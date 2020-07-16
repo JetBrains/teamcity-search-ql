@@ -7,6 +7,7 @@ class CompletionManager(val projectManager: ProjectManager) {
     val projectIdFinder = SimpleStringFinder()
     val buildConfIdFinder = SimpleStringFinder()
     val templateIdFinder = SimpleStringFinder()
+    val buildConfOrTempIdFinder = CombinedStringFinder(buildConfIdFinder, templateIdFinder)
     val vcsRootIdFinder = SimpleStringFinder()
     val triggerParamValueFinder = ParameterValueFinder()
     val stepParamValueFinder = ParameterValueFinder()
@@ -29,6 +30,7 @@ class CompletionManager(val projectManager: ProjectManager) {
         map["trigger_type"] = triggerTypeFinder
         map["step_type"] = stepTypeFinder
         map["feature_type"] = featureTypeFinder
+        map["buildConfOrTemp_id"] = buildConfOrTempIdFinder
 
         indexAll()
     }

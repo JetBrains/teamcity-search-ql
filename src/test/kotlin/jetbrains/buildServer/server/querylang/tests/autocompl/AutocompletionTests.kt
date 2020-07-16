@@ -26,6 +26,9 @@ class AutocompletionTests : BaseServerTestCase() {
         val p5_bt1 = project5.createBuildType("BaseProject_p1_p5_bt1", "BaseProject_p1_p5_bt1")
         val p5_bt2 = project2.createBuildType("BaseProject_p2_bt1", "BaseProject_p2_bt1")
 
+        val p5_temp1 = project5.createBuildTypeTemplate("BaseProject_p1_p5_temp1", "BaseProject_p1_p5_temp1")
+        val p2_temp1 = project2.createBuildTypeTemplate("BaseProject_p2_temp1", "BaseProject_p2_temp1")
+
         myFixture.registerVcsSupport("git")
         myFixture.registerVcsSupport("svn")
         val vcsRoot1 = project1.createVcsRoot("git", "gitId1", "gitId1")
@@ -67,5 +70,25 @@ class AutocompletionTests : BaseServerTestCase() {
         assertEquals(expected, vars)
     }
 
+    fun testTemplateId() {
+        val query = """
+            find buildConf with id 5555 or template (id 55555 or id BaseProject_p1
+        """.trimIndent()
 
+        val vars = autoCompl.complete(query)
+        val expected = listOf("_p5_temp1")
+
+        assertEquals(expected, vars)
+    }
+
+    fun testBuildConfOrTempId() {
+        val query = """
+            find buildConfOrTemp with (id 5555 and id 6666) or (((id BaseProject_p
+        """.trimIndent()
+
+        val vars = autoCompl.complete(query)
+        val expected = listOf("1_bt1", "1_bt2", "2_bt1", "2_temp1", "1_p5_bt1", "1_p5_temp1")
+
+        assertEquals(expected, vars)
+    }
 }
