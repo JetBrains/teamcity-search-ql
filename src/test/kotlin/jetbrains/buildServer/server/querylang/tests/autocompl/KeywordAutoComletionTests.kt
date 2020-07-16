@@ -6,14 +6,15 @@ import kotlin.test.assertEquals
 
 
 @Test
-internal class AutoComletionTests {
-    
+internal class KeywordAutoComletionTests {
+    val autoCompl = AutoCompletion()
+
     fun testFindAutoCompleteon() {
         val query = """
             find buil
         """.trimIndent()
 
-        val vars = AutoCompletion.comlete(query)
+        val vars = autoCompl.complete(query)
 
         assertEquals(2, vars!!.size)
         assertEquals("buildConf", vars[0])
@@ -26,7 +27,7 @@ internal class AutoComletionTests {
             find buildConf with project ( ancestor id 5555 and anc
         """.trimIndent()
 
-        val vars = AutoCompletion.comlete(query)!!.sortedBy { it }
+        val vars = autoCompl.complete(query)!!.sortedBy { it }
 
         assertEquals(2, vars.size)
         assertEquals("ancestor", vars[0])
@@ -39,7 +40,7 @@ internal class AutoComletionTests {
             find buildConf with id 5555 or id 66666 and temp
         """.trimIndent()
 
-        val vars = AutoCompletion.comlete(query)
+        val vars = autoCompl.complete(query)
 
         assertEquals(1, vars!!.size)
         assertEquals("template", vars[0])
@@ -51,7 +52,7 @@ internal class AutoComletionTests {
             find buildConf with id 5555 or (id 6666 and template (( id 5555 or (id 6666 and (i
         """.trimIndent()
 
-        val vars = AutoCompletion.comlete(query)
+        val vars = autoCompl.complete(query)
 
         assertEquals(1, vars!!.size)
         assertEquals("id", vars[0])
@@ -63,7 +64,7 @@ internal class AutoComletionTests {
             find buildConf with trigger (((((t
         """.trimIndent()
 
-        val vars = AutoCompletion.comlete(query)
+        val vars = autoCompl.complete(query)
 
         assertEquals(1, vars!!.size)
         assertEquals("type", vars[0])
@@ -75,7 +76,7 @@ internal class AutoComletionTests {
             find vcsRoot with project( ( id 55555) ) and (type 555 or id 6666 and ((t
         """.trimIndent()
 
-        val vars = AutoCompletion.comlete(query)
+        val vars = autoCompl.complete(query)
 
         assertEquals(1, vars!!.size)
         assertEquals("type", vars[0])
@@ -87,7 +88,7 @@ internal class AutoComletionTests {
             find template with project (template (i
         """.trimIndent()
 
-        val vars = AutoCompletion.comlete(query)
+        val vars = autoCompl.complete(query)
 
         assertEquals(null, vars)
     }
@@ -97,7 +98,7 @@ internal class AutoComletionTests {
         val query = """
             find project with (id 5555 or id """.trimIndent()
 
-        val vars = AutoCompletion.comlete(query)
+        val vars = autoCompl.complete(query)
 
         assertEquals(listOf(), vars)
     }
@@ -107,7 +108,7 @@ internal class AutoComletionTests {
         val query = """
             find project with (id 5555 or i)""".trimIndent()
 
-        val vars = AutoCompletion.comlete(query)
+        val vars = autoCompl.complete(query)
 
         assertEquals(null, vars)
     }

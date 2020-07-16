@@ -7,7 +7,8 @@
       <class name="jetbrains.buildServer.server.querylang.tests.parser.BuildConfSearchTests" />
       <class name="jetbrains.buildServer.server.querylang.tests.parser.ProjectSearchTests" />
       <class name="jetbrains.buildServer.server.querylang.tests.parser.TemplateSearchTests" />
-      <class name="jetbrains.buildServer.server.querylang.tests.autocompl.AutoComletionTests" />
+      <class name="jetbrains.buildServer.server.querylang.tests.autocompl.KeywordAutoComletionTests" />
+      <class name="jetbrains.buildServer.server.querylang.tests.autocompl.AutocompletionTests" />
       <class name="jetbrains.buildServer.server.querylang.tests.autocompl.FeatureParameterValueFinderTests" />
       <class name="jetbrains.buildServer.server.querylang.tests.autocompl.ProjectIdFinderTests" />
       <class name="jetbrains.buildServer.server.querylang.tests.autocompl.StepParameterValueFinderTests" />

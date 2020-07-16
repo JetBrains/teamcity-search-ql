@@ -2,6 +2,7 @@ package jetbrains.buildServer.server.querylang.autocompl
 
 import jetbrains.buildServer.server.querylang.parser.QLangGrammarLexer
 import jetbrains.buildServer.server.querylang.parser.QLangGrammarParser
+import jetbrains.buildServer.serverSide.ProjectManager
 import org.antlr.v4.runtime.CharStreams
 import org.antlr.v4.runtime.CommonTokenStream
 import org.antlr.v4.runtime.ParserRuleContext
@@ -9,15 +10,15 @@ import org.antlr.v4.runtime.tree.ErrorNodeImpl
 import org.antlr.v4.runtime.tree.ParseTree
 import java.lang.IllegalStateException
 
-object AutoCompletion {
-    fun comlete(input: String): List<String>? {
+class AutoCompletion(val projectManager: ProjectManager? = null) {
+    fun complete(input: String): List<String>? {
         val stream = CharStreams.fromString(input)
         val lexer = QLangGrammarLexer(stream)
         val tokens = CommonTokenStream(lexer)
         val parser = QLangGrammarParser(tokens)
         val treeNode: ParserRuleContext = parser.find()
         val trace = getFilterTrace(treeNode, input) ?: return null
-        val variants = Completer.suggest(trace.dropLast(1), trace.last(), 10)
+        val variants = Completer(projectManager).suggest(trace.dropLast(1), trace.last(), 10)
         return variants
     }
 

@@ -5,13 +5,13 @@ import java.io.File
 import java.lang.IllegalStateException
 import java.util.*
 
-object Completer {
+class Completer(val projectManager: ProjectManager? = null) {
     private val filterFilename = "filters.txt"
     private val graph = mutableMapOf<String, List<String>>()
-    private val projectManager: ProjectManager? = null
     init {
         readFilterGraph()
     }
+
     fun suggest(trace: List<String>, word: String, limit: Int): List<String>? {
         var node = "root"
         for (filterName in trace) {
@@ -30,7 +30,7 @@ object Completer {
                     .completeString(
                             word,
                             "${trace[trace.lastIndex - 1]}_${trace.last()}",
-                            10
+                            limit
                     )
         }
         return graph[node]?.filter {it.startsWith(word)} ?: throw IllegalStateException("Unknow filter name ${node}")
