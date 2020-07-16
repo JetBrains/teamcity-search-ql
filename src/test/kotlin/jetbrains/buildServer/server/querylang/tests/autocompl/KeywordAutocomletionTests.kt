@@ -6,7 +6,7 @@ import kotlin.test.assertEquals
 
 
 @Test
-internal class KeywordAutoComletionTests {
+internal class KeywordAutocomletionTests {
     val autoCompl = AutoCompletion()
 
     fun testFindAutoCompleteon() {

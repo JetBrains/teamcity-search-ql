@@ -34,6 +34,11 @@ class AutocompletionTests : BaseServerTestCase() {
         val vcsRoot1 = project1.createVcsRoot("git", "gitId1", "gitId1")
         val vcsRoot2 = project3.createVcsRoot("git", "gitId2", "gitId2")
         val vcsRoot3 = project3.createVcsRoot("svn", "svnId3", "svnId3")
+
+        p1_bt1.addBuildTrigger("vcsTrigger", mapOf(Pair("path", "abc")))
+        p5_temp1.addBuildTrigger("vcsTrigger", mapOf(Pair("path", "abd")))
+        p5_bt1.addBuildTrigger("schedulingTrigger", mapOf(Pair("patabc", "abc"), Pair("abc", "bcd"), Pair("path", "acd")))
+
         autoCompl = AutoCompletion(myFixture.projectManager)
     }
 
@@ -88,6 +93,39 @@ class AutocompletionTests : BaseServerTestCase() {
 
         val vars = autoCompl.complete(query)
         val expected = listOf("1_bt1", "1_bt2", "2_bt1", "2_temp1", "1_p5_bt1", "1_p5_temp1")
+
+        assertEquals(expected, vars)
+    }
+
+    fun testTriggerParamName() {
+        val query = """
+            find buildConf with (id 5555 or id 6666) and (id 7777 or ( ( trigger param pat
+        """.trimIndent()
+
+        val vars = autoCompl.complete(query)
+        val expected = listOf("h", "abc")
+
+        assertEquals(expected, vars)
+    }
+
+    fun testTriggerParamValue() {
+        val query = """
+            find buildConf with (id 5555 or id 6666) and (id 7777 or ( ( trigger param path = "ab
+        """.trimIndent()
+
+        val vars = autoCompl.complete(query)
+        val expected = listOf("c", "d")
+
+        assertEquals(expected, vars)
+    }
+
+    fun testTriggerType() {
+        val query = """
+            find template with trigger type vcs
+        """.trimIndent()
+
+        val vars = autoCompl.complete(query)
+        val expected = listOf("Trigger")
 
         assertEquals(expected, vars)
     }

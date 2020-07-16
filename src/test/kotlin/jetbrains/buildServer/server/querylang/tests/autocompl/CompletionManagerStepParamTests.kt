@@ -6,7 +6,7 @@ import org.testng.annotations.BeforeClass
 import org.testng.annotations.Test
 
 @Test
-class FeatureParameterValueFinderTests : BaseServerTestCase() {
+class CompletionManagerStepParamTests : BaseServerTestCase() {
 
     private lateinit var compl: CompletionManager
     @BeforeClass
@@ -16,23 +16,21 @@ class FeatureParameterValueFinderTests : BaseServerTestCase() {
         val bc1 = project1.createBuildType("bt1", "bt1")
         val temp1 = project1.createBuildType("temp1", "temp1")
 
-        bc1.addBuildFeature("vcsTrigger", mapOf(Pair("path", "abc"), Pair("abc", "bcd"), Pair("pathabc", "abc")))
-        temp1.addBuildFeature("vcsTrigger", mapOf(Pair("path", "abd"), Pair("abc", "bcd")))
+        bc1.addBuildRunner("vcsTrigger", "a", mapOf(Pair("path", "abc"), Pair("abc", "bcd"), Pair("pathabc", "abc")))
+        temp1.addBuildRunner("vcsTrigger", "a", mapOf(Pair("path", "abd"), Pair("abc", "bcd")))
 
         compl = CompletionManager(myFixture.projectManager)
     }
 
-    
     fun testParamNameCompletion() {
-        val vars = compl.completeString("pat", "feature_param", 10)
+        val vars = compl.completeString("pat", "step_param", 10)
         val expected = listOf("h", "habc")
 
         assertEquals(expected, vars)
     }
 
-    
     fun testValueCompletion() {
-        val vars = compl.completeString("path =  \"a","feature_param",10).toSet()
+        val vars = compl.completeString("path =  \"a", "step_param", 10).toSet()
         val expected = setOf("bc", "bd")
 
         assertEquals(expected, vars)
@@ -40,7 +38,7 @@ class FeatureParameterValueFinderTests : BaseServerTestCase() {
 
     
     fun testValueCompletion2() {
-        val vars = compl.completeString("abc =  \"", "feature_param", 10)
+        val vars = compl.completeString("abc =  \"", "step_param", 10)
         val expected = listOf("bcd")
 
         assertEquals(expected, vars)
@@ -48,7 +46,7 @@ class FeatureParameterValueFinderTests : BaseServerTestCase() {
 
     
     fun testWrongInput() {
-        val vars = compl.completeString("path = \"a ", "feature_param", 10)
+        val vars = compl.completeString("path = \"a ", "step_param", 10)
 
         assertEquals(emptyList<String>(), vars)
     }

@@ -6,7 +6,7 @@ import org.testng.annotations.BeforeClass
 import org.testng.annotations.Test
 
 @Test
-internal class ProjectIdFinderTests : BaseServerTestCase() {
+internal class CompletionManagerProjectIdTests : BaseServerTestCase() {
 
     private lateinit var compl: CompletionManager
 

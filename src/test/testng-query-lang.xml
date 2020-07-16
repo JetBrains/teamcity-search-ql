@@ -7,13 +7,13 @@
       <class name="jetbrains.buildServer.server.querylang.tests.parser.BuildConfSearchTests" />
       <class name="jetbrains.buildServer.server.querylang.tests.parser.ProjectSearchTests" />
       <class name="jetbrains.buildServer.server.querylang.tests.parser.TemplateSearchTests" />
-      <class name="jetbrains.buildServer.server.querylang.tests.autocompl.KeywordAutoComletionTests" />
+      <class name="jetbrains.buildServer.server.querylang.tests.autocompl.KeywordAutocomletionTests" />
       <class name="jetbrains.buildServer.server.querylang.tests.autocompl.AutocompletionTests" />
-      <class name="jetbrains.buildServer.server.querylang.tests.autocompl.FeatureParameterValueFinderTests" />
-      <class name="jetbrains.buildServer.server.querylang.tests.autocompl.ProjectIdFinderTests" />
-      <class name="jetbrains.buildServer.server.querylang.tests.autocompl.StepParameterValueFinderTests" />
+      <class name="jetbrains.buildServer.server.querylang.tests.autocompl.CompletionManagerFeatureParamTests" />
+      <class name="jetbrains.buildServer.server.querylang.tests.autocompl.CompletionManagerProjectIdTests" />
+      <class name="jetbrains.buildServer.server.querylang.tests.autocompl.CompletionManagerStepParamTests" />
       <class name="jetbrains.buildServer.server.querylang.tests.autocompl.TrieTests" />
-      <class name="jetbrains.buildServer.server.querylang.tests.autocompl.TriggerParameterValueFinderTests" />
+      <class name="jetbrains.buildServer.server.querylang.tests.autocompl.CompletionManagerTriggerParamTests" />
     </classes>
   </test>
 </suite>
