@@ -1,0 +1,3 @@
+package jetbrains.buildServer.server.querylang.objects
+
+interface TeamCityObject

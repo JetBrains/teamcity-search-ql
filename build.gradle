@@ -1,0 +1,55 @@
+plugins {
+    id 'java'
+    id 'org.jetbrains.kotlin.jvm' version '1.3.72'
+    id "com.github.rodm.teamcity-server" version "1.3"
+    id 'antlr'
+}
+
+ext {
+    teamcityTestLibs = "../../.idea_artifacts/dist_openapi_integration/tests"
+    teamcityLibs = "../../.idea_artifacts/web-deployment/WEB-INF/lib"
+}
+
+group 'org.example'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+    jcenter()
+}
+
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+    antlr "org.antlr:antlr4:4.8"
+    compile "org.jetbrains.teamcity:server-api:2020.1-SNAPSHOT"
+    compile "org.jetbrains.kotlin:kotlin-reflect:1.3.72"
+    compile "org.jetbrains.kotlin:kotlin-test:1.3.72"
+    compile fileTree(dir: "$rootProject.ext.teamcityLibs", include: ['*.jar'])
+    testImplementation fileTree(dir: "$rootProject.ext.teamcityTestLibs", include: ['*.jar'])
+    testImplementation("org.testng:testng:6.8")
+}
+
+test {
+    useTestNG() {
+        suites 'src/test/testng-query-lang.xml'
+    }
+}
+
+compileKotlin {
+    kotlinOptions.jvmTarget = "1.8"
+}
+compileTestKotlin {
+    kotlinOptions.jvmTarget = "1.8"
+}
+
+generateGrammarSource {
+    outputDirectory = file("src/main/java/jetbrains/buildServer/server/querylang/parser")
+    arguments += ['-visitor', '-long-messages']
+}
+
+teamcity {
+    version = '2020.1'
+    server {
+        descriptor = file("teamcity-plugin.xml")
+    }
+}
