@@ -1,6 +1,6 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite name="Tests for Commit Status Publisher">
-  <test name="Tests for Commit Status Publisher">
+<suite name="Tests for Query Language">
+  <test name="Tests for Query Language">
     <classes>
       <class name="jetbrains.buildServer.server.querylang.tests.client.ClientTests" />
       <class name="jetbrains.buildServer.server.querylang.tests.parser.BuildConfOrTemplateSearchTests" />

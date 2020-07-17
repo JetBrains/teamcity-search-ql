@@ -15,6 +15,7 @@ class CompletionManager(val projectManager: ProjectManager) {
     val triggerTypeFinder = SimpleStringFinder()
     val stepTypeFinder = SimpleStringFinder()
     val featureTypeFinder = SimpleStringFinder()
+    val vcsRootTypeFinder = SimpleStringFinder()
     init {
         map["project_id"] = projectIdFinder
         map["parent_id"] = projectIdFinder
@@ -31,6 +32,7 @@ class CompletionManager(val projectManager: ProjectManager) {
         map["step_type"] = stepTypeFinder
         map["feature_type"] = featureTypeFinder
         map["buildConfOrTemp_id"] = buildConfOrTempIdFinder
+        map["vcsRoot_type"] = vcsRootTypeFinder
 
         indexAll()
     }
@@ -89,6 +91,7 @@ class CompletionManager(val projectManager: ProjectManager) {
 
         projectManager.allVcsRoots.forEach { vcs ->
             vcsRootIdFinder.addString(vcs.externalId)
+            vcsRootTypeFinder.addString(vcs.vcsName)
         }
     }
 }

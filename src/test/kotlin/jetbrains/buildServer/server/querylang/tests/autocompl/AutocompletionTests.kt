@@ -129,4 +129,15 @@ class AutocompletionTests : BaseServerTestCase() {
 
         assertEquals(expected, vars)
     }
+
+    fun testVcsRootType() {
+        val query = """
+            find vcsRoot with type gi
+        """.trimIndent()
+
+        val vars = autoCompl.complete(query)
+        val expected = listOf("t")
+
+        assertEquals(expected, vars)
+    }
 }
