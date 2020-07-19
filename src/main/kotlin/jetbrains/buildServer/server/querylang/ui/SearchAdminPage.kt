@@ -32,20 +32,21 @@ class SearchAdminPage(
     private val requestClient: RequestClient
     val parser = QueryParser()
     init {
-        requestClient = RequestClient(InternalApiQueryHandler(projectManager), ConsoleResultPrinter)
+        requestClient = RequestClient(InternalApiQueryHandler(projectManager))
         register()
     }
 
     override fun fillModel(model: MutableMap<String, Any>, request: HttpServletRequest) {
         val form = FormUtil.getOrCreateForm(
             request,
-            ProjectAdminForm::class.java
-        ) { ProjectAdminForm() }!!
+            SearchAdminForm::class.java
+        ) { SearchAdminForm() }!!
         FormUtil.bindFromRequest(request, form)
 
-        val bean = AdminOverviewBean(form, projectManager)
-        model["adminOverviewForm"] = bean
-        model["searchResult"] = bean.keyword?.let {requestClient.process(parser.parse(it))} ?: ""
+        val bean = SearchAdminBean(form, projectManager)
+        val result = bean.getKeyword()?.let {requestClient.process(parser.parse(it))}
+        bean.buildResultList(result)
+        model["searchForm"] = bean
         CameFromSupport.setupCameFromUrl(model, request)
     }
 

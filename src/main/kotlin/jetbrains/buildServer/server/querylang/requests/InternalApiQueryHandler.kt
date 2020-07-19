@@ -16,7 +16,7 @@ import jetbrains.buildServer.vcs.SVcsRoot
 class InternalApiQueryHandler(
         val projectManager: ProjectManager
 ) : QueryHandler {
-    override fun makeRequest(query: MainQuery): QueryResult {
+    override fun makeRequest(query: MainQuery): QueryResult<*> {
         //val a = projectManager.allVcsRoots[0]
         return when (query) {
             is FindProject -> findProjects(query.condition)
@@ -24,9 +24,9 @@ class InternalApiQueryHandler(
             is FindTemplate -> findTemplates(query.condition)
             is FindVcsRoot -> findVcsRoots(query.condition)
             is FindBuildConfOrTemplate -> {
-                val templates = findTemplates(query.condition).templates.map {it as BuildConfOrTemp}
-                val buildConfs = findBuildConfs(query.condition).buildConfs.map {it as BuildConfOrTemp}
-                ResultBuildConfOrTemp(templates.union(buildConfs).toList())
+                val templates = findTemplates(query.condition).objects.map {it as BuildConfOrTemp}
+                val buildConfs = findBuildConfs(query.condition).objects.map {it as BuildConfOrTemp}
+                ResultBuildConfOrTemp(templates.union(buildConfs).toMutableList())
             }
         }
     }

@@ -2,4 +2,4 @@ package jetbrains.buildServer.server.querylang.requests
 
 import jetbrains.buildServer.server.querylang.objects.Project
 
-data class ResultProject(val projects: MutableList<Project> = mutableListOf()) : QueryResult
+data class ResultProject(override val objects: MutableList<Project> = mutableListOf()) : QueryResult<Project>

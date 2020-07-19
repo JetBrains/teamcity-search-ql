@@ -3,12 +3,12 @@ package jetbrains.buildServer.server.querylang.requests
 import jetbrains.buildServer.server.querylang.ast.MainQuery
 
 class RequestClient(
-        val queryHandler: QueryHandler,
-        val resultPrinter: ResultPrinter
+    private val queryHandler: QueryHandler,
+    private val resultPrinter: ResultPrinter? = null
 ) {
-    fun process(query: MainQuery): QueryResult {
+    fun process(query: MainQuery): QueryResult<*> {
         val res = queryHandler.makeRequest(query)
-        resultPrinter.display(res)
+        resultPrinter?.display(res)
         return res
     }
 }

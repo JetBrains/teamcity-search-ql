@@ -74,10 +74,10 @@ class ClientTests: BaseServerTestCase() {
 
         when (res) {
             is ResultBuildConfiguration -> {
-                res.buildConfs.sortBy { it.description }
-                assertEquals(res.buildConfs.size, 2)
-                assertEquals(res.buildConfs[0].description, "Project1_test1")
-                assertEquals(res.buildConfs[1].description, "Project3_test1")
+                res.objects.sortBy { it.externalId }
+                assertEquals(res.objects.size, 2)
+                assertEquals(res.objects[0].externalId, "Project1_test1")
+                assertEquals(res.objects[1].externalId, "Project3_test1")
             }
             else -> {
                 fail("Result should be ResultBuildConfiguration")
@@ -98,10 +98,10 @@ class ClientTests: BaseServerTestCase() {
 
         when (res) {
             is ResultBuildConfiguration -> {
-                res.buildConfs.sortBy { it.description }
-                assertEquals(res.buildConfs.size, 2)
-                assertEquals(res.buildConfs[0].description, "Project1_test1")
-                assertEquals(res.buildConfs[1].description, "Project3_test1")
+                res.objects.sortBy { it.externalId }
+                assertEquals(res.objects.size, 2)
+                assertEquals(res.objects[0].externalId, "Project1_test1")
+                assertEquals(res.objects[1].externalId, "Project3_test1")
             }
             else -> {
                 fail("Result should be ResultBuildConfiguration")
@@ -121,11 +121,11 @@ class ClientTests: BaseServerTestCase() {
 
         when (res) {
             is ResultBuildConfiguration -> {
-                val confs = res.buildConfs.sortedBy { it.description }
+                val confs = res.objects.sortedBy { it.externalId }
                 assertEquals(confs.size, 3)
-                assertEquals(confs[0].description, "Project1_test1")
-                assertEquals(confs[1].description, "Project2_test1")
-                assertEquals(confs[2].description, "Project3_test1")
+                assertEquals(confs[0].externalId, "Project1_test1")
+                assertEquals(confs[1].externalId, "Project2_test1")
+                assertEquals(confs[2].externalId, "Project3_test1")
             }
             else -> {
                 fail("Result should be ResultBuildConfiguration")
@@ -145,8 +145,8 @@ class ClientTests: BaseServerTestCase() {
 
         when (res) {
             is ResultProject -> {
-                assertEquals(res.projects.size, 1)
-                assertEquals(res.projects[0].description, "Project3")
+                assertEquals(res.objects.size, 1)
+                assertEquals(res.objects[0].externalId, "Project3")
             }
             else -> {
                 fail("Result should be ResultProject")
@@ -166,10 +166,10 @@ class ClientTests: BaseServerTestCase() {
 
         when (res) {
             is ResultBuildConfiguration -> {
-                res.buildConfs.sortBy { it.description }
-                assertEquals(res.buildConfs.size, 2)
-                assertEquals(res.buildConfs[0].description, "Project2_test1")
-                assertEquals(res.buildConfs[1].description, "Project3_test2")
+                res.objects.sortBy { it.externalId }
+                assertEquals(res.objects.size, 2)
+                assertEquals(res.objects[0].externalId, "Project2_test1")
+                assertEquals(res.objects[1].externalId, "Project3_test2")
             }
             else -> {
                 fail("Result should be ResultBuildConfiguration")
@@ -184,9 +184,9 @@ class ClientTests: BaseServerTestCase() {
 
         val res = client.process(parser.parse(query)) as ResultBuildConfiguration
 
-        assertEquals(2, res.buildConfs.size)
-        assertEquals(res.buildConfs[0].description, "Project4_test1")
-        assertEquals(res.buildConfs[1].description, "Project5_test1")
+        assertEquals(2, res.objects.size)
+        assertEquals(res.objects[0].externalId, "Project4_test1")
+        assertEquals(res.objects[1].externalId, "Project5_test1")
     }
 
     fun testBCWithProjectFilter() {
@@ -196,12 +196,12 @@ class ClientTests: BaseServerTestCase() {
 
         val res = client.process(parser.parse(query)) as ResultBuildConfiguration
 
-        res.buildConfs.sortBy {it.description}
-        assertEquals(4, res.buildConfs.size)
-        assertEquals(res.buildConfs[0].description, "Project3_test1")
-        assertEquals(res.buildConfs[1].description, "Project3_test2")
-        assertEquals(res.buildConfs[2].description, "Project4_test1")
-        assertEquals(res.buildConfs[3].description, "Project5_test1")
+        res.objects.sortBy {it.externalId}
+        assertEquals(4, res.objects.size)
+        assertEquals(res.objects[0].externalId, "Project3_test1")
+        assertEquals(res.objects[1].externalId, "Project3_test2")
+        assertEquals(res.objects[2].externalId, "Project4_test1")
+        assertEquals(res.objects[3].externalId, "Project5_test1")
     }
 
     fun testProjectWithAncestorOrSelfFIlter() {
@@ -211,11 +211,11 @@ class ClientTests: BaseServerTestCase() {
 
         val res = client.process(parser.parse(query)) as ResultProject
 
-        res.projects.sortBy { it.description }
-        assertEquals(3, res.projects.size)
-        assertEquals(res.projects[0].description, "Project3")
-        assertEquals(res.projects[1].description, "Project4")
-        assertEquals(res.projects[2].description, "Project5")
+        res.objects.sortBy { it.externalId }
+        assertEquals(3, res.objects.size)
+        assertEquals(res.objects[0].externalId, "Project3")
+        assertEquals(res.objects[1].externalId, "Project4")
+        assertEquals(res.objects[2].externalId, "Project5")
     }
 
     fun testProjectParentFilter() {
@@ -225,10 +225,10 @@ class ClientTests: BaseServerTestCase() {
 
         val res = client.process(parser.parse(query)) as ResultProject
 
-        res.projects.sortBy { it.description }
-        assertEquals(res.projects.size, 2)
-        assertEquals(res.projects[0].description, "Project1")
-        assertEquals(res.projects[1].description, "Project2")
+        res.objects.sortBy { it.externalId }
+        assertEquals(res.objects.size, 2)
+        assertEquals(res.objects[0].externalId, "Project1")
+        assertEquals(res.objects[1].externalId, "Project2")
     }
 
     fun testBuildConfigurationStepFilter() {
@@ -238,9 +238,9 @@ class ClientTests: BaseServerTestCase() {
 
         val res = client.process(parser.parse(query)) as ResultBuildConfiguration
 
-        res.buildConfs.sortBy { it.description }
-        assertEquals(res.buildConfs.size, 1)
-        assertEquals(res.buildConfs[0].description, "Project4_test1")
+        res.objects.sortBy { it.externalId }
+        assertEquals(res.objects.size, 1)
+        assertEquals(res.objects[0].externalId, "Project4_test1")
     }
 
     fun testBuildConfigurationFeatureFilter() {
@@ -250,9 +250,9 @@ class ClientTests: BaseServerTestCase() {
 
         val res = client.process(parser.parse(query)) as ResultBuildConfiguration
 
-        res.buildConfs.sortBy { it.description }
-        assertEquals(res.buildConfs.size, 1)
-        assertEquals(res.buildConfs[0].description, "Project3_test2")
+        res.objects.sortBy { it.externalId }
+        assertEquals(res.objects.size, 1)
+        assertEquals(res.objects[0].externalId, "Project3_test2")
     }
 
     fun testBuildConfigurationStepEnabledFilter() {
@@ -262,8 +262,8 @@ class ClientTests: BaseServerTestCase() {
 
         val res = client.process(parser.parse(query)) as ResultBuildConfiguration
 
-        assertEquals(res.buildConfs.size, 1)
-        assertEquals(res.buildConfs[0].description, "Project3_test2")
+        assertEquals(res.objects.size, 1)
+        assertEquals(res.objects[0].externalId, "Project3_test2")
     }
 
     fun testTemplateStepFilter() {
@@ -273,8 +273,8 @@ class ClientTests: BaseServerTestCase() {
 
         val res = client.process(parser.parse(query)) as ResultBuildTemplate
 
-        assertEquals(1, res.templates.size)
-        assertEquals("Project4_temp1", res.templates[0].description)
+        assertEquals(1, res.objects.size)
+        assertEquals("Project4_temp1", res.objects[0].externalId)
     }
 
     fun testBuildConfOrTempStepFilter() {
@@ -284,11 +284,11 @@ class ClientTests: BaseServerTestCase() {
 
         val res = client.process(parser.parse(query)) as ResultBuildConfOrTemp
 
-        val obj = res.buildObjects.sortedBy { it.description }
-        assertEquals(3, res.buildObjects.size)
-        assertEquals("Project4_temp1", obj[0].description)
-        assertEquals("Project4_test1", obj[1].description)
-        assertEquals("Project5_test1", obj[2].description)
+        val obj = res.objects.sortedBy { it.externalId }
+        assertEquals(3, res.objects.size)
+        assertEquals("Project4_temp1", obj[0].externalId)
+        assertEquals("Project4_test1", obj[1].externalId)
+        assertEquals("Project5_test1", obj[2].externalId)
     }
 
     fun testBuildConfDependencyOnTemp() {
@@ -298,8 +298,8 @@ class ClientTests: BaseServerTestCase() {
 
         val res = client.process(parser.parse(query)) as ResultBuildConfiguration
 
-        assertEquals(1, res.buildConfs.size)
-        assertEquals("Project5_test1", res.buildConfs[0].description)
+        assertEquals(1, res.objects.size)
+        assertEquals("Project5_test1", res.objects[0].externalId)
     }
 
     fun testVcsRootWithProjectAndTypeFilter() {
@@ -309,7 +309,7 @@ class ClientTests: BaseServerTestCase() {
 
         val res = client.process(parser.parse(query)) as ResultVcsRoot
 
-        assertEquals(1, res.vcsRoots.size)
-        assertEquals("Project5_vcs1", res.vcsRoots[0].description)
+        assertEquals(1, res.objects.size)
+        assertEquals("Project5_vcs1", res.objects[0].externalId)
     }
 }
