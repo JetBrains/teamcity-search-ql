@@ -10,6 +10,8 @@ import jetbrains.buildServer.serverSide.ProjectManager
 
 class SearchAdminBean(val searchAdminForm: SearchAdminForm, val projectManager: ProjectManager){
     private lateinit var result: QueryResult<*>
+    private var wrongQueryMessage: String? = null
+
     val resultProjects = mutableListOf<Pair<String, String>>()
     val resultBuildConfigurations = mutableListOf<Pair<String, String>>()
     val resultTemplates = mutableListOf<Pair<String, String>>()
@@ -45,6 +47,14 @@ class SearchAdminBean(val searchAdminForm: SearchAdminForm, val projectManager: 
                 resultTemplates.isEmpty() &&
                 resultVcsRoots.isEmpty()
     }
+
+    fun isWrongQuery() = wrongQueryMessage != null
+
+    fun setWrongQueryMessage(message: String) {
+        wrongQueryMessage = message
+    }
+
+    fun getWrongQueryMessage() = wrongQueryMessage
 
     fun hasProjects() = resultProjects.isNotEmpty()
     fun hasBuildConfs() = resultBuildConfigurations.isNotEmpty()

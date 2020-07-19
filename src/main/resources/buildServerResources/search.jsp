@@ -12,55 +12,61 @@
     </div>
     <div>
         <c:choose>
-            <c:when test="${searchForm.isNothingFound()}">
-                Nothing found.
-                <br />
-            </c:when>
+        <c:when test="${searchForm.isWrongQuery()}">
+            <h3 style="color:red">${searchForm.getWrongQueryMessage()}</h3>
+        </c:when>
             <c:otherwise>
+                <c:choose>
+                    <c:when test="${searchForm.isNothingFound()}">
+                        Nothing found.
+                        <br />
+                    </c:when>
+                    <c:otherwise>
+                        <c:if test="${searchForm.hasProjects()}">
+                            <h3>Projects:</h3>
+                            <ol>
+                                <c:forEach items="${searchForm.resultProjects}" var="project">
+                                    <li>
+                                        <a href="${project.first}">${project.second}</a>
+                                    </li>
+                                </c:forEach>
+                            </ol>
+                        </c:if>
 
-                <c:if test="${searchForm.hasProjects()}">
-                    <h3>Projects:</h3>
-                    <ol>
-                        <c:forEach items="${searchForm.resultProjects}" var="project">
-                            <li>
-                                <a href="${project.first}">${project.second}</a>
-                            </li>
-                        </c:forEach>
-                    </ol>
-                </c:if>
+                        <c:if test="${searchForm.hasBuildConfs()}">
+                            <h3>Build configurations:</h3>
+                            <ol>
+                                <c:forEach items="${searchForm.resultBuildConfigurations}" var="buildConf">
+                                    <li>
+                                        <a href="${buildConf.first}">${buildConf.second}</a>
+                                    </li>
+                                </c:forEach>
+                            </ol>
+                        </c:if>
 
-                <c:if test="${searchForm.hasBuildConfs()}">
-                    <h3>Build configurations:</h3>
-                    <ol>
-                        <c:forEach items="${searchForm.resultBuildConfigurations}" var="buildConf">
-                            <li>
-                                <a href="${buildConf.first}">${buildConf.second}</a>
-                            </li>
-                        </c:forEach>
-                    </ol>
-                </c:if>
+                        <c:if test="${searchForm.hasTemplates()}">
+                            <h3>Build configuration templates:</h3>
+                            <ol>
+                                <c:forEach items="${searchForm.resultTemplates}" var="temp">
+                                    <li>
+                                        <a href="${temp.first}">${temp.second}</a>
+                                    </li>
+                                </c:forEach>
+                            </ol>
+                        </c:if>
 
-                <c:if test="${searchForm.hasTemplates()}">
-                    <h3>Build configuration templates:</h3>
-                    <ol>
-                        <c:forEach items="${searchForm.resultTemplates}" var="temp">
-                            <li>
-                                <a href="${temp.first}">${temp.second}</a>
-                            </li>
-                        </c:forEach>
-                    </ol>
-                </c:if>
-
-                <c:if test="${searchForm.hasVcsRoots()}">
-                    <h3>VCS roots:</h3>
-                    <ol>
-                        <c:forEach items="${searchForm.resultVcsRoots}" var="vcs">
-                            <li>
-                                <a href="${vcs.first}">${vcs.second}</a>
-                            </li>
-                        </c:forEach>
-                    </ol>
-                </c:if>
+                        <c:if test="${searchForm.hasVcsRoots()}">
+                            <h3>VCS roots:</h3>
+                            <ol>
+                                <c:forEach items="${searchForm.resultVcsRoots}" var="vcs">
+                                    <li>
+                                        <a href="${vcs.first}">${vcs.second}</a>
+                                    </li>
+                                </c:forEach>
+                            </ol>
+                        </c:if>
+                    </c:otherwise>
+                </c:choose>
             </c:otherwise>
         </c:choose>
     </div>

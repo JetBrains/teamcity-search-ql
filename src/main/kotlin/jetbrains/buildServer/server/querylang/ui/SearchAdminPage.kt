@@ -4,6 +4,7 @@ import jetbrains.buildServer.controllers.FormUtil
 import jetbrains.buildServer.controllers.admin.AdminOverviewBean
 import jetbrains.buildServer.controllers.admin.AdminPage
 import jetbrains.buildServer.controllers.admin.ProjectAdminForm
+import jetbrains.buildServer.server.querylang.parser.ParsingException
 import jetbrains.buildServer.server.querylang.parser.QueryParser
 import jetbrains.buildServer.server.querylang.requests.ConsoleResultPrinter
 import jetbrains.buildServer.server.querylang.requests.RequestClient
@@ -14,6 +15,7 @@ import jetbrains.buildServer.web.openapi.Groupable
 import jetbrains.buildServer.web.openapi.PagePlaces
 import jetbrains.buildServer.web.openapi.PluginDescriptor
 import jetbrains.buildServer.web.util.CameFromSupport
+import java.lang.Exception
 import javax.servlet.http.HttpServletRequest
 
 class SearchAdminPage(
@@ -44,8 +46,14 @@ class SearchAdminPage(
         FormUtil.bindFromRequest(request, form)
 
         val bean = SearchAdminBean(form, projectManager)
-        val result = bean.getQuery()?.let {requestClient.process(parser.parse(it))}
-        bean.buildResultList(result)
+        try {
+            val result = bean.getQuery()?.let { requestClient.process(parser.parse(it)) }
+            bean.buildResultList(result)
+        } catch (e: ParsingException) {
+            bean.setWrongQueryMessage("Wrong query: ${e.message}")
+        } catch (e: Exception) {
+            bean.setWrongQueryMessage("Java exception: ${e.message}")
+        }
         model["searchForm"] = bean
         CameFromSupport.setupCameFromUrl(model, request)
     }
