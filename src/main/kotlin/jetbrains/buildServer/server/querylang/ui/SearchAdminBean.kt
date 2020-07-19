@@ -20,8 +20,8 @@ class SearchAdminBean(val searchAdminForm: SearchAdminForm, val projectManager: 
     private val BUILD_TEMPLATE_URL_PREFIX = "/bs/admin/editBuild.html?id=template:"
     private val VCS_ROOT_URL_PREFIX = "/bs/admin/editVcsRoot.html?vcsRootId="
 
-    fun getKeyword(): String? {
-        return searchAdminForm.keyword
+    fun getQuery(): String? {
+        return searchAdminForm.query
     }
 
     fun buildResultList(result_: QueryResult<*>?) {

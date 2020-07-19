@@ -23,7 +23,7 @@ class SearchAdminPage(
 ) : AdminPage(
         pagePlaces,
         "search",
-        pluginDescriptor.getPluginResourcesPath("example.jsp"),
+        pluginDescriptor.getPluginResourcesPath("search.jsp"),
         "Search"
     )
 {
@@ -44,7 +44,7 @@ class SearchAdminPage(
         FormUtil.bindFromRequest(request, form)
 
         val bean = SearchAdminBean(form, projectManager)
-        val result = bean.getKeyword()?.let {requestClient.process(parser.parse(it))}
+        val result = bean.getQuery()?.let {requestClient.process(parser.parse(it))}
         bean.buildResultList(result)
         model["searchForm"] = bean
         CameFromSupport.setupCameFromUrl(model, request)

@@ -3,11 +3,11 @@
 <form action="<c:url value='/admin/admin.html'/>" method="get">
     <div class="actionBar">
         <span class="nowrap">
-          <label class="firstLabel" for="keyword">Keyword: </label>
-          <forms:textField name="keyword" value="${searchForm.getKeyword()}" size="40" style="width: 360px"/>
+          <label class="firstLabel" for="query">Query: </label>
+          <forms:textField name="query" value="${searchForm.query}" size="80" style="width: 1000px; height: 30px; font-size: 15px" noAutoComplete="true"/>
         </span>
           <forms:filterButton/>
-          <div class="smallNote" style="margin-left: 6em; line-height: 1.5">Search projects, build configurations, templates, etc.</div>
+          <div class="smallNote" style="margin-left: 6em; line-height: 1.5">Search projects, build configurations, templates, vcsRoots, etc.</div>
           <div class="clearfix"></div>
     </div>
     <div>
