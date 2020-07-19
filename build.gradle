@@ -5,6 +5,9 @@ plugins {
     id 'antlr'
 }
 
+sourceCompatibility = "1.8"
+targetCompatibility = "1.8"
+
 ext {
     teamcityTestLibs = "../../.idea_artifacts/dist_openapi_integration/tests"
     teamcityLibs = "../../.idea_artifacts/web-deployment/WEB-INF/lib"
@@ -21,10 +24,11 @@ repositories {
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
     antlr "org.antlr:antlr4:4.8"
-    compile "org.jetbrains.teamcity:server-api:2020.1-SNAPSHOT"
-    compile "org.jetbrains.kotlin:kotlin-reflect:1.3.72"
-    compile "org.jetbrains.kotlin:kotlin-test:1.3.72"
-    compile fileTree(dir: "$rootProject.ext.teamcityLibs", include: ['*.jar'])
+    implementation "org.jetbrains.kotlin:kotlin-reflect:1.3.72"
+    implementation "org.jetbrains.kotlin:kotlin-test:1.3.72"
+
+    provided "org.jetbrains.teamcity:server-api:2020.1-SNAPSHOT"
+    provided fileTree(dir: "$rootProject.ext.teamcityLibs", include: ['*.jar'])
     testImplementation fileTree(dir: "$rootProject.ext.teamcityTestLibs", include: ['*.jar'])
     testImplementation("org.testng:testng:6.8")
 }

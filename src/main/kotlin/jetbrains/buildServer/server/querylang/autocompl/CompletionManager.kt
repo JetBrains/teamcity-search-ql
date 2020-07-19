@@ -42,6 +42,7 @@ class CompletionManager(val projectManager: ProjectManager) {
     }
 
     fun indexAll() {
+        projectManager.projects
         projectManager.projects.forEach {project ->
             projectIdFinder.addString(project.externalId)
             project.buildTypes.forEach { bt ->
