@@ -6,4 +6,5 @@
         default-autowire="constructor"
 >
     <bean class="jetbrains.buildServer.server.querylang.ui.SearchAdminPage"/>
+    <bean class="jetbrains.buildServer.server.querylang.ui.SearchFormAutocompletionController"/>
 </beans>

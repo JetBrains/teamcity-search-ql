@@ -1,10 +1,17 @@
 <%@     taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %><%@
-        taglib prefix="forms" tagdir="/WEB-INF/tags/forms"%>
+        taglib prefix="forms" tagdir="/WEB-INF/tags/forms"%><%@
+        taglib prefix="util" uri="/WEB-INF/functions/util" %>
+
 <form action="<c:url value='/admin/admin.html'/>" method="get">
     <div class="actionBar">
         <span class="nowrap">
-          <label class="firstLabel" for="query">Query: </label>
-          <forms:textField name="query" value="${searchForm.query}" size="80" style="width: 1000px; height: 30px; font-size: 15px" noAutoComplete="true"/>
+            <label class="firstLabel" for="query">Query: </label>
+            <c:url var="autocompletionUrl" value="/adminQueryAutocompletion.html"/>
+            <forms:autocompletionTextField name="query" value="${searchForm.query}" style="width: 1000px; height: 30px; font-size: 15px"
+                                           autocompletionSource="BS.QueryLanguage.createCompleteQueryFunction('${autocompletionUrl}')"
+                                           autocompletionShowOnFocus="true"
+                                           autocompletionShowEmpty="false"
+            />
         </span>
           <forms:filterButton/>
           <div class="smallNote" style="margin-left: 6em; line-height: 1.5">Search projects, build configurations, templates, vcsRoots, etc.</div>
@@ -72,3 +79,17 @@
     </div>
     <input type="hidden" name="item" value="search">
 </form>
+
+<script language="JavaScript">
+    BS.QueryLanguage = {
+        createCompleteQueryFunction: function (baseUrl) {
+            return function (request, response) {
+                var term = request.term;
+                var url = baseUrl + '?term=' + encodeURIComponent(term);
+                $j.getJSON(url, function(data) {
+                    response(data);
+                });
+            }
+        }
+    };
+</script>

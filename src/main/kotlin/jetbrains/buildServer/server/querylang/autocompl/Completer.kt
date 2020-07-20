@@ -5,8 +5,7 @@ import java.io.File
 import java.lang.IllegalStateException
 import java.util.*
 
-class Completer(val projectManager: ProjectManager? = null) {
-    private val filterFilename = "filters.txt"
+class Completer(private val filterFilename: String, val projectManager: ProjectManager? = null) {
     private val graph = mutableMapOf<String, List<String>>()
     init {
         readFilterGraph()
@@ -37,8 +36,7 @@ class Completer(val projectManager: ProjectManager? = null) {
     }
 
     private fun readFilterGraph() {
-        val file = File(this.javaClass.classLoader.getResource(filterFilename)?.file
-                ?: throw IllegalStateException("No such file $filterFilename"))
+        val file = File(filterFilename)
 
         val lines = file.readLines()
         val lineRegex = """\w+\s*->\s*\[(\s*\w+\s*,)*\s*\w+\s*]""".toRegex()
