@@ -9,10 +9,12 @@ inline fun <reified T : Filter> getFilterVisitor(): FilterVisitor<T> {
     return FilterVisitor<T>(T::class)
 }
 
-class FilterVisitor<T : Filter>(val filterType: KClass<T>) : QLangGrammarBaseVisitor<T>() {
+class FilterVisitor<T : Filter>(
+    val filterType: KClass<T>
+) : QLangGrammarBaseVisitor<T>() {
 
     private fun transform(filter: Filter, start: Token): T {
-        return filterType.safeCast(filter) ?: throw ParsingException("Wrong filter")
+        return filterType.safeCast(filter) ?: throw ParsingException("Not suitable filter '${start.text}' at position ${start.startIndex}")
     }
 
     override fun visitIdFilter(ctx: QLangGrammarParser.IdFilterContext?): T {

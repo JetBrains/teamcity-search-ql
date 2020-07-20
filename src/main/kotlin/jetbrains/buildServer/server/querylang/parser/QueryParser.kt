@@ -9,6 +9,8 @@ class QueryParser {
     fun parse(input: String): MainQuery {
         val stream = CharStreams.fromString(input)
         val parser = initParser(stream)
+        parser.removeErrorListeners()
+        parser.addErrorListener(ErrorListener())
         return parser.parse()
     }
 
