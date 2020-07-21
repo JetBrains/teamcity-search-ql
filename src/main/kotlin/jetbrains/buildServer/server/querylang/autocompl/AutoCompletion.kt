@@ -36,12 +36,14 @@ class AutoCompletion(val projectManager: ProjectManager? = null) {
         var node: ParseTree = rootNode
         val trace = mutableListOf<String>()
         var lastParsedIndex = 0
+        var lastFilterIndex = -1
         loop@ while (true) {
             if (node is QLangGrammarParser.FindContext) {
                 if (node.childCount < 1) {
                     return null
                 }
                 if (node.children.size == 1) {
+                    //when there is `find` keyword and space after it
                     if (node.getChild(0).text == "find" && input.length >= 5) {
                         return listOf("")
                     }
@@ -79,22 +81,17 @@ class AutoCompletion(val projectManager: ProjectManager? = null) {
                         break@loop
                     }
 
-                    //when there is no `with` keyword
                     val node1 = node.getChild(1)
-                    if (node1.childCount == 2) {
-                        if (node1.getChild(1) !is QLangGrammarParser.ConditionInSubprojectContext) {
-                            return null
-                        }
+
+                    //there is no `with` keyword and there is space after object type
+                    //e.g. ```find buildConf ```
+                    if (node1.childCount > 1 && node1.getChild(1).childCount == 0
+                        && getIndex(node1, 0) != input.lastIndex) {
+                        return null
                     }
 
-                    //'with' keyword hasn't started
-                    if (node1.childCount == 1) {
-                        //get last index of 'find' keyword
-                        lastParsedIndex = getIndex(node, 0)
-                        return listOf(input.substring(lastParsedIndex + 1).trimStart())
-                    }
-
-                    lastParsedIndex = getLastIndex(node1)
+                    lastParsedIndex = getLastIndex(node)
+                    lastFilterIndex = getIndex(node1, 0)
                     node = node.getChild(node.childCount - 1)
                 }
                 is QLangGrammarParser.ConditionInSubprojectContext -> {
@@ -117,6 +114,7 @@ class AutoCompletion(val projectManager: ProjectManager? = null) {
                     val n = node.childCount
 
                     if (node.parent is QLangGrammarParser.FilterContext) {
+                        lastFilterIndex = getIndex(node, 0)
                         if (!(node.getChild(n - 1) is QLangGrammarParser.FilterOrConditionContext)) {
                             //get the last index of the filter name
                             lastParsedIndex = getIndex(node, 0)
@@ -138,16 +136,17 @@ class AutoCompletion(val projectManager: ProjectManager? = null) {
         val lastWord = input.substring(lastParsedIndex + 1).trimStart()
         if (lastWord.isEmpty()) {
 
-            //if `lastWord` is empty then we complete empty string
+            //if `lastWord` is empty then we want to complete empty string
             //but if the last symbol is not ' ' or '(' then
-            //we want to complete the last word in `trace` not start the new one
-            if (input[lastParsedIndex] !in listOf(' ', '(', ')')
-                && ( lastParsedIndex + 1 >= input.length || input[lastParsedIndex + 1] != ' ')
-            ) {
-                if (trace.size == 0) {
-                    return null
+            //we want to complete the last word in `trace` not to start the new one.
+            if (input.last() !in listOf(' ', '(', ')')) {
+                if (lastFilterIndex == input.lastIndex) {
+                    if (trace.size == 0) {
+                        return null
+                    }
+                    return trace
                 }
-                return trace
+                return null
             }
         }
         trace.add(lastWord)
