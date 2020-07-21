@@ -5,7 +5,7 @@ class ParameterValueFinder: StringFinder {
     val params: MutableMap<String, Trie<Any>> = mutableMapOf()
 
     override fun completeString(prefix: String, limit: Int): List<String> {
-        val onlyParamRegex = """[\w\.]+""".toRegex()
+        val onlyParamRegex = """[\w\.]*""".toRegex()
         val withValueRegex = """[\w\.]+\s*=\s*\".*?""".toRegex()
         return when {
             prefix.matches(onlyParamRegex) -> completeParamName(prefix, limit)

@@ -13,7 +13,7 @@ class Completer(val projectManager: ProjectManager? = null) {
         readFilterGraph()
     }
 
-    fun suggest(trace: List<String>, word: String, limit: Int): List<String>? {
+    fun suggest(trace: List<String>, word: String, limit: Int): List<String> {
         var node = "root"
         for (filterName in trace) {
             if (graph[node] == null) {
@@ -21,7 +21,7 @@ class Completer(val projectManager: ProjectManager? = null) {
             }
 
             if (!graph[node]!!.contains(filterName)) {
-                return null
+                return emptyList()
             } else {
                 node = filterName
             }

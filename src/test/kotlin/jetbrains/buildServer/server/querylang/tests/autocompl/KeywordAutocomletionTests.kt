@@ -90,7 +90,7 @@ internal class KeywordAutocomletionTests {
 
         val vars = autoCompl.complete(query)
 
-        assertEquals(null, vars)
+        assertEquals(listOf(), vars)
     }
 
     
@@ -110,6 +110,6 @@ internal class KeywordAutocomletionTests {
 
         val vars = autoCompl.complete(query)
 
-        assertEquals(null, vars)
+        assertEquals(listOf(), vars)
     }
 }

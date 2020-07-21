@@ -55,7 +55,7 @@ class AutocompletionTests : BaseServerTestCase() {
 
     fun testBuildConfId() {
         val query = """
-            find buildConf with project(id 5555) and id((BaseProject_p1
+            find buildConf with project(id 5555) and (((id BaseProject_p1
         """.trimIndent()
 
         val vars = autoCompl.complete(query)
@@ -115,6 +115,17 @@ class AutocompletionTests : BaseServerTestCase() {
 
         val vars = autoCompl.complete(query)
         val expected = listOf("c", "d")
+
+        assertEquals(expected, vars)
+    }
+
+    fun testTriggerEmptyParam() {
+        val query = """
+            find buildConf with (id 5555 or id 6666) and (id 7777 or ( ( trigger param 
+        """.trimIndent()
+
+        val vars = autoCompl.complete(query)
+        val expected = listOf("abc", "path", "patabc")
 
         assertEquals(expected, vars)
     }
