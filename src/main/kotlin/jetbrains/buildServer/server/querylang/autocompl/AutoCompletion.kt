@@ -82,8 +82,7 @@ class AutoCompletion(val projectManager: ProjectManager? = null) {
                     //when there is no `with` keyword
                     val node1 = node.getChild(1)
                     if (node1.childCount == 2) {
-                        if (node1.getChild(1) !is QLangGrammarParser.ConditionInSubprojectContext
-                        ) {
+                        if (node1.getChild(1) !is QLangGrammarParser.ConditionInSubprojectContext) {
                             return null
                         }
                     }
@@ -96,7 +95,15 @@ class AutoCompletion(val projectManager: ProjectManager? = null) {
                     }
 
                     lastParsedIndex = getLastIndex(node1)
-                    node = node1.getChild(node1.childCount - 1)
+                    node = node.getChild(node.childCount - 1)
+                }
+                is QLangGrammarParser.ConditionInSubprojectContext -> {
+                    //when there is no whitespace after `with` keyword
+                    if (getIndex(node, 0) == input.lastIndex) {
+                        return null
+                    }
+                    lastParsedIndex = getLastIndex(node)
+                    node = node.getChild(node.childCount - 1)
                 }
                 is QLangGrammarParser.ConditionBracesContext -> {
                     lastParsedIndex = getIndex(node, 0)
@@ -134,7 +141,9 @@ class AutoCompletion(val projectManager: ProjectManager? = null) {
             //if `lastWord` is empty then we complete empty string
             //but if the last symbol is not ' ' or '(' then
             //we want to complete the last word in `trace` not start the new one
-            if (lastParsedIndex + 1 >= input.length || input[lastParsedIndex + 1] !in listOf(' ', '(', ')')) {
+            if (input[lastParsedIndex] !in listOf(' ', '(', ')')
+                && ( lastParsedIndex + 1 >= input.length || input[lastParsedIndex + 1] != ' ')
+            ) {
                 if (trace.size == 0) {
                     return null
                 }

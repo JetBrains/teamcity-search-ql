@@ -34,7 +34,7 @@ fbuildConf : 'buildConf' conditionInSubproject ;
 
 fvcsRoot : 'vcsRoot' conditionInSubproject ;
 
-fproject : 'project' 'with' condition;
+fproject : 'project' conditionInSubproject;
 
 ftemplate : 'template' conditionInSubproject ;
 

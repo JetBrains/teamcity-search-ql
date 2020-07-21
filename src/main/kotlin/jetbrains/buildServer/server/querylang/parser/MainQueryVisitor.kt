@@ -10,7 +10,7 @@ object MainQueryVisitor : QLangGrammarBaseVisitor<MainQuery>() {
 
     override fun visitFproject(ctx: QLangGrammarParser.FprojectContext?): MainQuery {
         return FindProject(
-                ctx!!.condition().accept(projectConditionVisitor)
+                ctx!!.conditionInSubproject().accept(projectConditionVisitor)
         )
     }
 
