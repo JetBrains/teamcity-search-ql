@@ -34,7 +34,8 @@ class Completer(val projectManager: ProjectManager? = null) {
                             limit
                     )
         }
-        return graph[node]?.filter {it.startsWith(word)} ?: throw IllegalStateException("Unknow filter name ${node}")
+        return graph[node]?.filter {it.startsWith(word)}?.map {it.drop(word.length)}
+            ?: throw IllegalStateException("Unknow filter name ${node}")
     }
 
     private fun readFilterGraph() {

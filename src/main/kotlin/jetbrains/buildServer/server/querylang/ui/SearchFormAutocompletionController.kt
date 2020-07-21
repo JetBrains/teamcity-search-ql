@@ -14,8 +14,7 @@ import javax.servlet.http.HttpServletRequest
 class SearchFormAutocompletionController(
     projectManager: ProjectManager,
     securityContext: SecurityContext,
-    webControllerManager: WebControllerManager,
-    pluginDescriptor: PluginDescriptor
+    webControllerManager: WebControllerManager
 ) : BaseAutocompletionController(securityContext) {
 
     private val autoCompl: AutoCompletion
@@ -30,6 +29,6 @@ class SearchFormAutocompletionController(
 
     override fun getCompletionData(request: HttpServletRequest): List<Completion?> {
         val term = request.getParameter("term")
-        return autoCompl.complete(term)?.map {Completion(term + it, it, "", true)} ?: emptyList()
+        return autoCompl.complete(term).map {Completion(term + it.first, it.second, "", true)}
     }
 }

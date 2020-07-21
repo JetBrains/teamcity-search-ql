@@ -12,7 +12,7 @@ import org.antlr.v4.runtime.tree.TerminalNode
 import java.lang.IllegalStateException
 
 class AutoCompletion(val projectManager: ProjectManager? = null) {
-    fun complete(input: String): List<String> {
+    fun complete(input: String): List<Pair<String, String>> {
         val stream = CharStreams.fromString(input)
         val lexer = QLangGrammarLexer(stream)
         val tokens = CommonTokenStream(lexer)
@@ -26,8 +26,9 @@ class AutoCompletion(val projectManager: ProjectManager? = null) {
 
         val treeNode: ParserRuleContext = start.find()
         val trace = getFilterTrace(treeNode, input) ?: return emptyList()
-
-        return Completer(projectManager).suggest(trace.dropLast(1), trace.last(), 10)
+        val word = trace.last()
+        val vars = Completer(projectManager).suggest(trace.dropLast(1), word, 10)
+        return vars.map {Pair(it, word + it)}
     }
 
 
