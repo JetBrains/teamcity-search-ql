@@ -14,11 +14,11 @@ internal class KeywordAutocomletionTests {
             find buil
         """.trimIndent()
 
-        val vars = autoCompl.complete(query)
+        val vars = autoCompl.complete(query).map {it.first}
 
-        assertEquals(2, vars!!.size)
-        assertEquals("buildConf", vars[0])
-        assertEquals("buildConfOrTemp", vars[1])
+        assertEquals(2, vars.size)
+        assertEquals("dConf", vars[0])
+        assertEquals("dConfOrTemp", vars[1])
     }
 
     
@@ -27,11 +27,11 @@ internal class KeywordAutocomletionTests {
             find buildConf with project ( ancestor id 5555 and anc
         """.trimIndent()
 
-        val vars = autoCompl.complete(query)!!.sortedBy { it }
+        val vars = autoCompl.complete(query).map {it.first}.sortedBy { it }
 
         assertEquals(2, vars.size)
-        assertEquals("ancestor", vars[0])
-        assertEquals("ancestorOrSelf", vars[1])
+        assertEquals("estor", vars[0])
+        assertEquals("estorOrSelf", vars[1])
     }
 
     
@@ -40,10 +40,10 @@ internal class KeywordAutocomletionTests {
             find buildConf with id 5555 or id 66666 and temp
         """.trimIndent()
 
-        val vars = autoCompl.complete(query)
+        val vars = autoCompl.complete(query).map {it.first}
 
-        assertEquals(1, vars!!.size)
-        assertEquals("template", vars[0])
+        assertEquals(1, vars.size)
+        assertEquals("late", vars[0])
     }
 
     
@@ -52,10 +52,10 @@ internal class KeywordAutocomletionTests {
             find buildConf with id 5555 or (id 6666 and template (( id 5555 or (id 6666 and (i
         """.trimIndent()
 
-        val vars = autoCompl.complete(query)
+        val vars = autoCompl.complete(query).map {it.first}
 
-        assertEquals(1, vars!!.size)
-        assertEquals("id", vars[0])
+        assertEquals(1, vars.size)
+        assertEquals("d", vars[0])
     }
 
     
@@ -64,10 +64,10 @@ internal class KeywordAutocomletionTests {
             find buildConf with trigger (((((t
         """.trimIndent()
 
-        val vars = autoCompl.complete(query)
+        val vars = autoCompl.complete(query).map {it.first}
 
         assertEquals(1, vars!!.size)
-        assertEquals("type", vars[0])
+        assertEquals("ype", vars[0])
     }
 
     
@@ -76,10 +76,10 @@ internal class KeywordAutocomletionTests {
             find vcsRoot with project( ( id 55555) ) and (type 555 or id 6666 and ((t
         """.trimIndent()
 
-        val vars = autoCompl.complete(query)
+        val vars = autoCompl.complete(query).map {it.first}
 
         assertEquals(1, vars!!.size)
-        assertEquals("type", vars[0])
+        assertEquals("ype", vars[0])
     }
 
     
