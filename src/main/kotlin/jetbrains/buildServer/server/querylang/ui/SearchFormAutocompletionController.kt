@@ -7,7 +7,9 @@ import jetbrains.buildServer.serverSide.ProjectManager
 import jetbrains.buildServer.serverSide.auth.SecurityContext
 import jetbrains.buildServer.web.openapi.PluginDescriptor
 import jetbrains.buildServer.web.openapi.WebControllerManager
+import java.io.File
 import javax.servlet.http.HttpServletRequest
+
 
 class SearchFormAutocompletionController(
     projectManager: ProjectManager,
@@ -16,17 +18,18 @@ class SearchFormAutocompletionController(
     pluginDescriptor: PluginDescriptor
 ) : BaseAutocompletionController(securityContext) {
 
-    private val autoCompl: AutoCompletion = AutoCompletion(
-        pluginDescriptor.getPluginResourcesPath("filters.txt"),
-        projectManager
-    )
+    private val autoCompl: AutoCompletion
 
     init {
         webControllerManager.registerController("/adminQueryAutocompletion.html", this)
+
+        autoCompl = AutoCompletion(
+            projectManager
+        )
     }
 
     override fun getCompletionData(request: HttpServletRequest): List<Completion?> {
         val term = request.getParameter("term")
-        return autoCompl.complete(term)?.map {Completion(it, "", "", true)} ?: emptyList()
+        return autoCompl.complete(term)?.map {Completion(term + it, it, "", true)} ?: emptyList()
     }
 }

@@ -10,7 +10,7 @@ import org.antlr.v4.runtime.tree.ErrorNodeImpl
 import org.antlr.v4.runtime.tree.ParseTree
 import java.lang.IllegalStateException
 
-class AutoCompletion(val pathToFilters: String, val projectManager: ProjectManager? = null) {
+class AutoCompletion(val projectManager: ProjectManager? = null) {
     fun complete(input: String): List<String>? {
         val stream = CharStreams.fromString(input)
         val lexer = QLangGrammarLexer(stream)
@@ -19,7 +19,7 @@ class AutoCompletion(val pathToFilters: String, val projectManager: ProjectManag
         parser.removeErrorListeners()
         val treeNode: ParserRuleContext = parser.find()
         val trace = getFilterTrace(treeNode, input) ?: return null
-        val variants = Completer(pathToFilters, projectManager).suggest(trace.dropLast(1), trace.last(), 10)
+        val variants = Completer(projectManager).suggest(trace.dropLast(1), trace.last(), 10)
         return variants
     }
 

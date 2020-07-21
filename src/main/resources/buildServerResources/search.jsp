@@ -7,7 +7,10 @@
         <span class="nowrap">
             <label class="firstLabel" for="query">Query: </label>
             <c:url var="autocompletionUrl" value="/adminQueryAutocompletion.html"/>
-            <forms:autocompletionTextField name="query" value="${searchForm.query}" style="width: 1000px; height: 30px; font-size: 15px"
+            <forms:autocompletionTextField name="query" value="${searchForm.query}"
+                                           style="width: 1000px; height: 30px; font-size: 15px"
+                                           maxlength="256"
+                                           size="256"
                                            autocompletionSource="BS.QueryLanguage.createCompleteQueryFunction('${autocompletionUrl}')"
                                            autocompletionShowOnFocus="true"
                                            autocompletionShowEmpty="false"
@@ -89,6 +92,12 @@
                 $j.getJSON(url, function(data) {
                     response(data);
                 });
+            }
+        },
+
+        createShowVariantsFunction: function (form) {
+            return function () {
+
             }
         }
     };

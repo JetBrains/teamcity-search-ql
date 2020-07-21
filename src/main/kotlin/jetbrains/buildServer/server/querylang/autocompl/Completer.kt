@@ -1,11 +1,13 @@
 package jetbrains.buildServer.server.querylang.autocompl
 
 import jetbrains.buildServer.serverSide.ProjectManager
-import java.io.File
+import java.io.BufferedReader
+import java.io.InputStreamReader
 import java.lang.IllegalStateException
 import java.util.*
+import kotlin.streams.toList
 
-class Completer(private val filterFilename: String, val projectManager: ProjectManager? = null) {
+class Completer(val projectManager: ProjectManager? = null) {
     private val graph = mutableMapOf<String, List<String>>()
     init {
         readFilterGraph()
@@ -36,9 +38,12 @@ class Completer(private val filterFilename: String, val projectManager: ProjectM
     }
 
     private fun readFilterGraph() {
-        val file = File(filterFilename)
+        val classLoader: ClassLoader = this.javaClass.classLoader
+        val inputStream = BufferedReader(
+            InputStreamReader(classLoader.getResourceAsStream("filters.txt"))
+        )
 
-        val lines = file.readLines()
+        val lines = inputStream.lines().toList()
         val lineRegex = """\w+\s*->\s*\[(\s*\w+\s*,)*\s*\w+\s*]""".toRegex()
 
         lines.forEachIndexed { i, s ->
