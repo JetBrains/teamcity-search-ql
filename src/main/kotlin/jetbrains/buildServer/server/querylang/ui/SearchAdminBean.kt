@@ -17,8 +17,8 @@ class SearchAdminBean(val searchAdminForm: SearchAdminForm, val projectManager: 
     val resultTemplates = mutableListOf<Pair<String, String>>()
     val resultVcsRoots = mutableListOf<Pair<String, String>>()
 
-    private val PROJECT_URL_PREFIX = "/bs/project.html?projectId="
-    private val BUILD_CONF_URL_PREFIX = "/bs/viewType.html?buildTypeId="
+    private val PROJECT_URL_PREFIX = "/bs/admin/editProject.html?projectId="
+    private val BUILD_CONF_URL_PREFIX = "/bs/admin/editBuild.html?id=buildType:"
     private val BUILD_TEMPLATE_URL_PREFIX = "/bs/admin/editBuild.html?id=template:"
     private val VCS_ROOT_URL_PREFIX = "/bs/admin/editVcsRoot.html?vcsRootId="
 
