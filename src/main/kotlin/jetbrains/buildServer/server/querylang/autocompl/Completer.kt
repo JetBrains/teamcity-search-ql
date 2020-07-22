@@ -13,29 +13,31 @@ class Completer(val projectManager: ProjectManager? = null) {
         readFilterGraph()
     }
 
-    fun suggest(trace: List<String>, word: String, limit: Int): List<String> {
-        var node = "root"
-        for (filterName in trace) {
-            if (graph[node] == null) {
-                throw IllegalStateException("Unknow filter name ${filterName}")
-            }
+    fun suggest(objectTypes: List<String>?, trace: List<String>, word: String, limit: Int): List<String> {
+        if (objectTypes == null) {
+            return graph["root"]!!.filter {it.startsWith(word)}.map {it.drop(word.length)}
+        }
 
-            if (!graph[node]!!.contains(filterName)) {
-                return emptyList()
-            } else {
-                node = filterName
+        if (objectTypes.any {!graph.contains(it)}) throw IllegalStateException("Unkwnow type name")
+
+        if (trace.isEmpty()) {
+            if (objectTypes.isEmpty()) {
+                throw IllegalStateException("objectTypes shouldn't be empty")
             }
+            return objectTypes.fold(graph[objectTypes.first()]!!.toSet()) {acc, s ->
+                acc.intersect(graph[s]!!)
+            }.toList().filter {it.startsWith(word)}.map {it.drop(word.length)}
         }
-        if (graph[node]?.size == 0 && projectManager != null && trace.size > 1) {
-            return CompletionManager(projectManager)
-                    .completeString(
-                            word,
-                            "${trace[trace.lastIndex - 1]}_${trace.last()}",
-                            limit
-                    )
+
+        //some of the types doesn't contain first filter
+        if (!objectTypes.all {graph[it]!!.contains(trace[0])}) {
+            return listOf()
         }
-        return graph[node]?.filter {it.startsWith(word)}?.map {it.drop(word.length)}
-            ?: throw IllegalStateException("Unknow filter name ${node}")
+
+        //unite all variants
+        return objectTypes.flatMap { objType ->
+            getVariants(objType, trace, word, limit)
+        }.toSet().toList().take(limit)
     }
 
     private fun readFilterGraph() {
@@ -57,6 +59,34 @@ class Completer(val projectManager: ProjectManager? = null) {
             val edges = names.drop(1).toList().map {it.value}
             edges.forEach { if (!graph.contains(it)) graph[it] = listOf() }
             graph[name] = edges
+        }
+    }
+
+    private fun getVariants(startNode: String, trace: List<String>, word: String, limit: Int): List<String> {
+        var node = startNode
+        for (filterName in trace) {
+            if (graph[node] == null) {
+                throw IllegalStateException("Unknow filter name ${filterName}")
+            }
+
+            if (!graph[node]!!.contains(filterName)) {
+                return emptyList()
+            } else {
+                node = filterName
+            }
+        }
+        return if (graph[node]?.size == 0 && projectManager != null) {
+            val last2Filters = if (trace.size > 1) "${trace[trace.lastIndex - 1]}_${trace.last()}"
+                               else "${startNode}_${trace.last()}"
+            CompletionManager(projectManager)
+                .completeString(
+                    word,
+                    last2Filters,
+                    limit
+                )
+        } else {
+            graph[node]?.filter { it.startsWith(word) }?.map { it.drop(word.length) }
+                ?: throw IllegalStateException("Unknow filter name ${node}")
         }
     }
 }

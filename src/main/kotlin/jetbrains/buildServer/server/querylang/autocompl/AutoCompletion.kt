@@ -25,37 +25,58 @@ class AutoCompletion(val projectManager: ProjectManager? = null) {
         }
 
         val treeNode: ParserRuleContext = start.find()
-        val trace = getFilterTrace(treeNode, input) ?: return emptyList()
-        val word = trace.last()
-        val vars = Completer(projectManager).suggest(trace.dropLast(1), word, 10)
+        val (word, objectTypes, trace) = getFilterTrace(treeNode, input) ?: return emptyList()
+        val vars = Completer(projectManager).suggest(objectTypes, trace, word, 10)
         return vars.map {Pair(it, word + it)}
     }
 
 
-    private fun getFilterTrace(rootNode: ParserRuleContext, input: String): List<String>? {
+    private fun getFilterTrace(rootNode: ParserRuleContext, input: String): Trace? {
         var node: ParseTree = rootNode
+
+        //the filters sequence before the word we want to complete
         val trace = mutableListOf<String>()
+
+        //index of the last token, that was parsed successfully
         var lastParsedIndex = 0
+
+        //index of the last filter name, that was parsed
         var lastFilterIndex = -1
+
+        //the list of object types that we want to find
+        var objectTypes = listOf<String>()
         loop@ while (true) {
             if (node is QLangGrammarParser.FindContext) {
                 if (node.childCount < 1) {
                     return null
                 }
+
+                //there is not `find` keyword
                 if (node.children.size == 1) {
-                    //when there is `find` keyword and space after it
-                    if (node.getChild(0).text == "find" && input.length >= 5) {
-                        return listOf("")
-                    }
                     return null
                 }
-                val child = node.getChild(1) ?: break
-                when (child) {
-                    is ParserRuleContext -> trace.add(child.start.text)
+
+                val conditionInSubproject = node.conditionInSubproject() ?: return null
+
+                //there is no `with` keyword
+                // complete object name
+                if (conditionInSubproject.childCount == 0) {
+                    val objectType = getLastObjectType(node.multipleObjects(), input) ?: return null
+                    return Trace(objectType)
                 }
 
+                //if `with` keyword wasn't finished,
+                //or `with` keyword is the last word in input.
+                if (conditionInSubproject.childCount == 1
+                    || (conditionInSubproject.getChild(0) as TerminalNode).symbol.stopIndex == input.lastIndex) {
+                    return null
+                }
+
+                //if the `with` keyword was finished, we can collect object types that we want to search
+                objectTypes = node.multipleObjects().objectKeyword().map {it.text}
             }
 
+            //add filter name to `trace`
             if (node is QLangGrammarParser.FilterContext) {
                 val child = node.getChild(0)
                 trace.add(
@@ -66,34 +87,12 @@ class AutoCompletion(val projectManager: ProjectManager? = null) {
                 )
             }
 
+            //if the node has no children, than we reach the end of the input
             if (node.childCount == 0) {
                 break
             }
 
             when (node) {
-                is QLangGrammarParser.FindContext -> {
-                    //analyzing different cases: `find pro...`, `find project wi`, etc
-
-                    //when object name wasn't finished: `find pro`
-                    if (node.getChild(1) is ErrorNodeImpl) {
-                        val b = node.getChild(0) as TerminalNode
-                        lastParsedIndex = b.symbol.stopIndex
-                        break@loop
-                    }
-
-                    val node1 = node.getChild(1)
-
-                    //there is no `with` keyword and there is space after object type
-                    //e.g. ```find buildConf ```
-                    if (node1.childCount > 1 && node1.getChild(1).childCount == 0
-                        && getIndex(node1, 0) != input.lastIndex) {
-                        return null
-                    }
-
-                    lastParsedIndex = getLastIndex(node)
-                    lastFilterIndex = getIndex(node1, 0)
-                    node = node.getChild(node.childCount - 1)
-                }
                 is QLangGrammarParser.ConditionInSubprojectContext -> {
                     //when there is no whitespace after `with` keyword
                     if (getIndex(node, 0) == input.lastIndex) {
@@ -144,13 +143,13 @@ class AutoCompletion(val projectManager: ProjectManager? = null) {
                     if (trace.size == 0) {
                         return null
                     }
-                    return trace
+                    return Trace(trace.last(), objectTypes, trace.dropLast(1))
                 }
                 return null
             }
         }
-        trace.add(lastWord)
-        return trace
+
+        return Trace(lastWord, objectTypes, trace)
     }
 
     private fun getLastIndex(node: ParseTree): Int {
@@ -165,4 +164,49 @@ class AutoCompletion(val projectManager: ProjectManager? = null) {
             else -> throw IllegalStateException("Unknown node type")
         }
     }
+
+    private fun hasErorNodeInSubtree(node: ParseTree): Boolean {
+        if (node is ErrorNodeImpl) {
+            return true
+        }
+        var i = 0
+        while (i < node.childCount) {
+            if (hasErorNodeInSubtree(node.getChild(i))) {
+                return true
+            }
+            i += 1
+        }
+        return false
+    }
+
+    private fun getLastObjectType(node: QLangGrammarParser.MultipleObjectsContext, input: String): String? {
+        val child = node.getChild(node.childCount - 1)
+        if (!hasErorNodeInSubtree(child) && child.childCount > 0) {
+            //if input finishes with this word, then we want to complete it
+            val lastIndex = getIndex(node, node.childCount - 1)
+            if (lastIndex == input.lastIndex) {
+
+                //the input finishes with `find` keyword without a whitespace
+                if (child.text == "" && input.last() !in listOf(' ', ',')) {
+                    return null
+                }
+
+                return child.text
+            }
+
+            //there is something that parser doesn't recognize(e.g. whitespace)
+            //nothing to complete
+            return null
+        }
+        if (input.trimStart().endsWith("find")) {
+            return null
+        }
+        return child.text
+    }
+
+    data class Trace(
+        val word: String,
+        val objectTypes: List<String>? = null,
+        val trace: List<String> = emptyList()
+    )
 }
