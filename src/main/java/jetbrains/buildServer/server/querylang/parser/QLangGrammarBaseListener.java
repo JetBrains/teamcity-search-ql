@@ -102,6 +102,54 @@ public class QLangGrammarBaseListener implements QLangGrammarListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterVcsRootKeyword(QLangGrammarParser.VcsRootKeywordContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitVcsRootKeyword(QLangGrammarParser.VcsRootKeywordContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterBuildConfKeword(QLangGrammarParser.BuildConfKewordContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitBuildConfKeword(QLangGrammarParser.BuildConfKewordContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterProjectKeword(QLangGrammarParser.ProjectKewordContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitProjectKeword(QLangGrammarParser.ProjectKewordContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterTemplateKeyword(QLangGrammarParser.TemplateKeywordContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitTemplateKeyword(QLangGrammarParser.TemplateKeywordContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterFind(QLangGrammarParser.FindContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -114,61 +162,25 @@ public class QLangGrammarBaseListener implements QLangGrammarListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterFbuildConf(QLangGrammarParser.FbuildConfContext ctx) { }
+	@Override public void enterMultipleObjects(QLangGrammarParser.MultipleObjectsContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitFbuildConf(QLangGrammarParser.FbuildConfContext ctx) { }
+	@Override public void exitMultipleObjects(QLangGrammarParser.MultipleObjectsContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterFvcsRoot(QLangGrammarParser.FvcsRootContext ctx) { }
+	@Override public void enterObjectKeyword(QLangGrammarParser.ObjectKeywordContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitFvcsRoot(QLangGrammarParser.FvcsRootContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterFproject(QLangGrammarParser.FprojectContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitFproject(QLangGrammarParser.FprojectContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterFtemplate(QLangGrammarParser.FtemplateContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitFtemplate(QLangGrammarParser.FtemplateContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterFbuildConfOrTemp(QLangGrammarParser.FbuildConfOrTempContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitFbuildConfOrTemp(QLangGrammarParser.FbuildConfOrTempContext ctx) { }
+	@Override public void exitObjectKeyword(QLangGrammarParser.ObjectKeywordContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

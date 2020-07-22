@@ -9,7 +9,7 @@ import jetbrains.buildServer.server.querylang.requests.*
 import jetbrains.buildServer.serverSide.ProjectManager
 
 class SearchAdminBean(val searchAdminForm: SearchAdminForm, val projectManager: ProjectManager){
-    private lateinit var result: QueryResult<*>
+    private lateinit var result: QueryResult
     private var wrongQueryMessage: String? = null
 
     val resultProjects = mutableListOf<Pair<String, String>>()
@@ -26,7 +26,7 @@ class SearchAdminBean(val searchAdminForm: SearchAdminForm, val projectManager: 
         return searchAdminForm.query
     }
 
-    fun buildResultList(result_: QueryResult<*>?) {
+    fun buildResultList(result_: QueryResult?) {
         if (result_ == null) {
             return
         }

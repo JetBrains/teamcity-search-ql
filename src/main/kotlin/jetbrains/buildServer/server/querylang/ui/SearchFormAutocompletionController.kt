@@ -5,9 +5,7 @@ import jetbrains.buildServer.controllers.Completion
 import jetbrains.buildServer.server.querylang.autocompl.AutoCompletion
 import jetbrains.buildServer.serverSide.ProjectManager
 import jetbrains.buildServer.serverSide.auth.SecurityContext
-import jetbrains.buildServer.web.openapi.PluginDescriptor
 import jetbrains.buildServer.web.openapi.WebControllerManager
-import java.io.File
 import javax.servlet.http.HttpServletRequest
 
 

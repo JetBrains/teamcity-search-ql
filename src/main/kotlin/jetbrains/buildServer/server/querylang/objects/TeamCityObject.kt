@@ -1,3 +1,5 @@
 package jetbrains.buildServer.server.querylang.objects
 
-interface TeamCityObject
+interface TeamCityObject {
+    val externalId: String
+}

@@ -8,6 +8,6 @@ data class FindBuildConf(val condition: ConditionAST<BuildConfFilter>) : MainQue
 
 data class FindTemplate(val condition: ConditionAST<TempFilter>) : MainQuery()
 
-data class FindBuildConfOrTemplate(val condition: ConditionAST<BcOrTempFilter>) : MainQuery()
-
 data class FindVcsRoot(val condition: ConditionAST<VcsRootFilter>) : MainQuery()
+
+data class FindMultipleTypes(val findQueries: List<MainQuery>) : MainQuery()

@@ -10,9 +10,15 @@ fragment ULET: [A-Z] ;
 fragment LET: ULET | LLET ;
 fragment WSP: [ \t\r\n] ;
 
+
+PROJECT : 'project' ;
+BUILD_CONF : 'buildConf' ;
+TEMPLATE : 'template' ;
+VCS_ROOT : 'vcsRoot' ;
 OR : 'or' ;
 AND: 'and';
 NOT: 'not';
+
 STRING: '"' (~[\t\r\n"])+? '"';
 IDENT: (LET | DIGIT | '_' | '.')+ ;
 WS : [ \t\r\n]+ -> skip ;
@@ -27,18 +33,18 @@ objectId : IDENT ;
 objectType : IDENT ;
 parameterValue : STRING;
 
+vcsRootKeyword : VCS_ROOT;
+buildConfKeword : BUILD_CONF;
+projectKeword : PROJECT;
+templateKeyword : TEMPLATE;
 
-find: 'find' (fbuildConf | fproject | ftemplate | fbuildConfOrTemp | fvcsRoot) ;
-
-fbuildConf : 'buildConf' conditionInSubproject ;
-
-fvcsRoot : 'vcsRoot' conditionInSubproject ;
-
-fproject : 'project' conditionInSubproject;
-
-ftemplate : 'template' conditionInSubproject ;
-
-fbuildConfOrTemp : 'buildConfOrTemp' conditionInSubproject ;
+find: 'find' multipleObjects conditionInSubproject;
+multipleObjects : objectKeyword (',' objectKeyword)*;
+objectKeyword : projectKeword
+              | templateKeyword
+              | buildConfKeword
+              | vcsRootKeyword
+              ;
 
 conditionInSubproject : (('in' objectId)? 'with' condition | 'in' objectId) ;
 

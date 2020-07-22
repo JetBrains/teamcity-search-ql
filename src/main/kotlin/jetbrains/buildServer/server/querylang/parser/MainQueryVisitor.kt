@@ -1,40 +1,33 @@
 package jetbrains.buildServer.server.querylang.parser
 
 import jetbrains.buildServer.server.querylang.ast.*
+import java.lang.IllegalStateException
 
-object MainQueryVisitor : QLangGrammarBaseVisitor<MainQuery>() {
+object MainQueryVisitor : QLangGrammarBaseVisitor<FindMultipleTypes>() {
 
-    override fun visitStart(ctx: QLangGrammarParser.StartContext?): MainQuery {
+    override fun visitStart(ctx: QLangGrammarParser.StartContext?): FindMultipleTypes {
         return ctx!!.find().accept(this)
     }
 
-    override fun visitFproject(ctx: QLangGrammarParser.FprojectContext?): MainQuery {
-        return FindProject(
-                ctx!!.conditionInSubproject().accept(projectConditionVisitor)
-        )
-    }
-
-    override fun visitFbuildConf(ctx: QLangGrammarParser.FbuildConfContext?): MainQuery {
-        return FindBuildConf(
-                ctx!!.conditionInSubproject().accept(buildConfConditionVisitor)
-        )
-    }
-
-    override fun visitFtemplate(ctx: QLangGrammarParser.FtemplateContext?): MainQuery {
-        return FindTemplate(
-                ctx!!.conditionInSubproject().accept(tempConditionVisitor)
-        )
-    }
-
-    override fun visitFbuildConfOrTemp(ctx: QLangGrammarParser.FbuildConfOrTempContext?): MainQuery {
-        return FindBuildConfOrTemplate(
-                ctx!!.conditionInSubproject().accept(buildConfOrTempConditionVisitor)
-        )
-    }
-
-    override fun visitFvcsRoot(ctx: QLangGrammarParser.FvcsRootContext?): MainQuery {
-        return FindVcsRoot(
-                ctx!!.conditionInSubproject().accept(vcsRootConditionVisitor)
-        )
+    override fun visitFind(ctx: QLangGrammarParser.FindContext?): FindMultipleTypes {
+        val objectKeywords = ctx!!.multipleObjects().objectKeyword()
+        val queries = objectKeywords.map { objKeyword ->
+            when (objKeyword.getChild(0)) {
+                is QLangGrammarParser.ProjectKewordContext -> {
+                    FindProject(ctx.conditionInSubproject().accept(projectConditionVisitor))
+                }
+                is QLangGrammarParser.BuildConfKewordContext -> {
+                    FindBuildConf(ctx.conditionInSubproject().accept(buildConfConditionVisitor))
+                }
+                is QLangGrammarParser.TemplateKeywordContext -> {
+                    FindTemplate(ctx.conditionInSubproject().accept(tempConditionVisitor))
+                }
+                is QLangGrammarParser.VcsRootKeywordContext -> {
+                    FindVcsRoot(ctx.conditionInSubproject().accept(vcsRootConditionVisitor))
+                }
+                else -> throw IllegalStateException("Unknown keyword in search query")
+            }
+        }
+        return FindMultipleTypes(queries)
     }
 }

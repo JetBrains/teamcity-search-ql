@@ -1,16 +1,13 @@
 package jetbrains.buildServer.server.querylang.requests
 
+import jetbrains.buildServer.server.querylang.objects.BuildConfiguration
+import jetbrains.buildServer.server.querylang.objects.BuildTemplate
+import jetbrains.buildServer.server.querylang.objects.Project
+
 object ConsoleResultPrinter : ResultPrinter {
-    override fun display(res: QueryResult<*>) {
-        when(res) {
-            is ResultProject -> {
-                println("Build Configurations:")
-                res.objects.forEach { println(it) }
-            }
-            is ResultBuildConfiguration -> {
-                println("Projects:")
-                res.objects.forEach { println(it) }
-            }
+    override fun display(res: QueryResult) {
+        res.objects.forEach { obj ->
+            println(obj)
         }
     }
 }

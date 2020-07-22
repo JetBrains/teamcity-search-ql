@@ -32,7 +32,6 @@ class SearchAdminPage(
 
     private val projectManager: ProjectManager = projectManager_
     private val requestClient: RequestClient
-    val parser = QueryParser()
     init {
         requestClient = RequestClient(InternalApiQueryHandler(projectManager))
         register()
@@ -47,7 +46,7 @@ class SearchAdminPage(
 
         val bean = SearchAdminBean(form, projectManager)
         try {
-            val result = bean.getQuery()?.let { requestClient.process(parser.parse(it)) }
+            val result = bean.getQuery()?.let { requestClient.process(it) }
             bean.buildResultList(result)
         } catch (e: ParsingException) {
             bean.setWrongQueryMessage("Wrong query: ${e.message}")

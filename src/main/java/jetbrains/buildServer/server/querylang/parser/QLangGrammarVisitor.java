@@ -55,41 +55,47 @@ public interface QLangGrammarVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitParameterValue(QLangGrammarParser.ParameterValueContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link QLangGrammarParser#vcsRootKeyword}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitVcsRootKeyword(QLangGrammarParser.VcsRootKeywordContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link QLangGrammarParser#buildConfKeword}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitBuildConfKeword(QLangGrammarParser.BuildConfKewordContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link QLangGrammarParser#projectKeword}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitProjectKeword(QLangGrammarParser.ProjectKewordContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link QLangGrammarParser#templateKeyword}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitTemplateKeyword(QLangGrammarParser.TemplateKeywordContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link QLangGrammarParser#find}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitFind(QLangGrammarParser.FindContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link QLangGrammarParser#fbuildConf}.
+	 * Visit a parse tree produced by {@link QLangGrammarParser#multipleObjects}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitFbuildConf(QLangGrammarParser.FbuildConfContext ctx);
+	T visitMultipleObjects(QLangGrammarParser.MultipleObjectsContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link QLangGrammarParser#fvcsRoot}.
+	 * Visit a parse tree produced by {@link QLangGrammarParser#objectKeyword}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitFvcsRoot(QLangGrammarParser.FvcsRootContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link QLangGrammarParser#fproject}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitFproject(QLangGrammarParser.FprojectContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link QLangGrammarParser#ftemplate}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitFtemplate(QLangGrammarParser.FtemplateContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link QLangGrammarParser#fbuildConfOrTemp}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitFbuildConfOrTemp(QLangGrammarParser.FbuildConfOrTempContext ctx);
+	T visitObjectKeyword(QLangGrammarParser.ObjectKeywordContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link QLangGrammarParser#conditionInSubproject}.
 	 * @param ctx the parse tree

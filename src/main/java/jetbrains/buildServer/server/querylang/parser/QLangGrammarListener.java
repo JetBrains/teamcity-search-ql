@@ -80,6 +80,46 @@ public interface QLangGrammarListener extends ParseTreeListener {
 	 */
 	void exitParameterValue(QLangGrammarParser.ParameterValueContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link QLangGrammarParser#vcsRootKeyword}.
+	 * @param ctx the parse tree
+	 */
+	void enterVcsRootKeyword(QLangGrammarParser.VcsRootKeywordContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link QLangGrammarParser#vcsRootKeyword}.
+	 * @param ctx the parse tree
+	 */
+	void exitVcsRootKeyword(QLangGrammarParser.VcsRootKeywordContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link QLangGrammarParser#buildConfKeword}.
+	 * @param ctx the parse tree
+	 */
+	void enterBuildConfKeword(QLangGrammarParser.BuildConfKewordContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link QLangGrammarParser#buildConfKeword}.
+	 * @param ctx the parse tree
+	 */
+	void exitBuildConfKeword(QLangGrammarParser.BuildConfKewordContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link QLangGrammarParser#projectKeword}.
+	 * @param ctx the parse tree
+	 */
+	void enterProjectKeword(QLangGrammarParser.ProjectKewordContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link QLangGrammarParser#projectKeword}.
+	 * @param ctx the parse tree
+	 */
+	void exitProjectKeword(QLangGrammarParser.ProjectKewordContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link QLangGrammarParser#templateKeyword}.
+	 * @param ctx the parse tree
+	 */
+	void enterTemplateKeyword(QLangGrammarParser.TemplateKeywordContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link QLangGrammarParser#templateKeyword}.
+	 * @param ctx the parse tree
+	 */
+	void exitTemplateKeyword(QLangGrammarParser.TemplateKeywordContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link QLangGrammarParser#find}.
 	 * @param ctx the parse tree
 	 */
@@ -90,55 +130,25 @@ public interface QLangGrammarListener extends ParseTreeListener {
 	 */
 	void exitFind(QLangGrammarParser.FindContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link QLangGrammarParser#fbuildConf}.
+	 * Enter a parse tree produced by {@link QLangGrammarParser#multipleObjects}.
 	 * @param ctx the parse tree
 	 */
-	void enterFbuildConf(QLangGrammarParser.FbuildConfContext ctx);
+	void enterMultipleObjects(QLangGrammarParser.MultipleObjectsContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link QLangGrammarParser#fbuildConf}.
+	 * Exit a parse tree produced by {@link QLangGrammarParser#multipleObjects}.
 	 * @param ctx the parse tree
 	 */
-	void exitFbuildConf(QLangGrammarParser.FbuildConfContext ctx);
+	void exitMultipleObjects(QLangGrammarParser.MultipleObjectsContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link QLangGrammarParser#fvcsRoot}.
+	 * Enter a parse tree produced by {@link QLangGrammarParser#objectKeyword}.
 	 * @param ctx the parse tree
 	 */
-	void enterFvcsRoot(QLangGrammarParser.FvcsRootContext ctx);
+	void enterObjectKeyword(QLangGrammarParser.ObjectKeywordContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link QLangGrammarParser#fvcsRoot}.
+	 * Exit a parse tree produced by {@link QLangGrammarParser#objectKeyword}.
 	 * @param ctx the parse tree
 	 */
-	void exitFvcsRoot(QLangGrammarParser.FvcsRootContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link QLangGrammarParser#fproject}.
-	 * @param ctx the parse tree
-	 */
-	void enterFproject(QLangGrammarParser.FprojectContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link QLangGrammarParser#fproject}.
-	 * @param ctx the parse tree
-	 */
-	void exitFproject(QLangGrammarParser.FprojectContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link QLangGrammarParser#ftemplate}.
-	 * @param ctx the parse tree
-	 */
-	void enterFtemplate(QLangGrammarParser.FtemplateContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link QLangGrammarParser#ftemplate}.
-	 * @param ctx the parse tree
-	 */
-	void exitFtemplate(QLangGrammarParser.FtemplateContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link QLangGrammarParser#fbuildConfOrTemp}.
-	 * @param ctx the parse tree
-	 */
-	void enterFbuildConfOrTemp(QLangGrammarParser.FbuildConfOrTempContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link QLangGrammarParser#fbuildConfOrTemp}.
-	 * @param ctx the parse tree
-	 */
-	void exitFbuildConfOrTemp(QLangGrammarParser.FbuildConfOrTempContext ctx);
+	void exitObjectKeyword(QLangGrammarParser.ObjectKeywordContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link QLangGrammarParser#conditionInSubproject}.
 	 * @param ctx the parse tree
