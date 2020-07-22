@@ -14,6 +14,7 @@
                                            autocompletionSource="BS.QueryLanguage.createCompleteQueryFunction('${autocompletionUrl}')"
                                            autocompletionShowOnFocus="true"
                                            autocompletionShowEmpty="false"
+                                           defaultText="find "
             />
         </span>
           <forms:filterButton/>

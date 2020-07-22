@@ -1,6 +1,8 @@
 package jetbrains.buildServer.server.querylang
 
 import jetbrains.buildServer.server.querylang.autocompl.AutoCompletion
+import jetbrains.buildServer.server.querylang.parser.QueryParser
+
 
 fun main() {
     while (true)

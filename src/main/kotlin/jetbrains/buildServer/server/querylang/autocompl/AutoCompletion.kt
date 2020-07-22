@@ -26,7 +26,7 @@ class AutoCompletion(val projectManager: ProjectManager? = null) {
 
         val treeNode: ParserRuleContext = start.find()
         val (word, objectTypes, trace) = getFilterTrace(treeNode, input) ?: return emptyList()
-        val vars = Completer(projectManager).suggest(objectTypes, trace, word, 10)
+        val vars = Completer(projectManager).suggest(objectTypes, trace, word, 100)
         return vars.map {Pair(it, word + it)}
     }
 
