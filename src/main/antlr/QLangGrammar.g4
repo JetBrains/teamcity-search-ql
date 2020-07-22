@@ -19,7 +19,7 @@ OR : 'or' ;
 AND: 'and';
 NOT: 'not';
 
-STRING: '"' (~[\t\r\n"])+? '"';
+STRING: '"' (~[\t\r\n"])*? '"';
 IDENT: (LET | DIGIT | '_' | '.')+ ;
 WS : [ \t\r\n]+ -> skip ;
 
