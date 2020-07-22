@@ -19,7 +19,7 @@ null
 'ancestor'
 'ancestorOrSelf'
 'project'
-'buildConf'
+'buildConfiguration'
 'template'
 'vcsRoot'
 'or'

@@ -25,7 +25,7 @@ class CompletionManager(val projectManager: ProjectManager) {
         map["trigger_param"] = triggerParamValueFinder
         map["step_param"] = stepParamValueFinder
         map["feature_param"] = featureParamValueFinder
-        map["buildConf_id"] = buildConfIdFinder
+        map["buildConfiguration_id"] = buildConfIdFinder
         map["template_id"] = templateIdFinder
         map["vcsRoot_id"] = vcsRootIdFinder
         map["trigger_type"] = triggerTypeFinder

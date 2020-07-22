@@ -12,7 +12,7 @@ fragment WSP: [ \t\r\n] ;
 
 
 PROJECT : 'project' ;
-BUILD_CONF : 'buildConf' ;
+BUILD_CONF : 'buildConfiguration' ;
 TEMPLATE : 'template' ;
 VCS_ROOT : 'vcsRoot' ;
 OR : 'or' ;

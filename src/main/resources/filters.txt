@@ -1,5 +1,5 @@
-root            -> [buildConf, project, template, vcsRoot]
-buildConf       -> [id, project, parent, template, trigger, step, feature]
+root            -> [buildConfiguration, project, template, vcsRoot]
+buildConfiguration -> [id, project, parent, template, trigger, step, feature]
 project         -> [id, parent, ancestorOrSelf, ancestor]
 parent          -> [id, parent, ancestorOrSelf, ancestor]
 ancestorOrSelf  -> [id, parent, ancestorOrSelf, ancestor]

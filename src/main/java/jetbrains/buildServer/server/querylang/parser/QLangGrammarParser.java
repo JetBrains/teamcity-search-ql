@@ -50,7 +50,7 @@ public class QLangGrammarParser extends Parser {
 		return new String[] {
 			null, "'find'", "','", "'in'", "'with'", "'('", "')'", "'id'", "'parent'", 
 			"'trigger'", "'step'", "'feature'", "'type'", "'param'", "'='", "'val'", 
-			"'enabled'", "'ancestor'", "'ancestorOrSelf'", "'project'", "'buildConf'", 
+			"'enabled'", "'ancestor'", "'ancestorOrSelf'", "'project'", "'buildConfiguration'", 
 			"'template'", "'vcsRoot'", "'or'", "'and'", "'not'"
 		};
 	}
