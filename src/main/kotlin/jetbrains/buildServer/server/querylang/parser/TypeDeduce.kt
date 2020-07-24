@@ -8,17 +8,20 @@ import kotlin.reflect.full.*
 class TypeDeduce {
     val reflections = Reflections("jetbrains.buildServer.server.querylang.ast")
 
-    fun deduceQueryType(condition: ConditionAST<Filter>, level: Int): List<TopLevelQuery<*>> {
+    fun deduceQueryType(condition: ConditionAST<Filter>, level: Int): List<FindMultipleTypes> {
         val filters = getAllFilters(condition)
 
-        val res = mutableListOf<TopLevelQuery<*>>()
+        val res = mutableListOf<FindMultipleTypes>()
+        val new = mutableListOf<TopLevelQuery<*>>()
 
+        getMainQueries(res, new, filters, condition, level, ProjectComplexFilter::class)
+        getMainQueries(res, new, filters, condition, level, BuildConfComplexFilter::class)
+        getMainQueries(res, new, filters, condition, level, TemplateComplexFilter::class)
+        getMainQueries(res, new, filters, condition, level, VcsRootComplexFilter::class)
+        getMainQueries(res, new, filters, condition, level, ParHolderComplexFilter::class)
 
-        res.addAll(getMainQueries(filters, condition, level, ProjectComplexFilter::class))
-        res.addAll(getMainQueries(filters, condition, level, BuildConfComplexFilter::class))
-        res.addAll(getMainQueries(filters, condition, level, TemplateComplexFilter::class))
-        res.addAll(getMainQueries(filters, condition, level, VcsRootComplexFilter::class))
-        res.addAll(getMainQueries(filters, condition, level, ParHolderComplexFilter::class))
+        res.add(FindMultipleTypes(new))
+
         return res
     }
 
@@ -44,18 +47,19 @@ class TypeDeduce {
     }
 
     private inline fun <reified T : Filter> getMainQueries(
+        res: MutableList<FindMultipleTypes>,
+        new: MutableList<TopLevelQuery<*>>,
         filters: List<Filter>,
         condition: ConditionAST<Filter>,
         level: Int,
         kclass: KClass<out ConditionContainer<T>>
-    ): List<TopLevelQuery<*>> {
-        val res = mutableListOf<TopLevelQuery<*>>()
+    ) {
         if (filters.all {it is T}) {
             val filterClasses = getSubclasses(kclass.java)
             filterClasses.forEach { clazz ->
                 when {
                     clazz.kotlin.isSubclassOf(TopLevelQuery::class) ->
-                        createInstance<TopLevelQuery<*>>(clazz, condition)?.let { res.add(it) }
+                        createInstance<TopLevelQuery<*>>(clazz, condition)?.let { new.add(it) }
 
                     clazz.kotlin.isSubclassOf(Filter::class) && level != 0 ->
                         createInstance<Filter>(clazz, condition)?.let {
@@ -64,7 +68,6 @@ class TypeDeduce {
                 }
             }
         }
-        return res
     }
 
 }

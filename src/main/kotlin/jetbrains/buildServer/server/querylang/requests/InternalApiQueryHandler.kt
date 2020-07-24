@@ -16,15 +16,22 @@ import java.lang.IllegalStateException
 class InternalApiQueryHandler(
         val projectManager: ProjectManager
 ) : QueryHandler {
-    override fun makeRequest(multQuery: FindMultipleTypes): QueryResult {
-        return multQuery.findQueries.map { query ->
-            when (query) {
-                is FindProject -> findProjects(query.condition)
-                is FindBuildConf -> findBuildConfs(query.condition)
-                is FindTemplate -> findTemplates(query.condition)
-                is FindVcsRoot -> findVcsRoots(query.condition)
+    override fun makeRequest(mainQuery: MainQuery): QueryResult {
+        return when(mainQuery) {
+            is FindMultipleTypes -> {
+                mainQuery.findQueries.map { query ->
+                    when (query) {
+                        is FindProject -> findProjects(query.condition)
+                        is FindBuildConf -> findBuildConfs(query.condition)
+                        is FindTemplate -> findTemplates(query.condition)
+                        is FindVcsRoot -> findVcsRoots(query.condition)
+                    }
+                }.fold(QueryResult()) { q1, q2 -> q1.join(q2) }
             }
-        }.fold(QueryResult()) { q1, q2 -> q1.join(q2)}
+            is MultipleMainQuery -> {
+                QueryResult()
+            }
+        }
     }
 
     private fun findProjects(condition: ConditionAST<ProjectFilter>): QueryResult {

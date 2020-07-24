@@ -120,6 +120,16 @@ public interface QLangGrammarListener extends ParseTreeListener {
 	 */
 	void exitTemplateKeyword(QLangGrammarParser.TemplateKeywordContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link QLangGrammarParser#partialQuery}.
+	 * @param ctx the parse tree
+	 */
+	void enterPartialQuery(QLangGrammarParser.PartialQueryContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link QLangGrammarParser#partialQuery}.
+	 * @param ctx the parse tree
+	 */
+	void exitPartialQuery(QLangGrammarParser.PartialQueryContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link QLangGrammarParser#find}.
 	 * @param ctx the parse tree
 	 */

@@ -3,10 +3,11 @@ package jetbrains.buildServer.server.querylang.parser
 import jetbrains.buildServer.server.querylang.ast.*
 import java.lang.IllegalStateException
 
-object MainQueryVisitor : QLangGrammarBaseVisitor<FindMultipleTypes>() {
+object MainQueryVisitor : QLangGrammarBaseVisitor<MainQuery>() {
 
-    override fun visitStart(ctx: QLangGrammarParser.StartContext?): FindMultipleTypes {
-        return ctx!!.find().accept(this)
+    override fun visitStart(ctx: QLangGrammarParser.StartContext?): MainQuery {
+        return if (ctx!!.find() != null) ctx.find().accept(this)
+               else ctx.partialQuery().accept(this)
     }
 
     override fun visitFind(ctx: QLangGrammarParser.FindContext?): FindMultipleTypes {
@@ -29,5 +30,11 @@ object MainQueryVisitor : QLangGrammarBaseVisitor<FindMultipleTypes>() {
             }
         }
         return FindMultipleTypes(queries)
+    }
+
+    override fun visitPartialQuery(ctx: QLangGrammarParser.PartialQueryContext?): MainQuery {
+        val condition: ConditionAST<Filter> = ctx!!.condition().accept(anyFilterConditionVisitor)
+        val queryVars = TypeDeduce().deduceQueryType(condition, 1)
+        return MultipleMainQuery(queryVars)
     }
 }

@@ -1,12 +1,13 @@
 package jetbrains.buildServer.server.querylang.parser
 
 import jetbrains.buildServer.server.querylang.ast.FindMultipleTypes
+import jetbrains.buildServer.server.querylang.ast.MainQuery
 import org.antlr.v4.runtime.CharStream
 import org.antlr.v4.runtime.CharStreams
 import org.antlr.v4.runtime.CommonTokenStream
 
 class QueryParser {
-    fun parse(input: String): FindMultipleTypes {
+    fun parse(input: String): MainQuery {
         val stream = CharStreams.fromString(input)
         val parser = initParser(stream)
         parser.removeErrorListeners()

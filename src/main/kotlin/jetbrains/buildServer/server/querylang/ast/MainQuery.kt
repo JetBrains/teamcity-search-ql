@@ -9,3 +9,5 @@ data class FindMultipleTypes(val findQueries: List<TopLevelQuery<*>>) : MainQuer
 
     override fun toString() = createStr()
 }
+
+data class MultipleMainQuery(val queries: List<FindMultipleTypes>) : MainQuery()

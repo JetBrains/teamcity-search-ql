@@ -150,6 +150,18 @@ public class QLangGrammarBaseListener implements QLangGrammarListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterPartialQuery(QLangGrammarParser.PartialQueryContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitPartialQuery(QLangGrammarParser.PartialQueryContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterFind(QLangGrammarParser.FindContext ctx) { }
 	/**
 	 * {@inheritDoc}

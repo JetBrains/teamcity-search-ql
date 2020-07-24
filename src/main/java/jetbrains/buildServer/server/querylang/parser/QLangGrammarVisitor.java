@@ -79,6 +79,12 @@ public interface QLangGrammarVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitTemplateKeyword(QLangGrammarParser.TemplateKeywordContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link QLangGrammarParser#partialQuery}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitPartialQuery(QLangGrammarParser.PartialQueryContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link QLangGrammarParser#find}.
 	 * @param ctx the parse tree
 	 * @return the visitor result

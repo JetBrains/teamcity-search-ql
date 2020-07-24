@@ -23,7 +23,7 @@ STRING: '"' (~[\t\r\n"])*? '"';
 IDENT: (LET | DIGIT | '_' | '.')+ ;
 WS : [ \t\r\n]+ -> skip ;
 
-start: find EOF ;
+start: (find | partialQuery) EOF ;
 
 and : AND ;
 or : OR ;
@@ -37,6 +37,8 @@ vcsRootKeyword : VCS_ROOT;
 buildConfKeword : BUILD_CONF;
 projectKeword : PROJECT;
 templateKeyword : TEMPLATE;
+
+partialQuery : condition ;
 
 find: 'find' multipleObjects conditionInSubproject;
 multipleObjects : objectKeyword (',' objectKeyword)*;
