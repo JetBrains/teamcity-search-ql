@@ -2,14 +2,12 @@ package jetbrains.buildServer.server.querylang
 
 import jetbrains.buildServer.server.querylang.ast.*
 import jetbrains.buildServer.server.querylang.parser.TypeDeduce
-import org.reflections.Reflections
-import kotlin.reflect.KClass
 
 
 fun main() {
     val query = FilterConditionNode(TypeFilter("vcsTrigger"))
     TypeDeduce().deduceQueryType(query, 1).forEach {
-        println(it)
+        println(it.wrap())
     }
     /*
     while (true)

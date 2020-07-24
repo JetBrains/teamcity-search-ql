@@ -24,7 +24,7 @@ object FilterBuilder {
         return when (filter) {
             is IdFilter -> {
                 ObjectFilter {project ->
-                    project.externalId == filter.id
+                    project.externalId == filter.str
                 }
             }
             is AncestorFilter -> {
@@ -62,7 +62,7 @@ object FilterBuilder {
             }
             is IdFilter -> {
                 ObjectFilter {buildType ->
-                    filter.id == buildType.externalId
+                    filter.str == buildType.externalId
                 }
             }
             is TriggerFilter -> {
@@ -118,7 +118,7 @@ object FilterBuilder {
             }
             is IdFilter -> {
                 ObjectFilter {buildType ->
-                    filter.id == buildType.externalId
+                    filter.str == buildType.externalId
                 }
             }
             is TriggerFilter -> {
@@ -162,7 +162,7 @@ object FilterBuilder {
         return when (filter) {
             is TypeFilter -> {
                 ObjectFilter {parHolder ->
-                    parHolder.type == filter.type
+                    parHolder.type == filter.str
                 }
             }
             is ParameterFilter -> {
@@ -173,7 +173,7 @@ object FilterBuilder {
             }
             is ParValueFilter -> {
                 ObjectFilter {parHolder ->
-                    parHolder.parameters.containsValue(filter.value)
+                    parHolder.parameters.containsValue(filter.str)
                 }
             }
             is EnabledFilter -> {
@@ -194,7 +194,7 @@ object FilterBuilder {
         return when(filter) {
             is IdFilter -> {
                 ObjectFilter {vcs ->
-                    vcs.externalId == filter.id
+                    vcs.externalId == filter.str
                 }
             }
             is SProjectFilter -> {
@@ -205,7 +205,7 @@ object FilterBuilder {
             }
             is TypeFilter -> {
                 ObjectFilter {vcs ->
-                    vcs.vcsName == filter.type
+                    vcs.vcsName == filter.str
                 }
             }
             else -> throw java.lang.IllegalStateException("Unknown VcsRootFilter")

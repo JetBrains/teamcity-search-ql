@@ -1,3 +1,5 @@
 package jetbrains.buildServer.server.querylang.ast
 
-interface Filter : Named, Printable
+interface Printable {
+    fun createStr(): String
+}

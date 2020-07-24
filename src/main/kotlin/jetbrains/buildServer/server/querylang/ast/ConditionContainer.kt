@@ -1,7 +1,11 @@
 package jetbrains.buildServer.server.querylang.ast
 
-interface ConditionContainer<T : Filter> {
+interface ConditionContainer<T : Filter> : Printable, Named {
     val condition: ConditionAST<T>
+
+    override fun createStr(): String {
+        return "${names[0]}(${condition.createStr()})"
+    }
 }
 
 interface ProjectComplexFilter : ConditionContainer<ProjectFilter>
