@@ -27,6 +27,6 @@ class SearchFormAutocompletionController(
 
     override fun getCompletionData(request: HttpServletRequest): List<Completion?> {
         val term = request.getParameter("term")
-        return autoCompl.complete(term).map {Completion(term + it.first, it.second, "", true)}
+        return autoCompl.complete(term).map {Completion(it.first, it.second, "", true)}
     }
 }

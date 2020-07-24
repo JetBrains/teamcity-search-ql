@@ -40,6 +40,35 @@ class Completer(val projectManager: ProjectManager? = null) {
         }.toSet().toList().take(limit).sortedWith(compareBy({ it.length }, {it}))
     }
 
+    fun suggestBasedOnOther(otherFilters: List<String>, word: String): List<String> {
+        val vars = graph.values.filter { value ->
+            otherFilters.all {it in value}
+        }.flatMap { it.filter {it.startsWith(word)} }.toSet().toList()
+
+        return vars.map {it.drop(word.length)}
+    }
+
+    fun suggestForPartial(trace: List<String>, word: String): List<String> {
+        if (trace.isEmpty()) {
+            return listOf()
+        }
+        var node = trace[0]
+
+        graph[node] ?: return emptyList()
+
+        trace.drop(1).forEach { filterName ->
+            if (filterName !in graph[node]!!) {
+                return emptyList()
+            }
+            node = filterName
+        }
+
+        if (graph.contains(node)) {
+            return graph[node]!!.filter {it.startsWith(word)}.map {it.drop(word.length)}
+        }
+        return emptyList()
+    }
+
     private fun readFilterGraph() {
         val classLoader: ClassLoader = this.javaClass.classLoader
         val inputStream = BufferedReader(

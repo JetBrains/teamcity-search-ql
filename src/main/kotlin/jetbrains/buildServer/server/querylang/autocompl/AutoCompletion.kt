@@ -1,7 +1,10 @@
 package jetbrains.buildServer.server.querylang.autocompl
 
+import jetbrains.buildServer.server.querylang.ast.MultipleMainQuery
+import jetbrains.buildServer.server.querylang.parser.ParsingException
 import jetbrains.buildServer.server.querylang.parser.QLangGrammarLexer
 import jetbrains.buildServer.server.querylang.parser.QLangGrammarParser
+import jetbrains.buildServer.server.querylang.parser.QueryParser
 import jetbrains.buildServer.serverSide.ProjectManager
 import org.antlr.v4.runtime.CharStreams
 import org.antlr.v4.runtime.CommonTokenStream
@@ -12,22 +15,36 @@ import org.antlr.v4.runtime.tree.TerminalNode
 import java.lang.IllegalStateException
 
 class AutoCompletion(val projectManager: ProjectManager? = null) {
+    private val parser = QueryParser()
+
     fun complete(input: String): List<Pair<String, String>> {
         val stream = CharStreams.fromString(input)
         val lexer = QLangGrammarLexer(stream)
         val tokens = CommonTokenStream(lexer)
-        val parser = QLangGrammarParser(tokens)
-        parser.removeErrorListeners()
+        val parserTree = QLangGrammarParser(tokens)
+        parserTree.removeErrorListeners()
 
-        val start = parser.start()
+        val start = parserTree.start() ?: return emptyList()
         if (start.children.size > 2) {
             return emptyList()
         }
 
-        val treeNode: ParserRuleContext = start.find()
-        val (word, objectTypes, trace) = getFilterTrace(treeNode, input) ?: return emptyList()
-        val vars = Completer(projectManager).suggest(objectTypes, trace, word, 100)
-        return vars.map {Pair(it, word + it)}
+        val treeFindNode = start.find()
+        val treePartNode = start.partialQuery()
+        if (treeFindNode != null) {
+            val (word, objectTypes, trace) = getFilterTrace(treeFindNode, input) ?: return emptyList()
+            val vars = Completer(projectManager).suggest(objectTypes, trace, word, 100)
+            return vars.map { Pair(input + it, word + it) }
+        }
+        if (treePartNode != null) {
+            try {
+                val multipleQueries = parser.parse(input) as? MultipleMainQuery ?: return emptyList()
+                return multipleQueries.queries.map {it.createStr()}.map {Pair(it, it)}
+            } catch (e: ParsingException) {
+                return completePartialQuery(input, treePartNode)
+            }
+        }
+        return emptyList()
     }
 
 
@@ -150,6 +167,40 @@ class AutoCompletion(val projectManager: ProjectManager? = null) {
         }
 
         return Trace(lastWord, objectTypes, trace)
+    }
+
+    private fun completePartialQuery(input: String, rootNode: QLangGrammarParser.PartialQueryContext): List<Pair<String, String>> {
+        val trace = getFilterTrace(rootNode, input) ?: return listOf()
+        return if (trace.trace.isEmpty()) {
+            val flFilters = getFirstLevelFilters(rootNode.condition())
+            Completer(projectManager).suggestBasedOnOther(
+                flFilters, trace.word
+            ).map {Pair(input + it, trace.word + it)}
+        } else {
+            Completer(projectManager).suggestForPartial(trace.trace, trace.word).map {Pair(input + it, trace.word + it)}
+        }
+    }
+
+    private fun getFirstLevelFilters(rootNode: ParserRuleContext?): List<String> {
+        if (rootNode == null) {
+            return listOf()
+        }
+        val node = rootNode
+        when (node) {
+            is QLangGrammarParser.ConditionAndContext -> {
+                return getFirstLevelFilters(node.condition(0)) + getFirstLevelFilters(node.condition(1))
+            }
+            is QLangGrammarParser.ConditionOrContext -> {
+                return getFirstLevelFilters(node.condition(0)) + getFirstLevelFilters(node.condition(1))
+            }
+            is QLangGrammarParser.ConditionNotContext -> {
+                return getFirstLevelFilters(node.condition())
+            }
+            is QLangGrammarParser.ConditionFilterContext -> {
+                node.filter()?.let { return listOf(it.start.text) }
+            }
+        }
+        return emptyList()
     }
 
     private fun getLastIndex(node: ParseTree): Int {

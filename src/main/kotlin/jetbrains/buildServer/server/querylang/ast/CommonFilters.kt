@@ -7,7 +7,6 @@ data class IdFilter(
     StringTerminalFilter,
     ProjectFilter,
     BcOrTempFilter,
-    ParameterHolderFilter,
     VcsRootFilter
 {
     override val names = listOf("id")

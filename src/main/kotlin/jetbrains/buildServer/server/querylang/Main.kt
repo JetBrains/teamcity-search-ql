@@ -1,19 +1,16 @@
 package jetbrains.buildServer.server.querylang
 
 import jetbrains.buildServer.server.querylang.ast.*
+import jetbrains.buildServer.server.querylang.autocompl.AutoCompletion
 import jetbrains.buildServer.server.querylang.parser.QueryParser
 import jetbrains.buildServer.server.querylang.parser.TypeDeduce
 
 
 fun main() {
-    val parser = QueryParser()
+    val autoCompl = AutoCompletion(null)
 
-    val query = "type vcsTrigger"
-
-    val parsed = parser.parse(query) as MultipleMainQuery
-
-    parsed.queries.forEach {
-        println(it)
+    while (true) {
+        println(autoCompl.complete(readLine()!!))
     }
 }
 
