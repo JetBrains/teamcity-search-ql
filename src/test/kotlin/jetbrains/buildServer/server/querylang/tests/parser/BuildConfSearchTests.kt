@@ -11,10 +11,13 @@ import kotlin.test.assertFailsWith
 class BuildConfSearchTests {
     private val parser = QueryParser()
 
+    private fun TopLevelQuery.wrap(): MainQuery {
+        return FindMultipleTypes(listOf(this))
+    }
     
     fun testProjectFilterOnly() {
         val query = """
-            find buildConf in Project1
+            find buildConfiguration in Project1
         """.trimIndent()
 
         val parsed = parser.parse(query)
@@ -22,7 +25,7 @@ class BuildConfSearchTests {
                 SProjectFilter(FilterConditionNode(
                         IdFilter("Project1")
                 ))
-        ))
+        )).wrap()
 
         assertEquals(expected, parsed)
     }
@@ -30,7 +33,7 @@ class BuildConfSearchTests {
     
     fun testProjectFilterWithOtherFilters() {
         val query = """
-            find buildConf in Project1 with (trigger ((type vcsTrigger) and (param par = "abc")))
+            find buildConfiguration in Project1 with (trigger ((type vcsTrigger) and (param par = "abc")))
         """.trimIndent()
 
         val parsed = parser.parse(query)
@@ -43,14 +46,14 @@ class BuildConfSearchTests {
                                 FilterConditionNode(TypeFilter("vcsTrigger")),
                                 FilterConditionNode(ParameterFilter("par", "abc"))
                         )))
-        ))
+        )).wrap()
         assertEquals(expected, parsed)
     }
 
     
     fun testLongProjectFilter() {
         val query = """
-            find buildConf 
+            find buildConfiguration 
                  with trigger(type vcsTrigger and param par="abc") 
                  and project(id Project1)
         """.trimIndent()
@@ -69,7 +72,7 @@ class BuildConfSearchTests {
                                 FilterConditionNode(IdFilter("Project1"))
                         ))
                 )
-        )
+        ).wrap()
 
         assertEquals(expected, parsed)
     }
@@ -77,7 +80,7 @@ class BuildConfSearchTests {
     
     fun testOnlyOneFilter() {
         val query = """
-            find buildConf with trigger(type vcsTrigger and param par = "abc")
+            find buildConfiguration with trigger(type vcsTrigger and param par = "abc")
         """.trimIndent()
 
         val parsed = parser.parse(query)
@@ -90,7 +93,7 @@ class BuildConfSearchTests {
                                 )
                         )
                 )
-        )
+        ).wrap()
 
         assertEquals(parsed, expected)
 
@@ -99,7 +102,7 @@ class BuildConfSearchTests {
     
     fun testProjectFilterWithOneSubfilter() {
         val query = """
-            find buildConf with project id Project1
+            find buildConfiguration with project id Project1
         """.trimIndent()
 
         val parsed = parser.parse(query)
@@ -109,7 +112,7 @@ class BuildConfSearchTests {
                                 FilterConditionNode(IdFilter("Project1"))
                         )
                 )
-        )
+        ).wrap()
 
         assertEquals(parsed, expected)
     }
@@ -117,7 +120,7 @@ class BuildConfSearchTests {
     
     fun testTriggerFilterWithOneSubfilter() {
         val query = """
-            find buildConf with trigger type vcsTrigger
+            find buildConfiguration with trigger type vcsTrigger
         """.trimIndent()
 
         val parsed = parser.parse(query)
@@ -129,7 +132,7 @@ class BuildConfSearchTests {
                                 )
                         )
                 )
-        )
+        ).wrap()
 
         assertEquals(expected, parsed)
     }
@@ -137,7 +140,7 @@ class BuildConfSearchTests {
     
     fun testShortenedTriggerTypeFilter() {
         val query = """
-            find buildConf with trigger type vcsTrigger
+            find buildConfiguration with trigger type vcsTrigger
         """.trimIndent()
 
         val parsed = parser.parse(query)
@@ -149,7 +152,7 @@ class BuildConfSearchTests {
                                 )
                         )
                 )
-        )
+        ).wrap()
 
         assertEquals(expected, parsed)
     }
@@ -157,7 +160,7 @@ class BuildConfSearchTests {
     
     fun testShortenedTriggerParameterFilter() {
         val query = """
-            find buildConf with trigger param path="abacaba"
+            find buildConfiguration with trigger param path="abacaba"
         """.trimIndent()
 
         val parsed = parser.parse(query)
@@ -169,7 +172,7 @@ class BuildConfSearchTests {
                                 )
                         )
                 )
-        )
+        ).wrap()
 
         assertEquals(expected, parsed)
     }
@@ -177,7 +180,7 @@ class BuildConfSearchTests {
     
     fun testAncestorFilter() {
         val query = """
-            find buildConf with project ancestor id Project1
+            find buildConfiguration with project ancestor id Project1
         """.trimIndent()
 
         val parsed = parser.parse(query)
@@ -191,7 +194,7 @@ class BuildConfSearchTests {
                             )
                         )
                 )
-        )
+        ).wrap()
 
         assertEquals(expected, parsed)
     }
@@ -199,7 +202,7 @@ class BuildConfSearchTests {
     
     fun testTriggerValueFilter() {
         val query = """
-            find buildConf with trigger val "abc"
+            find buildConfiguration with trigger val "abc"
         """.trimIndent()
 
         val parsed = parser.parse(query)
@@ -209,7 +212,7 @@ class BuildConfSearchTests {
                                 FilterConditionNode(ParValueFilter("abc"))
                         )
                 )
-        )
+        ).wrap()
 
         assertEquals(expected, parsed)
     }
@@ -217,7 +220,7 @@ class BuildConfSearchTests {
     
     fun testBuildStepFilter() {
         val query = """
-            find buildConf with step param path = "abc"
+            find buildConfiguration with step param path = "abc"
         """.trimIndent()
 
         val parsed = parser.parse(query)
@@ -229,7 +232,7 @@ class BuildConfSearchTests {
                                 )
                         )
                 )
-        )
+        ).wrap()
 
         assertEquals(expected, parsed)
     }
@@ -237,7 +240,7 @@ class BuildConfSearchTests {
     
     fun testBuildFeature() {
         val query = """
-            find buildConf with feature param path = "abc"
+            find buildConfiguration with feature param path = "abc"
         """.trimIndent()
 
         val parsed = parser.parse(query)
@@ -249,7 +252,7 @@ class BuildConfSearchTests {
                                 )
                         )
                 )
-        )
+        ).wrap()
 
         assertEquals(expected, parsed)
     }
@@ -257,7 +260,7 @@ class BuildConfSearchTests {
     
     fun testBuildStepEnabled() {
         val query = """
-            find buildConf with step(val "abc" and enabled)
+            find buildConfiguration with step(val "abc" and enabled)
         """.trimIndent()
 
         val parsed = parser.parse(query)
@@ -274,7 +277,7 @@ class BuildConfSearchTests {
                                 )
                         )
                 )
-        )
+        ).wrap()
 
         assertEquals(expected, parsed)
     }
@@ -282,7 +285,7 @@ class BuildConfSearchTests {
     
     fun testTemplateDependence() {
         val query = """
-            find buildConf with template(id 5555 and trigger type vcsTrigger)
+            find buildConfiguration with template(id 5555 and trigger type vcsTrigger)
         """.trimIndent()
 
         val parsed = parser.parse(query)
@@ -299,7 +302,7 @@ class BuildConfSearchTests {
                                 )
                         )
                 )
-        )
+        ).wrap()
     }
 
     

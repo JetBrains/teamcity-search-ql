@@ -1,5 +1,7 @@
 package jetbrains.buildServer.server.querylang.tests.client
 
+import jetbrains.buildServer.server.querylang.objects.BuildConfiguration
+import jetbrains.buildServer.server.querylang.objects.Project
 import jetbrains.buildServer.server.querylang.parser.QueryParser
 import jetbrains.buildServer.server.querylang.requests.*
 import jetbrains.buildServer.serverSide.ProjectManager
@@ -65,72 +67,51 @@ class ClientTests: BaseServerTestCase() {
 
     fun testSearchBuildConfigurationWithVcsTrigger() {
         val query = """
-                     find buildConf with
+                     find buildConfiguration with
                          project ancestor id BaseProject
                          and trigger (type vcsTrigger and param opt1 = "val1")
                      """.trimIndent()
 
-        val res = client.process(parser.parse(query))
+        val res = client.process(query)
 
-        when (res) {
-            is ResultBuildConfiguration -> {
-                res.objects.sortBy { it.externalId }
-                assertEquals(res.objects.size, 2)
-                assertEquals(res.objects[0].externalId, "Project1_test1")
-                assertEquals(res.objects[1].externalId, "Project3_test1")
-            }
-            else -> {
-                fail("Result should be ResultBuildConfiguration")
-            }
-        }
+        res.objects.sortBy { it.externalId }
+        assertEquals(res.objects.size, 2)
+        assertEquals(res.objects[0].externalId, "Project1_test1")
+        assertEquals(res.objects[1].externalId, "Project3_test1")
         println(res)
     }
 
     fun testSearchBuildConfigurationWithVcsAndSchedulingTrigger() {
         val query = """
-                     find buildConf with
+                     find buildConfiguration with
                          project ancestor id BaseProject
                          and trigger (type vcsTrigger and param opt1 = "val1")
                          and trigger type schedulingTrigger
                      """.trimIndent()
 
-        val res = client.process(parser.parse(query))
+        val res = client.process(query)
 
-        when (res) {
-            is ResultBuildConfiguration -> {
-                res.objects.sortBy { it.externalId }
-                assertEquals(res.objects.size, 2)
-                assertEquals(res.objects[0].externalId, "Project1_test1")
-                assertEquals(res.objects[1].externalId, "Project3_test1")
-            }
-            else -> {
-                fail("Result should be ResultBuildConfiguration")
-            }
-        }
+        res.objects.sortBy { it.externalId }
+        assertEquals(res.objects.size, 2)
+        assertEquals(res.objects[0].externalId, "Project1_test1")
+        assertEquals(res.objects[1].externalId, "Project3_test1")
         println(res)
     }
 
     fun testSearchBuildConfigurationWithVcsOrSchedulingTrigger() {
         val query = """
-                     find buildConf with
+                     find buildConfiguration with
                          project ancestor id BaseProject
                          and trigger(type vcsTrigger and param opt1 = "val1" or  type schedulingTrigger and param opt2 = "val2")
                      """.trimIndent()
 
-        val res = client.process(parser.parse(query))
+        val res = client.process(query)
 
-        when (res) {
-            is ResultBuildConfiguration -> {
-                val confs = res.objects.sortedBy { it.externalId }
-                assertEquals(confs.size, 3)
-                assertEquals(confs[0].externalId, "Project1_test1")
-                assertEquals(confs[1].externalId, "Project2_test1")
-                assertEquals(confs[2].externalId, "Project3_test1")
-            }
-            else -> {
-                fail("Result should be ResultBuildConfiguration")
-            }
-        }
+        val confs = res.objects.sortedBy { it.externalId }
+        assertEquals(confs.size, 3)
+        assertEquals(confs[0].externalId, "Project1_test1")
+        assertEquals(confs[1].externalId, "Project2_test1")
+        assertEquals(confs[2].externalId, "Project3_test1")
         println(res)
     }
 
@@ -141,49 +122,42 @@ class ClientTests: BaseServerTestCase() {
                          and id Project3
                      """.trimIndent()
 
-        val res = client.process(parser.parse(query))
+        val res = client.process(query)
 
-        when (res) {
-            is ResultProject -> {
-                assertEquals(res.objects.size, 1)
-                assertEquals(res.objects[0].externalId, "Project3")
-            }
-            else -> {
-                fail("Result should be ResultProject")
-            }
-        }
+        assertEquals(res.objects.size, 1)
+        assertTrue(res.objects[0] is Project)
+        assertEquals(res.objects[0].externalId, "Project3")
         println(res)
     }
 
     fun testLogicalExpression() {
         val query = """
-            find buildConf with
+            find buildConfiguration with
                 trigger(val "val2" or type schedulingTrigger)
                 and not (trigger val "val3" or parent id Project1)
         """.trimIndent()
 
-        val res = client.process(parser.parse(query))
+        val res = client.process(query)
 
-        when (res) {
-            is ResultBuildConfiguration -> {
-                res.objects.sortBy { it.externalId }
-                assertEquals(res.objects.size, 2)
-                assertEquals(res.objects[0].externalId, "Project2_test1")
-                assertEquals(res.objects[1].externalId, "Project3_test2")
-            }
-            else -> {
-                fail("Result should be ResultBuildConfiguration")
-            }
+        res.objects.sortBy { it.externalId }
+        res.objects.forEach {
+            assertTrue(it is BuildConfiguration)
         }
+        assertEquals(res.objects.size, 2)
+        assertEquals(res.objects[0].externalId, "Project2_test1")
+        assertEquals(res.objects[1].externalId, "Project3_test2")
     }
 
     fun testBCWithProjectAncestorFilter1() {
         val query = """
-            find buildConf with project (ancestor id Project3)
+            find buildConfiguration with project (ancestor id Project3)
         """.trimIndent()
 
-        val res = client.process(parser.parse(query)) as ResultBuildConfiguration
+        val res = client.process(query)
 
+        res.objects.forEach {
+            assertTrue(it is BuildConfiguration)
+        }
         assertEquals(2, res.objects.size)
         assertEquals(res.objects[0].externalId, "Project4_test1")
         assertEquals(res.objects[1].externalId, "Project5_test1")
@@ -191,10 +165,10 @@ class ClientTests: BaseServerTestCase() {
 
     fun testBCWithProjectFilter() {
         val query = """
-            find buildConf with project (id Project3)
+            find buildConfiguration with project (id Project3)
         """.trimIndent()
 
-        val res = client.process(parser.parse(query)) as ResultBuildConfiguration
+        val res = client.process(query)
 
         res.objects.sortBy {it.externalId}
         assertEquals(4, res.objects.size)
@@ -209,7 +183,7 @@ class ClientTests: BaseServerTestCase() {
             find project with ancestorOrSelf (id Project3)
         """.trimIndent()
 
-        val res = client.process(parser.parse(query)) as ResultProject
+        val res = client.process(query)
 
         res.objects.sortBy { it.externalId }
         assertEquals(3, res.objects.size)
@@ -223,7 +197,7 @@ class ClientTests: BaseServerTestCase() {
             find project with parent id BaseProject
         """.trimIndent()
 
-        val res = client.process(parser.parse(query)) as ResultProject
+        val res = client.process(query)
 
         res.objects.sortBy { it.externalId }
         assertEquals(res.objects.size, 2)
@@ -233,10 +207,10 @@ class ClientTests: BaseServerTestCase() {
 
     fun testBuildConfigurationStepFilter() {
         val query = """
-            find buildConf with step (param path = "abc" and type runnerType2)
+            find buildConfiguration with step (param path = "abc" and type runnerType2)
         """.trimIndent()
 
-        val res = client.process(parser.parse(query)) as ResultBuildConfiguration
+        val res = client.process(query)
 
         res.objects.sortBy { it.externalId }
         assertEquals(res.objects.size, 1)
@@ -245,10 +219,10 @@ class ClientTests: BaseServerTestCase() {
 
     fun testBuildConfigurationFeatureFilter() {
         val query = """
-            find buildConf with feature (param path = "qwe" and type featureType2)
+            find buildConfiguration with feature (param path = "qwe" and type featureType2)
         """.trimIndent()
 
-        val res = client.process(parser.parse(query)) as ResultBuildConfiguration
+        val res = client.process(query)
 
         res.objects.sortBy { it.externalId }
         assertEquals(res.objects.size, 1)
@@ -257,10 +231,10 @@ class ClientTests: BaseServerTestCase() {
 
     fun testBuildConfigurationStepEnabledFilter() {
         val query = """
-            find buildConf with step(type runnerType2 and not enabled)
+            find buildConfiguration with step(type runnerType2 and not enabled)
         """.trimIndent()
 
-        val res = client.process(parser.parse(query)) as ResultBuildConfiguration
+        val res = client.process(query)
 
         assertEquals(res.objects.size, 1)
         assertEquals(res.objects[0].externalId, "Project3_test2")
@@ -271,7 +245,7 @@ class ClientTests: BaseServerTestCase() {
             find template with step( (type temp_runner1 or type runnerType2) and enabled)
         """.trimIndent()
 
-        val res = client.process(parser.parse(query)) as ResultBuildTemplate
+        val res = client.process(query)
 
         assertEquals(1, res.objects.size)
         assertEquals("Project4_temp1", res.objects[0].externalId)
@@ -279,10 +253,10 @@ class ClientTests: BaseServerTestCase() {
 
     fun testBuildConfOrTempStepFilter() {
         val query = """
-            find buildConfOrTemp with step( (type temp_runner1 or type runnerType2) and enabled)
+            find buildConfiguration, template with step( (type temp_runner1 or type runnerType2) and enabled)
         """.trimIndent()
 
-        val res = client.process(parser.parse(query)) as ResultBuildConfOrTemp
+        val res = client.process(query)
 
         val obj = res.objects.sortedBy { it.externalId }
         assertEquals(3, res.objects.size)
@@ -293,10 +267,10 @@ class ClientTests: BaseServerTestCase() {
 
     fun testBuildConfDependencyOnTemp() {
         val query = """
-            find buildConf with template step (type temp_runner1)
+            find buildConfiguration with template step (type temp_runner1)
         """.trimIndent()
 
-        val res = client.process(parser.parse(query)) as ResultBuildConfiguration
+        val res = client.process(query)
 
         assertEquals(1, res.objects.size)
         assertEquals("Project5_test1", res.objects[0].externalId)
@@ -307,7 +281,7 @@ class ClientTests: BaseServerTestCase() {
             find vcsRoot in Project4 with type jetbrains.git or id Project3_vcs1
         """.trimIndent()
 
-        val res = client.process(parser.parse(query)) as ResultVcsRoot
+        val res = client.process(query)
 
         assertEquals(1, res.objects.size)
         assertEquals("Project5_vcs1", res.objects[0].externalId)

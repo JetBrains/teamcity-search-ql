@@ -3,7 +3,6 @@
   <test name="Tests for Query Language">
     <classes>
       <class name="jetbrains.buildServer.server.querylang.tests.client.ClientTests" />
-      <class name="jetbrains.buildServer.server.querylang.tests.parser.BuildConfOrTemplateSearchTests" />
       <class name="jetbrains.buildServer.server.querylang.tests.parser.BuildConfSearchTests" />
       <class name="jetbrains.buildServer.server.querylang.tests.parser.ProjectSearchTests" />
       <class name="jetbrains.buildServer.server.querylang.tests.parser.TemplateSearchTests" />

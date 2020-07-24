@@ -9,8 +9,11 @@ import kotlin.test.assertFailsWith
 
 @Test
 internal class ProjectSearchTests {
-    val parser = QueryParser()
+    private val parser = QueryParser()
 
+    private fun TopLevelQuery.wrap(): MainQuery {
+        return FindMultipleTypes(listOf(this))
+    }
     
     fun testOnlyOneFilter() {
         val query = """
@@ -24,7 +27,7 @@ internal class ProjectSearchTests {
                                         FilterConditionNode(IdFilter("Project1"))
                                 )
                         )
-        )
+        ).wrap()
 
         assertEquals(expected, parsed)
     }
@@ -42,7 +45,7 @@ internal class ProjectSearchTests {
                                 FilterConditionNode(IdFilter("Project1"))
                         )
                 )
-        )
+        ).wrap()
     }
 
     

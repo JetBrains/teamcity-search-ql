@@ -11,6 +11,9 @@ import kotlin.test.assertFailsWith
 internal class TemplateSearchTests {
     val parser = QueryParser()
 
+    private fun TopLevelQuery.wrap(): MainQuery {
+        return FindMultipleTypes(listOf(this))
+    }
     
     fun testTemplateSearchWithBCFilters() {
         val query = """
@@ -27,7 +30,7 @@ internal class TemplateSearchTests {
                                 )
                         ))
                 )
-        )
+        ).wrap()
 
         assertEquals(expected, parsed)
     }
@@ -48,7 +51,7 @@ internal class TemplateSearchTests {
                         )),
                         FilterConditionNode(IdFilter("Test1"))
                 )
-        )
+        ).wrap()
 
         assertEquals(expected, parsed)
     }

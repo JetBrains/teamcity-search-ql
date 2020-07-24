@@ -44,7 +44,7 @@ class AutocompletionTests : BaseServerTestCase() {
 
     fun testProjectId() {
         val query = """
-            find buildConf with project id BaseProject_p1
+            find buildConfiguration with project id BaseProject_p1
         """.trimIndent()
 
         val vars = autoCompl.complete(query).map {it.first}
@@ -55,7 +55,7 @@ class AutocompletionTests : BaseServerTestCase() {
 
     fun testBuildConfId() {
         val query = """
-            find buildConf with project(id 5555) and (((id BaseProject_p1
+            find buildConfiguration with project(id 5555) and (((id BaseProject_p1
         """.trimIndent()
 
         val vars = autoCompl.complete(query).map {it.first}
@@ -77,7 +77,7 @@ class AutocompletionTests : BaseServerTestCase() {
 
     fun testTemplateId() {
         val query = """
-            find buildConf with id 5555 or template (id 55555 or id BaseProject_p1
+            find buildConfiguration with id 5555 or template (id 55555 or id BaseProject_p1
         """.trimIndent()
 
         val vars = autoCompl.complete(query).map {it.first}
@@ -88,7 +88,7 @@ class AutocompletionTests : BaseServerTestCase() {
 
     fun testBuildConfOrTempId() {
         val query = """
-            find buildConfOrTemp with (id 5555 and id 6666) or (((id BaseProject_p
+            find buildConfiguration, template with (id 5555 and id 6666) or (((id BaseProject_p
         """.trimIndent()
 
         val vars = autoCompl.complete(query).map {it.first}
@@ -99,7 +99,7 @@ class AutocompletionTests : BaseServerTestCase() {
 
     fun testTriggerParamName() {
         val query = """
-            find buildConf with (id 5555 or id 6666) and (id 7777 or ( ( trigger param pat
+            find buildConfiguration with (id 5555 or id 6666) and (id 7777 or ( ( trigger param pat
         """.trimIndent()
 
         val vars = autoCompl.complete(query).map {it.first}
@@ -110,7 +110,7 @@ class AutocompletionTests : BaseServerTestCase() {
 
     fun testTriggerParamValue() {
         val query = """
-            find buildConf with (id 5555 or id 6666) and (id 7777 or ( ( trigger param path = "ab
+            find buildConfiguration with (id 5555 or id 6666) and (id 7777 or ( ( trigger param path = "ab
         """.trimIndent()
 
         val vars = autoCompl.complete(query).map {it.first}
@@ -121,7 +121,7 @@ class AutocompletionTests : BaseServerTestCase() {
 
     fun testTriggerEmptyParam() {
         val query = """
-            find buildConf with (id 5555 or id 6666) and (id 7777 or ( ( trigger param 
+            find buildConfiguration with (id 5555 or id 6666) and (id 7777 or ( ( trigger param 
         """.trimIndent()
 
         val vars = autoCompl.complete(query).map {it.first}

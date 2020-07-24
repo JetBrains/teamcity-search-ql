@@ -16,15 +16,14 @@ internal class KeywordAutocomletionTests {
 
         val vars = autoCompl.complete(query).map {it.first}
 
-        assertEquals(2, vars.size)
-        assertEquals("dConf", vars[0])
-        assertEquals("dConfOrTemp", vars[1])
+        assertEquals(1, vars.size)
+        assertEquals("dConfiguration", vars[0])
     }
 
     
     fun testProjectAutoCompleteon() {
         val query = """
-            find buildConf with project ( ancestor id 5555 and anc
+            find buildConfiguration with project ( ancestor id 5555 and anc
         """.trimIndent()
 
         val vars = autoCompl.complete(query).map {it.first}.sortedBy { it }
@@ -37,7 +36,7 @@ internal class KeywordAutocomletionTests {
     
     fun testBuildConfAutoCompleteon() {
         val query = """
-            find buildConf with id 5555 or id 66666 and temp
+            find buildConfiguration with id 5555 or id 66666 and temp
         """.trimIndent()
 
         val vars = autoCompl.complete(query).map {it.first}
@@ -49,7 +48,7 @@ internal class KeywordAutocomletionTests {
     
     fun testTemplateAutoCompleteon() {
         val query = """
-            find buildConf with id 5555 or (id 6666 and template (( id 5555 or (id 6666 and (i
+            find buildConfiguration with id 5555 or (id 6666 and template (( id 5555 or (id 6666 and (i
         """.trimIndent()
 
         val vars = autoCompl.complete(query).map {it.first}
@@ -61,7 +60,7 @@ internal class KeywordAutocomletionTests {
     
     fun testTriggerAutoCompleteon() {
         val query = """
-            find buildConf with trigger (((((t
+            find buildConfiguration with trigger (((((t
         """.trimIndent()
 
         val vars = autoCompl.complete(query).map {it.first}

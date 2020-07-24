@@ -37,7 +37,7 @@ class Completer(val projectManager: ProjectManager? = null) {
         //unite all variants
         return objectTypes.flatMap { objType ->
             getVariants(objType, trace, word, limit)
-        }.toSet().toList().take(limit)
+        }.toSet().toList().take(limit).sortedWith(compareBy({ it.length }, {it}))
     }
 
     private fun readFilterGraph() {

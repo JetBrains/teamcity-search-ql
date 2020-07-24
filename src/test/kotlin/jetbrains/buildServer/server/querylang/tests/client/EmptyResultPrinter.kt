@@ -4,7 +4,7 @@ import jetbrains.buildServer.server.querylang.requests.QueryResult
 import jetbrains.buildServer.server.querylang.requests.ResultPrinter
 
 object EmptyResultPrinter: ResultPrinter {
-    override fun display(res: QueryResult<*>) {
+    override fun display(res: QueryResult) {
 
     }
 }
