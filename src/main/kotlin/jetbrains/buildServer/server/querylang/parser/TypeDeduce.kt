@@ -8,10 +8,10 @@ import kotlin.reflect.full.*
 class TypeDeduce {
     val reflections = Reflections("jetbrains.buildServer.server.querylang.ast")
 
-    fun deduceQueryType(condition: ConditionAST<Filter>, level: Int): List<MainQuery> {
+    fun deduceQueryType(condition: ConditionAST<Filter>, level: Int): List<TopLevelQuery> {
         val filters = getAllFilters(condition)
 
-        val res = mutableListOf<MainQuery>()
+        val res = mutableListOf<TopLevelQuery>()
 
 
         res.addAll(getMainQueries(filters, condition, level, ProjectComplexFilter::class))
@@ -48,14 +48,14 @@ class TypeDeduce {
         condition: ConditionAST<Filter>,
         level: Int,
         kclass: KClass<out ConditionContainer<T>>
-    ): List<MainQuery> {
-        val res = mutableListOf<MainQuery>()
+    ): List<TopLevelQuery> {
+        val res = mutableListOf<TopLevelQuery>()
         if (filters.all {it is T}) {
             val filterClasses = getSubclasses(kclass.java)
             filterClasses.forEach { clazz ->
                 when {
-                    clazz.kotlin.isSubclassOf(MainQuery::class) ->
-                        createInstance<MainQuery>(clazz, condition)?.let { res.add(it) }
+                    clazz.kotlin.isSubclassOf(TopLevelQuery::class) ->
+                        createInstance<TopLevelQuery>(clazz, condition)?.let { res.add(it) }
 
                     clazz.kotlin.isSubclassOf(Filter::class) && level != 0 ->
                         createInstance<Filter>(clazz, condition)?.let {

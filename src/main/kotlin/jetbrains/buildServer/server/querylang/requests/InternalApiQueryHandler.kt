@@ -23,7 +23,6 @@ class InternalApiQueryHandler(
                 is FindBuildConf -> findBuildConfs(query.condition)
                 is FindTemplate -> findTemplates(query.condition)
                 is FindVcsRoot -> findVcsRoots(query.condition)
-                is FindMultipleTypes -> throw IllegalStateException("FindMultipleTypes can't be in findQueries list")
             }
         }.fold(QueryResult()) { q1, q2 -> q1.join(q2)}
     }
