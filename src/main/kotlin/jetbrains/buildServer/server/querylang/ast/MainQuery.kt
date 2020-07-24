@@ -2,12 +2,12 @@ package jetbrains.buildServer.server.querylang.ast
 
 sealed class MainQuery
 
-data class FindProject(val condition: ConditionAST<ProjectFilter>) : MainQuery()
+data class FindProject(override val condition: ConditionAST<ProjectFilter>) : MainQuery(), ProjectComplexFilter
 
-data class FindBuildConf(val condition: ConditionAST<BuildConfFilter>) : MainQuery()
+data class FindBuildConf(override val condition: ConditionAST<BuildConfFilter>) : MainQuery(), BuildConfComplexFilter
 
-data class FindTemplate(val condition: ConditionAST<TempFilter>) : MainQuery()
+data class FindTemplate(override val condition: ConditionAST<TempFilter>) : MainQuery(), TemplateComplexFilter
 
-data class FindVcsRoot(val condition: ConditionAST<VcsRootFilter>) : MainQuery()
+data class FindVcsRoot(override val condition: ConditionAST<VcsRootFilter>) : MainQuery(), VcsRootComplexFilter
 
 data class FindMultipleTypes(val findQueries: List<MainQuery>) : MainQuery()

@@ -14,7 +14,7 @@ object MainQueryVisitor : QLangGrammarBaseVisitor<FindMultipleTypes>() {
         val queries = objectKeywords.map { objKeyword ->
             when (objKeyword.getChild(0)) {
                 is QLangGrammarParser.ProjectKewordContext -> {
-                    FindProject(ctx.conditionInSubproject().accept(projectConditionVisitor))
+                    FindProject(ctx.conditionInSubproject().accept(projectConditionVisitor)) as MainQuery
                 }
                 is QLangGrammarParser.BuildConfKewordContext -> {
                     FindBuildConf(ctx.conditionInSubproject().accept(buildConfConditionVisitor))

@@ -1,20 +1,33 @@
 package jetbrains.buildServer.server.querylang.ast
 
+
 data class IdFilter(val id: String) : ProjectFilter, BcOrTempFilter, ParameterHolderFilter, VcsRootFilter
 
-data class SProjectFilter(val condition: ConditionAST<ProjectFilter>) : BcOrTempFilter, VcsRootFilter
+data class SProjectFilter(
+    override val condition: ConditionAST<ProjectFilter>
+) : ProjectComplexFilter, BcOrTempFilter, VcsRootFilter
 
-data class ParentFilter(val condition: ConditionAST<ProjectFilter>) : BcOrTempFilter, ProjectFilter
+data class ParentFilter(
+    override val condition: ConditionAST<ProjectFilter>
+) : ProjectComplexFilter, BcOrTempFilter, ProjectFilter
 
 data class TypeFilter(val type: String) : ParameterHolderFilter, VcsRootFilter
 
-data class TriggerFilter(val condition: ConditionAST<ParameterHolderFilter>) : BcOrTempFilter
+data class TriggerFilter(
+    override val condition: ConditionAST<ParameterHolderFilter>
+) : ParHolderComplexFilter, BcOrTempFilter
 
-data class StepFilter(val condition: ConditionAST<ParameterHolderFilter>) : BcOrTempFilter
+data class StepFilter(
+    override val condition: ConditionAST<ParameterHolderFilter>
+) : ParHolderComplexFilter, BcOrTempFilter
 
-data class FeatureFilter(val condition: ConditionAST<ParameterHolderFilter>) : BcOrTempFilter
+data class FeatureFilter(
+    override val condition: ConditionAST<ParameterHolderFilter>
+) : ParHolderComplexFilter, BcOrTempFilter
 
-data class TempDepFilter(val condition: ConditionAST<TempFilter>) : BuildConfFilter
+data class TempDepFilter(
+    override val condition: ConditionAST<TempFilter>
+) : TemplateComplexFilter, BuildConfFilter
 
 data class ParValueFilter(val value: String) : ParameterHolderFilter
 
@@ -22,6 +35,10 @@ data class EnabledFilter(val enabled: Boolean) : ParameterHolderFilter
 
 data class ParameterFilter(val option: String, val value: String) : ParameterHolderFilter
 
-data class AncestorFilter(val condition: ConditionAST<ProjectFilter>) : ProjectFilter
+data class AncestorFilter(
+    override val condition: ConditionAST<ProjectFilter>
+) : ProjectComplexFilter, ProjectFilter
 
-data class AncestorOrSelfFilter(val condition: ConditionAST<ProjectFilter>) : ProjectFilter
+data class AncestorOrSelfFilter(
+    override val condition: ConditionAST<ProjectFilter>
+) : ProjectComplexFilter, ProjectFilter
