@@ -47,7 +47,7 @@ class AutocompletionTests : BaseServerTestCase() {
             find buildConfiguration with project id BaseProject_p1
         """.trimIndent()
 
-        val vars = autoCompl.complete(query).map {it.first}
+        val vars = autoCompl.complete(query).map {it.show}
         val expected = listOf("", "_p4", "_p5", "_p5_p6")
 
         assertEquals(expected, vars)
@@ -58,7 +58,7 @@ class AutocompletionTests : BaseServerTestCase() {
             find buildConfiguration with project(id 5555) and (((id BaseProject_p1
         """.trimIndent()
 
-        val vars = autoCompl.complete(query).map {it.first}
+        val vars = autoCompl.complete(query).map {it.show}
         val expected = listOf("_bt1", "_bt2", "_p5_bt1")
 
         assertEquals(expected, vars)
@@ -69,7 +69,7 @@ class AutocompletionTests : BaseServerTestCase() {
             find vcsRoot with id gi
         """.trimIndent()
 
-        val vars = autoCompl.complete(query).map {it.first}
+        val vars = autoCompl.complete(query).map {it.show}
         val expected = listOf("tId1", "tId2")
 
         assertEquals(expected, vars)
@@ -80,7 +80,7 @@ class AutocompletionTests : BaseServerTestCase() {
             find buildConfiguration with id 5555 or template (id 55555 or id BaseProject_p1
         """.trimIndent()
 
-        val vars = autoCompl.complete(query).map {it.first}
+        val vars = autoCompl.complete(query).map {it.show}
         val expected = listOf("_p5_temp1")
 
         assertEquals(expected, vars)
@@ -91,7 +91,7 @@ class AutocompletionTests : BaseServerTestCase() {
             find buildConfiguration, template with (id 5555 and id 6666) or (((id BaseProject_p
         """.trimIndent()
 
-        val vars = autoCompl.complete(query).map {it.first}
+        val vars = autoCompl.complete(query).map {it.show}
         val expected = listOf("1_bt1", "1_bt2", "2_bt1", "2_temp1", "1_p5_bt1", "1_p5_temp1")
 
         assertEquals(expected, vars)
@@ -102,7 +102,7 @@ class AutocompletionTests : BaseServerTestCase() {
             find buildConfiguration with (id 5555 or id 6666) and (id 7777 or ( ( trigger param pat
         """.trimIndent()
 
-        val vars = autoCompl.complete(query).map {it.first}
+        val vars = autoCompl.complete(query).map {it.show}
         val expected = listOf("h", "abc")
 
         assertEquals(expected, vars)
@@ -113,7 +113,7 @@ class AutocompletionTests : BaseServerTestCase() {
             find buildConfiguration with (id 5555 or id 6666) and (id 7777 or ( ( trigger param path = "ab
         """.trimIndent()
 
-        val vars = autoCompl.complete(query).map {it.first}
+        val vars = autoCompl.complete(query).map {it.show}
         val expected = listOf("c", "d")
 
         assertEquals(expected, vars)
@@ -124,7 +124,7 @@ class AutocompletionTests : BaseServerTestCase() {
             find buildConfiguration with (id 5555 or id 6666) and (id 7777 or ( ( trigger param 
         """.trimIndent()
 
-        val vars = autoCompl.complete(query).map {it.first}
+        val vars = autoCompl.complete(query).map {it.show}
         val expected = listOf("abc", "path", "patabc")
 
         assertEquals(expected, vars)
@@ -135,7 +135,7 @@ class AutocompletionTests : BaseServerTestCase() {
             find template with trigger type vcs
         """.trimIndent()
 
-        val vars = autoCompl.complete(query).map {it.first}
+        val vars = autoCompl.complete(query).map {it.show}
         val expected = listOf("Trigger")
 
         assertEquals(expected, vars)
@@ -146,7 +146,7 @@ class AutocompletionTests : BaseServerTestCase() {
             find vcsRoot with type gi
         """.trimIndent()
 
-        val vars = autoCompl.complete(query).map {it.first}
+        val vars = autoCompl.complete(query).map {it.show}
         val expected = listOf("t")
 
         assertEquals(expected, vars)

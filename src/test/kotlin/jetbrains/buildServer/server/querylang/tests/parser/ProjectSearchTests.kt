@@ -10,10 +10,6 @@ import kotlin.test.assertFailsWith
 @Test
 internal class ProjectSearchTests {
     private val parser = QueryParser()
-
-    private fun TopLevelQuery.wrap(): MainQuery {
-        return FindMultipleTypes(listOf(this))
-    }
     
     fun testOnlyOneFilter() {
         val query = """

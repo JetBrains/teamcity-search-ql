@@ -14,7 +14,7 @@ internal class KeywordAutocomletionTests {
             find buil
         """.trimIndent()
 
-        val vars = autoCompl.complete(query).map {it.first}
+        val vars = autoCompl.complete(query).map {it.show}
 
         assertEquals(1, vars.size)
         assertEquals("dConfiguration", vars[0])
@@ -26,7 +26,7 @@ internal class KeywordAutocomletionTests {
             find buildConfiguration with project ( ancestor id 5555 and anc
         """.trimIndent()
 
-        val vars = autoCompl.complete(query).map {it.first}.sortedBy { it }
+        val vars = autoCompl.complete(query).map {it.show}.sortedBy { it }
 
         assertEquals(2, vars.size)
         assertEquals("estor", vars[0])
@@ -39,7 +39,7 @@ internal class KeywordAutocomletionTests {
             find buildConfiguration with id 5555 or id 66666 and temp
         """.trimIndent()
 
-        val vars = autoCompl.complete(query).map {it.first}
+        val vars = autoCompl.complete(query).map {it.show}
 
         assertEquals(1, vars.size)
         assertEquals("late", vars[0])
@@ -51,7 +51,7 @@ internal class KeywordAutocomletionTests {
             find buildConfiguration with id 5555 or (id 6666 and template (( id 5555 or (id 6666 and (i
         """.trimIndent()
 
-        val vars = autoCompl.complete(query).map {it.first}
+        val vars = autoCompl.complete(query).map {it.show}
 
         assertEquals(1, vars.size)
         assertEquals("d", vars[0])
@@ -63,7 +63,7 @@ internal class KeywordAutocomletionTests {
             find buildConfiguration with trigger (((((t
         """.trimIndent()
 
-        val vars = autoCompl.complete(query).map {it.first}
+        val vars = autoCompl.complete(query).map {it.show}
 
         assertEquals(1, vars!!.size)
         assertEquals("ype", vars[0])
@@ -75,7 +75,7 @@ internal class KeywordAutocomletionTests {
             find vcsRoot with project( ( id 55555) ) and (type 555 or id 6666 and ((t
         """.trimIndent()
 
-        val vars = autoCompl.complete(query).map {it.first}
+        val vars = autoCompl.complete(query).map {it.show}
 
         assertEquals(1, vars!!.size)
         assertEquals("ype", vars[0])

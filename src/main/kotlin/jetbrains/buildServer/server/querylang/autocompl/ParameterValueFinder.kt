@@ -27,10 +27,10 @@ class ParameterValueFinder: StringFinder {
     }
 
     private fun completeParamName(paramPrefix: String, limit: Int): List<String> {
-        return nameTrie.completeString(paramPrefix, limit)
+        return nameTrie.complete(paramPrefix, limit)
     }
 
     private fun completeParamValue(paramName: String, valuePrefix: String, limit: Int): List<String> {
-        return params[paramName]?.completeString(valuePrefix, limit) ?: emptyList()
+        return params[paramName]?.complete(valuePrefix, limit) ?: emptyList()
     }
 }

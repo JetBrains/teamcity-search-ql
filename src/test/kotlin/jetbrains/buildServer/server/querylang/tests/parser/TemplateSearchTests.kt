@@ -10,10 +10,6 @@ import kotlin.test.assertFailsWith
 @Test
 internal class TemplateSearchTests {
     val parser = QueryParser()
-
-    private fun TopLevelQuery.wrap(): MainQuery {
-        return FindMultipleTypes(listOf(this))
-    }
     
     fun testTemplateSearchWithBCFilters() {
         val query = """

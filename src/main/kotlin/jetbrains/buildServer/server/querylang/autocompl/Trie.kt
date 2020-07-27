@@ -2,7 +2,7 @@ package jetbrains.buildServer.server.querylang.autocompl
 
 import java.util.*
 
-class Trie<T> {
+class Trie<T> : AutocompletionIndexer<T> {
     class Node<T>(var obj: T? = null, var terminalCnt: Int = 0) {
         val nodes: MutableMap<Char, Node<T>> = mutableMapOf()
         fun getNode(c: Char): Node<T>? {
@@ -21,9 +21,9 @@ class Trie<T> {
 
     val root = Node<T>()
 
-    fun addString(s: String, merge: ((T?) -> Unit)? = null) {
+    override fun addString(str: String, obj: T?) {
         var node = root
-        s.forEach { c ->
+        str.forEach { c ->
             if (!node.exists(c)) {
                 val newNode = Node<T>()
                 node.addEdge(c, newNode)
@@ -31,30 +31,12 @@ class Trie<T> {
             node = node.getNode(c)!!
         }
         node.terminalCnt += 1
-        if (merge != null) {
-            merge(node.obj)
-        }
+        node.obj = obj
     }
 
-    fun deleteString(s: String, remove: ((T?) -> Unit)? = null) {
+    override fun exists(str: String): Boolean {
         var node = root
-        s.forEach { c ->
-            if (!node.exists(c)) {
-                return
-            }
-            node = node.getNode(c)!!
-        }
-        if (node.isTerminal()) {
-            node.terminalCnt -= 1
-            if (remove != null) {
-                remove(node.obj)
-            }
-        }
-    }
-
-    fun exists(s: String): Boolean {
-        var node = root
-        s.forEach { c ->
+        str.forEach { c ->
             if (!node.exists(c)) {
                 return false
             }
@@ -63,9 +45,9 @@ class Trie<T> {
         return node.isTerminal()
     }
 
-    fun getCnt(s: String): Int {
+    override fun getCnt(str: String): Int {
         var node = root
-        s.forEach { c ->
+        str.forEach { c ->
             if (!node.exists(c)) {
                 return 0
             }
@@ -74,9 +56,9 @@ class Trie<T> {
         return node.terminalCnt
     }
 
-    fun completeString(s: String, limit: Int): List<String> {
+    override fun complete(str: String, limit: Int): List<String> {
         var node = root
-        s.forEach { c ->
+        str.forEach { c ->
             if (!node.exists(c)) {
                 return listOf()
             }
