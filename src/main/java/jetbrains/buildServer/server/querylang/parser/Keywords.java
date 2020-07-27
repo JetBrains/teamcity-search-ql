@@ -22,9 +22,9 @@ public class Keywords extends Lexer {
 	protected static final PredictionContextCache _sharedContextCache =
 		new PredictionContextCache();
 	public static final int
-		PROJECT=1, TEMPLATE=2, ID=3, PARENT=4, TRIGGER=5, STEP=6, FEATURE=7, TYPE=8, 
-		PARAM=9, VAL=10, ENABLED=11, ANCESTOR=12, ANCESTOR_OR_SELF=13, BUILD_CONF=14, 
-		VCS_ROOT=15, OR=16, AND=17, NOT=18, STRING=19, IDENT=20, WS=21;
+		PROJECT=1, TEMPLATE=2, BUILD_CONFIGURATION=3, VCS_ROOT=4, ID=5, PARENT=6, 
+		TRIGGER=7, STEP=8, FEATURE=9, TYPE=10, PARAM=11, VAL=12, ENABLED=13, ANCESTOR=14, 
+		ANCESTOR_OR_SELF=15, OR=16, AND=17, NOT=18, STRING=19, IDENT=20, WS=21;
 	public static String[] channelNames = {
 		"DEFAULT_TOKEN_CHANNEL", "HIDDEN"
 	};
@@ -35,8 +35,8 @@ public class Keywords extends Lexer {
 
 	private static String[] makeRuleNames() {
 		return new String[] {
-			"DIGIT", "LLET", "ULET", "LET", "WSP", "BUILD_CONF", "VCS_ROOT", "OR", 
-			"AND", "NOT", "STRING", "IDENT", "WS"
+			"DIGIT", "LLET", "ULET", "LET", "WSP", "OR", "AND", "NOT", "STRING", 
+			"IDENT", "WS"
 		};
 	}
 	public static final String[] ruleNames = makeRuleNames();
@@ -44,15 +44,16 @@ public class Keywords extends Lexer {
 	private static String[] makeLiteralNames() {
 		return new String[] {
 			null, null, null, null, null, null, null, null, null, null, null, null, 
-			null, null, "'buildConfiguration'", "'vcsRoot'", "'or'", "'and'", "'not'"
+			null, null, null, null, "'or'", "'and'", "'not'"
 		};
 	}
 	private static final String[] _LITERAL_NAMES = makeLiteralNames();
 	private static String[] makeSymbolicNames() {
 		return new String[] {
-			null, "PROJECT", "TEMPLATE", "ID", "PARENT", "TRIGGER", "STEP", "FEATURE", 
-			"TYPE", "PARAM", "VAL", "ENABLED", "ANCESTOR", "ANCESTOR_OR_SELF", "BUILD_CONF", 
-			"VCS_ROOT", "OR", "AND", "NOT", "STRING", "IDENT", "WS"
+			null, "PROJECT", "TEMPLATE", "BUILD_CONFIGURATION", "VCS_ROOT", "ID", 
+			"PARENT", "TRIGGER", "STEP", "FEATURE", "TYPE", "PARAM", "VAL", "ENABLED", 
+			"ANCESTOR", "ANCESTOR_OR_SELF", "OR", "AND", "NOT", "STRING", "IDENT", 
+			"WS"
 		};
 	}
 	private static final String[] _SYMBOLIC_NAMES = makeSymbolicNames();
@@ -90,21 +91,34 @@ public class Keywords extends Lexer {
 	}
 
 
-	    Map<String, Integer> keywords = new HashMap<String, Integer>() {{
-	        put(IdFilter.Companion.getNames().get(0) , QLangGrammarParser.ID);
-	        put(SProjectFilter.Companion.getNames().get(0), QLangGrammarParser.PROJECT);
-	        put(TempDepFilter.Companion.getNames().get(0), QLangGrammarParser.TEMPLATE);
-	        put(ParentFilter.Companion.getNames().get(0), QLangGrammarParser.PARENT);
-	        put(TriggerFilter.Companion.getNames().get(0), QLangGrammarParser.TRIGGER);
-	        put(StepFilter.Companion.getNames().get(0), QLangGrammarParser.STEP);
-	        put(FeatureFilter.Companion.getNames().get(0), QLangGrammarParser.FEATURE);
-	        put(TypeFilter.Companion.getNames().get(0), QLangGrammarParser.TYPE);
-	        put(ParameterFilter.Companion.getNames().get(0), QLangGrammarParser.PARAM);
-	        put(ValueFilter.Companion.getNames().get(0), QLangGrammarParser.VAL);
-	        put(EnabledFilter.Companion.getNames().get(0), QLangGrammarParser.ENABLED);
-	        put(AncestorFilter.Companion.getNames().get(0), QLangGrammarParser.ANCESTOR);
-	        put(AncestorOrSelfFilter.Companion.getNames().get(0), QLangGrammarParser.ANCESTOR_OR_SELF);
-	    }};
+	    Map<String, Integer> keywords = new HashMap<String, Integer>();
+
+	    {
+	        putToKeywords(FindProject.Companion.getNames(), QLangGrammarParser.PROJECT);
+	        putToKeywords(FindBuildConf.Companion.getNames(), QLangGrammarParser.BUILD_CONFIGURATION);
+	        putToKeywords(FindTemplate.Companion.getNames(), QLangGrammarParser.TEMPLATE);
+	        putToKeywords(FindVcsRoot.Companion.getNames(), QLangGrammarParser.VCS_ROOT);
+
+	        putToKeywords(IdFilter.Companion.getNames() , QLangGrammarParser.ID);
+	        putToKeywords(SProjectFilter.Companion.getNames(), QLangGrammarParser.PROJECT);
+	        putToKeywords(TempDepFilter.Companion.getNames(), QLangGrammarParser.TEMPLATE);
+	        putToKeywords(ParentFilter.Companion.getNames(), QLangGrammarParser.PARENT);
+	        putToKeywords(TriggerFilter.Companion.getNames(), QLangGrammarParser.TRIGGER);
+	        putToKeywords(StepFilter.Companion.getNames(), QLangGrammarParser.STEP);
+	        putToKeywords(FeatureFilter.Companion.getNames(), QLangGrammarParser.FEATURE);
+	        putToKeywords(TypeFilter.Companion.getNames(), QLangGrammarParser.TYPE);
+	        putToKeywords(ParameterFilter.Companion.getNames(), QLangGrammarParser.PARAM);
+	        putToKeywords(ValueFilter.Companion.getNames(), QLangGrammarParser.VAL);
+	        putToKeywords(EnabledFilter.Companion.getNames(), QLangGrammarParser.ENABLED);
+	        putToKeywords(AncestorFilter.Companion.getNames(), QLangGrammarParser.ANCESTOR);
+	        putToKeywords(AncestorOrSelfFilter.Companion.getNames(), QLangGrammarParser.ANCESTOR_OR_SELF);
+	    }
+
+	    private void putToKeywords(List<String> filterNames, Integer tokenType) {
+	        filterNames.forEach(name -> {
+	            keywords.put(name, tokenType);
+	        });
+	    }
 
 
 	public Keywords(CharStream input) {
@@ -133,7 +147,7 @@ public class Keywords extends Lexer {
 	@Override
 	public void action(RuleContext _localctx, int ruleIndex, int actionIndex) {
 		switch (ruleIndex) {
-		case 11:
+		case 9:
 			IDENT_action((RuleContext)_localctx, actionIndex);
 			break;
 		}
@@ -151,32 +165,26 @@ public class Keywords extends Lexer {
 	}
 
 	public static final String _serializedATN =
-		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\2\27h\b\1\4\2\t\2\4"+
+		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\2\27I\b\1\4\2\t\2\4"+
 		"\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4\t\t\t\4\n\t\n\4\13\t"+
-		"\13\4\f\t\f\4\r\t\r\4\16\t\16\3\2\3\2\3\3\3\3\3\4\3\4\3\5\3\5\5\5&\n\5"+
-		"\3\6\3\6\3\7\3\7\3\7\3\7\3\7\3\7\3\7\3\7\3\7\3\7\3\7\3\7\3\7\3\7\3\7\3"+
-		"\7\3\7\3\7\3\7\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\t\3\t\3\t\3\n\3\n\3\n"+
-		"\3\n\3\13\3\13\3\13\3\13\3\f\3\f\7\fR\n\f\f\f\16\fU\13\f\3\f\3\f\3\r\3"+
-		"\r\3\r\6\r\\\n\r\r\r\16\r]\3\r\3\r\3\16\6\16c\n\16\r\16\16\16d\3\16\3"+
-		"\16\3S\2\17\3\2\5\2\7\2\t\2\13\2\r\20\17\21\21\22\23\23\25\24\27\25\31"+
-		"\26\33\27\3\2\b\3\2\62;\3\2c|\3\2C\\\5\2\13\f\17\17\"\"\5\2\13\f\17\17"+
-		"$$\4\2\60\60aa\2h\2\r\3\2\2\2\2\17\3\2\2\2\2\21\3\2\2\2\2\23\3\2\2\2\2"+
-		"\25\3\2\2\2\2\27\3\2\2\2\2\31\3\2\2\2\2\33\3\2\2\2\3\35\3\2\2\2\5\37\3"+
-		"\2\2\2\7!\3\2\2\2\t%\3\2\2\2\13\'\3\2\2\2\r)\3\2\2\2\17<\3\2\2\2\21D\3"+
-		"\2\2\2\23G\3\2\2\2\25K\3\2\2\2\27O\3\2\2\2\31[\3\2\2\2\33b\3\2\2\2\35"+
-		"\36\t\2\2\2\36\4\3\2\2\2\37 \t\3\2\2 \6\3\2\2\2!\"\t\4\2\2\"\b\3\2\2\2"+
-		"#&\5\7\4\2$&\5\5\3\2%#\3\2\2\2%$\3\2\2\2&\n\3\2\2\2\'(\t\5\2\2(\f\3\2"+
-		"\2\2)*\7d\2\2*+\7w\2\2+,\7k\2\2,-\7n\2\2-.\7f\2\2./\7E\2\2/\60\7q\2\2"+
-		"\60\61\7p\2\2\61\62\7h\2\2\62\63\7k\2\2\63\64\7i\2\2\64\65\7w\2\2\65\66"+
-		"\7t\2\2\66\67\7c\2\2\678\7v\2\289\7k\2\29:\7q\2\2:;\7p\2\2;\16\3\2\2\2"+
-		"<=\7x\2\2=>\7e\2\2>?\7u\2\2?@\7T\2\2@A\7q\2\2AB\7q\2\2BC\7v\2\2C\20\3"+
-		"\2\2\2DE\7q\2\2EF\7t\2\2F\22\3\2\2\2GH\7c\2\2HI\7p\2\2IJ\7f\2\2J\24\3"+
-		"\2\2\2KL\7p\2\2LM\7q\2\2MN\7v\2\2N\26\3\2\2\2OS\7$\2\2PR\n\6\2\2QP\3\2"+
-		"\2\2RU\3\2\2\2ST\3\2\2\2SQ\3\2\2\2TV\3\2\2\2US\3\2\2\2VW\7$\2\2W\30\3"+
-		"\2\2\2X\\\5\t\5\2Y\\\5\3\2\2Z\\\t\7\2\2[X\3\2\2\2[Y\3\2\2\2[Z\3\2\2\2"+
-		"\\]\3\2\2\2][\3\2\2\2]^\3\2\2\2^_\3\2\2\2_`\b\r\2\2`\32\3\2\2\2ac\t\5"+
-		"\2\2ba\3\2\2\2cd\3\2\2\2db\3\2\2\2de\3\2\2\2ef\3\2\2\2fg\b\16\3\2g\34"+
-		"\3\2\2\2\b\2%S[]d\4\3\r\2\b\2\2";
+		"\13\4\f\t\f\3\2\3\2\3\3\3\3\3\4\3\4\3\5\3\5\5\5\"\n\5\3\6\3\6\3\7\3\7"+
+		"\3\7\3\b\3\b\3\b\3\b\3\t\3\t\3\t\3\t\3\n\3\n\7\n\63\n\n\f\n\16\n\66\13"+
+		"\n\3\n\3\n\3\13\3\13\3\13\6\13=\n\13\r\13\16\13>\3\13\3\13\3\f\6\fD\n"+
+		"\f\r\f\16\fE\3\f\3\f\3\64\2\r\3\2\5\2\7\2\t\2\13\2\r\22\17\23\21\24\23"+
+		"\25\25\26\27\27\3\2\b\3\2\62;\3\2c|\3\2C\\\5\2\13\f\17\17\"\"\5\2\13\f"+
+		"\17\17$$\4\2\60\60aa\2I\2\r\3\2\2\2\2\17\3\2\2\2\2\21\3\2\2\2\2\23\3\2"+
+		"\2\2\2\25\3\2\2\2\2\27\3\2\2\2\3\31\3\2\2\2\5\33\3\2\2\2\7\35\3\2\2\2"+
+		"\t!\3\2\2\2\13#\3\2\2\2\r%\3\2\2\2\17(\3\2\2\2\21,\3\2\2\2\23\60\3\2\2"+
+		"\2\25<\3\2\2\2\27C\3\2\2\2\31\32\t\2\2\2\32\4\3\2\2\2\33\34\t\3\2\2\34"+
+		"\6\3\2\2\2\35\36\t\4\2\2\36\b\3\2\2\2\37\"\5\7\4\2 \"\5\5\3\2!\37\3\2"+
+		"\2\2! \3\2\2\2\"\n\3\2\2\2#$\t\5\2\2$\f\3\2\2\2%&\7q\2\2&\'\7t\2\2\'\16"+
+		"\3\2\2\2()\7c\2\2)*\7p\2\2*+\7f\2\2+\20\3\2\2\2,-\7p\2\2-.\7q\2\2./\7"+
+		"v\2\2/\22\3\2\2\2\60\64\7$\2\2\61\63\n\6\2\2\62\61\3\2\2\2\63\66\3\2\2"+
+		"\2\64\65\3\2\2\2\64\62\3\2\2\2\65\67\3\2\2\2\66\64\3\2\2\2\678\7$\2\2"+
+		"8\24\3\2\2\29=\5\t\5\2:=\5\3\2\2;=\t\7\2\2<9\3\2\2\2<:\3\2\2\2<;\3\2\2"+
+		"\2=>\3\2\2\2><\3\2\2\2>?\3\2\2\2?@\3\2\2\2@A\b\13\2\2A\26\3\2\2\2BD\t"+
+		"\5\2\2CB\3\2\2\2DE\3\2\2\2EC\3\2\2\2EF\3\2\2\2FG\3\2\2\2GH\b\f\3\2H\30"+
+		"\3\2\2\2\b\2!\64<>E\4\3\13\2\b\2\2";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {

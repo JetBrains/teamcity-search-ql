@@ -8,25 +8,38 @@ import java.util.*;
 }
 
 @lexer::members {
-    Map<String, Integer> keywords = new HashMap<String, Integer>() {{
-        put(IdFilter.Companion.getNames().get(0) , QLangGrammarParser.ID);
-        put(SProjectFilter.Companion.getNames().get(0), QLangGrammarParser.PROJECT);
-        put(TempDepFilter.Companion.getNames().get(0), QLangGrammarParser.TEMPLATE);
-        put(ParentFilter.Companion.getNames().get(0), QLangGrammarParser.PARENT);
-        put(TriggerFilter.Companion.getNames().get(0), QLangGrammarParser.TRIGGER);
-        put(StepFilter.Companion.getNames().get(0), QLangGrammarParser.STEP);
-        put(FeatureFilter.Companion.getNames().get(0), QLangGrammarParser.FEATURE);
-        put(TypeFilter.Companion.getNames().get(0), QLangGrammarParser.TYPE);
-        put(ParameterFilter.Companion.getNames().get(0), QLangGrammarParser.PARAM);
-        put(ValueFilter.Companion.getNames().get(0), QLangGrammarParser.VAL);
-        put(EnabledFilter.Companion.getNames().get(0), QLangGrammarParser.ENABLED);
-        put(AncestorFilter.Companion.getNames().get(0), QLangGrammarParser.ANCESTOR);
-        put(AncestorOrSelfFilter.Companion.getNames().get(0), QLangGrammarParser.ANCESTOR_OR_SELF);
-    }};
+    Map<String, Integer> keywords = new HashMap<String, Integer>();
+
+    {
+        putToKeywords(FindProject.Companion.getNames(), QLangGrammarParser.PROJECT);
+        putToKeywords(FindBuildConf.Companion.getNames(), QLangGrammarParser.BUILD_CONFIGURATION);
+        putToKeywords(FindTemplate.Companion.getNames(), QLangGrammarParser.TEMPLATE);
+        putToKeywords(FindVcsRoot.Companion.getNames(), QLangGrammarParser.VCS_ROOT);
+
+        putToKeywords(IdFilter.Companion.getNames() , QLangGrammarParser.ID);
+        putToKeywords(SProjectFilter.Companion.getNames(), QLangGrammarParser.PROJECT);
+        putToKeywords(TempDepFilter.Companion.getNames(), QLangGrammarParser.TEMPLATE);
+        putToKeywords(ParentFilter.Companion.getNames(), QLangGrammarParser.PARENT);
+        putToKeywords(TriggerFilter.Companion.getNames(), QLangGrammarParser.TRIGGER);
+        putToKeywords(StepFilter.Companion.getNames(), QLangGrammarParser.STEP);
+        putToKeywords(FeatureFilter.Companion.getNames(), QLangGrammarParser.FEATURE);
+        putToKeywords(TypeFilter.Companion.getNames(), QLangGrammarParser.TYPE);
+        putToKeywords(ParameterFilter.Companion.getNames(), QLangGrammarParser.PARAM);
+        putToKeywords(ValueFilter.Companion.getNames(), QLangGrammarParser.VAL);
+        putToKeywords(EnabledFilter.Companion.getNames(), QLangGrammarParser.ENABLED);
+        putToKeywords(AncestorFilter.Companion.getNames(), QLangGrammarParser.ANCESTOR);
+        putToKeywords(AncestorOrSelfFilter.Companion.getNames(), QLangGrammarParser.ANCESTOR_OR_SELF);
+    }
+
+    private void putToKeywords(List<String> filterNames, Integer tokenType) {
+        filterNames.forEach(name -> {
+            keywords.put(name, tokenType);
+        });
+    }
 }
 
 tokens {
-       PROJECT, TEMPLATE,
+       PROJECT, TEMPLATE, BUILD_CONFIGURATION, VCS_ROOT,
        ID, PARENT, TRIGGER, STEP, FEATURE, TYPE, PARAM, VAL,
        ENABLED, ANCESTOR, ANCESTOR_OR_SELF
 }
@@ -38,8 +51,6 @@ fragment LET: ULET | LLET ;
 fragment WSP: [ \t\r\n] ;
 
 
-BUILD_CONF : 'buildConfiguration' ;
-VCS_ROOT : 'vcsRoot' ;
 OR : 'or' ;
 AND: 'and';
 NOT: 'not';

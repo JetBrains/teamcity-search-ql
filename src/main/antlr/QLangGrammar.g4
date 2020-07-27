@@ -16,7 +16,7 @@ objectType : IDENT ;
 parameterValue : STRING;
 
 vcsRootKeyword : VCS_ROOT;
-buildConfKeword : BUILD_CONF ;
+buildConfKeword : BUILD_CONFIGURATION ;
 projectKeword : PROJECT ;
 templateKeyword : TEMPLATE;
 
