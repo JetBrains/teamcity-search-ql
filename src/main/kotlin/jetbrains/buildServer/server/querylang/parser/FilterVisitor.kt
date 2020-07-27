@@ -75,7 +75,7 @@ class FilterVisitor<T : Filter>(
 
     override fun visitParValueFilter(ctx: QLangGrammarParser.ParValueFilterContext?): T {
         return transform(
-                ParValueFilter(ctx!!.parameterValue().text.dropLast(1).drop(1)),
+                ValueFilter(ctx!!.parameterValue().text.dropLast(1).drop(1)),
                 ctx.start
         )
     }

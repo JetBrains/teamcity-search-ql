@@ -1,27 +1,9 @@
 grammar QLangGrammar;
+import Keywords;
 
-@header {
+@parser::header {
     package jetbrains.buildServer.server.querylang.parser;
 }
-
-fragment DIGIT: [0-9] ;
-fragment LLET: [a-z] ;
-fragment ULET: [A-Z] ;
-fragment LET: ULET | LLET ;
-fragment WSP: [ \t\r\n] ;
-
-
-PROJECT : 'project' ;
-BUILD_CONF : 'buildConfiguration' ;
-TEMPLATE : 'template' ;
-VCS_ROOT : 'vcsRoot' ;
-OR : 'or' ;
-AND: 'and';
-NOT: 'not';
-
-STRING: '"' (~[\t\r\n"])*? '"';
-IDENT: (LET | DIGIT | '_' | '.')+ ;
-WS : [ \t\r\n]+ -> skip ;
 
 start: (find | partialQuery) EOF ;
 
@@ -34,8 +16,8 @@ objectType : IDENT ;
 parameterValue : STRING;
 
 vcsRootKeyword : VCS_ROOT;
-buildConfKeword : BUILD_CONF;
-projectKeword : PROJECT;
+buildConfKeword : BUILD_CONF ;
+projectKeword : PROJECT ;
 templateKeyword : TEMPLATE;
 
 partialQuery : condition ;
@@ -76,16 +58,16 @@ filterOrCondition : filter               #singleFilter
                   | '(' condition ')'    #multFilter
                   ;
 
-idFilter : 'id' objectId;
-projectFilter : 'project' filterOrCondition;
-parentFilter : 'parent' filterOrCondition ;
-triggerFilter : 'trigger' filterOrCondition ;
-stepFilter : 'step' filterOrCondition ;
-featureFilter : 'feature' filterOrCondition ;
-typeFilter : ('type') objectType ;
-parameterFilter : ('param')  parameterName=IDENT '=' parameterValue ;
-parValueFilter : ('val') parameterValue ;
-enabledFilter : 'enabled';
-ancestorFilter : 'ancestor' filterOrCondition;
-ancestorOrSelfFilter : 'ancestorOrSelf' filterOrCondition ;
-templateDepFilter : 'template' filterOrCondition ;
+idFilter : ID objectId;
+projectFilter : PROJECT filterOrCondition;
+parentFilter : PARENT filterOrCondition ;
+triggerFilter : TRIGGER filterOrCondition ;
+stepFilter : STEP filterOrCondition ;
+featureFilter : FEATURE filterOrCondition ;
+typeFilter : TYPE objectType ;
+parameterFilter : PARAM  parameterName=IDENT '=' parameterValue ;
+parValueFilter : VAL parameterValue ;
+enabledFilter : ENABLED;
+ancestorFilter : ANCESTOR filterOrCondition;
+ancestorOrSelfFilter : ANCESTOR_OR_SELF filterOrCondition ;
+templateDepFilter : TEMPLATE filterOrCondition ;

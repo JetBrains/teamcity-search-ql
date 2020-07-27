@@ -9,7 +9,8 @@ data class IdFilter(
     BcOrTempFilter,
     VcsRootFilter
 {
-    override val names = listOf("id")
+    companion object : Names("id")
+    override val names = IdFilter.names
 }
 
 data class SProjectFilter(
@@ -19,7 +20,8 @@ data class SProjectFilter(
     BcOrTempFilter,
     VcsRootFilter
 {
-    override val names = listOf("project")
+    companion object : Names("project")
+    override val names = SProjectFilter.names
 }
 
 data class ParentFilter(
@@ -29,7 +31,8 @@ data class ParentFilter(
     BcOrTempFilter,
     ProjectFilter
 {
-    override val names = listOf("parent")
+    companion object : Names("parent")
+    override val names = ParentFilter.names
 }
 
 data class TypeFilter(
@@ -39,7 +42,8 @@ data class TypeFilter(
     ParameterHolderFilter,
     VcsRootFilter
 {
-    override val names = listOf("type")
+    companion object : Names("type")
+    override val names = TypeFilter.names
 }
 
 data class TriggerFilter(
@@ -48,7 +52,8 @@ data class TriggerFilter(
     ParHolderComplexFilter,
     BcOrTempFilter
 {
-    override val names = listOf("trigger")
+    companion object : Names("trigger")
+    override val names = TriggerFilter.names
 }
 
 data class StepFilter(
@@ -57,7 +62,8 @@ data class StepFilter(
     ParHolderComplexFilter,
     BcOrTempFilter
 {
-    override val names = listOf("step")
+    companion object : Names("step")
+    override val names = StepFilter.names
 }
 
 data class FeatureFilter(
@@ -66,7 +72,8 @@ data class FeatureFilter(
     ParHolderComplexFilter,
     BcOrTempFilter
 {
-    override val names = listOf("feature")
+    companion object : Names("feature")
+    override val names = FeatureFilter.names
 }
 
 data class TempDepFilter(
@@ -75,16 +82,18 @@ data class TempDepFilter(
     TemplateComplexFilter,
     BuildConfFilter
 {
-    override val names = listOf("template")
+    companion object : Names("template")
+    override val names = TempDepFilter.names
 }
 
-data class ParValueFilter(
+data class ValueFilter(
     override val str: String
 ) :
     StringTerminalFilter,
     ParameterHolderFilter
 {
-    override val names = listOf("val")
+    companion object : Names("val")
+    override val names = ValueFilter.names
 }
 
 data class EnabledFilter(
@@ -93,12 +102,15 @@ data class EnabledFilter(
     TerminalFilter,
     ParameterHolderFilter
 {
-    override val names = listOf("enabled")
+    companion object : Names("enabled")
+    override val names = EnabledFilter.names
     override fun createStr() = "enabled"
 }
 
-data class ParameterFilter(val option: String, val value: String) : ParameterHolderFilter {
-    override val names = listOf("param")
+data class ParameterFilter(val option: String, val value: String) : ParameterHolderFilter
+{
+    companion object : Names("param")
+    override val names = ParameterFilter.names
 
     override fun createStr() = "param ${option}=\"${value}\""
 }
@@ -109,7 +121,8 @@ data class AncestorFilter(
     ProjectComplexFilter,
     ProjectFilter
 {
-    override val names = listOf("ancestor")
+    companion object : Names("ancestor")
+    override val names = AncestorFilter.names
 }
 
 data class AncestorOrSelfFilter(
@@ -118,5 +131,6 @@ data class AncestorOrSelfFilter(
     ProjectComplexFilter,
     ProjectFilter
 {
-    override val names = listOf("ancestorOrSelf")
+    companion object : Names("ancestorOrSelf")
+    override val names = AncestorOrSelfFilter.names
 }

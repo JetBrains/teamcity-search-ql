@@ -171,7 +171,7 @@ object FilterBuilder {
                             && parHolder.parameters[filter.option] == filter.value
                 }
             }
-            is ParValueFilter -> {
+            is ValueFilter -> {
                 ObjectFilter {parHolder ->
                     parHolder.parameters.containsValue(filter.str)
                 }

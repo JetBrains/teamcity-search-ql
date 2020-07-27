@@ -209,7 +209,7 @@ class BuildConfSearchTests {
         val expected = FindBuildConf(
                 FilterConditionNode(
                         TriggerFilter(
-                                FilterConditionNode(ParValueFilter("abc"))
+                                FilterConditionNode(ValueFilter("abc"))
                         )
                 )
         ).wrap()
@@ -269,7 +269,7 @@ class BuildConfSearchTests {
                         StepFilter(
                                 AndConditionNode<ParameterHolderFilter>(
                                         FilterConditionNode(
-                                                ParValueFilter("abc")
+                                                ValueFilter("abc")
                                         ),
                                         FilterConditionNode(
                                                 EnabledFilter(true)
