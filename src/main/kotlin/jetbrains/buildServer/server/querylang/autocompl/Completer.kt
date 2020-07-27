@@ -13,20 +13,33 @@ class Completer(val projectManager: ProjectManager? = null) {
         readFilterGraph()
     }
 
-    fun suggest(objectTypes: List<String>?, trace: List<String>, word: String, limit: Int): List<String> {
+    fun suggest(
+        input: String,
+        objectTypes: List<String>?,
+        trace: List<String>,
+        word: String,
+        limit: Int
+    ): List<CompletionResult> {
+
+        //complete object type name
         if (objectTypes == null) {
-            return graph["root"]!!.filter {it.startsWith(word)}.map {it.drop(word.length)}
+            return graph["root"]!!
+                .filterBegins(word)
+                .autocomplSort()
+                .toCompletionResult(input, word)
         }
 
         if (objectTypes.any {!graph.contains(it)}) throw IllegalStateException("Unkwnow type name")
 
+
+        //complete first level filter name (e.g `find project with par`)
         if (trace.isEmpty()) {
             if (objectTypes.isEmpty()) {
                 throw IllegalStateException("objectTypes shouldn't be empty")
             }
             return objectTypes.fold(graph[objectTypes.first()]!!.toSet()) {acc, s ->
                 acc.intersect(graph[s]!!)
-            }.toList().filter {it.startsWith(word)}.map {it.drop(word.length)}
+            }.toList().filterBegins(word).toCompletionResult(input, word)
         }
 
         //some of the types doesn't contain first filter
@@ -37,20 +50,24 @@ class Completer(val projectManager: ProjectManager? = null) {
         //unite all variants
         return objectTypes.flatMap { objType ->
             getVariants(objType, trace, word, limit)
-        }.toSet().toList().take(limit).sortedWith(compareBy({ it.length }, {it}))
+        }.toSet()
+            .toList()
+            .take(limit)
+            .autocomplSort()
+            .toCompletionResult(input, word, true)
     }
 
-    fun suggestBasedOnOther(otherFilters: List<String>, word: String): List<String> {
+    fun suggestBasedOnOther(input: String, otherFilters: List<String>, word: String): List<CompletionResult> {
         val vars = graph.values.filter { value ->
             otherFilters.all {it in value}
-        }.flatMap { it.filter {it.startsWith(word)} }.toSet().toList()
+        }.flatMap { it.filterBegins(word) }.toSet().toList()
 
-        return vars.map {it.drop(word.length)}
+        return vars.toCompletionResult(input, word)
     }
 
-    fun suggestForPartial(trace: List<String>, word: String): List<String> {
+    fun suggestForPartial(input: String, trace: List<String>, word: String): List<CompletionResult> {
         if (trace.isEmpty()) {
-            return listOf()
+            return emptyList()
         }
         var node = trace[0]
 
@@ -64,7 +81,7 @@ class Completer(val projectManager: ProjectManager? = null) {
         }
 
         if (graph.contains(node)) {
-            return graph[node]!!.filter {it.startsWith(word)}.map {it.drop(word.length)}
+            return graph[node]!!.filterBegins(word).toCompletionResult(input, word)
         }
         return emptyList()
     }
@@ -114,8 +131,31 @@ class Completer(val projectManager: ProjectManager? = null) {
                     limit
                 )
         } else {
-            graph[node]?.filter { it.startsWith(word) }?.map { it.drop(word.length) }
+            graph[node]?.filterBegins(word)?.map { it.drop(word.length) }
                 ?: throw IllegalStateException("Unknow filter name ${node}")
         }
+    }
+
+    private fun List<String>.toCompletionResult(
+        input: String,
+        word: String,
+        addOnly: Boolean = false
+    ): List<CompletionResult> {
+        return this.map {
+            if (addOnly) CompletionResult(input + it, word + it)
+            else CompletionResult(input + it.dropw(word), it)
+        }
+    }
+
+    private fun List<String>.filterBegins(word: String): List<String> {
+        return this.filter {it.startsWith(word)}
+    }
+
+    private fun List<String>.autocomplSort(): List<String> {
+        return this.sortedWith(compareBy({ it.length }, {it}))
+    }
+
+    private fun String.dropw(word: String): String {
+        return this.drop(word.length)
     }
 }

@@ -17,7 +17,7 @@ import java.lang.IllegalStateException
 class AutoCompletion(val projectManager: ProjectManager? = null) {
     private val parser = QueryParser()
 
-    fun complete(input: String): List<Pair<String, String>> {
+    fun complete(input: String): List<CompletionResult> {
         val stream = CharStreams.fromString(input)
         val lexer = QLangGrammarLexer(stream)
         val tokens = CommonTokenStream(lexer)
@@ -25,6 +25,9 @@ class AutoCompletion(val projectManager: ProjectManager? = null) {
         parserTree.removeErrorListeners()
 
         val start = parserTree.start() ?: return emptyList()
+        if (start.children == null) {
+            return emptyList()
+        }
         if (start.children.size > 2) {
             return emptyList()
         }
@@ -33,13 +36,13 @@ class AutoCompletion(val projectManager: ProjectManager? = null) {
         val treePartNode = start.partialQuery()
         if (treeFindNode != null) {
             val (word, objectTypes, trace) = getFilterTrace(treeFindNode, input) ?: return emptyList()
-            val vars = Completer(projectManager).suggest(objectTypes, trace, word, 100)
-            return vars.map { Pair(input + it, word + it) }
+            val vars = Completer(projectManager).suggest(input, objectTypes, trace, word, 100)
+            return vars
         }
         if (treePartNode != null) {
             try {
                 val multipleQueries = parser.parse(input) as? MultipleMainQuery ?: return emptyList()
-                return multipleQueries.queries.map {it.createStr()}.map {Pair(it, it)}
+                return multipleQueries.queries.map {it.createStr()}.map {CompletionResult(it, it)}
             } catch (e: ParsingException) {
                 return completePartialQuery(input, treePartNode)
             }
@@ -169,15 +172,13 @@ class AutoCompletion(val projectManager: ProjectManager? = null) {
         return Trace(lastWord, objectTypes, trace)
     }
 
-    private fun completePartialQuery(input: String, rootNode: QLangGrammarParser.PartialQueryContext): List<Pair<String, String>> {
+    private fun completePartialQuery(input: String, rootNode: QLangGrammarParser.PartialQueryContext): List<CompletionResult> {
         val trace = getFilterTrace(rootNode, input) ?: return listOf()
         return if (trace.trace.isEmpty()) {
             val flFilters = getFirstLevelFilters(rootNode.condition())
-            Completer(projectManager).suggestBasedOnOther(
-                flFilters, trace.word
-            ).map {Pair(input + it, trace.word + it)}
+            Completer(projectManager).suggestBasedOnOther(input, flFilters, trace.word)
         } else {
-            Completer(projectManager).suggestForPartial(trace.trace, trace.word).map {Pair(input + it, trace.word + it)}
+            Completer(projectManager).suggestForPartial(input, trace.trace, trace.word)
         }
     }
 
