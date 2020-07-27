@@ -16,6 +16,7 @@ import java.lang.IllegalStateException
 
 class AutoCompletion(val projectManager: ProjectManager? = null) {
     private val parser = QueryParser()
+    private val compl = Completer(projectManager)
 
     fun complete(input: String): List<CompletionResult> {
         val stream = CharStreams.fromString(input)
@@ -36,7 +37,7 @@ class AutoCompletion(val projectManager: ProjectManager? = null) {
         val treePartNode = start.partialQuery()
         if (treeFindNode != null) {
             val (word, objectTypes, trace) = getFilterTrace(treeFindNode, input) ?: return emptyList()
-            val vars = Completer(projectManager).suggest(input, objectTypes, trace, word, 100)
+            val vars = compl.suggest(input, objectTypes, trace, word, 100)
             return vars
         }
         if (treePartNode != null) {
@@ -176,9 +177,9 @@ class AutoCompletion(val projectManager: ProjectManager? = null) {
         val trace = getFilterTrace(rootNode, input) ?: return listOf()
         return if (trace.trace.isEmpty()) {
             val flFilters = getFirstLevelFilters(rootNode.condition())
-            Completer(projectManager).suggestBasedOnOther(input, flFilters, trace.word)
+            compl.suggestBasedOnOther(input, flFilters, trace.word)
         } else {
-            Completer(projectManager).suggestForPartial(input, trace.trace, trace.word)
+            compl.suggestForPartial(input, trace.trace, trace.word)
         }
     }
 

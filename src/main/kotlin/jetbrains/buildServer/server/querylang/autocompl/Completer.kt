@@ -1,16 +1,23 @@
 package jetbrains.buildServer.server.querylang.autocompl
 
+import jetbrains.buildServer.server.querylang.ast.*
 import jetbrains.buildServer.serverSide.ProjectManager
+import org.reflections.Reflections
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.lang.IllegalStateException
 import java.util.*
+import kotlin.reflect.full.allSuperclasses
+import kotlin.reflect.full.companionObject
+import kotlin.reflect.full.companionObjectInstance
+import kotlin.reflect.full.isSubclassOf
 import kotlin.streams.toList
 
 class Completer(val projectManager: ProjectManager? = null) {
-    private val graph = mutableMapOf<String, List<String>>()
+    private val graph = mutableMapOf<String, MutableList<String>>()
+    private val reflections = Reflections("jetbrains.buildServer.server.querylang.ast")
     init {
-        readFilterGraph()
+        loadFilterGraph()
     }
 
     fun suggest(
@@ -20,6 +27,7 @@ class Completer(val projectManager: ProjectManager? = null) {
         word: String,
         limit: Int
     ): List<CompletionResult> {
+
 
         //complete object type name
         if (objectTypes == null) {
@@ -103,8 +111,8 @@ class Completer(val projectManager: ProjectManager? = null) {
             val names = """\w+""".toRegex().findAll(s)
             val name = names.first().value
             val edges = names.drop(1).toList().map {it.value}
-            edges.forEach { if (!graph.contains(it)) graph[it] = listOf() }
-            graph[name] = edges
+            edges.forEach { if (!graph.contains(it)) graph[it] = mutableListOf() }
+            graph[name] = edges.toMutableList()
         }
     }
 
@@ -145,6 +153,46 @@ class Completer(val projectManager: ProjectManager? = null) {
             if (addOnly) CompletionResult(input + it, word + it)
             else CompletionResult(input + it.dropw(word), it)
         }
+    }
+
+    private fun loadFilterGraph() {
+        val topLevelClasses = reflections.getSubTypesOf(TopLevelQuery::class.java)
+        val filters = reflections.getSubTypesOf(Filter::class.java).filter {!it.isInterface}
+
+        graph["root"] = topLevelClasses.flatMap {getNames(it)}.toMutableList()
+        filters.forEach { filterClass ->
+            getNames(filterClass).forEach {filterName ->
+                graph[filterName] = mutableListOf()
+            }
+        }
+
+        createEdges(ProjectComplexFilter::class.java, filters)
+        createEdges(BuildConfComplexFilter::class.java, filters)
+        createEdges(TemplateComplexFilter::class.java, filters)
+        createEdges(VcsRootComplexFilter::class.java, filters)
+    }
+
+    private inline fun <reified T : Filter> createEdges(mainClass: Class<out ConditionContainer<T>>, filters: List<Class<out Filter>>) {
+        val classes = reflections.getSubTypesOf(mainClass)
+        classes.forEach { clazz ->
+            val filterNames = getNames(clazz)
+            filterNames.forEach { filterName ->
+                if (!graph.contains(filterName)) {
+                    graph[filterName] = mutableListOf()
+                }
+            }
+            filters.filter { it.kotlin.isSubclassOf(T::class) }.forEach { filter ->
+                val subFilterNames = getNames(filter)
+                filterNames.forEach { filterName ->
+                    graph[filterName]!!.addAll(subFilterNames)
+                }
+            }
+        }
+    }
+
+    private fun getNames(clazz: Class<out Named>): List<String> {
+        val names = clazz.kotlin.companionObjectInstance as? Names ?: throw IllegalStateException("There is not Names companion object")
+        return names.names
     }
 
     private fun List<String>.filterBegins(word: String): List<String> {
