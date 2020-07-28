@@ -1,14 +1,15 @@
 package jetbrains.buildServer.server.querylang.autocompl
 
 internal fun String.escape(): String {
-    val startsWithQuote = this.startsWith("\"")
-    if (this.all {it.isLetter() || it.isDigit() || it in "_.-"}) {
-        if (startsWithQuote) return this.drop(1)
+    if (this.startsWith("\"") && this.endsWith("\"")) {
         return this
     }
+    val str = if (this.startsWith("\"")) this.drop(1) else this
+    if (str.all {it.isLetter() || it.isDigit() || it in "_.-"}) {
+        return str
+    }
     else {
-        if (startsWithQuote) return this + "\""
-        return "\"this\""
+        return "\"$str\""
     }
 }
 

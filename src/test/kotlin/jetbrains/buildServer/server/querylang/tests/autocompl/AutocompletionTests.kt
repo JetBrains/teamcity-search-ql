@@ -158,4 +158,15 @@ class AutocompletionTests : BaseServerTestCase() {
 
         assertEquals(expected, vars)
     }
+
+    fun testTriggerParamWithQuotes1() {
+        val query = """
+            find buildConfiguration with trigger param "path"=a
+        """.trimIndent()
+
+        val vars = autoCompl.complete(query).map {it.show}
+        val expected = listOf("path=abc", "path=abd", "path=acd")
+
+        assertEquals(expected, vars)
+    }
 }
