@@ -9,7 +9,7 @@ import kotlin.test.assertFailsWith
 
 @Test
 internal class ProjectSearchTests {
-    private val parser = QueryParser()
+    private val parser = QueryParser
     
     fun testOnlyOneFilter() {
         val query = """

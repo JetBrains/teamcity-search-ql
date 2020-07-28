@@ -15,7 +15,7 @@ import org.antlr.v4.runtime.tree.TerminalNode
 import java.lang.IllegalStateException
 
 class AutoCompletion(val projectManager: ProjectManager? = null) {
-    private val parser = QueryParser()
+    private val parser = QueryParser
     private val compl = Completer(projectManager)
 
     fun complete(input: String): List<CompletionResult> {

@@ -6,7 +6,7 @@ class RequestClient(
     private val queryHandler: QueryHandler,
     private val resultPrinter: ResultPrinter? = null
 ) {
-    val parser = QueryParser()
+    val parser = QueryParser
     fun process(squery: String): QueryResult {
         val query = parser.parse(squery)
         val res = queryHandler.makeRequest(query)

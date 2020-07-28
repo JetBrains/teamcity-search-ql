@@ -13,7 +13,7 @@ import org.testng.annotations.Test
 class ClientTests: BaseServerTestCase() {
     private lateinit var pManager: ProjectManager
     private lateinit var client: RequestClient
-    private val parser = QueryParser()
+    private val parser = QueryParser
 
     @BeforeClass
     override fun setUp() {

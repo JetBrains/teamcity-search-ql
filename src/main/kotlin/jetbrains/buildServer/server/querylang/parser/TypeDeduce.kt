@@ -9,20 +9,8 @@ class TypeDeduce {
     val reflections = Reflections("jetbrains.buildServer.server.querylang.ast")
 
     fun deduceQueryType(condition: ConditionAST<Filter>, level: Int): List<FindMultipleTypes> {
-        val filters = getAllFilters(condition)
 
-        val res = mutableListOf<FindMultipleTypes>()
-        val new = mutableListOf<TopLevelQuery<*>>()
-
-        getMainQueries(res, new, filters, condition, level, ProjectComplexFilter::class)
-        getMainQueries(res, new, filters, condition, level, BuildConfComplexFilter::class)
-        getMainQueries(res, new, filters, condition, level, TemplateComplexFilter::class)
-        getMainQueries(res, new, filters, condition, level, VcsRootComplexFilter::class)
-        getMainQueries(res, new, filters, condition, level, ParHolderComplexFilter::class)
-
-        res.add(FindMultipleTypes(new))
-
-        return res
+        return getMainQueries(condition, level)
     }
 
     private fun getAllFilters(condition: ConditionAST<Filter>): List<Filter> {
@@ -46,28 +34,39 @@ class TypeDeduce {
         }
     }
 
-    private inline fun <reified T : Filter> getMainQueries(
-        res: MutableList<FindMultipleTypes>,
-        new: MutableList<TopLevelQuery<*>>,
-        filters: List<Filter>,
+    private fun getMainQueries(
         condition: ConditionAST<Filter>,
-        level: Int,
-        kclass: KClass<out ConditionContainer<T>>
-    ) {
-        if (filters.all {it is T}) {
-            val filterClasses = getSubclasses(kclass.java)
-            filterClasses.forEach { clazz ->
-                when {
-                    clazz.kotlin.isSubclassOf(TopLevelQuery::class) ->
-                        createInstance<TopLevelQuery<*>>(clazz, condition)?.let { new.add(it) }
+        level: Int
+    ): List<FindMultipleTypes> {
+        val filters = getAllFilters(condition)
 
-                    clazz.kotlin.isSubclassOf(Filter::class) && level != 0 ->
-                        createInstance<Filter>(clazz, condition)?.let {
-                            res.addAll(deduceQueryType(FilterConditionNode(it), level - 1))
-                        }
+        val res = mutableListOf<FindMultipleTypes>()
+        val new = mutableListOf<TopLevelQuery<*>>()
+
+        fun rec(conditionClass: KClass<out ConditionContainer<out Filter>>, FilterClass: KClass<out Filter>) {
+
+            if (filters.all { FilterClass.isInstance(it) }) {
+                val filterClasses = getSubclasses(conditionClass.java)
+                filterClasses.forEach { clazz ->
+                    when {
+                        clazz.kotlin.isSubclassOf(TopLevelQuery::class) ->
+                            createInstance<TopLevelQuery<*>>(clazz, condition)?.let { new.add(it) }
+
+                        clazz.kotlin.isSubclassOf(Filter::class) && level != 0 ->
+                            createInstance<Filter>(clazz, condition)?.let {
+                                res.addAll(deduceQueryType(FilterConditionNode(it), level - 1))
+                            }
+                    }
                 }
             }
         }
+
+        FilterTypeRegistration.getConditionContainerFilterPairs().forEach { r ->
+            rec(r.conditionc.kotlin, r.filterc.kotlin)
+        }
+
+        res.add(FindMultipleTypes(new))
+        return res
     }
 
 }

@@ -9,7 +9,7 @@ import kotlin.test.assertFailsWith
 
 @Test
 internal class TemplateSearchTests {
-    val parser = QueryParser()
+    val parser = QueryParser
     
     fun testTemplateSearchWithBCFilters() {
         val query = """

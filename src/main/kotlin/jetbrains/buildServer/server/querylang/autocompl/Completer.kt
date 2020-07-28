@@ -166,28 +166,31 @@ class Completer(val projectManager: ProjectManager? = null) {
             }
         }
 
-        createEdges(ProjectComplexFilter::class.java, filters)
-        createEdges(BuildConfComplexFilter::class.java, filters)
-        createEdges(TemplateComplexFilter::class.java, filters)
-        createEdges(VcsRootComplexFilter::class.java, filters)
-        createEdges(ParHolderComplexFilter::class.java, filters)
+        createEdges(filters)
     }
 
-    private inline fun <reified T : Filter> createEdges(mainClass: Class<out ConditionContainer<T>>, filters: List<Class<out Filter>>) {
-        val classes = reflections.getSubTypesOf(mainClass)
-        classes.forEach { clazz ->
-            val filterNames = getNames(clazz)
-            filterNames.forEach { filterName ->
-                if (!graph.contains(filterName)) {
-                    graph[filterName] = mutableListOf()
-                }
-            }
-            filters.filter { it.kotlin.isSubclassOf(T::class) }.forEach { filter ->
-                val subFilterNames = getNames(filter)
+    private fun createEdges(filters: List<Class<out Filter>>) {
+
+        fun createEdgesForMainClass(mainClass: Class<out ConditionContainer<out Filter>>, filterClass: Class<out Filter>) {
+            val classes = reflections.getSubTypesOf(mainClass)
+            classes.forEach { clazz ->
+                val filterNames = getNames(clazz)
                 filterNames.forEach { filterName ->
-                    graph[filterName]!!.addAll(subFilterNames)
+                    if (!graph.contains(filterName)) {
+                        graph[filterName] = mutableListOf()
+                    }
+                }
+                filters.filter { it.kotlin.isSubclassOf(filterClass.kotlin) }.forEach { filter ->
+                    val subFilterNames = getNames(filter)
+                    filterNames.forEach { filterName ->
+                        graph[filterName]!!.addAll(subFilterNames)
+                    }
                 }
             }
+        }
+
+        FilterTypeRegistration.getConditionContainerFilterPairs().forEach { con ->
+            createEdgesForMainClass(con.conditionc, con.filterc)
         }
     }
 
