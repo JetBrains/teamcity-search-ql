@@ -48,7 +48,7 @@ class AutocompletionTests : BaseServerTestCase() {
         """.trimIndent()
 
         val vars = autoCompl.complete(query).map {it.show}
-        val expected = listOf("", "_p4", "_p5", "_p5_p6")
+        val expected = listOf("BaseProject_p1", "BaseProject_p1_p4", "BaseProject_p1_p5", "BaseProject_p1_p5_p6")
 
         assertEquals(expected, vars)
     }
@@ -59,7 +59,7 @@ class AutocompletionTests : BaseServerTestCase() {
         """.trimIndent()
 
         val vars = autoCompl.complete(query).map {it.show}
-        val expected = listOf("_bt1", "_bt2", "_p5_bt1")
+        val expected = listOf("BaseProject_p1_bt1", "BaseProject_p1_bt2", "BaseProject_p1_p5_bt1")
 
         assertEquals(expected, vars)
     }
@@ -70,7 +70,7 @@ class AutocompletionTests : BaseServerTestCase() {
         """.trimIndent()
 
         val vars = autoCompl.complete(query).map {it.show}
-        val expected = listOf("tId1", "tId2")
+        val expected = listOf("gitId1", "gitId2")
 
         assertEquals(expected, vars)
     }
@@ -81,7 +81,7 @@ class AutocompletionTests : BaseServerTestCase() {
         """.trimIndent()
 
         val vars = autoCompl.complete(query).map {it.show}
-        val expected = listOf("_p5_temp1")
+        val expected = listOf("BaseProject_p1_p5_temp1")
 
         assertEquals(expected, vars)
     }
@@ -92,7 +92,14 @@ class AutocompletionTests : BaseServerTestCase() {
         """.trimIndent()
 
         val vars = autoCompl.complete(query).map {it.show}
-        val expected = listOf("1_bt1", "1_bt2", "2_bt1", "2_temp1", "1_p5_bt1", "1_p5_temp1")
+        val expected = listOf(
+            "BaseProject_p1_bt1",
+            "BaseProject_p1_bt2",
+            "BaseProject_p2_bt1",
+            "BaseProject_p2_temp1",
+            "BaseProject_p1_p5_bt1",
+            "BaseProject_p1_p5_temp1"
+        )
 
         assertEquals(expected, vars)
     }
@@ -103,7 +110,7 @@ class AutocompletionTests : BaseServerTestCase() {
         """.trimIndent()
 
         val vars = autoCompl.complete(query).map {it.show}
-        val expected = listOf("h", "abc")
+        val expected = listOf("path", "patabc")
 
         assertEquals(expected, vars)
     }
@@ -114,7 +121,7 @@ class AutocompletionTests : BaseServerTestCase() {
         """.trimIndent()
 
         val vars = autoCompl.complete(query).map {it.show}
-        val expected = listOf("c", "d")
+        val expected = listOf("path = \"abc", "path = \"abd")
 
         assertEquals(expected, vars)
     }
@@ -136,7 +143,7 @@ class AutocompletionTests : BaseServerTestCase() {
         """.trimIndent()
 
         val vars = autoCompl.complete(query).map {it.show}
-        val expected = listOf("Trigger")
+        val expected = listOf("vcsTrigger")
 
         assertEquals(expected, vars)
     }
@@ -147,7 +154,7 @@ class AutocompletionTests : BaseServerTestCase() {
         """.trimIndent()
 
         val vars = autoCompl.complete(query).map {it.show}
-        val expected = listOf("t")
+        val expected = listOf("git")
 
         assertEquals(expected, vars)
     }

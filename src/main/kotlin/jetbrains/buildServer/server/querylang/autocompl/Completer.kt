@@ -170,6 +170,7 @@ class Completer(val projectManager: ProjectManager? = null) {
         createEdges(BuildConfComplexFilter::class.java, filters)
         createEdges(TemplateComplexFilter::class.java, filters)
         createEdges(VcsRootComplexFilter::class.java, filters)
+        createEdges(ParHolderComplexFilter::class.java, filters)
     }
 
     private inline fun <reified T : Filter> createEdges(mainClass: Class<out ConditionContainer<T>>, filters: List<Class<out Filter>>) {

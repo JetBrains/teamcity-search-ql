@@ -17,7 +17,7 @@ internal class KeywordAutocomletionTests {
         val vars = autoCompl.complete(query).map {it.show}
 
         assertEquals(1, vars.size)
-        assertEquals("dConfiguration", vars[0])
+        assertEquals("buildConfiguration", vars[0])
     }
 
     
@@ -26,11 +26,11 @@ internal class KeywordAutocomletionTests {
             find buildConfiguration with project ( ancestor id 5555 and anc
         """.trimIndent()
 
-        val vars = autoCompl.complete(query).map {it.show}.sortedBy { it }
+        val vars = autoCompl.complete(query).map {it.show}
 
         assertEquals(2, vars.size)
-        assertEquals("estor", vars[0])
-        assertEquals("estorOrSelf", vars[1])
+        assertEquals("ancestor", vars[0])
+        assertEquals("ancestorOrSelf", vars[1])
     }
 
     
@@ -42,7 +42,7 @@ internal class KeywordAutocomletionTests {
         val vars = autoCompl.complete(query).map {it.show}
 
         assertEquals(1, vars.size)
-        assertEquals("late", vars[0])
+        assertEquals("template", vars[0])
     }
 
     
@@ -54,7 +54,7 @@ internal class KeywordAutocomletionTests {
         val vars = autoCompl.complete(query).map {it.show}
 
         assertEquals(1, vars.size)
-        assertEquals("d", vars[0])
+        assertEquals("id", vars[0])
     }
 
     
@@ -65,8 +65,8 @@ internal class KeywordAutocomletionTests {
 
         val vars = autoCompl.complete(query).map {it.show}
 
-        assertEquals(1, vars!!.size)
-        assertEquals("ype", vars[0])
+        assertEquals(1, vars.size)
+        assertEquals("type", vars[0])
     }
 
     
@@ -77,8 +77,8 @@ internal class KeywordAutocomletionTests {
 
         val vars = autoCompl.complete(query).map {it.show}
 
-        assertEquals(1, vars!!.size)
-        assertEquals("ype", vars[0])
+        assertEquals(1, vars.size)
+        assertEquals("type", vars[0])
     }
 
     

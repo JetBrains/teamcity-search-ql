@@ -110,7 +110,7 @@ class CompressedTrie<T> : AutocompletionIndexer<T> {
 
             val prefix = findLargestPrefix(str, i, nextNode.str)
             if (prefix.length != nextNode.str.length) {
-                if (prefix.length == str.length) {
+                if (prefix.length == str.length - i) {
                     break
                 }
                 return null

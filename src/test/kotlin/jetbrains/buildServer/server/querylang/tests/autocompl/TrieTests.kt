@@ -78,4 +78,16 @@ class TrieTests {
             assertEquals("DDD", l[3])
         }
     }
+
+    fun testCommonPrefix() {
+        getTrie().forEach { t ->
+            t.addString("Base_Project1")
+            t.addString("Base_Project1_Project5")
+            t.addString("Base_Project2")
+
+            assertTrue(t.exists("Base_Project1"))
+            assertTrue(t.exists("Base_Project1_Project5"))
+            assertTrue(t.exists("Base_Project2"))
+        }
+    }
 }
