@@ -37,6 +37,12 @@ public interface QLangGrammarVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitNot(QLangGrammarParser.NotContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link QLangGrammarParser#identOrString}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitIdentOrString(QLangGrammarParser.IdentOrStringContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link QLangGrammarParser#objectId}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -54,6 +60,12 @@ public interface QLangGrammarVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitParameterValue(QLangGrammarParser.ParameterValueContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link QLangGrammarParser#parameterName}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitParameterName(QLangGrammarParser.ParameterNameContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link QLangGrammarParser#vcsRootKeyword}.
 	 * @param ctx the parse tree

@@ -66,6 +66,18 @@ public class QLangGrammarBaseListener implements QLangGrammarListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterIdentOrString(QLangGrammarParser.IdentOrStringContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitIdentOrString(QLangGrammarParser.IdentOrStringContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterObjectId(QLangGrammarParser.ObjectIdContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -97,6 +109,18 @@ public class QLangGrammarBaseListener implements QLangGrammarListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitParameterValue(QLangGrammarParser.ParameterValueContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterParameterName(QLangGrammarParser.ParameterNameContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitParameterName(QLangGrammarParser.ParameterNameContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

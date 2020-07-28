@@ -19,7 +19,7 @@ class FilterVisitor<T : Filter>(
 
     override fun visitIdFilter(ctx: QLangGrammarParser.IdFilterContext?): T {
         return transform(
-                IdFilter(ctx!!.objectId().text),
+                IdFilter(ctx!!.objectId().text.fromIdentOrString()),
                 ctx.start
         )
     }
@@ -61,21 +61,24 @@ class FilterVisitor<T : Filter>(
 
     override fun visitTypeFilter(ctx: QLangGrammarParser.TypeFilterContext?): T {
         return transform(
-                TypeFilter(ctx!!.objectType().text),
+                TypeFilter(ctx!!.objectType().text.fromIdentOrString()),
                 ctx.start
         )
     }
 
     override fun visitParameterFilter(ctx: QLangGrammarParser.ParameterFilterContext?): T {
         return transform(
-                ParameterFilter(ctx!!.parameterName.text, ctx.parameterValue().text.dropLast(1).drop(1)),
+                ParameterFilter(
+                    ctx!!.parameterName().text.fromIdentOrString(),
+                    ctx.parameterValue().text.dropLast(1).drop(1)
+                ),
                 ctx.start
         )
     }
 
     override fun visitParValueFilter(ctx: QLangGrammarParser.ParValueFilterContext?): T {
         return transform(
-                ValueFilter(ctx!!.parameterValue().text.dropLast(1).drop(1)),
+                ValueFilter(ctx!!.parameterValue().text.fromIdentOrString()),
                 ctx.start
         )
     }

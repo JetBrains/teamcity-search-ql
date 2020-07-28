@@ -56,7 +56,7 @@ AND: 'and';
 NOT: 'not';
 
 STRING: '"' (~[\t\r\n"])*? '"';
-IDENT: (LET | DIGIT | '_' | '.')+
+IDENT: (LET | DIGIT | '_' | '.' | '-')+
 {
    if ( keywords.containsKey(getText()) ) {
        setType(keywords.get(getText()));

@@ -11,9 +11,12 @@ and : AND ;
 or : OR ;
 not: NOT ;
 
-objectId : IDENT ;
-objectType : IDENT ;
-parameterValue : STRING;
+identOrString : IDENT | STRING ;
+
+objectId : identOrString ;
+objectType : identOrString ;
+parameterValue : identOrString;
+parameterName : identOrString;
 
 vcsRootKeyword : VCS_ROOT;
 buildConfKeword : BUILD_CONFIGURATION ;
@@ -65,7 +68,7 @@ triggerFilter : TRIGGER filterOrCondition ;
 stepFilter : STEP filterOrCondition ;
 featureFilter : FEATURE filterOrCondition ;
 typeFilter : TYPE objectType ;
-parameterFilter : PARAM  parameterName=IDENT '=' parameterValue ;
+parameterFilter : PARAM  parameterName '=' parameterValue ;
 parValueFilter : VAL parameterValue ;
 enabledFilter : ENABLED;
 ancestorFilter : ANCESTOR filterOrCondition;

@@ -50,6 +50,16 @@ public interface QLangGrammarListener extends ParseTreeListener {
 	 */
 	void exitNot(QLangGrammarParser.NotContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link QLangGrammarParser#identOrString}.
+	 * @param ctx the parse tree
+	 */
+	void enterIdentOrString(QLangGrammarParser.IdentOrStringContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link QLangGrammarParser#identOrString}.
+	 * @param ctx the parse tree
+	 */
+	void exitIdentOrString(QLangGrammarParser.IdentOrStringContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link QLangGrammarParser#objectId}.
 	 * @param ctx the parse tree
 	 */
@@ -79,6 +89,16 @@ public interface QLangGrammarListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitParameterValue(QLangGrammarParser.ParameterValueContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link QLangGrammarParser#parameterName}.
+	 * @param ctx the parse tree
+	 */
+	void enterParameterName(QLangGrammarParser.ParameterNameContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link QLangGrammarParser#parameterName}.
+	 * @param ctx the parse tree
+	 */
+	void exitParameterName(QLangGrammarParser.ParameterNameContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link QLangGrammarParser#vcsRootKeyword}.
 	 * @param ctx the parse tree
