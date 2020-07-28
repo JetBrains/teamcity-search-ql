@@ -121,7 +121,7 @@ class AutocompletionTests : BaseServerTestCase() {
         """.trimIndent()
 
         val vars = autoCompl.complete(query).map {it.show}
-        val expected = listOf("path = \"abc", "path = \"abd")
+        val expected = listOf("path=abc", "path=abd")
 
         assertEquals(expected, vars)
     }

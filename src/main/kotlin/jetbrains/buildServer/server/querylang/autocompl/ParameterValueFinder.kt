@@ -5,15 +5,18 @@ class ParameterValueFinder: StringFinder {
     val params: MutableMap<String, Trie<Any>> = mutableMapOf()
 
     override fun completeString(prefix: String, limit: Int): List<String> {
-        val onlyParamRegex = """[\w\.]*""".toRegex()
-        val withValueRegex = """[\w\.]+\s*=\s*\".*?""".toRegex()
+        val wordRegex = """[\w.-_]*?""".toRegex()
+        val withQuoteRegex = """"[\s\S]*?""".toRegex()
+        val paramOnlyRegex = """$wordRegex|$withQuoteRegex""".toRegex()
+        val withValueRegex = """(([\w.-_]+?)|("[\s\S]+?"))\s*=\s*($withQuoteRegex|$wordRegex)""".toRegex()
         return when {
-            prefix.matches(onlyParamRegex) -> completeParamName(prefix, limit)
             prefix.matches(withValueRegex) -> {
-                val paramName = prefix.substringBefore("=").trim()
-                val paramValue = prefix.substringAfter("\"")
-                completeParamValue(paramName, paramValue, limit)
+                val paramName = prefix.substringBefore("=").trim().removeQuotationMarks()
+                val paramValue = prefix.substringAfter("=").trimStart().removeStartMarks()
+                val vars = completeParamValue(paramName, paramValue, limit)
+                vars.map {paramName.escape() + "=" + (paramValue + it).escape()}
             }
+            prefix.matches(paramOnlyRegex) || prefix.isEmpty() -> completeParamName(prefix.removeStartMarks(), limit).map {(prefix + it).escape()}
             else -> listOf()
         }
     }
@@ -32,5 +35,14 @@ class ParameterValueFinder: StringFinder {
 
     private fun completeParamValue(paramName: String, valuePrefix: String, limit: Int): List<String> {
         return params[paramName]?.complete(valuePrefix, limit) ?: emptyList()
+    }
+
+    private fun String.removeStartMarks(): String {
+        if (this.startsWith("\"")) {
+            return this.drop(1)
+        }
+        else {
+            return this
+        }
     }
 }

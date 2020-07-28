@@ -28,13 +28,12 @@ class Completer(val projectManager: ProjectManager? = null) {
         limit: Int
     ): List<CompletionResult> {
 
-
         //complete object type name
         if (objectTypes == null) {
             return graph["root"]!!
                 .filterBegins(word)
                 .autocomplSort()
-                .toCompletionResult(input, word)
+                .toCompletionResult(input)
         }
 
         if (objectTypes.any {!graph.contains(it)}) throw IllegalStateException("Unkwnow type name")
@@ -47,7 +46,7 @@ class Completer(val projectManager: ProjectManager? = null) {
             }
             return objectTypes.fold(graph[objectTypes.first()]!!.toSet()) {acc, s ->
                 acc.intersect(graph[s]!!)
-            }.toList().filterBegins(word).toCompletionResult(input, word)
+            }.toList().filterBegins(word).toCompletionResult(input)
         }
 
         //some of the types doesn't contain first filter
@@ -62,7 +61,7 @@ class Completer(val projectManager: ProjectManager? = null) {
             .toList()
             .take(limit)
             .autocomplSort()
-            .toCompletionResult(input, word, true)
+            .toCompletionResult(input)
     }
 
     fun suggestBasedOnOther(input: String, otherFilters: List<String>, word: String): List<CompletionResult> {
@@ -70,7 +69,7 @@ class Completer(val projectManager: ProjectManager? = null) {
             otherFilters.all {it in value}
         }.flatMap { it.filterBegins(word) }.toSet().toList()
 
-        return vars.toCompletionResult(input, word)
+        return vars.toCompletionResult(input)
     }
 
     fun suggestForPartial(input: String, trace: List<String>, word: String): List<CompletionResult> {
@@ -89,31 +88,9 @@ class Completer(val projectManager: ProjectManager? = null) {
         }
 
         if (graph.contains(node)) {
-            return graph[node]!!.filterBegins(word).toCompletionResult(input, word)
+            return graph[node]!!.filterBegins(word).toCompletionResult(input)
         }
         return emptyList()
-    }
-
-    private fun readFilterGraph() {
-        val classLoader: ClassLoader = this.javaClass.classLoader
-        val inputStream = BufferedReader(
-            InputStreamReader(classLoader.getResourceAsStream("filters.txt"))
-        )
-
-        val lines = inputStream.lines().toList()
-        val lineRegex = """\w+\s*->\s*\[(\s*\w+\s*,)*\s*\w+\s*]""".toRegex()
-
-        lines.forEachIndexed { i, s ->
-            if (!lineRegex.matches(s)) {
-                throw InputMismatchException("Parsing error in line $i")
-            }
-
-            val names = """\w+""".toRegex().findAll(s)
-            val name = names.first().value
-            val edges = names.drop(1).toList().map {it.value}
-            edges.forEach { if (!graph.contains(it)) graph[it] = mutableListOf() }
-            graph[name] = edges.toMutableList()
-        }
     }
 
     private fun getVariants(startNode: String, trace: List<String>, word: String, limit: Int): List<String> {
@@ -139,19 +116,8 @@ class Completer(val projectManager: ProjectManager? = null) {
                     limit
                 )
         } else {
-            graph[node]?.filterBegins(word)?.map { it.drop(word.length) }
+            graph[node]?.filterBegins(word)
                 ?: throw IllegalStateException("Unknow filter name ${node}")
-        }
-    }
-
-    private fun List<String>.toCompletionResult(
-        input: String,
-        word: String,
-        addOnly: Boolean = false
-    ): List<CompletionResult> {
-        return this.map {
-            if (addOnly) CompletionResult(input + it, word + it)
-            else CompletionResult(input + it.dropw(word), it)
         }
     }
 
@@ -199,6 +165,14 @@ class Completer(val projectManager: ProjectManager? = null) {
         return names.names
     }
 
+    private fun List<String>.toCompletionResult(
+        input: String
+    ): List<CompletionResult> {
+        return this.map {
+            CompletionResult(input + it, it)
+        }
+    }
+
     private fun List<String>.filterBegins(word: String): List<String> {
         return this.filter {it.startsWith(word)}
     }
@@ -210,4 +184,6 @@ class Completer(val projectManager: ProjectManager? = null) {
     private fun String.dropw(word: String): String {
         return this.drop(word.length)
     }
+
+    private fun String.fromInput() = if (this.startsWith("\"")) this.drop(1) else this
 }

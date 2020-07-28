@@ -70,7 +70,7 @@ class FilterVisitor<T : Filter>(
         return transform(
                 ParameterFilter(
                     ctx!!.parameterName().text.fromIdentOrString(),
-                    ctx.parameterValue().text.dropLast(1).drop(1)
+                    ctx.parameterValue().text.fromIdentOrString()
                 ),
                 ctx.start
         )

@@ -30,10 +30,10 @@ internal class CompletionManagerProjectIdTests : BaseServerTestCase() {
     fun test1() {
         val vars = compl.completeString("Base_Project2_", "project_id", 4)
         val expected = listOf(
-                "Project3",
-                "Project4",
-                "Project5",
-                "Project3_Project6"
+                "Base_Project2_Project3",
+                "Base_Project2_Project4",
+                "Base_Project2_Project5",
+                "Base_Project2_Project3_Project6"
         )
 
         assertEquals(expected, vars)

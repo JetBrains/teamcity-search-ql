@@ -24,14 +24,14 @@ class CompletionManagerStepParamTests : BaseServerTestCase() {
 
     fun testParamNameCompletion() {
         val vars = compl.completeString("pat", "step_param", 10)
-        val expected = listOf("h", "habc")
+        val expected = listOf("path", "pathabc")
 
         assertEquals(expected, vars)
     }
 
     fun testValueCompletion() {
         val vars = compl.completeString("path =  \"a", "step_param", 10).toSet()
-        val expected = setOf("bc", "bd")
+        val expected = setOf("path=abc", "path=abd")
 
         assertEquals(expected, vars)
     }
@@ -39,7 +39,7 @@ class CompletionManagerStepParamTests : BaseServerTestCase() {
     
     fun testValueCompletion2() {
         val vars = compl.completeString("abc =  \"", "step_param", 10)
-        val expected = listOf("bcd")
+        val expected = listOf("abc=bcd")
 
         assertEquals(expected, vars)
     }

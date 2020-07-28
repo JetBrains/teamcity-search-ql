@@ -4,7 +4,8 @@ import jetbrains.buildServer.serverSide.ProjectManager
 
 class SimpleStringFinder(val trie: AutocompletionIndexer<Any> = CompressedTrie()) : StringFinder {
     override fun completeString(prefix: String, limit: Int): List<String> {
-        return trie.complete(prefix, limit)
+        val realPrefix = if (prefix.startsWith("\"")) prefix.drop(1) else prefix
+        return trie.complete(realPrefix, limit).map {(prefix + it).escape()}
     }
 
     fun addString(s: String) {
