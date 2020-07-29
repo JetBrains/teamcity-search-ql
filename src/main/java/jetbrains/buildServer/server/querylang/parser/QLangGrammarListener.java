@@ -50,6 +50,16 @@ public interface QLangGrammarListener extends ParseTreeListener {
 	 */
 	void exitNot(QLangGrammarParser.NotContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link QLangGrammarParser#filterKeyword}.
+	 * @param ctx the parse tree
+	 */
+	void enterFilterKeyword(QLangGrammarParser.FilterKeywordContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link QLangGrammarParser#filterKeyword}.
+	 * @param ctx the parse tree
+	 */
+	void exitFilterKeyword(QLangGrammarParser.FilterKeywordContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link QLangGrammarParser#identOrString}.
 	 * @param ctx the parse tree
 	 */

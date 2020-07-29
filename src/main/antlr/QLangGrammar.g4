@@ -11,7 +11,11 @@ and : AND ;
 or : OR ;
 not: NOT ;
 
-identOrString : IDENT | STRING ;
+filterKeyword : PROJECT | TEMPLATE | BUILD_CONFIGURATION | VCS_ROOT
+                 | PARENT | TRIGGER | STEP | FEATURE | TYPE | PARAM | VAL
+                 | ENABLED | ANCESTOR | ANCESTOR_OR_SELF
+                 ;
+identOrString : IDENT | STRING | filterKeyword;
 
 objectId : stringFilterOrCondition ;
 objectType : identOrString ;

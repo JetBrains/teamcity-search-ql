@@ -37,6 +37,12 @@ public interface QLangGrammarVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitNot(QLangGrammarParser.NotContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link QLangGrammarParser#filterKeyword}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFilterKeyword(QLangGrammarParser.FilterKeywordContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link QLangGrammarParser#identOrString}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
