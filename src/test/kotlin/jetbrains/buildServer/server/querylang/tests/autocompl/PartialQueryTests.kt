@@ -89,4 +89,14 @@ class PartialQueryTests {
 
         assertEquals(expected.first(), res.first())
     }
+
+    fun testEscapeKeywordTest() {
+        val query = """id "project" """
+        val res = compl.complete(query).map {it.result}
+        val expected = listOf(
+            """find project with ancestor(id("project"))"""
+        )
+
+        assertEquals(expected.first(), res.first())
+    }
 }

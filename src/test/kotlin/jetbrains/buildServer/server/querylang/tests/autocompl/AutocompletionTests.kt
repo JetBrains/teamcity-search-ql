@@ -39,6 +39,8 @@ class AutocompletionTests : BaseServerTestCase() {
         p5_temp1.addBuildTrigger("vcsTrigger", mapOf(Pair("path", "abd")))
         p5_bt1.addBuildTrigger("schedulingTrigger", mapOf(Pair("patabc", "abc"), Pair("abc", "bcd"), Pair("path", "acd")))
 
+        p5_bt1.addBuildTrigger("project", mapOf(Pair("param", "vcsRoot")))
+
         autoCompl = AutoCompletion(myFixture.projectManager)
     }
 
@@ -132,7 +134,7 @@ class AutocompletionTests : BaseServerTestCase() {
         """.trimIndent()
 
         val vars = autoCompl.complete(query).map {it.show}
-        val expected = listOf("abc", "path", "patabc")
+        val expected = listOf("abc", "path", "patabc", "\"param\"")
 
         assertEquals(expected, vars)
     }
@@ -166,6 +168,17 @@ class AutocompletionTests : BaseServerTestCase() {
 
         val vars = autoCompl.complete(query).map {it.show}
         val expected = listOf("path=abc", "path=abd", "path=acd")
+
+        assertEquals(expected, vars)
+    }
+
+    fun testEscapeKeywordParameterName() {
+        val query = """
+            find buildConfiguration with trigger param pa
+        """.trimIndent()
+
+        val vars = autoCompl.complete(query).map {it.show}
+        val expected = listOf("path", "patabc", "\"param\"")
 
         assertEquals(expected, vars)
     }

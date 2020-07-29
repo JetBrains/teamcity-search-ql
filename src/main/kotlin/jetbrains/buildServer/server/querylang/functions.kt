@@ -1,7 +1,9 @@
 package jetbrains.buildServer.server.querylang
 
+import jetbrains.buildServer.server.querylang.ast.FilterTypeRegistration
+
 internal fun String.toIdentOrString(): String {
-    if (this.all {it.isLetter() || it.isDigit() || it in "_.-"}) {
+    if (this.all {it.isLetter() || it.isDigit() || it in "_.-"} && !FilterTypeRegistration.isKeyWord(this)) {
         return this
     } else {
         return "\"" + this.escapeQuotes() + "\""

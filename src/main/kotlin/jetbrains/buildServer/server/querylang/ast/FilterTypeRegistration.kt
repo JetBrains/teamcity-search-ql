@@ -1,10 +1,14 @@
 package jetbrains.buildServer.server.querylang.ast
 
+import org.reflections.Reflections
+import kotlin.reflect.full.companionObjectInstance
+
 object FilterTypeRegistration {
 
+    private val reflection = Reflections("jetbrains.buildServer.server.querylang.ast")
     private val conditionFilterList : MutableList< Connector<*> > = mutableListOf()
 
-
+    private val keywords = getNames(reflection.getSubTypesOf(Named::class.java).toList())
 
     inline fun <reified T : Filter> connectFilterType(
         conditionContainerClass: Class<out ConditionContainer<T>>
@@ -21,6 +25,19 @@ object FilterTypeRegistration {
     }
 
     fun getConditionContainerFilterPairs() = conditionFilterList.toList()
+
+    fun isKeyWord(str: String) = str in keywords
+
+    private fun getNames(classes: List<Class<out Named>>): List<String> {
+        val res = mutableListOf<String>()
+        classes.forEach { clazz ->
+            val names = clazz.kotlin.companionObjectInstance as? Names
+            if (names != null) {
+                res.addAll(names.names)
+            }
+        }
+        return res
+    }
 
     class Connector<T : Filter>(val conditionc: Class<out ConditionContainer<T>>,val filterc: Class<T>)
 }
