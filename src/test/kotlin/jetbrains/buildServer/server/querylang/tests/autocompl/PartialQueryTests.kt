@@ -1,9 +1,7 @@
 package jetbrains.buildServer.server.querylang.tests.autocompl
 
-import jetbrains.buildServer.server.querylang.ast.FilterTypeRegistration
 import jetbrains.buildServer.server.querylang.autocompl.AutoCompletion
 import jetbrains.buildServer.server.querylang.parser.QueryParser
-import jetbrains.buildServer.server.querylang.parser.TypeDeduce
 import org.testng.annotations.Test
 import kotlin.test.assertEquals
 
@@ -55,5 +53,29 @@ class PartialQueryTests {
         )
 
         assertEquals(expected, res)
+    }
+
+    fun testDoubleQuotes() {
+        val query = """param "path&1" = ("Base^"* and *"Project*" )"""
+
+        val res = compl.complete(query).map {it.result}
+        val expected = listOf(
+            """find buildConfiguration,template with feature(param "path&1"=("Base^"* and *"Project*"))""",
+            """find buildConfiguration,template with step(param "path&1"=("Base^"* and *"Project*"))""",
+            """find buildConfiguration,template with trigger(param "path&1"=("Base^"* and *"Project*"))"""
+        )
+
+        assertEquals(expected, res)
+    }
+
+    fun testDoubleQuotesId() {
+        val query = """id "Base^Project" """
+
+        val res = compl.complete(query).map {it.result}
+        val expected = listOf(
+            """find project with ancestor(id("Base^Project"))"""
+        )
+
+        assertEquals(expected.first(), res.first())
     }
 }

@@ -1,5 +1,7 @@
 package jetbrains.buildServer.server.querylang.ast
 
+import jetbrains.buildServer.server.querylang.toIdentOrString
+
 interface TerminalFilter : Filter
 
 interface StringTerminalFilter : TerminalFilter {
@@ -9,11 +11,6 @@ interface StringTerminalFilter : TerminalFilter {
     }
 
     private fun getString(): String {
-        if (str.all { it.isDigit() || it.isLetter() || it in listOf('.', '-', '_') }) {
-            return str
-        }
-        else {
-            return "\"$str\""
-        }
+        return str.toIdentOrString()
     }
 }

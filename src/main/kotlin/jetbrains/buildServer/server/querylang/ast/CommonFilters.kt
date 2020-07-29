@@ -1,5 +1,7 @@
 package jetbrains.buildServer.server.querylang.ast
 
+import jetbrains.buildServer.server.querylang.toIdentOrString
+
 
 data class IdFilter(
     val strCondition: ConditionAST<StringFilter>
@@ -112,7 +114,7 @@ data class ParameterFilter(val option: String, val valueCondition: ConditionAST<
     companion object : Names("param")
     override val names = ParameterFilter.names
 
-    override fun createStr() = "param ${option}=(${valueCondition.createStr()})"
+    override fun createStr() = "param ${option.toIdentOrString()}=(${valueCondition.createStr()})"
 }
 
 data class AncestorFilter(
