@@ -123,7 +123,9 @@ class Completer(val projectManager: ProjectManager? = null) {
 
     private fun loadFilterGraph() {
         val topLevelClasses = reflections.getSubTypesOf(TopLevelQuery::class.java)
-        val filters = reflections.getSubTypesOf(Filter::class.java).filter {!it.isInterface}
+        val filters = reflections.getSubTypesOf(Filter::class.java).filter{
+            !it.isInterface && !(it.kotlin.isSubclassOf(StringFilter::class))
+        }
 
         graph["root"] = topLevelClasses.flatMap {getNames(it)}.toMutableList()
         filters.forEach { filterClass ->

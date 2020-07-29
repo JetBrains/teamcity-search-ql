@@ -20,29 +20,34 @@ public class QLangGrammarParser extends Parser {
 		new PredictionContextCache();
 	public static final int
 		T__0=1, T__1=2, T__2=3, T__3=4, T__4=5, T__5=6, T__6=7, OR=8, AND=9, NOT=10, 
-		STRING=11, IDENT=12, WS=13, PROJECT=14, TEMPLATE=15, BUILD_CONFIGURATION=16, 
-		VCS_ROOT=17, ID=18, PARENT=19, TRIGGER=20, STEP=21, FEATURE=22, TYPE=23, 
-		PARAM=24, VAL=25, ENABLED=26, ANCESTOR=27, ANCESTOR_OR_SELF=28;
+		STRING=11, IDENT=12, SUFFIXS=13, PREFIXS=14, SUBSTRINGS=15, WS=16, PROJECT=17, 
+		TEMPLATE=18, BUILD_CONFIGURATION=19, VCS_ROOT=20, ID=21, PARENT=22, TRIGGER=23, 
+		STEP=24, FEATURE=25, TYPE=26, PARAM=27, VAL=28, ENABLED=29, ANCESTOR=30, 
+		ANCESTOR_OR_SELF=31;
 	public static final int
 		RULE_start = 0, RULE_and = 1, RULE_or = 2, RULE_not = 3, RULE_identOrString = 4, 
 		RULE_objectId = 5, RULE_objectType = 6, RULE_parameterValue = 7, RULE_parameterName = 8, 
 		RULE_vcsRootKeyword = 9, RULE_buildConfKeword = 10, RULE_projectKeword = 11, 
 		RULE_templateKeyword = 12, RULE_partialQuery = 13, RULE_find = 14, RULE_multipleObjects = 15, 
 		RULE_objectKeyword = 16, RULE_conditionInSubproject = 17, RULE_filter = 18, 
-		RULE_condition = 19, RULE_filterOrCondition = 20, RULE_idFilter = 21, 
-		RULE_projectFilter = 22, RULE_parentFilter = 23, RULE_triggerFilter = 24, 
-		RULE_stepFilter = 25, RULE_featureFilter = 26, RULE_typeFilter = 27, RULE_parameterFilter = 28, 
-		RULE_parValueFilter = 29, RULE_enabledFilter = 30, RULE_ancestorFilter = 31, 
-		RULE_ancestorOrSelfFilter = 32, RULE_templateDepFilter = 33;
+		RULE_condition = 19, RULE_filterOrCondition = 20, RULE_stringFilterOrCondition = 21, 
+		RULE_idFilter = 22, RULE_projectFilter = 23, RULE_parentFilter = 24, RULE_triggerFilter = 25, 
+		RULE_stepFilter = 26, RULE_featureFilter = 27, RULE_typeFilter = 28, RULE_parameterFilter = 29, 
+		RULE_parValueFilter = 30, RULE_enabledFilter = 31, RULE_ancestorFilter = 32, 
+		RULE_ancestorOrSelfFilter = 33, RULE_templateDepFilter = 34, RULE_stringCondition = 35, 
+		RULE_stringFilter = 36, RULE_stringEqualsFilter = 37, RULE_stringPrefixFilter = 38, 
+		RULE_stringSuffixFilter = 39, RULE_stringSubstringFilter = 40;
 	private static String[] makeRuleNames() {
 		return new String[] {
 			"start", "and", "or", "not", "identOrString", "objectId", "objectType", 
 			"parameterValue", "parameterName", "vcsRootKeyword", "buildConfKeword", 
 			"projectKeword", "templateKeyword", "partialQuery", "find", "multipleObjects", 
 			"objectKeyword", "conditionInSubproject", "filter", "condition", "filterOrCondition", 
-			"idFilter", "projectFilter", "parentFilter", "triggerFilter", "stepFilter", 
-			"featureFilter", "typeFilter", "parameterFilter", "parValueFilter", "enabledFilter", 
-			"ancestorFilter", "ancestorOrSelfFilter", "templateDepFilter"
+			"stringFilterOrCondition", "idFilter", "projectFilter", "parentFilter", 
+			"triggerFilter", "stepFilter", "featureFilter", "typeFilter", "parameterFilter", 
+			"parValueFilter", "enabledFilter", "ancestorFilter", "ancestorOrSelfFilter", 
+			"templateDepFilter", "stringCondition", "stringFilter", "stringEqualsFilter", 
+			"stringPrefixFilter", "stringSuffixFilter", "stringSubstringFilter"
 		};
 	}
 	public static final String[] ruleNames = makeRuleNames();
@@ -57,9 +62,9 @@ public class QLangGrammarParser extends Parser {
 	private static String[] makeSymbolicNames() {
 		return new String[] {
 			null, null, null, null, null, null, null, null, "OR", "AND", "NOT", "STRING", 
-			"IDENT", "WS", "PROJECT", "TEMPLATE", "BUILD_CONFIGURATION", "VCS_ROOT", 
-			"ID", "PARENT", "TRIGGER", "STEP", "FEATURE", "TYPE", "PARAM", "VAL", 
-			"ENABLED", "ANCESTOR", "ANCESTOR_OR_SELF"
+			"IDENT", "SUFFIXS", "PREFIXS", "SUBSTRINGS", "WS", "PROJECT", "TEMPLATE", 
+			"BUILD_CONFIGURATION", "VCS_ROOT", "ID", "PARENT", "TRIGGER", "STEP", 
+			"FEATURE", "TYPE", "PARAM", "VAL", "ENABLED", "ANCESTOR", "ANCESTOR_OR_SELF"
 		};
 	}
 	private static final String[] _SYMBOLIC_NAMES = makeSymbolicNames();
@@ -146,12 +151,12 @@ public class QLangGrammarParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(70);
+			setState(84);
 			_errHandler.sync(this);
 			switch (_input.LA(1)) {
 			case T__0:
 				{
-				setState(68);
+				setState(82);
 				find();
 				}
 				break;
@@ -171,14 +176,14 @@ public class QLangGrammarParser extends Parser {
 			case ANCESTOR:
 			case ANCESTOR_OR_SELF:
 				{
-				setState(69);
+				setState(83);
 				partialQuery();
 				}
 				break;
 			default:
 				throw new NoViableAltException(this);
 			}
-			setState(72);
+			setState(86);
 			match(EOF);
 			}
 		}
@@ -220,7 +225,7 @@ public class QLangGrammarParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(74);
+			setState(88);
 			match(AND);
 			}
 		}
@@ -262,7 +267,7 @@ public class QLangGrammarParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(76);
+			setState(90);
 			match(OR);
 			}
 		}
@@ -304,7 +309,7 @@ public class QLangGrammarParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(78);
+			setState(92);
 			match(NOT);
 			}
 		}
@@ -348,7 +353,7 @@ public class QLangGrammarParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(80);
+			setState(94);
 			_la = _input.LA(1);
 			if ( !(_la==STRING || _la==IDENT) ) {
 			_errHandler.recoverInline(this);
@@ -372,8 +377,8 @@ public class QLangGrammarParser extends Parser {
 	}
 
 	public static class ObjectIdContext extends ParserRuleContext {
-		public IdentOrStringContext identOrString() {
-			return getRuleContext(IdentOrStringContext.class,0);
+		public StringFilterOrConditionContext stringFilterOrCondition() {
+			return getRuleContext(StringFilterOrConditionContext.class,0);
 		}
 		public ObjectIdContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -400,8 +405,8 @@ public class QLangGrammarParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(82);
-			identOrString();
+			setState(96);
+			stringFilterOrCondition();
 			}
 		}
 		catch (RecognitionException re) {
@@ -444,7 +449,7 @@ public class QLangGrammarParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(84);
+			setState(98);
 			identOrString();
 			}
 		}
@@ -460,8 +465,8 @@ public class QLangGrammarParser extends Parser {
 	}
 
 	public static class ParameterValueContext extends ParserRuleContext {
-		public IdentOrStringContext identOrString() {
-			return getRuleContext(IdentOrStringContext.class,0);
+		public StringFilterOrConditionContext stringFilterOrCondition() {
+			return getRuleContext(StringFilterOrConditionContext.class,0);
 		}
 		public ParameterValueContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -488,8 +493,8 @@ public class QLangGrammarParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(86);
-			identOrString();
+			setState(100);
+			stringFilterOrCondition();
 			}
 		}
 		catch (RecognitionException re) {
@@ -532,7 +537,7 @@ public class QLangGrammarParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(88);
+			setState(102);
 			identOrString();
 			}
 		}
@@ -574,7 +579,7 @@ public class QLangGrammarParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(90);
+			setState(104);
 			match(VCS_ROOT);
 			}
 		}
@@ -616,7 +621,7 @@ public class QLangGrammarParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(92);
+			setState(106);
 			match(BUILD_CONFIGURATION);
 			}
 		}
@@ -658,7 +663,7 @@ public class QLangGrammarParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(94);
+			setState(108);
 			match(PROJECT);
 			}
 		}
@@ -700,7 +705,7 @@ public class QLangGrammarParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(96);
+			setState(110);
 			match(TEMPLATE);
 			}
 		}
@@ -744,7 +749,7 @@ public class QLangGrammarParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(98);
+			setState(112);
 			condition(0);
 			}
 		}
@@ -791,11 +796,11 @@ public class QLangGrammarParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(100);
+			setState(114);
 			match(T__0);
-			setState(101);
+			setState(115);
 			multipleObjects();
-			setState(102);
+			setState(116);
 			conditionInSubproject();
 			}
 		}
@@ -843,21 +848,21 @@ public class QLangGrammarParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(104);
+			setState(118);
 			objectKeyword();
-			setState(109);
+			setState(123);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			while (_la==T__1) {
 				{
 				{
-				setState(105);
+				setState(119);
 				match(T__1);
-				setState(106);
+				setState(120);
 				objectKeyword();
 				}
 				}
-				setState(111);
+				setState(125);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			}
@@ -910,34 +915,34 @@ public class QLangGrammarParser extends Parser {
 		ObjectKeywordContext _localctx = new ObjectKeywordContext(_ctx, getState());
 		enterRule(_localctx, 32, RULE_objectKeyword);
 		try {
-			setState(116);
+			setState(130);
 			_errHandler.sync(this);
 			switch (_input.LA(1)) {
 			case PROJECT:
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(112);
+				setState(126);
 				projectKeword();
 				}
 				break;
 			case TEMPLATE:
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(113);
+				setState(127);
 				templateKeyword();
 				}
 				break;
 			case BUILD_CONFIGURATION:
 				enterOuterAlt(_localctx, 3);
 				{
-				setState(114);
+				setState(128);
 				buildConfKeword();
 				}
 				break;
 			case VCS_ROOT:
 				enterOuterAlt(_localctx, 4);
 				{
-				setState(115);
+				setState(129);
 				vcsRootKeyword();
 				}
 				break;
@@ -989,34 +994,34 @@ public class QLangGrammarParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(126);
+			setState(140);
 			_errHandler.sync(this);
 			switch ( getInterpreter().adaptivePredict(_input,4,_ctx) ) {
 			case 1:
 				{
-				setState(120);
+				setState(134);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 				if (_la==T__2) {
 					{
-					setState(118);
+					setState(132);
 					match(T__2);
-					setState(119);
+					setState(133);
 					objectId();
 					}
 				}
 
-				setState(122);
+				setState(136);
 				match(T__3);
-				setState(123);
+				setState(137);
 				condition(0);
 				}
 				break;
 			case 2:
 				{
-				setState(124);
+				setState(138);
 				match(T__2);
-				setState(125);
+				setState(139);
 				objectId();
 				}
 				break;
@@ -1097,97 +1102,97 @@ public class QLangGrammarParser extends Parser {
 		FilterContext _localctx = new FilterContext(_ctx, getState());
 		enterRule(_localctx, 36, RULE_filter);
 		try {
-			setState(141);
+			setState(155);
 			_errHandler.sync(this);
 			switch (_input.LA(1)) {
 			case ID:
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(128);
+				setState(142);
 				idFilter();
 				}
 				break;
 			case PROJECT:
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(129);
+				setState(143);
 				projectFilter();
 				}
 				break;
 			case PARENT:
 				enterOuterAlt(_localctx, 3);
 				{
-				setState(130);
+				setState(144);
 				parentFilter();
 				}
 				break;
 			case TRIGGER:
 				enterOuterAlt(_localctx, 4);
 				{
-				setState(131);
+				setState(145);
 				triggerFilter();
 				}
 				break;
 			case STEP:
 				enterOuterAlt(_localctx, 5);
 				{
-				setState(132);
+				setState(146);
 				stepFilter();
 				}
 				break;
 			case FEATURE:
 				enterOuterAlt(_localctx, 6);
 				{
-				setState(133);
+				setState(147);
 				featureFilter();
 				}
 				break;
 			case TYPE:
 				enterOuterAlt(_localctx, 7);
 				{
-				setState(134);
+				setState(148);
 				typeFilter();
 				}
 				break;
 			case PARAM:
 				enterOuterAlt(_localctx, 8);
 				{
-				setState(135);
+				setState(149);
 				parameterFilter();
 				}
 				break;
 			case VAL:
 				enterOuterAlt(_localctx, 9);
 				{
-				setState(136);
+				setState(150);
 				parValueFilter();
 				}
 				break;
 			case ENABLED:
 				enterOuterAlt(_localctx, 10);
 				{
-				setState(137);
+				setState(151);
 				enabledFilter();
 				}
 				break;
 			case ANCESTOR:
 				enterOuterAlt(_localctx, 11);
 				{
-				setState(138);
+				setState(152);
 				ancestorFilter();
 				}
 				break;
 			case ANCESTOR_OR_SELF:
 				enterOuterAlt(_localctx, 12);
 				{
-				setState(139);
+				setState(153);
 				ancestorOrSelfFilter();
 				}
 				break;
 			case TEMPLATE:
 				enterOuterAlt(_localctx, 13);
 				{
-				setState(140);
+				setState(154);
 				templateDepFilter();
 				}
 				break;
@@ -1343,7 +1348,7 @@ public class QLangGrammarParser extends Parser {
 			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(152);
+			setState(166);
 			_errHandler.sync(this);
 			switch (_input.LA(1)) {
 			case PROJECT:
@@ -1364,7 +1369,7 @@ public class QLangGrammarParser extends Parser {
 				_ctx = _localctx;
 				_prevctx = _localctx;
 
-				setState(144);
+				setState(158);
 				filter();
 				}
 				break;
@@ -1373,11 +1378,11 @@ public class QLangGrammarParser extends Parser {
 				_localctx = new ConditionBracesContext(_localctx);
 				_ctx = _localctx;
 				_prevctx = _localctx;
-				setState(145);
+				setState(159);
 				match(T__4);
-				setState(146);
+				setState(160);
 				condition(0);
-				setState(147);
+				setState(161);
 				match(T__5);
 				}
 				break;
@@ -1386,9 +1391,9 @@ public class QLangGrammarParser extends Parser {
 				_localctx = new ConditionNotContext(_localctx);
 				_ctx = _localctx;
 				_prevctx = _localctx;
-				setState(149);
+				setState(163);
 				not();
-				setState(150);
+				setState(164);
 				condition(3);
 				}
 				break;
@@ -1396,7 +1401,7 @@ public class QLangGrammarParser extends Parser {
 				throw new NoViableAltException(this);
 			}
 			_ctx.stop = _input.LT(-1);
-			setState(164);
+			setState(178);
 			_errHandler.sync(this);
 			_alt = getInterpreter().adaptivePredict(_input,8,_ctx);
 			while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
@@ -1404,18 +1409,18 @@ public class QLangGrammarParser extends Parser {
 					if ( _parseListeners!=null ) triggerExitRuleEvent();
 					_prevctx = _localctx;
 					{
-					setState(162);
+					setState(176);
 					_errHandler.sync(this);
 					switch ( getInterpreter().adaptivePredict(_input,7,_ctx) ) {
 					case 1:
 						{
 						_localctx = new ConditionAndContext(new ConditionContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_condition);
-						setState(154);
+						setState(168);
 						if (!(precpred(_ctx, 2))) throw new FailedPredicateException(this, "precpred(_ctx, 2)");
-						setState(155);
+						setState(169);
 						and();
-						setState(156);
+						setState(170);
 						condition(3);
 						}
 						break;
@@ -1423,18 +1428,18 @@ public class QLangGrammarParser extends Parser {
 						{
 						_localctx = new ConditionOrContext(new ConditionContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_condition);
-						setState(158);
+						setState(172);
 						if (!(precpred(_ctx, 1))) throw new FailedPredicateException(this, "precpred(_ctx, 1)");
-						setState(159);
+						setState(173);
 						or();
-						setState(160);
+						setState(174);
 						condition(2);
 						}
 						break;
 					}
 					} 
 				}
-				setState(166);
+				setState(180);
 				_errHandler.sync(this);
 				_alt = getInterpreter().adaptivePredict(_input,8,_ctx);
 			}
@@ -1505,7 +1510,7 @@ public class QLangGrammarParser extends Parser {
 		FilterOrConditionContext _localctx = new FilterOrConditionContext(_ctx, getState());
 		enterRule(_localctx, 40, RULE_filterOrCondition);
 		try {
-			setState(172);
+			setState(186);
 			_errHandler.sync(this);
 			switch (_input.LA(1)) {
 			case PROJECT:
@@ -1524,7 +1529,7 @@ public class QLangGrammarParser extends Parser {
 				_localctx = new SingleFilterContext(_localctx);
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(167);
+				setState(181);
 				filter();
 				}
 				break;
@@ -1532,11 +1537,107 @@ public class QLangGrammarParser extends Parser {
 				_localctx = new MultFilterContext(_localctx);
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(168);
+				setState(182);
 				match(T__4);
-				setState(169);
+				setState(183);
 				condition(0);
-				setState(170);
+				setState(184);
+				match(T__5);
+				}
+				break;
+			default:
+				throw new NoViableAltException(this);
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
+	}
+
+	public static class StringFilterOrConditionContext extends ParserRuleContext {
+		public StringFilterOrConditionContext(ParserRuleContext parent, int invokingState) {
+			super(parent, invokingState);
+		}
+		@Override public int getRuleIndex() { return RULE_stringFilterOrCondition; }
+	 
+		public StringFilterOrConditionContext() { }
+		public void copyFrom(StringFilterOrConditionContext ctx) {
+			super.copyFrom(ctx);
+		}
+	}
+	public static class MultipleStringFilterContext extends StringFilterOrConditionContext {
+		public StringConditionContext stringCondition() {
+			return getRuleContext(StringConditionContext.class,0);
+		}
+		public MultipleStringFilterContext(StringFilterOrConditionContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof QLangGrammarListener ) ((QLangGrammarListener)listener).enterMultipleStringFilter(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof QLangGrammarListener ) ((QLangGrammarListener)listener).exitMultipleStringFilter(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof QLangGrammarVisitor ) return ((QLangGrammarVisitor<? extends T>)visitor).visitMultipleStringFilter(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class SingleStringFilterContext extends StringFilterOrConditionContext {
+		public StringFilterContext stringFilter() {
+			return getRuleContext(StringFilterContext.class,0);
+		}
+		public SingleStringFilterContext(StringFilterOrConditionContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof QLangGrammarListener ) ((QLangGrammarListener)listener).enterSingleStringFilter(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof QLangGrammarListener ) ((QLangGrammarListener)listener).exitSingleStringFilter(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof QLangGrammarVisitor ) return ((QLangGrammarVisitor<? extends T>)visitor).visitSingleStringFilter(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+
+	public final StringFilterOrConditionContext stringFilterOrCondition() throws RecognitionException {
+		StringFilterOrConditionContext _localctx = new StringFilterOrConditionContext(_ctx, getState());
+		enterRule(_localctx, 42, RULE_stringFilterOrCondition);
+		try {
+			setState(193);
+			_errHandler.sync(this);
+			switch (_input.LA(1)) {
+			case STRING:
+			case IDENT:
+			case SUFFIXS:
+			case PREFIXS:
+			case SUBSTRINGS:
+				_localctx = new SingleStringFilterContext(_localctx);
+				enterOuterAlt(_localctx, 1);
+				{
+				setState(188);
+				stringFilter();
+				}
+				break;
+			case T__4:
+				_localctx = new MultipleStringFilterContext(_localctx);
+				enterOuterAlt(_localctx, 2);
+				{
+				setState(189);
+				match(T__4);
+				setState(190);
+				stringCondition(0);
+				setState(191);
 				match(T__5);
 				}
 				break;
@@ -1581,13 +1682,13 @@ public class QLangGrammarParser extends Parser {
 
 	public final IdFilterContext idFilter() throws RecognitionException {
 		IdFilterContext _localctx = new IdFilterContext(_ctx, getState());
-		enterRule(_localctx, 42, RULE_idFilter);
+		enterRule(_localctx, 44, RULE_idFilter);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(174);
+			setState(195);
 			match(ID);
-			setState(175);
+			setState(196);
 			objectId();
 			}
 		}
@@ -1628,13 +1729,13 @@ public class QLangGrammarParser extends Parser {
 
 	public final ProjectFilterContext projectFilter() throws RecognitionException {
 		ProjectFilterContext _localctx = new ProjectFilterContext(_ctx, getState());
-		enterRule(_localctx, 44, RULE_projectFilter);
+		enterRule(_localctx, 46, RULE_projectFilter);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(177);
+			setState(198);
 			match(PROJECT);
-			setState(178);
+			setState(199);
 			filterOrCondition();
 			}
 		}
@@ -1675,13 +1776,13 @@ public class QLangGrammarParser extends Parser {
 
 	public final ParentFilterContext parentFilter() throws RecognitionException {
 		ParentFilterContext _localctx = new ParentFilterContext(_ctx, getState());
-		enterRule(_localctx, 46, RULE_parentFilter);
+		enterRule(_localctx, 48, RULE_parentFilter);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(180);
+			setState(201);
 			match(PARENT);
-			setState(181);
+			setState(202);
 			filterOrCondition();
 			}
 		}
@@ -1722,13 +1823,13 @@ public class QLangGrammarParser extends Parser {
 
 	public final TriggerFilterContext triggerFilter() throws RecognitionException {
 		TriggerFilterContext _localctx = new TriggerFilterContext(_ctx, getState());
-		enterRule(_localctx, 48, RULE_triggerFilter);
+		enterRule(_localctx, 50, RULE_triggerFilter);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(183);
+			setState(204);
 			match(TRIGGER);
-			setState(184);
+			setState(205);
 			filterOrCondition();
 			}
 		}
@@ -1769,13 +1870,13 @@ public class QLangGrammarParser extends Parser {
 
 	public final StepFilterContext stepFilter() throws RecognitionException {
 		StepFilterContext _localctx = new StepFilterContext(_ctx, getState());
-		enterRule(_localctx, 50, RULE_stepFilter);
+		enterRule(_localctx, 52, RULE_stepFilter);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(186);
+			setState(207);
 			match(STEP);
-			setState(187);
+			setState(208);
 			filterOrCondition();
 			}
 		}
@@ -1816,13 +1917,13 @@ public class QLangGrammarParser extends Parser {
 
 	public final FeatureFilterContext featureFilter() throws RecognitionException {
 		FeatureFilterContext _localctx = new FeatureFilterContext(_ctx, getState());
-		enterRule(_localctx, 52, RULE_featureFilter);
+		enterRule(_localctx, 54, RULE_featureFilter);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(189);
+			setState(210);
 			match(FEATURE);
-			setState(190);
+			setState(211);
 			filterOrCondition();
 			}
 		}
@@ -1863,13 +1964,13 @@ public class QLangGrammarParser extends Parser {
 
 	public final TypeFilterContext typeFilter() throws RecognitionException {
 		TypeFilterContext _localctx = new TypeFilterContext(_ctx, getState());
-		enterRule(_localctx, 54, RULE_typeFilter);
+		enterRule(_localctx, 56, RULE_typeFilter);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(192);
+			setState(213);
 			match(TYPE);
-			setState(193);
+			setState(214);
 			objectType();
 			}
 		}
@@ -1913,17 +2014,17 @@ public class QLangGrammarParser extends Parser {
 
 	public final ParameterFilterContext parameterFilter() throws RecognitionException {
 		ParameterFilterContext _localctx = new ParameterFilterContext(_ctx, getState());
-		enterRule(_localctx, 56, RULE_parameterFilter);
+		enterRule(_localctx, 58, RULE_parameterFilter);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(195);
+			setState(216);
 			match(PARAM);
-			setState(196);
+			setState(217);
 			parameterName();
-			setState(197);
+			setState(218);
 			match(T__6);
-			setState(198);
+			setState(219);
 			parameterValue();
 			}
 		}
@@ -1964,13 +2065,13 @@ public class QLangGrammarParser extends Parser {
 
 	public final ParValueFilterContext parValueFilter() throws RecognitionException {
 		ParValueFilterContext _localctx = new ParValueFilterContext(_ctx, getState());
-		enterRule(_localctx, 58, RULE_parValueFilter);
+		enterRule(_localctx, 60, RULE_parValueFilter);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(200);
+			setState(221);
 			match(VAL);
-			setState(201);
+			setState(222);
 			parameterValue();
 			}
 		}
@@ -2008,11 +2109,11 @@ public class QLangGrammarParser extends Parser {
 
 	public final EnabledFilterContext enabledFilter() throws RecognitionException {
 		EnabledFilterContext _localctx = new EnabledFilterContext(_ctx, getState());
-		enterRule(_localctx, 60, RULE_enabledFilter);
+		enterRule(_localctx, 62, RULE_enabledFilter);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(203);
+			setState(224);
 			match(ENABLED);
 			}
 		}
@@ -2053,13 +2154,13 @@ public class QLangGrammarParser extends Parser {
 
 	public final AncestorFilterContext ancestorFilter() throws RecognitionException {
 		AncestorFilterContext _localctx = new AncestorFilterContext(_ctx, getState());
-		enterRule(_localctx, 62, RULE_ancestorFilter);
+		enterRule(_localctx, 64, RULE_ancestorFilter);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(205);
+			setState(226);
 			match(ANCESTOR);
-			setState(206);
+			setState(227);
 			filterOrCondition();
 			}
 		}
@@ -2100,13 +2201,13 @@ public class QLangGrammarParser extends Parser {
 
 	public final AncestorOrSelfFilterContext ancestorOrSelfFilter() throws RecognitionException {
 		AncestorOrSelfFilterContext _localctx = new AncestorOrSelfFilterContext(_ctx, getState());
-		enterRule(_localctx, 64, RULE_ancestorOrSelfFilter);
+		enterRule(_localctx, 66, RULE_ancestorOrSelfFilter);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(208);
+			setState(229);
 			match(ANCESTOR_OR_SELF);
-			setState(209);
+			setState(230);
 			filterOrCondition();
 			}
 		}
@@ -2147,14 +2248,504 @@ public class QLangGrammarParser extends Parser {
 
 	public final TemplateDepFilterContext templateDepFilter() throws RecognitionException {
 		TemplateDepFilterContext _localctx = new TemplateDepFilterContext(_ctx, getState());
-		enterRule(_localctx, 66, RULE_templateDepFilter);
+		enterRule(_localctx, 68, RULE_templateDepFilter);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(211);
+			setState(232);
 			match(TEMPLATE);
-			setState(212);
+			setState(233);
 			filterOrCondition();
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
+	}
+
+	public static class StringConditionContext extends ParserRuleContext {
+		public StringConditionContext(ParserRuleContext parent, int invokingState) {
+			super(parent, invokingState);
+		}
+		@Override public int getRuleIndex() { return RULE_stringCondition; }
+	 
+		public StringConditionContext() { }
+		public void copyFrom(StringConditionContext ctx) {
+			super.copyFrom(ctx);
+		}
+	}
+	public static class StringConditionFilterContext extends StringConditionContext {
+		public StringFilterContext stringFilter() {
+			return getRuleContext(StringFilterContext.class,0);
+		}
+		public StringConditionFilterContext(StringConditionContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof QLangGrammarListener ) ((QLangGrammarListener)listener).enterStringConditionFilter(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof QLangGrammarListener ) ((QLangGrammarListener)listener).exitStringConditionFilter(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof QLangGrammarVisitor ) return ((QLangGrammarVisitor<? extends T>)visitor).visitStringConditionFilter(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class StringConditionAndContext extends StringConditionContext {
+		public List<StringConditionContext> stringCondition() {
+			return getRuleContexts(StringConditionContext.class);
+		}
+		public StringConditionContext stringCondition(int i) {
+			return getRuleContext(StringConditionContext.class,i);
+		}
+		public AndContext and() {
+			return getRuleContext(AndContext.class,0);
+		}
+		public StringConditionAndContext(StringConditionContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof QLangGrammarListener ) ((QLangGrammarListener)listener).enterStringConditionAnd(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof QLangGrammarListener ) ((QLangGrammarListener)listener).exitStringConditionAnd(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof QLangGrammarVisitor ) return ((QLangGrammarVisitor<? extends T>)visitor).visitStringConditionAnd(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class StringConditionBracesContext extends StringConditionContext {
+		public StringConditionContext stringCondition() {
+			return getRuleContext(StringConditionContext.class,0);
+		}
+		public StringConditionBracesContext(StringConditionContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof QLangGrammarListener ) ((QLangGrammarListener)listener).enterStringConditionBraces(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof QLangGrammarListener ) ((QLangGrammarListener)listener).exitStringConditionBraces(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof QLangGrammarVisitor ) return ((QLangGrammarVisitor<? extends T>)visitor).visitStringConditionBraces(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class StringConditionOrContext extends StringConditionContext {
+		public List<StringConditionContext> stringCondition() {
+			return getRuleContexts(StringConditionContext.class);
+		}
+		public StringConditionContext stringCondition(int i) {
+			return getRuleContext(StringConditionContext.class,i);
+		}
+		public OrContext or() {
+			return getRuleContext(OrContext.class,0);
+		}
+		public StringConditionOrContext(StringConditionContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof QLangGrammarListener ) ((QLangGrammarListener)listener).enterStringConditionOr(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof QLangGrammarListener ) ((QLangGrammarListener)listener).exitStringConditionOr(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof QLangGrammarVisitor ) return ((QLangGrammarVisitor<? extends T>)visitor).visitStringConditionOr(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class StringConditionNotContext extends StringConditionContext {
+		public NotContext not() {
+			return getRuleContext(NotContext.class,0);
+		}
+		public StringConditionContext stringCondition() {
+			return getRuleContext(StringConditionContext.class,0);
+		}
+		public StringConditionNotContext(StringConditionContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof QLangGrammarListener ) ((QLangGrammarListener)listener).enterStringConditionNot(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof QLangGrammarListener ) ((QLangGrammarListener)listener).exitStringConditionNot(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof QLangGrammarVisitor ) return ((QLangGrammarVisitor<? extends T>)visitor).visitStringConditionNot(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+
+	public final StringConditionContext stringCondition() throws RecognitionException {
+		return stringCondition(0);
+	}
+
+	private StringConditionContext stringCondition(int _p) throws RecognitionException {
+		ParserRuleContext _parentctx = _ctx;
+		int _parentState = getState();
+		StringConditionContext _localctx = new StringConditionContext(_ctx, _parentState);
+		StringConditionContext _prevctx = _localctx;
+		int _startState = 70;
+		enterRecursionRule(_localctx, 70, RULE_stringCondition, _p);
+		try {
+			int _alt;
+			enterOuterAlt(_localctx, 1);
+			{
+			setState(244);
+			_errHandler.sync(this);
+			switch (_input.LA(1)) {
+			case STRING:
+			case IDENT:
+			case SUFFIXS:
+			case PREFIXS:
+			case SUBSTRINGS:
+				{
+				_localctx = new StringConditionFilterContext(_localctx);
+				_ctx = _localctx;
+				_prevctx = _localctx;
+
+				setState(236);
+				stringFilter();
+				}
+				break;
+			case T__4:
+				{
+				_localctx = new StringConditionBracesContext(_localctx);
+				_ctx = _localctx;
+				_prevctx = _localctx;
+				setState(237);
+				match(T__4);
+				setState(238);
+				stringCondition(0);
+				setState(239);
+				match(T__5);
+				}
+				break;
+			case NOT:
+				{
+				_localctx = new StringConditionNotContext(_localctx);
+				_ctx = _localctx;
+				_prevctx = _localctx;
+				setState(241);
+				not();
+				setState(242);
+				stringCondition(3);
+				}
+				break;
+			default:
+				throw new NoViableAltException(this);
+			}
+			_ctx.stop = _input.LT(-1);
+			setState(256);
+			_errHandler.sync(this);
+			_alt = getInterpreter().adaptivePredict(_input,13,_ctx);
+			while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
+				if ( _alt==1 ) {
+					if ( _parseListeners!=null ) triggerExitRuleEvent();
+					_prevctx = _localctx;
+					{
+					setState(254);
+					_errHandler.sync(this);
+					switch ( getInterpreter().adaptivePredict(_input,12,_ctx) ) {
+					case 1:
+						{
+						_localctx = new StringConditionAndContext(new StringConditionContext(_parentctx, _parentState));
+						pushNewRecursionContext(_localctx, _startState, RULE_stringCondition);
+						setState(246);
+						if (!(precpred(_ctx, 2))) throw new FailedPredicateException(this, "precpred(_ctx, 2)");
+						setState(247);
+						and();
+						setState(248);
+						stringCondition(3);
+						}
+						break;
+					case 2:
+						{
+						_localctx = new StringConditionOrContext(new StringConditionContext(_parentctx, _parentState));
+						pushNewRecursionContext(_localctx, _startState, RULE_stringCondition);
+						setState(250);
+						if (!(precpred(_ctx, 1))) throw new FailedPredicateException(this, "precpred(_ctx, 1)");
+						setState(251);
+						or();
+						setState(252);
+						stringCondition(2);
+						}
+						break;
+					}
+					} 
+				}
+				setState(258);
+				_errHandler.sync(this);
+				_alt = getInterpreter().adaptivePredict(_input,13,_ctx);
+			}
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			unrollRecursionContexts(_parentctx);
+		}
+		return _localctx;
+	}
+
+	public static class StringFilterContext extends ParserRuleContext {
+		public StringEqualsFilterContext stringEqualsFilter() {
+			return getRuleContext(StringEqualsFilterContext.class,0);
+		}
+		public StringPrefixFilterContext stringPrefixFilter() {
+			return getRuleContext(StringPrefixFilterContext.class,0);
+		}
+		public StringSuffixFilterContext stringSuffixFilter() {
+			return getRuleContext(StringSuffixFilterContext.class,0);
+		}
+		public StringSubstringFilterContext stringSubstringFilter() {
+			return getRuleContext(StringSubstringFilterContext.class,0);
+		}
+		public StringFilterContext(ParserRuleContext parent, int invokingState) {
+			super(parent, invokingState);
+		}
+		@Override public int getRuleIndex() { return RULE_stringFilter; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof QLangGrammarListener ) ((QLangGrammarListener)listener).enterStringFilter(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof QLangGrammarListener ) ((QLangGrammarListener)listener).exitStringFilter(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof QLangGrammarVisitor ) return ((QLangGrammarVisitor<? extends T>)visitor).visitStringFilter(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+
+	public final StringFilterContext stringFilter() throws RecognitionException {
+		StringFilterContext _localctx = new StringFilterContext(_ctx, getState());
+		enterRule(_localctx, 72, RULE_stringFilter);
+		try {
+			setState(263);
+			_errHandler.sync(this);
+			switch (_input.LA(1)) {
+			case STRING:
+			case IDENT:
+				enterOuterAlt(_localctx, 1);
+				{
+				setState(259);
+				stringEqualsFilter();
+				}
+				break;
+			case PREFIXS:
+				enterOuterAlt(_localctx, 2);
+				{
+				setState(260);
+				stringPrefixFilter();
+				}
+				break;
+			case SUFFIXS:
+				enterOuterAlt(_localctx, 3);
+				{
+				setState(261);
+				stringSuffixFilter();
+				}
+				break;
+			case SUBSTRINGS:
+				enterOuterAlt(_localctx, 4);
+				{
+				setState(262);
+				stringSubstringFilter();
+				}
+				break;
+			default:
+				throw new NoViableAltException(this);
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
+	}
+
+	public static class StringEqualsFilterContext extends ParserRuleContext {
+		public IdentOrStringContext identOrString() {
+			return getRuleContext(IdentOrStringContext.class,0);
+		}
+		public StringEqualsFilterContext(ParserRuleContext parent, int invokingState) {
+			super(parent, invokingState);
+		}
+		@Override public int getRuleIndex() { return RULE_stringEqualsFilter; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof QLangGrammarListener ) ((QLangGrammarListener)listener).enterStringEqualsFilter(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof QLangGrammarListener ) ((QLangGrammarListener)listener).exitStringEqualsFilter(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof QLangGrammarVisitor ) return ((QLangGrammarVisitor<? extends T>)visitor).visitStringEqualsFilter(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+
+	public final StringEqualsFilterContext stringEqualsFilter() throws RecognitionException {
+		StringEqualsFilterContext _localctx = new StringEqualsFilterContext(_ctx, getState());
+		enterRule(_localctx, 74, RULE_stringEqualsFilter);
+		try {
+			enterOuterAlt(_localctx, 1);
+			{
+			setState(265);
+			identOrString();
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
+	}
+
+	public static class StringPrefixFilterContext extends ParserRuleContext {
+		public TerminalNode PREFIXS() { return getToken(QLangGrammarParser.PREFIXS, 0); }
+		public StringPrefixFilterContext(ParserRuleContext parent, int invokingState) {
+			super(parent, invokingState);
+		}
+		@Override public int getRuleIndex() { return RULE_stringPrefixFilter; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof QLangGrammarListener ) ((QLangGrammarListener)listener).enterStringPrefixFilter(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof QLangGrammarListener ) ((QLangGrammarListener)listener).exitStringPrefixFilter(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof QLangGrammarVisitor ) return ((QLangGrammarVisitor<? extends T>)visitor).visitStringPrefixFilter(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+
+	public final StringPrefixFilterContext stringPrefixFilter() throws RecognitionException {
+		StringPrefixFilterContext _localctx = new StringPrefixFilterContext(_ctx, getState());
+		enterRule(_localctx, 76, RULE_stringPrefixFilter);
+		try {
+			enterOuterAlt(_localctx, 1);
+			{
+			setState(267);
+			match(PREFIXS);
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
+	}
+
+	public static class StringSuffixFilterContext extends ParserRuleContext {
+		public TerminalNode SUFFIXS() { return getToken(QLangGrammarParser.SUFFIXS, 0); }
+		public StringSuffixFilterContext(ParserRuleContext parent, int invokingState) {
+			super(parent, invokingState);
+		}
+		@Override public int getRuleIndex() { return RULE_stringSuffixFilter; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof QLangGrammarListener ) ((QLangGrammarListener)listener).enterStringSuffixFilter(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof QLangGrammarListener ) ((QLangGrammarListener)listener).exitStringSuffixFilter(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof QLangGrammarVisitor ) return ((QLangGrammarVisitor<? extends T>)visitor).visitStringSuffixFilter(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+
+	public final StringSuffixFilterContext stringSuffixFilter() throws RecognitionException {
+		StringSuffixFilterContext _localctx = new StringSuffixFilterContext(_ctx, getState());
+		enterRule(_localctx, 78, RULE_stringSuffixFilter);
+		try {
+			enterOuterAlt(_localctx, 1);
+			{
+			setState(269);
+			match(SUFFIXS);
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
+	}
+
+	public static class StringSubstringFilterContext extends ParserRuleContext {
+		public TerminalNode SUBSTRINGS() { return getToken(QLangGrammarParser.SUBSTRINGS, 0); }
+		public StringSubstringFilterContext(ParserRuleContext parent, int invokingState) {
+			super(parent, invokingState);
+		}
+		@Override public int getRuleIndex() { return RULE_stringSubstringFilter; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof QLangGrammarListener ) ((QLangGrammarListener)listener).enterStringSubstringFilter(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof QLangGrammarListener ) ((QLangGrammarListener)listener).exitStringSubstringFilter(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof QLangGrammarVisitor ) return ((QLangGrammarVisitor<? extends T>)visitor).visitStringSubstringFilter(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+
+	public final StringSubstringFilterContext stringSubstringFilter() throws RecognitionException {
+		StringSubstringFilterContext _localctx = new StringSubstringFilterContext(_ctx, getState());
+		enterRule(_localctx, 80, RULE_stringSubstringFilter);
+		try {
+			enterOuterAlt(_localctx, 1);
+			{
+			setState(271);
+			match(SUBSTRINGS);
 			}
 		}
 		catch (RecognitionException re) {
@@ -2172,6 +2763,8 @@ public class QLangGrammarParser extends Parser {
 		switch (ruleIndex) {
 		case 19:
 			return condition_sempred((ConditionContext)_localctx, predIndex);
+		case 35:
+			return stringCondition_sempred((StringConditionContext)_localctx, predIndex);
 		}
 		return true;
 	}
@@ -2184,72 +2777,103 @@ public class QLangGrammarParser extends Parser {
 		}
 		return true;
 	}
+	private boolean stringCondition_sempred(StringConditionContext _localctx, int predIndex) {
+		switch (predIndex) {
+		case 2:
+			return precpred(_ctx, 2);
+		case 3:
+			return precpred(_ctx, 1);
+		}
+		return true;
+	}
 
 	public static final String _serializedATN =
-		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\36\u00d9\4\2\t\2"+
-		"\4\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4\t\t\t\4\n\t\n\4\13"+
-		"\t\13\4\f\t\f\4\r\t\r\4\16\t\16\4\17\t\17\4\20\t\20\4\21\t\21\4\22\t\22"+
+		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3!\u0114\4\2\t\2\4"+
+		"\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4\t\t\t\4\n\t\n\4\13\t"+
+		"\13\4\f\t\f\4\r\t\r\4\16\t\16\4\17\t\17\4\20\t\20\4\21\t\21\4\22\t\22"+
 		"\4\23\t\23\4\24\t\24\4\25\t\25\4\26\t\26\4\27\t\27\4\30\t\30\4\31\t\31"+
 		"\4\32\t\32\4\33\t\33\4\34\t\34\4\35\t\35\4\36\t\36\4\37\t\37\4 \t \4!"+
-		"\t!\4\"\t\"\4#\t#\3\2\3\2\5\2I\n\2\3\2\3\2\3\3\3\3\3\4\3\4\3\5\3\5\3\6"+
-		"\3\6\3\7\3\7\3\b\3\b\3\t\3\t\3\n\3\n\3\13\3\13\3\f\3\f\3\r\3\r\3\16\3"+
-		"\16\3\17\3\17\3\20\3\20\3\20\3\20\3\21\3\21\3\21\7\21n\n\21\f\21\16\21"+
-		"q\13\21\3\22\3\22\3\22\3\22\5\22w\n\22\3\23\3\23\5\23{\n\23\3\23\3\23"+
-		"\3\23\3\23\5\23\u0081\n\23\3\24\3\24\3\24\3\24\3\24\3\24\3\24\3\24\3\24"+
-		"\3\24\3\24\3\24\3\24\5\24\u0090\n\24\3\25\3\25\3\25\3\25\3\25\3\25\3\25"+
-		"\3\25\3\25\5\25\u009b\n\25\3\25\3\25\3\25\3\25\3\25\3\25\3\25\3\25\7\25"+
-		"\u00a5\n\25\f\25\16\25\u00a8\13\25\3\26\3\26\3\26\3\26\3\26\5\26\u00af"+
-		"\n\26\3\27\3\27\3\27\3\30\3\30\3\30\3\31\3\31\3\31\3\32\3\32\3\32\3\33"+
-		"\3\33\3\33\3\34\3\34\3\34\3\35\3\35\3\35\3\36\3\36\3\36\3\36\3\36\3\37"+
-		"\3\37\3\37\3 \3 \3!\3!\3!\3\"\3\"\3\"\3#\3#\3#\3#\2\3($\2\4\6\b\n\f\16"+
-		"\20\22\24\26\30\32\34\36 \"$&(*,.\60\62\64\668:<>@BD\2\3\3\2\r\16\2\u00ce"+
-		"\2H\3\2\2\2\4L\3\2\2\2\6N\3\2\2\2\bP\3\2\2\2\nR\3\2\2\2\fT\3\2\2\2\16"+
-		"V\3\2\2\2\20X\3\2\2\2\22Z\3\2\2\2\24\\\3\2\2\2\26^\3\2\2\2\30`\3\2\2\2"+
-		"\32b\3\2\2\2\34d\3\2\2\2\36f\3\2\2\2 j\3\2\2\2\"v\3\2\2\2$\u0080\3\2\2"+
-		"\2&\u008f\3\2\2\2(\u009a\3\2\2\2*\u00ae\3\2\2\2,\u00b0\3\2\2\2.\u00b3"+
-		"\3\2\2\2\60\u00b6\3\2\2\2\62\u00b9\3\2\2\2\64\u00bc\3\2\2\2\66\u00bf\3"+
-		"\2\2\28\u00c2\3\2\2\2:\u00c5\3\2\2\2<\u00ca\3\2\2\2>\u00cd\3\2\2\2@\u00cf"+
-		"\3\2\2\2B\u00d2\3\2\2\2D\u00d5\3\2\2\2FI\5\36\20\2GI\5\34\17\2HF\3\2\2"+
-		"\2HG\3\2\2\2IJ\3\2\2\2JK\7\2\2\3K\3\3\2\2\2LM\7\13\2\2M\5\3\2\2\2NO\7"+
-		"\n\2\2O\7\3\2\2\2PQ\7\f\2\2Q\t\3\2\2\2RS\t\2\2\2S\13\3\2\2\2TU\5\n\6\2"+
-		"U\r\3\2\2\2VW\5\n\6\2W\17\3\2\2\2XY\5\n\6\2Y\21\3\2\2\2Z[\5\n\6\2[\23"+
-		"\3\2\2\2\\]\7\23\2\2]\25\3\2\2\2^_\7\22\2\2_\27\3\2\2\2`a\7\20\2\2a\31"+
-		"\3\2\2\2bc\7\21\2\2c\33\3\2\2\2de\5(\25\2e\35\3\2\2\2fg\7\3\2\2gh\5 \21"+
-		"\2hi\5$\23\2i\37\3\2\2\2jo\5\"\22\2kl\7\4\2\2ln\5\"\22\2mk\3\2\2\2nq\3"+
-		"\2\2\2om\3\2\2\2op\3\2\2\2p!\3\2\2\2qo\3\2\2\2rw\5\30\r\2sw\5\32\16\2"+
-		"tw\5\26\f\2uw\5\24\13\2vr\3\2\2\2vs\3\2\2\2vt\3\2\2\2vu\3\2\2\2w#\3\2"+
-		"\2\2xy\7\5\2\2y{\5\f\7\2zx\3\2\2\2z{\3\2\2\2{|\3\2\2\2|}\7\6\2\2}\u0081"+
-		"\5(\25\2~\177\7\5\2\2\177\u0081\5\f\7\2\u0080z\3\2\2\2\u0080~\3\2\2\2"+
-		"\u0081%\3\2\2\2\u0082\u0090\5,\27\2\u0083\u0090\5.\30\2\u0084\u0090\5"+
-		"\60\31\2\u0085\u0090\5\62\32\2\u0086\u0090\5\64\33\2\u0087\u0090\5\66"+
-		"\34\2\u0088\u0090\58\35\2\u0089\u0090\5:\36\2\u008a\u0090\5<\37\2\u008b"+
-		"\u0090\5> \2\u008c\u0090\5@!\2\u008d\u0090\5B\"\2\u008e\u0090\5D#\2\u008f"+
-		"\u0082\3\2\2\2\u008f\u0083\3\2\2\2\u008f\u0084\3\2\2\2\u008f\u0085\3\2"+
-		"\2\2\u008f\u0086\3\2\2\2\u008f\u0087\3\2\2\2\u008f\u0088\3\2\2\2\u008f"+
-		"\u0089\3\2\2\2\u008f\u008a\3\2\2\2\u008f\u008b\3\2\2\2\u008f\u008c\3\2"+
-		"\2\2\u008f\u008d\3\2\2\2\u008f\u008e\3\2\2\2\u0090\'\3\2\2\2\u0091\u0092"+
-		"\b\25\1\2\u0092\u009b\5&\24\2\u0093\u0094\7\7\2\2\u0094\u0095\5(\25\2"+
-		"\u0095\u0096\7\b\2\2\u0096\u009b\3\2\2\2\u0097\u0098\5\b\5\2\u0098\u0099"+
-		"\5(\25\5\u0099\u009b\3\2\2\2\u009a\u0091\3\2\2\2\u009a\u0093\3\2\2\2\u009a"+
-		"\u0097\3\2\2\2\u009b\u00a6\3\2\2\2\u009c\u009d\f\4\2\2\u009d\u009e\5\4"+
-		"\3\2\u009e\u009f\5(\25\5\u009f\u00a5\3\2\2\2\u00a0\u00a1\f\3\2\2\u00a1"+
-		"\u00a2\5\6\4\2\u00a2\u00a3\5(\25\4\u00a3\u00a5\3\2\2\2\u00a4\u009c\3\2"+
-		"\2\2\u00a4\u00a0\3\2\2\2\u00a5\u00a8\3\2\2\2\u00a6\u00a4\3\2\2\2\u00a6"+
-		"\u00a7\3\2\2\2\u00a7)\3\2\2\2\u00a8\u00a6\3\2\2\2\u00a9\u00af\5&\24\2"+
-		"\u00aa\u00ab\7\7\2\2\u00ab\u00ac\5(\25\2\u00ac\u00ad\7\b\2\2\u00ad\u00af"+
-		"\3\2\2\2\u00ae\u00a9\3\2\2\2\u00ae\u00aa\3\2\2\2\u00af+\3\2\2\2\u00b0"+
-		"\u00b1\7\24\2\2\u00b1\u00b2\5\f\7\2\u00b2-\3\2\2\2\u00b3\u00b4\7\20\2"+
-		"\2\u00b4\u00b5\5*\26\2\u00b5/\3\2\2\2\u00b6\u00b7\7\25\2\2\u00b7\u00b8"+
-		"\5*\26\2\u00b8\61\3\2\2\2\u00b9\u00ba\7\26\2\2\u00ba\u00bb\5*\26\2\u00bb"+
-		"\63\3\2\2\2\u00bc\u00bd\7\27\2\2\u00bd\u00be\5*\26\2\u00be\65\3\2\2\2"+
-		"\u00bf\u00c0\7\30\2\2\u00c0\u00c1\5*\26\2\u00c1\67\3\2\2\2\u00c2\u00c3"+
-		"\7\31\2\2\u00c3\u00c4\5\16\b\2\u00c49\3\2\2\2\u00c5\u00c6\7\32\2\2\u00c6"+
-		"\u00c7\5\22\n\2\u00c7\u00c8\7\t\2\2\u00c8\u00c9\5\20\t\2\u00c9;\3\2\2"+
-		"\2\u00ca\u00cb\7\33\2\2\u00cb\u00cc\5\20\t\2\u00cc=\3\2\2\2\u00cd\u00ce"+
-		"\7\34\2\2\u00ce?\3\2\2\2\u00cf\u00d0\7\35\2\2\u00d0\u00d1\5*\26\2\u00d1"+
-		"A\3\2\2\2\u00d2\u00d3\7\36\2\2\u00d3\u00d4\5*\26\2\u00d4C\3\2\2\2\u00d5"+
-		"\u00d6\7\21\2\2\u00d6\u00d7\5*\26\2\u00d7E\3\2\2\2\fHovz\u0080\u008f\u009a"+
-		"\u00a4\u00a6\u00ae";
+		"\t!\4\"\t\"\4#\t#\4$\t$\4%\t%\4&\t&\4\'\t\'\4(\t(\4)\t)\4*\t*\3\2\3\2"+
+		"\5\2W\n\2\3\2\3\2\3\3\3\3\3\4\3\4\3\5\3\5\3\6\3\6\3\7\3\7\3\b\3\b\3\t"+
+		"\3\t\3\n\3\n\3\13\3\13\3\f\3\f\3\r\3\r\3\16\3\16\3\17\3\17\3\20\3\20\3"+
+		"\20\3\20\3\21\3\21\3\21\7\21|\n\21\f\21\16\21\177\13\21\3\22\3\22\3\22"+
+		"\3\22\5\22\u0085\n\22\3\23\3\23\5\23\u0089\n\23\3\23\3\23\3\23\3\23\5"+
+		"\23\u008f\n\23\3\24\3\24\3\24\3\24\3\24\3\24\3\24\3\24\3\24\3\24\3\24"+
+		"\3\24\3\24\5\24\u009e\n\24\3\25\3\25\3\25\3\25\3\25\3\25\3\25\3\25\3\25"+
+		"\5\25\u00a9\n\25\3\25\3\25\3\25\3\25\3\25\3\25\3\25\3\25\7\25\u00b3\n"+
+		"\25\f\25\16\25\u00b6\13\25\3\26\3\26\3\26\3\26\3\26\5\26\u00bd\n\26\3"+
+		"\27\3\27\3\27\3\27\3\27\5\27\u00c4\n\27\3\30\3\30\3\30\3\31\3\31\3\31"+
+		"\3\32\3\32\3\32\3\33\3\33\3\33\3\34\3\34\3\34\3\35\3\35\3\35\3\36\3\36"+
+		"\3\36\3\37\3\37\3\37\3\37\3\37\3 \3 \3 \3!\3!\3\"\3\"\3\"\3#\3#\3#\3$"+
+		"\3$\3$\3%\3%\3%\3%\3%\3%\3%\3%\3%\5%\u00f7\n%\3%\3%\3%\3%\3%\3%\3%\3%"+
+		"\7%\u0101\n%\f%\16%\u0104\13%\3&\3&\3&\3&\5&\u010a\n&\3\'\3\'\3(\3(\3"+
+		")\3)\3*\3*\3*\2\4(H+\2\4\6\b\n\f\16\20\22\24\26\30\32\34\36 \"$&(*,.\60"+
+		"\62\64\668:<>@BDFHJLNPR\2\3\3\2\r\16\2\u010a\2V\3\2\2\2\4Z\3\2\2\2\6\\"+
+		"\3\2\2\2\b^\3\2\2\2\n`\3\2\2\2\fb\3\2\2\2\16d\3\2\2\2\20f\3\2\2\2\22h"+
+		"\3\2\2\2\24j\3\2\2\2\26l\3\2\2\2\30n\3\2\2\2\32p\3\2\2\2\34r\3\2\2\2\36"+
+		"t\3\2\2\2 x\3\2\2\2\"\u0084\3\2\2\2$\u008e\3\2\2\2&\u009d\3\2\2\2(\u00a8"+
+		"\3\2\2\2*\u00bc\3\2\2\2,\u00c3\3\2\2\2.\u00c5\3\2\2\2\60\u00c8\3\2\2\2"+
+		"\62\u00cb\3\2\2\2\64\u00ce\3\2\2\2\66\u00d1\3\2\2\28\u00d4\3\2\2\2:\u00d7"+
+		"\3\2\2\2<\u00da\3\2\2\2>\u00df\3\2\2\2@\u00e2\3\2\2\2B\u00e4\3\2\2\2D"+
+		"\u00e7\3\2\2\2F\u00ea\3\2\2\2H\u00f6\3\2\2\2J\u0109\3\2\2\2L\u010b\3\2"+
+		"\2\2N\u010d\3\2\2\2P\u010f\3\2\2\2R\u0111\3\2\2\2TW\5\36\20\2UW\5\34\17"+
+		"\2VT\3\2\2\2VU\3\2\2\2WX\3\2\2\2XY\7\2\2\3Y\3\3\2\2\2Z[\7\13\2\2[\5\3"+
+		"\2\2\2\\]\7\n\2\2]\7\3\2\2\2^_\7\f\2\2_\t\3\2\2\2`a\t\2\2\2a\13\3\2\2"+
+		"\2bc\5,\27\2c\r\3\2\2\2de\5\n\6\2e\17\3\2\2\2fg\5,\27\2g\21\3\2\2\2hi"+
+		"\5\n\6\2i\23\3\2\2\2jk\7\26\2\2k\25\3\2\2\2lm\7\25\2\2m\27\3\2\2\2no\7"+
+		"\23\2\2o\31\3\2\2\2pq\7\24\2\2q\33\3\2\2\2rs\5(\25\2s\35\3\2\2\2tu\7\3"+
+		"\2\2uv\5 \21\2vw\5$\23\2w\37\3\2\2\2x}\5\"\22\2yz\7\4\2\2z|\5\"\22\2{"+
+		"y\3\2\2\2|\177\3\2\2\2}{\3\2\2\2}~\3\2\2\2~!\3\2\2\2\177}\3\2\2\2\u0080"+
+		"\u0085\5\30\r\2\u0081\u0085\5\32\16\2\u0082\u0085\5\26\f\2\u0083\u0085"+
+		"\5\24\13\2\u0084\u0080\3\2\2\2\u0084\u0081\3\2\2\2\u0084\u0082\3\2\2\2"+
+		"\u0084\u0083\3\2\2\2\u0085#\3\2\2\2\u0086\u0087\7\5\2\2\u0087\u0089\5"+
+		"\f\7\2\u0088\u0086\3\2\2\2\u0088\u0089\3\2\2\2\u0089\u008a\3\2\2\2\u008a"+
+		"\u008b\7\6\2\2\u008b\u008f\5(\25\2\u008c\u008d\7\5\2\2\u008d\u008f\5\f"+
+		"\7\2\u008e\u0088\3\2\2\2\u008e\u008c\3\2\2\2\u008f%\3\2\2\2\u0090\u009e"+
+		"\5.\30\2\u0091\u009e\5\60\31\2\u0092\u009e\5\62\32\2\u0093\u009e\5\64"+
+		"\33\2\u0094\u009e\5\66\34\2\u0095\u009e\58\35\2\u0096\u009e\5:\36\2\u0097"+
+		"\u009e\5<\37\2\u0098\u009e\5> \2\u0099\u009e\5@!\2\u009a\u009e\5B\"\2"+
+		"\u009b\u009e\5D#\2\u009c\u009e\5F$\2\u009d\u0090\3\2\2\2\u009d\u0091\3"+
+		"\2\2\2\u009d\u0092\3\2\2\2\u009d\u0093\3\2\2\2\u009d\u0094\3\2\2\2\u009d"+
+		"\u0095\3\2\2\2\u009d\u0096\3\2\2\2\u009d\u0097\3\2\2\2\u009d\u0098\3\2"+
+		"\2\2\u009d\u0099\3\2\2\2\u009d\u009a\3\2\2\2\u009d\u009b\3\2\2\2\u009d"+
+		"\u009c\3\2\2\2\u009e\'\3\2\2\2\u009f\u00a0\b\25\1\2\u00a0\u00a9\5&\24"+
+		"\2\u00a1\u00a2\7\7\2\2\u00a2\u00a3\5(\25\2\u00a3\u00a4\7\b\2\2\u00a4\u00a9"+
+		"\3\2\2\2\u00a5\u00a6\5\b\5\2\u00a6\u00a7\5(\25\5\u00a7\u00a9\3\2\2\2\u00a8"+
+		"\u009f\3\2\2\2\u00a8\u00a1\3\2\2\2\u00a8\u00a5\3\2\2\2\u00a9\u00b4\3\2"+
+		"\2\2\u00aa\u00ab\f\4\2\2\u00ab\u00ac\5\4\3\2\u00ac\u00ad\5(\25\5\u00ad"+
+		"\u00b3\3\2\2\2\u00ae\u00af\f\3\2\2\u00af\u00b0\5\6\4\2\u00b0\u00b1\5("+
+		"\25\4\u00b1\u00b3\3\2\2\2\u00b2\u00aa\3\2\2\2\u00b2\u00ae\3\2\2\2\u00b3"+
+		"\u00b6\3\2\2\2\u00b4\u00b2\3\2\2\2\u00b4\u00b5\3\2\2\2\u00b5)\3\2\2\2"+
+		"\u00b6\u00b4\3\2\2\2\u00b7\u00bd\5&\24\2\u00b8\u00b9\7\7\2\2\u00b9\u00ba"+
+		"\5(\25\2\u00ba\u00bb\7\b\2\2\u00bb\u00bd\3\2\2\2\u00bc\u00b7\3\2\2\2\u00bc"+
+		"\u00b8\3\2\2\2\u00bd+\3\2\2\2\u00be\u00c4\5J&\2\u00bf\u00c0\7\7\2\2\u00c0"+
+		"\u00c1\5H%\2\u00c1\u00c2\7\b\2\2\u00c2\u00c4\3\2\2\2\u00c3\u00be\3\2\2"+
+		"\2\u00c3\u00bf\3\2\2\2\u00c4-\3\2\2\2\u00c5\u00c6\7\27\2\2\u00c6\u00c7"+
+		"\5\f\7\2\u00c7/\3\2\2\2\u00c8\u00c9\7\23\2\2\u00c9\u00ca\5*\26\2\u00ca"+
+		"\61\3\2\2\2\u00cb\u00cc\7\30\2\2\u00cc\u00cd\5*\26\2\u00cd\63\3\2\2\2"+
+		"\u00ce\u00cf\7\31\2\2\u00cf\u00d0\5*\26\2\u00d0\65\3\2\2\2\u00d1\u00d2"+
+		"\7\32\2\2\u00d2\u00d3\5*\26\2\u00d3\67\3\2\2\2\u00d4\u00d5\7\33\2\2\u00d5"+
+		"\u00d6\5*\26\2\u00d69\3\2\2\2\u00d7\u00d8\7\34\2\2\u00d8\u00d9\5\16\b"+
+		"\2\u00d9;\3\2\2\2\u00da\u00db\7\35\2\2\u00db\u00dc\5\22\n\2\u00dc\u00dd"+
+		"\7\t\2\2\u00dd\u00de\5\20\t\2\u00de=\3\2\2\2\u00df\u00e0\7\36\2\2\u00e0"+
+		"\u00e1\5\20\t\2\u00e1?\3\2\2\2\u00e2\u00e3\7\37\2\2\u00e3A\3\2\2\2\u00e4"+
+		"\u00e5\7 \2\2\u00e5\u00e6\5*\26\2\u00e6C\3\2\2\2\u00e7\u00e8\7!\2\2\u00e8"+
+		"\u00e9\5*\26\2\u00e9E\3\2\2\2\u00ea\u00eb\7\24\2\2\u00eb\u00ec\5*\26\2"+
+		"\u00ecG\3\2\2\2\u00ed\u00ee\b%\1\2\u00ee\u00f7\5J&\2\u00ef\u00f0\7\7\2"+
+		"\2\u00f0\u00f1\5H%\2\u00f1\u00f2\7\b\2\2\u00f2\u00f7\3\2\2\2\u00f3\u00f4"+
+		"\5\b\5\2\u00f4\u00f5\5H%\5\u00f5\u00f7\3\2\2\2\u00f6\u00ed\3\2\2\2\u00f6"+
+		"\u00ef\3\2\2\2\u00f6\u00f3\3\2\2\2\u00f7\u0102\3\2\2\2\u00f8\u00f9\f\4"+
+		"\2\2\u00f9\u00fa\5\4\3\2\u00fa\u00fb\5H%\5\u00fb\u0101\3\2\2\2\u00fc\u00fd"+
+		"\f\3\2\2\u00fd\u00fe\5\6\4\2\u00fe\u00ff\5H%\4\u00ff\u0101\3\2\2\2\u0100"+
+		"\u00f8\3\2\2\2\u0100\u00fc\3\2\2\2\u0101\u0104\3\2\2\2\u0102\u0100\3\2"+
+		"\2\2\u0102\u0103\3\2\2\2\u0103I\3\2\2\2\u0104\u0102\3\2\2\2\u0105\u010a"+
+		"\5L\'\2\u0106\u010a\5N(\2\u0107\u010a\5P)\2\u0108\u010a\5R*\2\u0109\u0105"+
+		"\3\2\2\2\u0109\u0106\3\2\2\2\u0109\u0107\3\2\2\2\u0109\u0108\3\2\2\2\u010a"+
+		"K\3\2\2\2\u010b\u010c\5\n\6\2\u010cM\3\2\2\2\u010d\u010e\7\20\2\2\u010e"+
+		"O\3\2\2\2\u010f\u0110\7\17\2\2\u0110Q\3\2\2\2\u0111\u0112\7\21\2\2\u0112"+
+		"S\3\2\2\2\21V}\u0084\u0088\u008e\u009d\u00a8\u00b2\u00b4\u00bc\u00c3\u00f6"+
+		"\u0100\u0102\u0109";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {

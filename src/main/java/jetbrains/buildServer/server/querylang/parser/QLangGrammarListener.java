@@ -284,6 +284,30 @@ public interface QLangGrammarListener extends ParseTreeListener {
 	 */
 	void exitMultFilter(QLangGrammarParser.MultFilterContext ctx);
 	/**
+	 * Enter a parse tree produced by the {@code singleStringFilter}
+	 * labeled alternative in {@link QLangGrammarParser#stringFilterOrCondition}.
+	 * @param ctx the parse tree
+	 */
+	void enterSingleStringFilter(QLangGrammarParser.SingleStringFilterContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code singleStringFilter}
+	 * labeled alternative in {@link QLangGrammarParser#stringFilterOrCondition}.
+	 * @param ctx the parse tree
+	 */
+	void exitSingleStringFilter(QLangGrammarParser.SingleStringFilterContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code multipleStringFilter}
+	 * labeled alternative in {@link QLangGrammarParser#stringFilterOrCondition}.
+	 * @param ctx the parse tree
+	 */
+	void enterMultipleStringFilter(QLangGrammarParser.MultipleStringFilterContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code multipleStringFilter}
+	 * labeled alternative in {@link QLangGrammarParser#stringFilterOrCondition}.
+	 * @param ctx the parse tree
+	 */
+	void exitMultipleStringFilter(QLangGrammarParser.MultipleStringFilterContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link QLangGrammarParser#idFilter}.
 	 * @param ctx the parse tree
 	 */
@@ -413,4 +437,114 @@ public interface QLangGrammarListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitTemplateDepFilter(QLangGrammarParser.TemplateDepFilterContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code stringConditionFilter}
+	 * labeled alternative in {@link QLangGrammarParser#stringCondition}.
+	 * @param ctx the parse tree
+	 */
+	void enterStringConditionFilter(QLangGrammarParser.StringConditionFilterContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code stringConditionFilter}
+	 * labeled alternative in {@link QLangGrammarParser#stringCondition}.
+	 * @param ctx the parse tree
+	 */
+	void exitStringConditionFilter(QLangGrammarParser.StringConditionFilterContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code stringConditionAnd}
+	 * labeled alternative in {@link QLangGrammarParser#stringCondition}.
+	 * @param ctx the parse tree
+	 */
+	void enterStringConditionAnd(QLangGrammarParser.StringConditionAndContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code stringConditionAnd}
+	 * labeled alternative in {@link QLangGrammarParser#stringCondition}.
+	 * @param ctx the parse tree
+	 */
+	void exitStringConditionAnd(QLangGrammarParser.StringConditionAndContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code stringConditionBraces}
+	 * labeled alternative in {@link QLangGrammarParser#stringCondition}.
+	 * @param ctx the parse tree
+	 */
+	void enterStringConditionBraces(QLangGrammarParser.StringConditionBracesContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code stringConditionBraces}
+	 * labeled alternative in {@link QLangGrammarParser#stringCondition}.
+	 * @param ctx the parse tree
+	 */
+	void exitStringConditionBraces(QLangGrammarParser.StringConditionBracesContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code stringConditionOr}
+	 * labeled alternative in {@link QLangGrammarParser#stringCondition}.
+	 * @param ctx the parse tree
+	 */
+	void enterStringConditionOr(QLangGrammarParser.StringConditionOrContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code stringConditionOr}
+	 * labeled alternative in {@link QLangGrammarParser#stringCondition}.
+	 * @param ctx the parse tree
+	 */
+	void exitStringConditionOr(QLangGrammarParser.StringConditionOrContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code stringConditionNot}
+	 * labeled alternative in {@link QLangGrammarParser#stringCondition}.
+	 * @param ctx the parse tree
+	 */
+	void enterStringConditionNot(QLangGrammarParser.StringConditionNotContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code stringConditionNot}
+	 * labeled alternative in {@link QLangGrammarParser#stringCondition}.
+	 * @param ctx the parse tree
+	 */
+	void exitStringConditionNot(QLangGrammarParser.StringConditionNotContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link QLangGrammarParser#stringFilter}.
+	 * @param ctx the parse tree
+	 */
+	void enterStringFilter(QLangGrammarParser.StringFilterContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link QLangGrammarParser#stringFilter}.
+	 * @param ctx the parse tree
+	 */
+	void exitStringFilter(QLangGrammarParser.StringFilterContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link QLangGrammarParser#stringEqualsFilter}.
+	 * @param ctx the parse tree
+	 */
+	void enterStringEqualsFilter(QLangGrammarParser.StringEqualsFilterContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link QLangGrammarParser#stringEqualsFilter}.
+	 * @param ctx the parse tree
+	 */
+	void exitStringEqualsFilter(QLangGrammarParser.StringEqualsFilterContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link QLangGrammarParser#stringPrefixFilter}.
+	 * @param ctx the parse tree
+	 */
+	void enterStringPrefixFilter(QLangGrammarParser.StringPrefixFilterContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link QLangGrammarParser#stringPrefixFilter}.
+	 * @param ctx the parse tree
+	 */
+	void exitStringPrefixFilter(QLangGrammarParser.StringPrefixFilterContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link QLangGrammarParser#stringSuffixFilter}.
+	 * @param ctx the parse tree
+	 */
+	void enterStringSuffixFilter(QLangGrammarParser.StringSuffixFilterContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link QLangGrammarParser#stringSuffixFilter}.
+	 * @param ctx the parse tree
+	 */
+	void exitStringSuffixFilter(QLangGrammarParser.StringSuffixFilterContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link QLangGrammarParser#stringSubstringFilter}.
+	 * @param ctx the parse tree
+	 */
+	void enterStringSubstringFilter(QLangGrammarParser.StringSubstringFilterContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link QLangGrammarParser#stringSubstringFilter}.
+	 * @param ctx the parse tree
+	 */
+	void exitStringSubstringFilter(QLangGrammarParser.StringSubstringFilterContext ctx);
 }

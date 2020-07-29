@@ -286,4 +286,21 @@ class ClientTests: BaseServerTestCase() {
         assertEquals(1, res.objects.size)
         assertEquals("Project5_vcs1", res.objects[0].externalId)
     }
+
+    fun testStringSuffixFilter() {
+        val query = """
+            find buildConfiguration with id( *test1)
+        """.trimIndent()
+
+        val res = client.process(query).objects.map {it.externalId}.sorted()
+        val expected = listOf(
+            "Project1_test1",
+            "Project2_test1",
+            "Project3_test1",
+            "Project4_test1",
+            "Project5_test1"
+        )
+
+        assertEquals(expected, res)
+    }
 }

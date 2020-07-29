@@ -19,7 +19,7 @@ class FilterVisitor<T : Filter>(
 
     override fun visitIdFilter(ctx: QLangGrammarParser.IdFilterContext?): T {
         return transform(
-                IdFilter(ctx!!.objectId().text.fromIdentOrString()),
+                IdFilter(ctx!!.objectId().stringFilterOrCondition().accept(StringConditionVisitor)),
                 ctx.start
         )
     }
@@ -70,7 +70,7 @@ class FilterVisitor<T : Filter>(
         return transform(
                 ParameterFilter(
                     ctx!!.parameterName().text.fromIdentOrString(),
-                    ctx.parameterValue().text.fromIdentOrString()
+                    ctx.parameterValue().stringFilterOrCondition().accept(StringConditionVisitor)
                 ),
                 ctx.start
         )
@@ -78,7 +78,7 @@ class FilterVisitor<T : Filter>(
 
     override fun visitParValueFilter(ctx: QLangGrammarParser.ParValueFilterContext?): T {
         return transform(
-                ValueFilter(ctx!!.parameterValue().text.fromIdentOrString()),
+                ValueFilter(ctx!!.parameterValue().stringFilterOrCondition().accept(StringConditionVisitor)),
                 ctx.start
         )
     }

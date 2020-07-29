@@ -176,6 +176,20 @@ public interface QLangGrammarVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitMultFilter(QLangGrammarParser.MultFilterContext ctx);
 	/**
+	 * Visit a parse tree produced by the {@code singleStringFilter}
+	 * labeled alternative in {@link QLangGrammarParser#stringFilterOrCondition}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitSingleStringFilter(QLangGrammarParser.SingleStringFilterContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code multipleStringFilter}
+	 * labeled alternative in {@link QLangGrammarParser#stringFilterOrCondition}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitMultipleStringFilter(QLangGrammarParser.MultipleStringFilterContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link QLangGrammarParser#idFilter}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -253,4 +267,69 @@ public interface QLangGrammarVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitTemplateDepFilter(QLangGrammarParser.TemplateDepFilterContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code stringConditionFilter}
+	 * labeled alternative in {@link QLangGrammarParser#stringCondition}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitStringConditionFilter(QLangGrammarParser.StringConditionFilterContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code stringConditionAnd}
+	 * labeled alternative in {@link QLangGrammarParser#stringCondition}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitStringConditionAnd(QLangGrammarParser.StringConditionAndContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code stringConditionBraces}
+	 * labeled alternative in {@link QLangGrammarParser#stringCondition}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitStringConditionBraces(QLangGrammarParser.StringConditionBracesContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code stringConditionOr}
+	 * labeled alternative in {@link QLangGrammarParser#stringCondition}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitStringConditionOr(QLangGrammarParser.StringConditionOrContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code stringConditionNot}
+	 * labeled alternative in {@link QLangGrammarParser#stringCondition}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitStringConditionNot(QLangGrammarParser.StringConditionNotContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link QLangGrammarParser#stringFilter}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitStringFilter(QLangGrammarParser.StringFilterContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link QLangGrammarParser#stringEqualsFilter}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitStringEqualsFilter(QLangGrammarParser.StringEqualsFilterContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link QLangGrammarParser#stringPrefixFilter}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitStringPrefixFilter(QLangGrammarParser.StringPrefixFilterContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link QLangGrammarParser#stringSuffixFilter}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitStringSuffixFilter(QLangGrammarParser.StringSuffixFilterContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link QLangGrammarParser#stringSubstringFilter}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitStringSubstringFilter(QLangGrammarParser.StringSubstringFilterContext ctx);
 }

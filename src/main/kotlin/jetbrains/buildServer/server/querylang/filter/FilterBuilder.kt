@@ -23,8 +23,9 @@ object FilterBuilder {
         }
         return when (filter) {
             is IdFilter -> {
+                val condition = fromCondition(filter.strCondition, this::makeStringFilter)
                 ObjectFilter {project ->
-                    project.externalId == filter.str
+                    condition.accepts(project.externalId)
                 }
             }
             is AncestorFilter -> {
@@ -61,8 +62,9 @@ object FilterBuilder {
                 }
             }
             is IdFilter -> {
+                val condition = fromCondition(filter.strCondition, this::makeStringFilter)
                 ObjectFilter {buildType ->
-                    filter.str == buildType.externalId
+                    condition.accepts(buildType.externalId)
                 }
             }
             is TriggerFilter -> {
@@ -117,8 +119,9 @@ object FilterBuilder {
                 }
             }
             is IdFilter -> {
+                val condition = fromCondition(filter.strCondition, this::makeStringFilter)
                 ObjectFilter {buildType ->
-                    filter.str == buildType.externalId
+                    condition.accepts(buildType.externalId)
                 }
             }
             is TriggerFilter -> {
@@ -166,14 +169,16 @@ object FilterBuilder {
                 }
             }
             is ParameterFilter -> {
+                val conditionVal = fromCondition(filter.valueCondition, this::makeStringFilter)
                 ObjectFilter {parHolder ->
                     parHolder.parameters.containsKey(filter.option)
-                            && parHolder.parameters[filter.option] == filter.value
+                            && conditionVal.accepts(parHolder.parameters[filter.option])
                 }
             }
             is ValueFilter -> {
+                val conditionVal = fromCondition(filter.strCondition, this::makeStringFilter)
                 ObjectFilter {parHolder ->
-                    parHolder.parameters.containsValue(filter.str)
+                    parHolder.parameters.values.any {conditionVal.accepts(it)}
                 }
             }
             is EnabledFilter -> {
@@ -193,8 +198,9 @@ object FilterBuilder {
     ): ObjectFilter<SVcsRoot> {
         return when(filter) {
             is IdFilter -> {
+                val condition = fromCondition(filter.strCondition, this::makeStringFilter)
                 ObjectFilter {vcs ->
-                    vcs.externalId == filter.str
+                    condition.accepts(vcs.externalId)
                 }
             }
             is SProjectFilter -> {
@@ -212,6 +218,35 @@ object FilterBuilder {
         }
     }
 
+    fun makeStringFilter(
+        filter: StringFilter,
+        context: Any? = null
+    ): ObjectFilter<String> {
+        return when(filter) {
+            is EqualsStringFilter -> {
+                ObjectFilter{str ->
+                    str == filter.str
+                }
+            }
+            is PrefixStringFilter -> {
+                ObjectFilter {str ->
+                    str.startsWith(filter.str)
+                }
+            }
+            is SuffixStringFilter -> {
+                ObjectFilter {str ->
+                    str.endsWith(filter.str)
+                }
+            }
+            is SubstringFilter -> {
+                ObjectFilter {str ->
+                    str.contains(filter.str)
+                }
+            }
+            else -> throw IllegalStateException("Unknown StringFilter")
+        }
+    }
+
     fun <T : Filter, S> fromCondition(
             condition: ConditionAST<T>,
             makeObjectFilter: KFunction2<T, Any?, ObjectFilter<S>>,
@@ -219,21 +254,21 @@ object FilterBuilder {
     ): ObjectFilter<S> {
         return when (condition) {
             is OrConditionNode -> {
-                val filter1 = fromCondition<T, S>(condition.left, makeObjectFilter, context)
-                val filter2 = fromCondition<T, S>(condition.right, makeObjectFilter, context)
+                val filter1 = fromCondition(condition.left, makeObjectFilter, context)
+                val filter2 = fromCondition(condition.right, makeObjectFilter, context)
                 ObjectFilter {obj ->
                     filter1.accepts(obj) || filter2.accepts(obj)
                 }
             }
             is AndConditionNode -> {
-                val filter1 = fromCondition<T, S>(condition.left, makeObjectFilter, context)
-                val filter2 = fromCondition<T, S>(condition.right, makeObjectFilter, context)
+                val filter1 = fromCondition(condition.left, makeObjectFilter, context)
+                val filter2 = fromCondition(condition.right, makeObjectFilter, context)
                 ObjectFilter {obj ->
                     filter1.accepts(obj) && filter2.accepts(obj)
                 }
             }
             is NotConditionNode -> {
-                val filter = fromCondition<T, S>(condition.cond, makeObjectFilter, context)
+                val filter = fromCondition(condition.cond, makeObjectFilter, context)
                 ObjectFilter {obj ->
                     !filter.accepts(obj)
                 }

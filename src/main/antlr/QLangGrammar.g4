@@ -13,9 +13,9 @@ not: NOT ;
 
 identOrString : IDENT | STRING ;
 
-objectId : identOrString ;
+objectId : stringFilterOrCondition ;
 objectType : identOrString ;
-parameterValue : identOrString;
+parameterValue : stringFilterOrCondition;
 parameterName : identOrString;
 
 vcsRootKeyword : VCS_ROOT;
@@ -61,8 +61,13 @@ filterOrCondition : filter               #singleFilter
                   | '(' condition ')'    #multFilter
                   ;
 
-idFilter : ID objectId;
-projectFilter : PROJECT filterOrCondition;
+stringFilterOrCondition : stringFilter             #singleStringFilter
+                        | '(' stringCondition ')'  #multipleStringFilter
+                        ;
+
+
+idFilter : ID objectId ;
+projectFilter : PROJECT filterOrCondition ;
 parentFilter : PARENT filterOrCondition ;
 triggerFilter : TRIGGER filterOrCondition ;
 stepFilter : STEP filterOrCondition ;
@@ -70,7 +75,26 @@ featureFilter : FEATURE filterOrCondition ;
 typeFilter : TYPE objectType ;
 parameterFilter : PARAM  parameterName '=' parameterValue ;
 parValueFilter : VAL parameterValue ;
-enabledFilter : ENABLED;
-ancestorFilter : ANCESTOR filterOrCondition;
+enabledFilter : ENABLED ;
+ancestorFilter : ANCESTOR filterOrCondition ;
 ancestorOrSelfFilter : ANCESTOR_OR_SELF filterOrCondition ;
 templateDepFilter : TEMPLATE filterOrCondition ;
+
+
+stringCondition : stringFilter                         #stringConditionFilter
+                | '(' stringCondition ')'              #stringConditionBraces
+                | not stringCondition                  #stringConditionNot
+                | stringCondition and stringCondition  #stringConditionAnd
+                | stringCondition or stringCondition   #stringConditionOr
+                ;
+
+stringFilter : stringEqualsFilter
+             | stringPrefixFilter
+             | stringSuffixFilter
+             | stringSubstringFilter
+             ;
+
+stringEqualsFilter : identOrString ;
+stringPrefixFilter : PREFIXS ;
+stringSuffixFilter : SUFFIXS ;
+stringSubstringFilter : SUBSTRINGS ;

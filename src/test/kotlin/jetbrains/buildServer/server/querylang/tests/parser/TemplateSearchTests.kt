@@ -3,6 +3,7 @@ package jetbrains.buildServer.server.querylang.tests.parser
 import jetbrains.buildServer.server.querylang.ast.*
 import jetbrains.buildServer.server.querylang.parser.ParsingException
 import jetbrains.buildServer.server.querylang.parser.QueryParser
+import jetbrains.buildServer.server.querylang.tests.wrapEq
 import org.testng.annotations.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -19,7 +20,7 @@ internal class TemplateSearchTests {
         val parsed = parser.parse(query)
         val expected = FindTemplate(
                 AndConditionNode<TempFilter>(
-                        FilterConditionNode(IdFilter("Test1")),
+                        FilterConditionNode(IdFilter("Test1".wrapEq())),
                         FilterConditionNode(TriggerFilter(
                                 FilterConditionNode(
                                         TypeFilter("vcsTrigger")
@@ -42,10 +43,10 @@ internal class TemplateSearchTests {
                 AndConditionNode<TempFilter>(
                         FilterConditionNode(SProjectFilter(
                                 FilterConditionNode(
-                                        IdFilter("Project1")
+                                        IdFilter("Project1".wrapEq())
                                 )
                         )),
-                        FilterConditionNode(IdFilter("Test1"))
+                        FilterConditionNode(IdFilter("Test1".wrapEq()))
                 )
         ).wrap()
 

@@ -2,15 +2,15 @@ package jetbrains.buildServer.server.querylang.ast
 
 
 data class IdFilter(
-    override val str: String
+    val strCondition: ConditionAST<StringFilter>
 ) :
-    StringTerminalFilter,
     ProjectFilter,
     BcOrTempFilter,
     VcsRootFilter
 {
     companion object : Names("id")
     override val names = IdFilter.names
+    override fun createStr() = "id(" + strCondition.createStr() + ")"
 }
 
 data class SProjectFilter(
@@ -87,13 +87,13 @@ data class TempDepFilter(
 }
 
 data class ValueFilter(
-    override val str: String
+    val strCondition: ConditionAST<StringFilter>
 ) :
-    StringTerminalFilter,
     ParameterHolderFilter
 {
     companion object : Names("val")
     override val names = ValueFilter.names
+    override fun createStr() = "val " + strCondition.createStr()
 }
 
 data class EnabledFilter(
@@ -107,12 +107,12 @@ data class EnabledFilter(
     override fun createStr() = "enabled"
 }
 
-data class ParameterFilter(val option: String, val value: String) : ParameterHolderFilter
+data class ParameterFilter(val option: String, val valueCondition: ConditionAST<StringFilter>) : ParameterHolderFilter
 {
     companion object : Names("param")
     override val names = ParameterFilter.names
 
-    override fun createStr() = "param ${option}=\"${value}\""
+    override fun createStr() = "param ${option}=(${valueCondition.createStr()})"
 }
 
 data class AncestorFilter(

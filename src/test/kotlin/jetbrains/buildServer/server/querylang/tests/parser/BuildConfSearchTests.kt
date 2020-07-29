@@ -3,6 +3,7 @@ package jetbrains.buildServer.server.querylang.tests.parser
 import jetbrains.buildServer.server.querylang.ast.*
 import jetbrains.buildServer.server.querylang.parser.ParsingException
 import jetbrains.buildServer.server.querylang.parser.QueryParser
+import jetbrains.buildServer.server.querylang.tests.wrapEq
 import org.testng.annotations.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -19,7 +20,7 @@ class BuildConfSearchTests {
         val parsed = parser.parse(query)
         val expected = FindBuildConf(FilterConditionNode(
                 SProjectFilter(FilterConditionNode(
-                        IdFilter("Project1")
+                        IdFilter("Project1".wrapEq())
                 ))
         )).wrap()
 
@@ -36,11 +37,11 @@ class BuildConfSearchTests {
 
         val expected = FindBuildConf(AndConditionNode<BuildConfFilter>(
                         FilterConditionNode(SProjectFilter(FilterConditionNode(
-                                IdFilter("Project1")
+                                IdFilter("Project1".wrapEq())
                         ))),
                         FilterConditionNode(TriggerFilter(AndConditionNode<ParameterHolderFilter>(
                                 FilterConditionNode(TypeFilter("vcsTrigger")),
-                                FilterConditionNode(ParameterFilter("par", "abc"))
+                                FilterConditionNode(ParameterFilter("par", "abc".wrapEq()))
                         )))
         )).wrap()
         assertEquals(expected, parsed)
@@ -61,11 +62,11 @@ class BuildConfSearchTests {
                         FilterConditionNode(TriggerFilter(
                                 AndConditionNode<ParameterHolderFilter>(
                                         FilterConditionNode(TypeFilter("vcsTrigger")),
-                                        FilterConditionNode(ParameterFilter("par", "abc"))
+                                        FilterConditionNode(ParameterFilter("par", "abc".wrapEq()))
                                 ))
                         ),
                         FilterConditionNode(SProjectFilter(
-                                FilterConditionNode(IdFilter("Project1"))
+                                FilterConditionNode(IdFilter("Project1".wrapEq()))
                         ))
                 )
         ).wrap()
@@ -85,7 +86,7 @@ class BuildConfSearchTests {
                         TriggerFilter(
                                 AndConditionNode<ParameterHolderFilter>(
                                         FilterConditionNode(TypeFilter("vcsTrigger")),
-                                        FilterConditionNode(ParameterFilter("par", "abc"))
+                                        FilterConditionNode(ParameterFilter("par", "abc".wrapEq()))
                                 )
                         )
                 )
@@ -105,7 +106,7 @@ class BuildConfSearchTests {
         val expected = FindBuildConf(
                 FilterConditionNode(
                         SProjectFilter(
-                                FilterConditionNode(IdFilter("Project1"))
+                                FilterConditionNode(IdFilter("Project1".wrapEq()))
                         )
                 )
         ).wrap()
@@ -164,7 +165,7 @@ class BuildConfSearchTests {
                 FilterConditionNode(
                         TriggerFilter(
                                 FilterConditionNode(
-                                        ParameterFilter("path", "abacaba")
+                                        ParameterFilter("path", "abacaba".wrapEq())
                                 )
                         )
                 )
@@ -185,7 +186,7 @@ class BuildConfSearchTests {
                         SProjectFilter(
                             FilterConditionNode(
                                     AncestorFilter(
-                                            FilterConditionNode(IdFilter("Project1"))
+                                            FilterConditionNode(IdFilter("Project1".wrapEq()))
                                     )
                             )
                         )
@@ -205,7 +206,7 @@ class BuildConfSearchTests {
         val expected = FindBuildConf(
                 FilterConditionNode(
                         TriggerFilter(
-                                FilterConditionNode(ValueFilter("abc"))
+                                FilterConditionNode(ValueFilter("abc".wrapEq()))
                         )
                 )
         ).wrap()
@@ -224,7 +225,7 @@ class BuildConfSearchTests {
                 FilterConditionNode(
                         StepFilter(
                                 FilterConditionNode(
-                                        ParameterFilter("path", "abc")
+                                        ParameterFilter("path", "abc".wrapEq())
                                 )
                         )
                 )
@@ -244,7 +245,7 @@ class BuildConfSearchTests {
                 FilterConditionNode(
                         FeatureFilter(
                                 FilterConditionNode(
-                                        ParameterFilter("path", "abc")
+                                        ParameterFilter("path", "abc".wrapEq())
                                 )
                         )
                 )
@@ -265,7 +266,7 @@ class BuildConfSearchTests {
                         StepFilter(
                                 AndConditionNode<ParameterHolderFilter>(
                                         FilterConditionNode(
-                                                ValueFilter("abc")
+                                                ValueFilter("abc".wrapEq())
                                         ),
                                         FilterConditionNode(
                                                 EnabledFilter(true)
@@ -289,7 +290,7 @@ class BuildConfSearchTests {
                 FilterConditionNode(
                         TempDepFilter(
                                 AndConditionNode<TempFilter>(
-                                        FilterConditionNode(IdFilter("5555)")),
+                                        FilterConditionNode(IdFilter("5555)".wrapEq())),
                                         FilterConditionNode(TriggerFilter(
                                                 FilterConditionNode(
                                                         TypeFilter("vcsTrigger")

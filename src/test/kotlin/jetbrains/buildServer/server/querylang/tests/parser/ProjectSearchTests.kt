@@ -3,6 +3,7 @@ package jetbrains.buildServer.server.querylang.tests.parser
 import jetbrains.buildServer.server.querylang.ast.*
 import jetbrains.buildServer.server.querylang.parser.ParsingException
 import jetbrains.buildServer.server.querylang.parser.QueryParser
+import jetbrains.buildServer.server.querylang.tests.wrapEq
 import org.testng.annotations.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -20,7 +21,7 @@ internal class ProjectSearchTests {
         val expected = FindProject(
                         FilterConditionNode(
                                 AncestorFilter(
-                                        FilterConditionNode(IdFilter("Project1"))
+                                        FilterConditionNode(IdFilter("Project1".wrapEq()))
                                 )
                         )
         ).wrap()
@@ -38,7 +39,7 @@ internal class ProjectSearchTests {
         val expected = FindProject(
                 FilterConditionNode(
                         ParentFilter(
-                                FilterConditionNode(IdFilter("Project1"))
+                                FilterConditionNode(IdFilter("Project1".wrapEq()))
                         )
                 )
         ).wrap()
