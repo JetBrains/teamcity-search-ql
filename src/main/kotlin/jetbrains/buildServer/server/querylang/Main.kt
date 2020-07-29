@@ -7,11 +7,17 @@ import jetbrains.buildServer.server.querylang.parser.TypeDeduce
 
 
 fun main() {
+
+    val queryp = QueryParser
     val autoCompl = AutoCompletion(null)
 
     while (true) {
-        println(autoCompl.complete(readLine()!!))
+        autoCompl.complete(readLine()!!).forEach {
+            println(it.result)
+        }
     }
+
+
 }
 
 //find buildConf: (project: (subprojects id:_Root)) (trig: (type: vcsTrigger) (opt:(triggerRules = "+:user=ilya:**")))

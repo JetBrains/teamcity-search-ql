@@ -303,4 +303,32 @@ class ClientTests: BaseServerTestCase() {
 
         assertEquals(expected, res)
     }
+
+    fun testPrefixFilter() {
+        val query = """
+            find buildConfiguration with id (Project1*)
+        """.trimIndent()
+
+        val res = client.process(query).objects.map {it.externalId}.sorted()
+        val expected = listOf(
+            "Project1_test1",
+            "Project1_test2"
+        )
+
+        assertEquals(expected, res)
+    }
+
+    fun testSubstringFilter() {
+        val query = """
+            find buildConfiguration with step (param path= *b*)
+        """.trimIndent()
+
+        val res = client.process(query).objects.map {it.externalId}.sorted()
+        val expected = listOf(
+            "Project3_test2",
+            "Project4_test1"
+        )
+
+        assertEquals(expected, res)
+    }
 }

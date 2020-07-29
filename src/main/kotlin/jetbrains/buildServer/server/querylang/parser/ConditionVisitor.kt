@@ -14,7 +14,9 @@ class ConditionVisitor<T : Filter>(
         if (ctx!!.objectId() != null) {
             condition1 = FilterConditionNode<T>(
                     filterType.safeCast(
-                        SProjectFilter(FilterConditionNode(IdFilter(ctx.objectId().text)))
+                        SProjectFilter(FilterConditionNode(IdFilter(
+                            FilterConditionNode(EqualsStringFilter(ctx.objectId().text)))
+                        ))
                     ) ?: throw IllegalStateException("visitConditionInSubproject was invoked from wrong context")
             )
         }

@@ -43,9 +43,9 @@ class TypeDeduce {
         val res = mutableListOf<FindMultipleTypes>()
         val new = mutableListOf<TopLevelQuery<*>>()
 
-        fun rec(conditionClass: KClass<out ConditionContainer<out Filter>>, FilterClass: KClass<out Filter>) {
+        fun rec(conditionClass: KClass<out ConditionContainer<out Filter>>, filterClass: KClass<out Filter>) {
 
-            if (filters.all { FilterClass.isInstance(it) }) {
+            if (filters.all { filterClass.isInstance(it) }) {
                 val filterClasses = getSubclasses(conditionClass.java)
                 filterClasses.forEach { clazz ->
                     when {
@@ -65,7 +65,9 @@ class TypeDeduce {
             rec(r.conditionc.kotlin, r.filterc.kotlin)
         }
 
-        res.add(FindMultipleTypes(new))
+        if (new.isNotEmpty()) {
+            res.add(FindMultipleTypes(new))
+        }
         return res
     }
 
