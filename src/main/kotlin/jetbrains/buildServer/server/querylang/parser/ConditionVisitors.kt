@@ -13,21 +13,3 @@ internal val vcsRootConditionVisitor = getConditionVisitor<VcsRootFilter>()
 internal val parHolderConditionVisitor = getConditionVisitor<ParameterHolderFilter>()
 
 internal val anyFilterConditionVisitor = getConditionVisitor<Filter>()
-
-internal fun String.fromIdentOrString(): String {
-    if (this.length <= 1) {
-        return this
-    }
-
-    var res = this
-
-    if (this.first() == '"') {
-        res = res.drop(1)
-    }
-
-    if (this.last() == '"') {
-        res = res.dropLast(1)
-    }
-
-    return res
-}

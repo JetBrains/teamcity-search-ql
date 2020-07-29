@@ -1,6 +1,7 @@
 package jetbrains.buildServer.server.querylang.parser
 
 import jetbrains.buildServer.server.querylang.ast.*
+import jetbrains.buildServer.server.querylang.fromIdentOrString
 import org.antlr.v4.runtime.Token
 import kotlin.reflect.KClass
 import kotlin.reflect.full.safeCast

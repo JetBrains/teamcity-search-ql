@@ -1,6 +1,7 @@
 package jetbrains.buildServer.server.querylang.parser
 
 import jetbrains.buildServer.server.querylang.ast.*
+import jetbrains.buildServer.server.querylang.fromIdentOrString
 
 object StringFilterVisitor : QLangGrammarBaseVisitor<StringFilter>() {
     override fun visitStringFilter(ctx: QLangGrammarParser.StringFilterContext?): StringFilter {

@@ -310,4 +310,17 @@ class BuildConfSearchTests {
 
         assertFailsWith<ParsingException> { parser.parse(query) }
     }
+
+    fun testQuotesEscape() {
+        val query = """
+            find buildConfiguration with id "Base""Configuration"
+        """.trimIndent()
+
+        val parsed = parser.parse(query)
+        val expected = FindBuildConf(FilterConditionNode(
+                IdFilter("Base\"Configuration".wrapEq())
+        )).wrap()
+
+        assertEquals(expected, parsed)
+    }
 }

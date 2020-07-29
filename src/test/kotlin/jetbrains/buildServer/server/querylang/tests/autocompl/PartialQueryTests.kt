@@ -15,7 +15,7 @@ class PartialQueryTests {
     fun completeIdQuery() {
         val query = "id BaseProject"
 
-        val res = compl.complete(query).map {it.result}
+        val res = compl.complete(query).map { it.result }
         val expected = listOf(
             "find project with ancestor(id(BaseProject))",
             "find project,buildConfiguration,template with parent(id(BaseProject))",
@@ -31,7 +31,7 @@ class PartialQueryTests {
     fun completeTypeQuery() {
         val query = "type vcsTrigger"
 
-        val res = compl.complete(query).map {it.result}
+        val res = compl.complete(query).map { it.result }
         val expected = listOf(
             "find buildConfiguration,template with feature(type vcsTrigger)",
             "find buildConfiguration,template with step(type vcsTrigger)",
@@ -45,7 +45,7 @@ class PartialQueryTests {
     fun completeParamQuery() {
         val query = "param path = (Base* and *Project)"
 
-        val res = compl.complete(query).map {it.result}
+        val res = compl.complete(query).map { it.result }
         val expected = listOf(
             "find buildConfiguration,template with feature(param path=(Base* and *Project))",
             "find buildConfiguration,template with step(param path=(Base* and *Project))",
@@ -58,7 +58,7 @@ class PartialQueryTests {
     fun testDoubleQuotes() {
         val query = """param "path&1" = ("Base^"* and *"Project*" )"""
 
-        val res = compl.complete(query).map {it.result}
+        val res = compl.complete(query).map { it.result }
         val expected = listOf(
             """find buildConfiguration,template with feature(param "path&1"=("Base^"* and *"Project*"))""",
             """find buildConfiguration,template with step(param "path&1"=("Base^"* and *"Project*"))""",
@@ -71,9 +71,20 @@ class PartialQueryTests {
     fun testDoubleQuotesId() {
         val query = """id "Base^Project" """
 
-        val res = compl.complete(query).map {it.result}
+        val res = compl.complete(query).map { it.result }
         val expected = listOf(
             """find project with ancestor(id("Base^Project"))"""
+        )
+
+        assertEquals(expected.first(), res.first())
+    }
+
+    fun testEscapedDoubleQuotesTest() {
+        val query = """id "Base""Project" """
+
+        val res = compl.complete(query).map { it.result }
+        val expected = listOf(
+            """find project with ancestor(id("Base""Project"))"""
         )
 
         assertEquals(expected.first(), res.first())
