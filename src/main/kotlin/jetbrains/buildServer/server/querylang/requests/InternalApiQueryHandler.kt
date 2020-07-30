@@ -1,7 +1,7 @@
 package jetbrains.buildServer.server.querylang.requests
 
 import jetbrains.buildServer.server.querylang.ast.*
-import jetbrains.buildServer.server.querylang.filter.FilterBuilder
+import jetbrains.buildServer.server.querylang.filter.*
 import jetbrains.buildServer.server.querylang.objects.BuildConfiguration
 import jetbrains.buildServer.server.querylang.objects.BuildTemplate
 import jetbrains.buildServer.server.querylang.objects.Project
@@ -34,7 +34,7 @@ class InternalApiQueryHandler(
     }
 
     private fun findProjects(condition: ConditionAST<ProjectFilterType>): QueryResult {
-        val projectFilter = FilterBuilder.fromCondition<ProjectFilterType, SProject>(condition, FilterBuilder::makeProjectFilter)
+        val projectFilter = ProjectFilterBuilder.createFilter(condition)
         return QueryResult(
                 projectManager.projects
                         .filter {projectFilter.accepts(it)}
@@ -44,7 +44,7 @@ class InternalApiQueryHandler(
     }
 
     private fun findBuildConfs(condition: ConditionAST<BuildConfFilterType>): QueryResult {
-        val buildConfFilter = FilterBuilder.fromCondition<BuildConfFilterType, SBuildType>(condition, FilterBuilder::makeBCFilter)
+        val buildConfFilter = BuildConfFilterBuilder.createFilter(condition)
         return QueryResult(
                 projectManager
                         .allBuildTypes
@@ -55,7 +55,7 @@ class InternalApiQueryHandler(
     }
 
     private fun findTemplates(condition: ConditionAST<TemplateFilterType>): QueryResult {
-        val templateConfFilter = FilterBuilder.fromCondition<TemplateFilterType, BuildTypeTemplate>(condition, FilterBuilder::makeTempFilter)
+        val templateConfFilter = TemplateFilterBuilder.createFilter(condition)
         return QueryResult(
                 projectManager
                         .allTemplates
@@ -66,7 +66,7 @@ class InternalApiQueryHandler(
     }
 
     private fun findVcsRoots(condition: ConditionAST<VcsRootFilterType>): QueryResult {
-        val vcsRootFilter = FilterBuilder.fromCondition<VcsRootFilterType, SVcsRoot>(condition, FilterBuilder::makeVcsFilter)
+        val vcsRootFilter = VcsRootFilterBuilder.createFilter(condition)
         return QueryResult(
                 projectManager
                         .allVcsRoots
