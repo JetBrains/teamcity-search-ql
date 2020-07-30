@@ -8,12 +8,14 @@ interface ConditionContainer<T : Filter> : Printable, Named {
     }
 }
 
-interface ProjectComplexFilter : ConditionContainer<ProjectFilter>
+interface ProjectComplexFilter : ConditionContainer<ProjectFilterType>
 
-interface BuildConfComplexFilter : ConditionContainer<BuildConfFilter>
+interface BuildConfComplexFilter : ConditionContainer<BuildConfFilterType>
 
-interface TemplateComplexFilter : ConditionContainer<TempFilter>
+interface TemplateComplexFilter : ConditionContainer<TemplateFilterType>
 
-interface ParHolderComplexFilter : ConditionContainer<ParameterHolderFilter>
+interface ParHolderComplexFilter : ConditionContainer<ParameterHolderFilterType>
 
-interface VcsRootComplexFilter : ConditionContainer<VcsRootFilter>
+interface VcsRootComplexFilter : ConditionContainer<VcsRootFilterType>
+
+interface VcsRootEntryComplexFilter : ConditionContainer<VcsRootEntryFilter>

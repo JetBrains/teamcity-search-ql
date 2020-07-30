@@ -17,7 +17,7 @@ import java.util.*;
         putToKeywords(FindVcsRoot.Companion.getNames(), QLangGrammarParser.VCS_ROOT);
 
         putToKeywords(IdFilter.Companion.getNames() , QLangGrammarParser.ID);
-        putToKeywords(SProjectFilter.Companion.getNames(), QLangGrammarParser.PROJECT);
+        putToKeywords(ProjectFilter.Companion.getNames(), QLangGrammarParser.PROJECT);
         putToKeywords(TempDepFilter.Companion.getNames(), QLangGrammarParser.TEMPLATE);
         putToKeywords(ParentFilter.Companion.getNames(), QLangGrammarParser.PARENT);
         putToKeywords(TriggerFilter.Companion.getNames(), QLangGrammarParser.TRIGGER);
@@ -29,6 +29,7 @@ import java.util.*;
         putToKeywords(EnabledFilter.Companion.getNames(), QLangGrammarParser.ENABLED);
         putToKeywords(AncestorFilter.Companion.getNames(), QLangGrammarParser.ANCESTOR);
         putToKeywords(AncestorOrSelfFilter.Companion.getNames(), QLangGrammarParser.ANCESTOR_OR_SELF);
+        putToKeywords(CheckoutRulesFilter.Companion.getNames(), QLangGrammarParser.RULES);
     }
 
     private void putToKeywords(List<String> filterNames, Integer tokenType) {
@@ -41,7 +42,7 @@ import java.util.*;
 tokens {
        PROJECT, TEMPLATE, BUILD_CONFIGURATION, VCS_ROOT,
        ID, PARENT, TRIGGER, STEP, FEATURE, TYPE, PARAM, VAL,
-       ENABLED, ANCESTOR, ANCESTOR_OR_SELF
+       ENABLED, ANCESTOR, ANCESTOR_OR_SELF, RULES
 }
 
 fragment DIGIT: [0-9] ;

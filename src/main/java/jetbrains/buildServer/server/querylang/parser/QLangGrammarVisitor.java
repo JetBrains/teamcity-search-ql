@@ -73,6 +73,12 @@ public interface QLangGrammarVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitParameterName(QLangGrammarParser.ParameterNameContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link QLangGrammarParser#checkoutRulesString}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitCheckoutRulesString(QLangGrammarParser.CheckoutRulesStringContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link QLangGrammarParser#vcsRootKeyword}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -273,6 +279,18 @@ public interface QLangGrammarVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitTemplateDepFilter(QLangGrammarParser.TemplateDepFilterContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link QLangGrammarParser#vcsRootFilter}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitVcsRootFilter(QLangGrammarParser.VcsRootFilterContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link QLangGrammarParser#checkoutRulesFilter}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitCheckoutRulesFilter(QLangGrammarParser.CheckoutRulesFilterContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code stringConditionFilter}
 	 * labeled alternative in {@link QLangGrammarParser#stringCondition}.

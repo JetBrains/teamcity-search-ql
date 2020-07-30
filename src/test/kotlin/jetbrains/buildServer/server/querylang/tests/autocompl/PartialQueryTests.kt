@@ -22,6 +22,7 @@ class PartialQueryTests {
             "find project with ancestorOrSelf(id(BaseProject))",
             "find buildConfiguration,template,vcsRoot with project(id(BaseProject))",
             "find buildConfiguration with template(id(BaseProject))",
+            "find buildConfiguration,template with vcsRoot(id(BaseProject))",
             "find project,buildConfiguration,template,vcsRoot with id(BaseProject)"
         )
 
@@ -36,6 +37,7 @@ class PartialQueryTests {
             "find buildConfiguration,template with feature(type vcsTrigger)",
             "find buildConfiguration,template with step(type vcsTrigger)",
             "find buildConfiguration,template with trigger(type vcsTrigger)",
+            "find buildConfiguration,template with vcsRoot(type vcsTrigger)",
             "find vcsRoot with type vcsTrigger"
         )
 

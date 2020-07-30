@@ -21,6 +21,7 @@ objectId : stringFilterOrCondition ;
 objectType : identOrString ;
 parameterValue : stringFilterOrCondition;
 parameterName : identOrString;
+checkoutRulesString : stringFilterOrCondition ;
 
 vcsRootKeyword : VCS_ROOT;
 buildConfKeword : BUILD_CONFIGURATION ;
@@ -52,6 +53,8 @@ filter : idFilter
        | ancestorFilter
        | ancestorOrSelfFilter
        | templateDepFilter
+       | vcsRootFilter
+       | checkoutRulesFilter
        ;
 
 condition : filter                     #conditionFilter
@@ -83,6 +86,8 @@ enabledFilter : ENABLED ;
 ancestorFilter : ANCESTOR filterOrCondition ;
 ancestorOrSelfFilter : ANCESTOR_OR_SELF filterOrCondition ;
 templateDepFilter : TEMPLATE filterOrCondition ;
+vcsRootFilter : VCS_ROOT filterOrCondition ;
+checkoutRulesFilter : RULES checkoutRulesString ;
 
 
 stringCondition : stringFilter                         #stringConditionFilter

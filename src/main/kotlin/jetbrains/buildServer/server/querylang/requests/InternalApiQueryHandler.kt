@@ -11,7 +11,6 @@ import jetbrains.buildServer.serverSide.ProjectManager
 import jetbrains.buildServer.serverSide.SBuildType
 import jetbrains.buildServer.serverSide.SProject
 import jetbrains.buildServer.vcs.SVcsRoot
-import java.lang.IllegalStateException
 
 class InternalApiQueryHandler(
         val projectManager: ProjectManager
@@ -34,8 +33,8 @@ class InternalApiQueryHandler(
         }
     }
 
-    private fun findProjects(condition: ConditionAST<ProjectFilter>): QueryResult {
-        val projectFilter = FilterBuilder.fromCondition<ProjectFilter, SProject>(condition, FilterBuilder::makeProjectFilter)
+    private fun findProjects(condition: ConditionAST<ProjectFilterType>): QueryResult {
+        val projectFilter = FilterBuilder.fromCondition<ProjectFilterType, SProject>(condition, FilterBuilder::makeProjectFilter)
         return QueryResult(
                 projectManager.projects
                         .filter {projectFilter.accepts(it)}
@@ -44,8 +43,8 @@ class InternalApiQueryHandler(
         )
     }
 
-    private fun findBuildConfs(condition: ConditionAST<BuildConfFilter>): QueryResult {
-        val buildConfFilter = FilterBuilder.fromCondition<BuildConfFilter, SBuildType>(condition, FilterBuilder::makeBCFilter)
+    private fun findBuildConfs(condition: ConditionAST<BuildConfFilterType>): QueryResult {
+        val buildConfFilter = FilterBuilder.fromCondition<BuildConfFilterType, SBuildType>(condition, FilterBuilder::makeBCFilter)
         return QueryResult(
                 projectManager
                         .allBuildTypes
@@ -55,8 +54,8 @@ class InternalApiQueryHandler(
         )
     }
 
-    private fun findTemplates(condition: ConditionAST<TempFilter>): QueryResult {
-        val templateConfFilter = FilterBuilder.fromCondition<TempFilter, BuildTypeTemplate>(condition, FilterBuilder::makeTempFilter)
+    private fun findTemplates(condition: ConditionAST<TemplateFilterType>): QueryResult {
+        val templateConfFilter = FilterBuilder.fromCondition<TemplateFilterType, BuildTypeTemplate>(condition, FilterBuilder::makeTempFilter)
         return QueryResult(
                 projectManager
                         .allTemplates
@@ -66,8 +65,8 @@ class InternalApiQueryHandler(
         )
     }
 
-    private fun findVcsRoots(condition: ConditionAST<VcsRootFilter>): QueryResult {
-        val vcsRootFilter = FilterBuilder.fromCondition<VcsRootFilter, SVcsRoot>(condition, FilterBuilder::makeVcsFilter)
+    private fun findVcsRoots(condition: ConditionAST<VcsRootFilterType>): QueryResult {
+        val vcsRootFilter = FilterBuilder.fromCondition<VcsRootFilterType, SVcsRoot>(condition, FilterBuilder::makeVcsFilter)
         return QueryResult(
                 projectManager
                         .allVcsRoots

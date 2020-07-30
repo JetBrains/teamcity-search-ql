@@ -3,13 +3,15 @@ package jetbrains.buildServer.server.querylang.filter
 import jetbrains.buildServer.server.querylang.ast.*
 import jetbrains.buildServer.serverSide.*
 import jetbrains.buildServer.vcs.SVcsRoot
+import jetbrains.buildServer.vcs.VcsRootEntry
+import jetbrains.buildServer.vcs.VcsRootInstanceEntry
 import kotlin.reflect.KFunction2
 
 object FilterBuilder {
 
     fun makeProjectFilter(
-            filter: ProjectFilter,
-            context: Any? = null
+        filter: ProjectFilterType,
+        context: Any? = null
     ): ObjectFilter<SProject> {
         fun hasSuitableAncestor(project: SProject?, filter: ObjectFilter<SProject>): Boolean {
             var curProject: SProject? = project
@@ -29,33 +31,33 @@ object FilterBuilder {
                 }
             }
             is AncestorFilter -> {
-                val conditionFilter = fromCondition<ProjectFilter, SProject>(filter.condition, this::makeProjectFilter)
+                val conditionFilter = fromCondition<ProjectFilterType, SProject>(filter.condition, this::makeProjectFilter)
                 ObjectFilter { project ->
                     hasSuitableAncestor(project.parentProject, conditionFilter)
                 }
             }
             is AncestorOrSelfFilter -> {
-                val conditionFilter = fromCondition<ProjectFilter, SProject>(filter.condition, this::makeProjectFilter)
+                val conditionFilter = fromCondition<ProjectFilterType, SProject>(filter.condition, this::makeProjectFilter)
                 ObjectFilter {project ->
                     hasSuitableAncestor(project, conditionFilter)
                 }
             }
             is ParentFilter -> {
-                val conditionFilter = fromCondition<ProjectFilter, SProject>(filter.condition, this::makeProjectFilter)
+                val conditionFilter = fromCondition<ProjectFilterType, SProject>(filter.condition, this::makeProjectFilter)
                 ObjectFilter {project ->
                     conditionFilter.accepts(project.parentProject)
                 }
             }
-            else -> throw java.lang.IllegalStateException("Unknow ProjectFilter")
+            else -> throw java.lang.IllegalStateException("Unknow ProjectFilterType")
         }
     }
 
     fun makeBCFilter(
-            filter: BuildConfFilter,
-            context: Any? = null
+        filter: BuildConfFilterType,
+        context: Any? = null
     ): ObjectFilter<SBuildType> {
         return when (filter) {
-            is SProjectFilter -> {
+            is ProjectFilter -> {
                 val projectFilter = makeProjectFilter(AncestorOrSelfFilter(filter.condition))
                 ObjectFilter {buildType ->
                     projectFilter.accepts(buildType.project)
@@ -69,7 +71,7 @@ object FilterBuilder {
             }
             is TriggerFilter -> {
                 ObjectFilter {buildType ->
-                    val condition = fromCondition<ParameterHolderFilter, ParametersDescriptor>(filter.condition, this::makeParHolderFilter, buildType)
+                    val condition = fromCondition<ParameterHolderFilterType, ParametersDescriptor>(filter.condition, this::makeParHolderFilter, buildType)
                     buildType.buildTriggersCollection.any {trig ->
                         condition.accepts(trig)
                     }
@@ -77,7 +79,7 @@ object FilterBuilder {
             }
             is StepFilter -> {
                 ObjectFilter {buildType ->
-                    val condition = fromCondition<ParameterHolderFilter, ParametersDescriptor>(filter.condition, this::makeParHolderFilter, buildType)
+                    val condition = fromCondition<ParameterHolderFilterType, ParametersDescriptor>(filter.condition, this::makeParHolderFilter, buildType)
                     buildType.buildRunners.any {step ->
                         condition.accepts(step)
                     }
@@ -85,34 +87,41 @@ object FilterBuilder {
             }
             is FeatureFilter -> {
                 ObjectFilter {buildType ->
-                    val condition = fromCondition<ParameterHolderFilter, ParametersDescriptor>(filter.condition, this::makeParHolderFilter, buildType)
+                    val condition = fromCondition<ParameterHolderFilterType, ParametersDescriptor>(filter.condition, this::makeParHolderFilter, buildType)
                     buildType.buildFeatures.any {feature ->
                         condition.accepts(feature)
                     }
                 }
             }
             is ParentFilter -> {
-                val projectFilter = fromCondition<ProjectFilter, SProject>(filter.condition, this::makeProjectFilter)
+                val projectFilter = fromCondition<ProjectFilterType, SProject>(filter.condition, this::makeProjectFilter)
                 ObjectFilter {buildType ->
                     projectFilter.accepts(buildType.project)
                 }
             }
             is TempDepFilter -> {
-                val tempFilter = fromCondition<TempFilter, BuildTypeTemplate>(filter.condition, this::makeTempFilter)
+                val tempFilter = fromCondition<TemplateFilterType, BuildTypeTemplate>(filter.condition, this::makeTempFilter)
                 ObjectFilter {buildType ->
                     buildType.templates.any {tempFilter.accepts(it)}
                 }
             }
+            is VcsRootFilter -> {
+                val vcsFilter = fromCondition(filter.condition, this::makeVcsRootEntryFilter)
+                ObjectFilter {buildType ->
+                    buildType.vcsRootInstanceEntries.any {vcsFilter.accepts(it.toMyVcsRootEntry())}
+                }
+            }
+
             else -> throw java.lang.IllegalStateException("Unknow BCFilter")
         }
     }
 
     fun makeTempFilter(
-            filter: TempFilter,
-            context: Any? = null
+        filter: TemplateFilterType,
+        context: Any? = null
     ) : ObjectFilter<BuildTypeTemplate> {
         return when(filter) {
-            is SProjectFilter -> {
+            is ProjectFilter -> {
                 val projectFilter = makeProjectFilter(AncestorOrSelfFilter(filter.condition))
                 ObjectFilter {buildType ->
                     projectFilter.accepts(buildType.project)
@@ -126,7 +135,7 @@ object FilterBuilder {
             }
             is TriggerFilter -> {
                 ObjectFilter {buildType ->
-                    val condition = fromCondition<ParameterHolderFilter, ParametersDescriptor>(filter.condition, this::makeParHolderFilter, buildType)
+                    val condition = fromCondition<ParameterHolderFilterType, ParametersDescriptor>(filter.condition, this::makeParHolderFilter, buildType)
                     buildType.buildTriggersCollection.any {trig ->
                         condition.accepts(trig)
                     }
@@ -134,7 +143,7 @@ object FilterBuilder {
             }
             is StepFilter -> {
                 ObjectFilter {buildType ->
-                    val condition = fromCondition<ParameterHolderFilter, ParametersDescriptor>(filter.condition, this::makeParHolderFilter, buildType)
+                    val condition = fromCondition<ParameterHolderFilterType, ParametersDescriptor>(filter.condition, this::makeParHolderFilter, buildType)
                     buildType.buildRunners.any {step ->
                         condition.accepts(step)
                     }
@@ -142,25 +151,31 @@ object FilterBuilder {
             }
             is FeatureFilter -> {
                 ObjectFilter {buildType ->
-                    val condition = fromCondition<ParameterHolderFilter, ParametersDescriptor>(filter.condition, this::makeParHolderFilter, buildType)
+                    val condition = fromCondition<ParameterHolderFilterType, ParametersDescriptor>(filter.condition, this::makeParHolderFilter, buildType)
                     buildType.buildFeatures.any {feature ->
                         condition.accepts(feature)
                     }
                 }
             }
             is ParentFilter -> {
-                val projectFilter = fromCondition<ProjectFilter, SProject>(filter.condition, this::makeProjectFilter)
+                val projectFilter = fromCondition<ProjectFilterType, SProject>(filter.condition, this::makeProjectFilter)
                 ObjectFilter {buildType ->
                     projectFilter.accepts(buildType.project)
                 }
             }
-            else -> throw java.lang.IllegalStateException("Unknow TempFilter")
+            is VcsRootFilter -> {
+                val vcsFilter = fromCondition(filter.condition, this::makeVcsRootEntryFilter)
+                ObjectFilter {buildType ->
+                    buildType.vcsRootEntries.any {vcsFilter.accepts(it.toMyVcsRootEntry())}
+                }
+            }
+            else -> throw java.lang.IllegalStateException("Unknow TemplateFilterType")
         }
     }
 
     fun makeParHolderFilter(
-            filter: ParameterHolderFilter,
-            context: Any?
+        filter: ParameterHolderFilterType,
+        context: Any?
     ): ObjectFilter<ParametersDescriptor> {
         return when (filter) {
             is TypeFilter -> {
@@ -193,8 +208,8 @@ object FilterBuilder {
     }
 
     fun makeVcsFilter(
-            filter: VcsRootFilter,
-            context: Any? = null
+        filter: VcsRootFilterType,
+        context: Any? = null
     ): ObjectFilter<SVcsRoot> {
         return when(filter) {
             is IdFilter -> {
@@ -203,7 +218,7 @@ object FilterBuilder {
                     condition.accepts(vcs.externalId)
                 }
             }
-            is SProjectFilter -> {
+            is ProjectFilter -> {
                 val projectFilter = makeProjectFilter(AncestorOrSelfFilter(filter.condition))
                 ObjectFilter {vcs ->
                     projectFilter.accepts(vcs.project)
@@ -214,7 +229,28 @@ object FilterBuilder {
                     vcs.vcsName == filter.str
                 }
             }
-            else -> throw java.lang.IllegalStateException("Unknown VcsRootFilter")
+            else -> throw java.lang.IllegalStateException("Unknown VcsRootFilterType")
+        }
+    }
+
+    fun makeVcsRootEntryFilter(
+        filter: VcsRootEntryFilter,
+        context: Any? = null
+    ): ObjectFilter<MyVcsRootEntry> {
+        return when(filter) {
+            is VcsRootFilterType -> {
+                val vcsFilter = makeVcsFilter(filter, context)
+                ObjectFilter {entry ->
+                    vcsFilter.accepts(entry.vcsRoot)
+                }
+            }
+            is CheckoutRulesFilter -> {
+                val stringFilter = fromCondition(filter.condition, this::makeStringFilter)
+                ObjectFilter {entry ->
+                    stringFilter.accepts(entry.checkoutRules)
+                }
+            }
+            else -> throw IllegalStateException("Unknown VcsRootInstanceFilter")
         }
     }
 
@@ -274,8 +310,20 @@ object FilterBuilder {
                 }
             }
             is FilterConditionNode -> {
+                println(condition.filter is StringFilter)
                 makeObjectFilter.call(condition.filter, context)
             }
         }
     }
+
+    data class MyVcsRootEntry(val vcsRoot: SVcsRoot, val checkoutRules: String)
+
+    fun VcsRootEntry.toMyVcsRootEntry() = MyVcsRootEntry(
+        this.vcsRoot as? SVcsRoot ?: throw IllegalStateException("Can't cast VcsRoot to SVcsRoot"),
+        this.checkoutRules.asString
+    )
+
+    fun VcsRootInstanceEntry.toMyVcsRootEntry() = MyVcsRootEntry(
+        this.vcsRoot.parent, this.checkoutRules.asString
+    )
 }

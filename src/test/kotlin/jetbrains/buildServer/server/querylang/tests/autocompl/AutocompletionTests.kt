@@ -182,4 +182,15 @@ class AutocompletionTests : BaseServerTestCase() {
 
         assertEquals(expected, vars)
     }
+
+    fun testVcsRootCheckoutRulesFilter() {
+        val query = """
+            find buildConfiguration with vcsRoot (ru
+        """.trimIndent()
+
+        val vars = autoCompl.complete(query).map {it.show}
+        val expected = listOf("rules")
+
+        assertEquals(expected, vars)
+    }
 }

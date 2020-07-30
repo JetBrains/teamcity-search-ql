@@ -6,6 +6,7 @@ import jetbrains.buildServer.server.querylang.parser.QueryParser
 import jetbrains.buildServer.server.querylang.requests.*
 import jetbrains.buildServer.serverSide.ProjectManager
 import jetbrains.buildServer.serverSide.impl.BaseServerTestCase
+import jetbrains.buildServer.vcs.CheckoutRules
 import org.testng.annotations.BeforeClass
 import org.testng.annotations.Test
 
@@ -58,11 +59,15 @@ class ClientTests: BaseServerTestCase() {
 
         val p4temp1 = project4.createBuildTypeTemplate("Project4_temp1", "Project4_temp1")
         p4temp1.addBuildRunner("temp_runner1", "temp_runner1", mapOf(Pair("home", "cde")))
+        p4temp1.addVcsRoot(p3vcs1)
+        p4temp1.setCheckoutRules(p3vcs1, CheckoutRules("dabadaba"))
 
         val p5bt1 = project5.createBuildType("Project5_test1", "Project5_test1")
         p5bt1.addTemplate(p4temp1, true)
 
         val p5vcs1 = project5.createVcsRoot("jetbrains.git", "Project5_vcs1", "Project5_vcs1")
+        p5bt1.addVcsRoot(p5vcs1)
+        p5bt1.setCheckoutRules(p5vcs1, CheckoutRules("abacaba"))
     }
 
     fun testSearchBuildConfigurationWithVcsTrigger() {
@@ -330,5 +335,37 @@ class ClientTests: BaseServerTestCase() {
         )
 
         assertEquals(expected, res)
+    }
+
+    fun testBuildConfVcsRootFilter() {
+        val query = """
+            find buildConfiguration with vcsRoot( id Project5_vcs1 and rules *bac*)
+        """.trimIndent()
+
+        val res = client.process(query).objects.map {it.externalId}
+        val expected = listOf(
+            "Project5_test1"
+        )
+
+        assertEquals(expected, res)
+    }
+
+    fun testTemplateVcsRootFilter() {
+        val query = """
+            find template with vcsRoot( rules *abad* )
+        """.trimIndent()
+
+        val res = client.process(query).objects.map {it.externalId}
+        val expected = listOf(
+            "Project4_temp1"
+        )
+
+        assertEquals(expected, res)
+    }
+
+    fun testProjectRootFilter() {
+        val query = """
+            find project with vcsRoot( rules *wer* )
+        """.trimIndent()
     }
 }

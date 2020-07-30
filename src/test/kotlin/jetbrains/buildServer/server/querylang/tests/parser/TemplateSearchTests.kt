@@ -19,7 +19,7 @@ internal class TemplateSearchTests {
 
         val parsed = parser.parse(query)
         val expected = FindTemplate(
-                AndConditionNode<TempFilter>(
+                AndConditionNode<TemplateFilterType>(
                         FilterConditionNode(IdFilter("Test1".wrapEq())),
                         FilterConditionNode(TriggerFilter(
                                 FilterConditionNode(
@@ -40,8 +40,8 @@ internal class TemplateSearchTests {
 
         val parsed = parser.parse(query)
         val expected = FindTemplate(
-                AndConditionNode<TempFilter>(
-                        FilterConditionNode(SProjectFilter(
+                AndConditionNode<TemplateFilterType>(
+                        FilterConditionNode(ProjectFilter(
                                 FilterConditionNode(
                                         IdFilter("Project1".wrapEq())
                                 )

@@ -24,8 +24,8 @@ public class Keywords extends Lexer {
 	public static final int
 		PROJECT=1, TEMPLATE=2, BUILD_CONFIGURATION=3, VCS_ROOT=4, ID=5, PARENT=6, 
 		TRIGGER=7, STEP=8, FEATURE=9, TYPE=10, PARAM=11, VAL=12, ENABLED=13, ANCESTOR=14, 
-		ANCESTOR_OR_SELF=15, OR=16, AND=17, NOT=18, STRING=19, IDENT=20, SUFFIXS=21, 
-		PREFIXS=22, SUBSTRINGS=23, WS=24;
+		ANCESTOR_OR_SELF=15, RULES=16, OR=17, AND=18, NOT=19, STRING=20, IDENT=21, 
+		SUFFIXS=22, PREFIXS=23, SUBSTRINGS=24, WS=25;
 	public static String[] channelNames = {
 		"DEFAULT_TOKEN_CHANNEL", "HIDDEN"
 	};
@@ -45,7 +45,7 @@ public class Keywords extends Lexer {
 	private static String[] makeLiteralNames() {
 		return new String[] {
 			null, null, null, null, null, null, null, null, null, null, null, null, 
-			null, null, null, null, "'or'", "'and'", "'not'"
+			null, null, null, null, null, "'or'", "'and'", "'not'"
 		};
 	}
 	private static final String[] _LITERAL_NAMES = makeLiteralNames();
@@ -53,8 +53,8 @@ public class Keywords extends Lexer {
 		return new String[] {
 			null, "PROJECT", "TEMPLATE", "BUILD_CONFIGURATION", "VCS_ROOT", "ID", 
 			"PARENT", "TRIGGER", "STEP", "FEATURE", "TYPE", "PARAM", "VAL", "ENABLED", 
-			"ANCESTOR", "ANCESTOR_OR_SELF", "OR", "AND", "NOT", "STRING", "IDENT", 
-			"SUFFIXS", "PREFIXS", "SUBSTRINGS", "WS"
+			"ANCESTOR", "ANCESTOR_OR_SELF", "RULES", "OR", "AND", "NOT", "STRING", 
+			"IDENT", "SUFFIXS", "PREFIXS", "SUBSTRINGS", "WS"
 		};
 	}
 	private static final String[] _SYMBOLIC_NAMES = makeSymbolicNames();
@@ -101,7 +101,7 @@ public class Keywords extends Lexer {
 	        putToKeywords(FindVcsRoot.Companion.getNames(), QLangGrammarParser.VCS_ROOT);
 
 	        putToKeywords(IdFilter.Companion.getNames() , QLangGrammarParser.ID);
-	        putToKeywords(SProjectFilter.Companion.getNames(), QLangGrammarParser.PROJECT);
+	        putToKeywords(ProjectFilter.Companion.getNames(), QLangGrammarParser.PROJECT);
 	        putToKeywords(TempDepFilter.Companion.getNames(), QLangGrammarParser.TEMPLATE);
 	        putToKeywords(ParentFilter.Companion.getNames(), QLangGrammarParser.PARENT);
 	        putToKeywords(TriggerFilter.Companion.getNames(), QLangGrammarParser.TRIGGER);
@@ -113,6 +113,7 @@ public class Keywords extends Lexer {
 	        putToKeywords(EnabledFilter.Companion.getNames(), QLangGrammarParser.ENABLED);
 	        putToKeywords(AncestorFilter.Companion.getNames(), QLangGrammarParser.ANCESTOR);
 	        putToKeywords(AncestorOrSelfFilter.Companion.getNames(), QLangGrammarParser.ANCESTOR_OR_SELF);
+	        putToKeywords(CheckoutRulesFilter.Companion.getNames(), QLangGrammarParser.RULES);
 	    }
 
 	    private void putToKeywords(List<String> filterNames, Integer tokenType) {
@@ -166,15 +167,15 @@ public class Keywords extends Lexer {
 	}
 
 	public static final String _serializedATN =
-		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\2\32c\b\1\4\2\t\2\4"+
+		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\2\33c\b\1\4\2\t\2\4"+
 		"\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4\t\t\t\4\n\t\n\4\13\t"+
 		"\13\4\f\t\f\4\r\t\r\4\16\t\16\4\17\t\17\3\2\3\2\3\3\3\3\3\4\3\4\3\5\3"+
 		"\5\5\5(\n\5\3\6\3\6\3\7\3\7\3\7\3\b\3\b\3\b\3\b\3\t\3\t\3\t\3\t\3\n\3"+
 		"\n\3\n\3\n\7\n;\n\n\f\n\16\n>\13\n\3\n\3\n\3\13\3\13\3\13\6\13E\n\13\r"+
 		"\13\16\13F\3\13\3\13\3\f\3\f\3\f\5\fN\n\f\3\r\3\r\5\rR\n\r\3\r\3\r\3\16"+
 		"\3\16\3\16\5\16Y\n\16\3\16\3\16\3\17\6\17^\n\17\r\17\16\17_\3\17\3\17"+
-		"\2\2\20\3\2\5\2\7\2\t\2\13\2\r\22\17\23\21\24\23\25\25\26\27\27\31\30"+
-		"\33\31\35\32\3\2\b\3\2\62;\3\2c|\3\2C\\\5\2\13\f\17\17\"\"\5\2\13\f\17"+
+		"\2\2\20\3\2\5\2\7\2\t\2\13\2\r\23\17\24\21\25\23\26\25\27\27\30\31\31"+
+		"\33\32\35\33\3\2\b\3\2\62;\3\2c|\3\2C\\\5\2\13\f\17\17\"\"\5\2\13\f\17"+
 		"\17$$\4\2/\60aa\2g\2\r\3\2\2\2\2\17\3\2\2\2\2\21\3\2\2\2\2\23\3\2\2\2"+
 		"\2\25\3\2\2\2\2\27\3\2\2\2\2\31\3\2\2\2\2\33\3\2\2\2\2\35\3\2\2\2\3\37"+
 		"\3\2\2\2\5!\3\2\2\2\7#\3\2\2\2\t\'\3\2\2\2\13)\3\2\2\2\r+\3\2\2\2\17."+

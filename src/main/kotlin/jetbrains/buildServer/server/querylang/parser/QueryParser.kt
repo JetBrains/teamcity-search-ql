@@ -13,6 +13,7 @@ object QueryParser {
         FilterTypeRegistration.connectFilterType(TemplateComplexFilter::class.java)
         FilterTypeRegistration.connectFilterType(ParHolderComplexFilter::class.java)
         FilterTypeRegistration.connectFilterType(VcsRootComplexFilter::class.java)
+        FilterTypeRegistration.connectFilterType(VcsRootEntryComplexFilter::class.java)
     }
 
     fun parse(input: String): MainQuery {

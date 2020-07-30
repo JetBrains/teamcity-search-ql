@@ -27,7 +27,7 @@ class FilterVisitor<T : Filter>(
 
     override fun visitProjectFilter(ctx: QLangGrammarParser.ProjectFilterContext?): T {
         return transform(
-                SProjectFilter(ctx!!.filterOrCondition().accept(projectConditionVisitor)),
+                ProjectFilter(ctx!!.filterOrCondition().accept(projectConditionVisitor)),
                 ctx.start
         )
     }
@@ -109,6 +109,24 @@ class FilterVisitor<T : Filter>(
         return transform(
                 TempDepFilter(ctx!!.filterOrCondition().accept(tempConditionVisitor)),
                 ctx.start
+        )
+    }
+
+    override fun visitVcsRootFilter(ctx: QLangGrammarParser.VcsRootFilterContext?): T {
+        return transform(
+            VcsRootFilter(
+                ctx!!.filterOrCondition().accept(vcsRootEntryConditionVisitor)
+            ),
+            ctx.start
+        )
+    }
+
+    override fun visitCheckoutRulesFilter(ctx: QLangGrammarParser.CheckoutRulesFilterContext?): T {
+        return transform(
+            CheckoutRulesFilter(
+                ctx!!.checkoutRulesString().accept(StringConditionVisitor)
+            ),
+            ctx.start
         )
     }
 }

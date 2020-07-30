@@ -110,6 +110,16 @@ public interface QLangGrammarListener extends ParseTreeListener {
 	 */
 	void exitParameterName(QLangGrammarParser.ParameterNameContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link QLangGrammarParser#checkoutRulesString}.
+	 * @param ctx the parse tree
+	 */
+	void enterCheckoutRulesString(QLangGrammarParser.CheckoutRulesStringContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link QLangGrammarParser#checkoutRulesString}.
+	 * @param ctx the parse tree
+	 */
+	void exitCheckoutRulesString(QLangGrammarParser.CheckoutRulesStringContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link QLangGrammarParser#vcsRootKeyword}.
 	 * @param ctx the parse tree
 	 */
@@ -447,6 +457,26 @@ public interface QLangGrammarListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitTemplateDepFilter(QLangGrammarParser.TemplateDepFilterContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link QLangGrammarParser#vcsRootFilter}.
+	 * @param ctx the parse tree
+	 */
+	void enterVcsRootFilter(QLangGrammarParser.VcsRootFilterContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link QLangGrammarParser#vcsRootFilter}.
+	 * @param ctx the parse tree
+	 */
+	void exitVcsRootFilter(QLangGrammarParser.VcsRootFilterContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link QLangGrammarParser#checkoutRulesFilter}.
+	 * @param ctx the parse tree
+	 */
+	void enterCheckoutRulesFilter(QLangGrammarParser.CheckoutRulesFilterContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link QLangGrammarParser#checkoutRulesFilter}.
+	 * @param ctx the parse tree
+	 */
+	void exitCheckoutRulesFilter(QLangGrammarParser.CheckoutRulesFilterContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code stringConditionFilter}
 	 * labeled alternative in {@link QLangGrammarParser#stringCondition}.

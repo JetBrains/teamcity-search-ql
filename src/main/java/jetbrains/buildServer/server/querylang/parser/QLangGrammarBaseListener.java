@@ -138,6 +138,18 @@ public class QLangGrammarBaseListener implements QLangGrammarListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterCheckoutRulesString(QLangGrammarParser.CheckoutRulesStringContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitCheckoutRulesString(QLangGrammarParser.CheckoutRulesStringContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterVcsRootKeyword(QLangGrammarParser.VcsRootKeywordContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -517,6 +529,30 @@ public class QLangGrammarBaseListener implements QLangGrammarListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitTemplateDepFilter(QLangGrammarParser.TemplateDepFilterContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterVcsRootFilter(QLangGrammarParser.VcsRootFilterContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitVcsRootFilter(QLangGrammarParser.VcsRootFilterContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterCheckoutRulesFilter(QLangGrammarParser.CheckoutRulesFilterContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitCheckoutRulesFilter(QLangGrammarParser.CheckoutRulesFilterContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

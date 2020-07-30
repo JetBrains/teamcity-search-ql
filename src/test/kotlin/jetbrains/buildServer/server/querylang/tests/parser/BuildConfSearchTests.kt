@@ -19,7 +19,7 @@ class BuildConfSearchTests {
 
         val parsed = parser.parse(query)
         val expected = FindBuildConf(FilterConditionNode(
-                SProjectFilter(FilterConditionNode(
+                ProjectFilter(FilterConditionNode(
                         IdFilter("Project1".wrapEq())
                 ))
         )).wrap()
@@ -35,11 +35,11 @@ class BuildConfSearchTests {
 
         val parsed = parser.parse(query)
 
-        val expected = FindBuildConf(AndConditionNode<BuildConfFilter>(
-                        FilterConditionNode(SProjectFilter(FilterConditionNode(
+        val expected = FindBuildConf(AndConditionNode<BuildConfFilterType>(
+                        FilterConditionNode(ProjectFilter(FilterConditionNode(
                                 IdFilter("Project1".wrapEq())
                         ))),
-                        FilterConditionNode(TriggerFilter(AndConditionNode<ParameterHolderFilter>(
+                        FilterConditionNode(TriggerFilter(AndConditionNode<ParameterHolderFilterType>(
                                 FilterConditionNode(TypeFilter("vcsTrigger")),
                                 FilterConditionNode(ParameterFilter("par", "abc".wrapEq()))
                         )))
@@ -58,14 +58,14 @@ class BuildConfSearchTests {
         val parsed = parser.parse(query)
 
         val expected = FindBuildConf(
-                AndConditionNode<BuildConfFilter>(
+                AndConditionNode<BuildConfFilterType>(
                         FilterConditionNode(TriggerFilter(
-                                AndConditionNode<ParameterHolderFilter>(
+                                AndConditionNode<ParameterHolderFilterType>(
                                         FilterConditionNode(TypeFilter("vcsTrigger")),
                                         FilterConditionNode(ParameterFilter("par", "abc".wrapEq()))
                                 ))
                         ),
-                        FilterConditionNode(SProjectFilter(
+                        FilterConditionNode(ProjectFilter(
                                 FilterConditionNode(IdFilter("Project1".wrapEq()))
                         ))
                 )
@@ -84,7 +84,7 @@ class BuildConfSearchTests {
         val expected = FindBuildConf(
                 FilterConditionNode(
                         TriggerFilter(
-                                AndConditionNode<ParameterHolderFilter>(
+                                AndConditionNode<ParameterHolderFilterType>(
                                         FilterConditionNode(TypeFilter("vcsTrigger")),
                                         FilterConditionNode(ParameterFilter("par", "abc".wrapEq()))
                                 )
@@ -105,7 +105,7 @@ class BuildConfSearchTests {
         val parsed = parser.parse(query)
         val expected = FindBuildConf(
                 FilterConditionNode(
-                        SProjectFilter(
+                        ProjectFilter(
                                 FilterConditionNode(IdFilter("Project1".wrapEq()))
                         )
                 )
@@ -183,7 +183,7 @@ class BuildConfSearchTests {
         val parsed = parser.parse(query)
         val expected = FindBuildConf(
                 FilterConditionNode(
-                        SProjectFilter(
+                        ProjectFilter(
                             FilterConditionNode(
                                     AncestorFilter(
                                             FilterConditionNode(IdFilter("Project1".wrapEq()))
@@ -264,7 +264,7 @@ class BuildConfSearchTests {
         val expected = FindBuildConf(
                 FilterConditionNode(
                         StepFilter(
-                                AndConditionNode<ParameterHolderFilter>(
+                                AndConditionNode<ParameterHolderFilterType>(
                                         FilterConditionNode(
                                                 ValueFilter("abc".wrapEq())
                                         ),
@@ -289,7 +289,7 @@ class BuildConfSearchTests {
         val expected = FindBuildConf(
                 FilterConditionNode(
                         TempDepFilter(
-                                AndConditionNode<TempFilter>(
+                                AndConditionNode<TemplateFilterType>(
                                         FilterConditionNode(IdFilter("5555)".wrapEq())),
                                         FilterConditionNode(TriggerFilter(
                                                 FilterConditionNode(
