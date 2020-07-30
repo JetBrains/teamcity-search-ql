@@ -115,7 +115,10 @@ data class EnabledFilter(
     override fun createStr() = "enabled"
 }
 
-data class ParameterFilter(val option: String, val valueCondition: ConditionAST<StringFilter>) : ParameterHolderFilterType
+data class ParameterFilter(
+    val option: String,
+    val valueCondition: ConditionAST<StringFilter>
+) : ParameterHolderFilterType, BuildConfFilterType, TemplateFilterType
 {
     companion object : Names("param")
     override val names = ParameterFilter.names

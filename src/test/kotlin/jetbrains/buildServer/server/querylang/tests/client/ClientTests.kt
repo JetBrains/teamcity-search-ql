@@ -4,7 +4,9 @@ import jetbrains.buildServer.server.querylang.objects.BuildConfiguration
 import jetbrains.buildServer.server.querylang.objects.Project
 import jetbrains.buildServer.server.querylang.parser.QueryParser
 import jetbrains.buildServer.server.querylang.requests.*
+import jetbrains.buildServer.serverSide.Parameter
 import jetbrains.buildServer.serverSide.ProjectManager
+import jetbrains.buildServer.serverSide.SimpleParameter
 import jetbrains.buildServer.serverSide.impl.BaseServerTestCase
 import jetbrains.buildServer.vcs.CheckoutRules
 import org.testng.annotations.BeforeClass
@@ -56,11 +58,13 @@ class ClientTests: BaseServerTestCase() {
         val p4bt1 = project4.createBuildType("Project4_test1", "Project4_test1")
         p4bt1.addBuildRunner("runner2", "runnerType2", mapOf(Pair("path", "abc")))
         p4bt1.addBuildFeature("featureType1", mapOf(Pair("path", "qwe")))
+        p4bt1.addBuildParameter(SimpleParameter("path", "bcdbcdbcd"))
 
         val p4temp1 = project4.createBuildTypeTemplate("Project4_temp1", "Project4_temp1")
         p4temp1.addBuildRunner("temp_runner1", "temp_runner1", mapOf(Pair("home", "cde")))
         p4temp1.addVcsRoot(p3vcs1)
         p4temp1.setCheckoutRules(p3vcs1, CheckoutRules("dabadaba"))
+        p4temp1.addParameter(SimpleParameter("path", "qwerasdf"))
 
         val p5bt1 = project5.createBuildType("Project5_test1", "Project5_test1")
         p5bt1.addTemplate(p4temp1, true)
@@ -68,6 +72,7 @@ class ClientTests: BaseServerTestCase() {
         val p5vcs1 = project5.createVcsRoot("jetbrains.git", "Project5_vcs1", "Project5_vcs1")
         p5bt1.addVcsRoot(p5vcs1)
         p5bt1.setCheckoutRules(p5vcs1, CheckoutRules("abacaba"))
+        p5bt1.addParameter(SimpleParameter("path", "dabacabadaba"))
     }
 
     fun testSearchBuildConfigurationWithVcsTrigger() {
@@ -363,9 +368,29 @@ class ClientTests: BaseServerTestCase() {
         assertEquals(expected, res)
     }
 
-    fun testProjectRootFilter() {
+    fun testBuildConfParams() {
         val query = """
-            find project with vcsRoot( rules *wer* )
+            find buildConfiguration with param path = *abac*
         """.trimIndent()
+
+        val res = client.process(query).objects.map {it.externalId}
+        val expected = listOf(
+            "Project5_test1"
+        )
+
+        assertEquals(expected, res)
+    }
+
+    fun testTemplateParams() {
+        val query = """
+            find template with param path = *wer*
+        """.trimIndent()
+
+        val res = client.process(query).objects.map {it.externalId}
+        val expected = listOf(
+            "Project4_temp1"
+        )
+
+        assertEquals(expected, res)
     }
 }

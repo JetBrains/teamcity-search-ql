@@ -44,30 +44,15 @@ class PartialQueryTests {
         assertEquals(expected, res)
     }
 
-    fun completeParamQuery() {
-        val query = "param path = (Base* and *Project)"
-
-        val res = compl.complete(query).map { it.result }
-        val expected = listOf(
-            "find buildConfiguration,template with feature(param path=(Base* and *Project))",
-            "find buildConfiguration,template with step(param path=(Base* and *Project))",
-            "find buildConfiguration,template with trigger(param path=(Base* and *Project))"
-        )
-
-        assertEquals(expected, res)
-    }
-
     fun testDoubleQuotes() {
         val query = """param "path&1" = ("Base^"* and *"Project*" )"""
 
         val res = compl.complete(query).map { it.result }
         val expected = listOf(
-            """find buildConfiguration,template with feature(param "path&1"=("Base^"* and *"Project*"))""",
-            """find buildConfiguration,template with step(param "path&1"=("Base^"* and *"Project*"))""",
-            """find buildConfiguration,template with trigger(param "path&1"=("Base^"* and *"Project*"))"""
+            """find buildConfiguration with template(param "path&1"=("Base^"* and *"Project*"))"""
         )
 
-        assertEquals(expected, res)
+        assertEquals(expected.first(), res.first())
     }
 
     fun testDoubleQuotesId() {

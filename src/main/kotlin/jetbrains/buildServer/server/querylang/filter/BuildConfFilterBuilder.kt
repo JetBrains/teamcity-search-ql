@@ -62,6 +62,14 @@ object BuildConfFilterBuilder : FilterBuilder<BuildConfFilterType, SBuildType> {
                     buildType.vcsRootInstanceEntries.any {vcsFilter.accepts(it.toMyVcsRootEntry())}
                 }
             }
+            is ParameterFilter -> {
+                val stringFilter = StringFilterBuilder.createFilter(filter.valueCondition)
+                ObjectFilter {buildType ->
+                    buildType.parameters.any<String, String> {(key, value) ->
+                        key == filter.option && stringFilter.accepts(value)
+                    }
+                }
+            }
 
             else -> throw java.lang.IllegalStateException("Unknow BCFilter")
         }

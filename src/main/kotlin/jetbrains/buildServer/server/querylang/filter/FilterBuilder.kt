@@ -31,7 +31,6 @@ interface FilterBuilder<T : Filter, S> {
                 }
             }
             is FilterConditionNode -> {
-                println(condition.filter is StringFilter)
                 this.createFilter(condition.filter, context)
             }
         }
