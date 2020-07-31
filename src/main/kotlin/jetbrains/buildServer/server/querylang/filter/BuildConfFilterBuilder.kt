@@ -2,7 +2,9 @@ package jetbrains.buildServer.server.querylang.filter
 
 import jetbrains.buildServer.server.querylang.ast.*
 import jetbrains.buildServer.server.querylang.filter.VcsRootEntryFilterBuilder.toMyVcsRootEntry
+import jetbrains.buildServer.serverSide.BuildTypeEx
 import jetbrains.buildServer.serverSide.SBuildType
+import java.lang.IllegalStateException
 
 object BuildConfFilterBuilder : FilterBuilder<BuildConfFilterType, SBuildType> {
     override fun createFilter(filter: BuildConfFilterType, context: Any?): ObjectFilter<SBuildType> {
@@ -21,8 +23,9 @@ object BuildConfFilterBuilder : FilterBuilder<BuildConfFilterType, SBuildType> {
             }
             is TriggerFilter -> {
                 ObjectFilter {buildType ->
+                    buildType as? BuildTypeEx ?: throw IllegalStateException("Should be BuildTypeEx")
                     val condition = ParHolderFilterBuilder.createFilter(filter.condition, buildType)
-                    buildType.buildTriggersCollection.any {trig ->
+                    buildType.settings.ownBuildTriggers.any {trig ->
                         condition.accepts(trig)
                     }
                 }
@@ -30,7 +33,8 @@ object BuildConfFilterBuilder : FilterBuilder<BuildConfFilterType, SBuildType> {
             is StepFilter -> {
                 ObjectFilter {buildType ->
                     val condition = ParHolderFilterBuilder.createFilter(filter.condition, buildType)
-                    buildType.buildRunners.any {step ->
+                    buildType as? BuildTypeEx ?: throw IllegalStateException("Should be BuildTypeEx")
+                    buildType.settings.ownBuildRunners.any {step ->
                         condition.accepts(step)
                     }
                 }
@@ -38,7 +42,8 @@ object BuildConfFilterBuilder : FilterBuilder<BuildConfFilterType, SBuildType> {
             is FeatureFilter -> {
                 ObjectFilter {buildType ->
                     val condition = ParHolderFilterBuilder.createFilter(filter.condition, buildType)
-                    buildType.buildFeatures.any {feature ->
+                    buildType as? BuildTypeEx ?: throw IllegalStateException("Should be BuildTypeEx")
+                    buildType.settings.ownBuildFeatures.any {feature ->
                         condition.accepts(feature)
                     }
                 }
@@ -65,13 +70,13 @@ object BuildConfFilterBuilder : FilterBuilder<BuildConfFilterType, SBuildType> {
             is ParameterFilter -> {
                 val stringFilter = StringFilterBuilder.createFilter(filter.valueCondition)
                 ObjectFilter {buildType ->
-                    buildType.parameters.any<String, String> {(key, value) ->
+                    buildType.ownParameters.any<String, String> {(key, value) ->
                         key == filter.option && stringFilter.accepts(value)
                     }
                 }
             }
 
-            else -> throw java.lang.IllegalStateException("Unknow BCFilter")
+            else -> throw IllegalStateException("Unknow BCFilter")
         }
     }
 }

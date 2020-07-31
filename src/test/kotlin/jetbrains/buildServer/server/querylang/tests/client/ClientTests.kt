@@ -61,7 +61,9 @@ class ClientTests: BaseServerTestCase() {
         p4bt1.addBuildParameter(SimpleParameter("path", "bcdbcdbcd"))
 
         val p4temp1 = project4.createBuildTypeTemplate("Project4_temp1", "Project4_temp1")
-        p4temp1.addBuildRunner("temp_runner1", "temp_runner1", mapOf(Pair("home", "cde")))
+        p4temp1.addBuildRunner("temp_runner1", "temp_runner1", mapOf(Pair("home", "cde"), Pair("path1", "111")))
+        p4temp1.addBuildTrigger("vcsTrigger", mapOf(Pair("path1", "111")))
+        p4temp1.addBuildFeature("feature11", mapOf(Pair("path1", "111")))
         p4temp1.addVcsRoot(p3vcs1)
         p4temp1.setCheckoutRules(p3vcs1, CheckoutRules("dabadaba"))
         p4temp1.addParameter(SimpleParameter("path", "qwerasdf"))
@@ -268,11 +270,9 @@ class ClientTests: BaseServerTestCase() {
 
         val res = client.process(query)
 
-        val obj = res.objects.sortedBy { it.externalId }
-        assertEquals(3, res.objects.size)
-        assertEquals("Project4_temp1", obj[0].externalId)
-        assertEquals("Project4_test1", obj[1].externalId)
-        assertEquals("Project5_test1", obj[2].externalId)
+        val obj = res.objects.sortedBy { it.externalId }.map {it.externalId}
+        val expected = listOf("Project4_temp1", "Project4_test1")
+        assertEquals(expected, obj)
     }
 
     fun testBuildConfDependencyOnTemp() {
@@ -392,5 +392,65 @@ class ClientTests: BaseServerTestCase() {
         )
 
         assertEquals(expected, res)
+    }
+
+    fun testOnlyOwnTriggers() {
+        val query = """
+            find buildConfiguration with trigger (type vcsTrigger and param path1=111)
+        """.trimIndent()
+
+        val res = client.process(query).objects.map {it.externalId}.sorted()
+        val expected = listOf<String>()
+
+        assertEquals(expected, res)
+
+        val query2 = """
+            find buildConfiguration with template (trigger (type vcsTrigger and param path1=111))
+        """.trimIndent()
+
+        val res2 = client.process(query2).objects.map {it.externalId}.sorted()
+        val expected2 = listOf("Project5_test1")
+
+        assertEquals(expected2, res2)
+    }
+
+    fun testOnlyOwnSteps() {
+        val query = """
+            find buildConfiguration with step (type temp_runner1 and param path1=111)
+        """.trimIndent()
+
+        val res = client.process(query).objects.map {it.externalId}.sorted()
+        val expected = listOf<String>()
+
+        assertEquals(expected, res)
+
+        val query2 = """
+            find buildConfiguration with template (step (type temp_runner1 and param path1=111))
+        """.trimIndent()
+
+        val res2 = client.process(query2).objects.map {it.externalId}.sorted()
+        val expected2 = listOf("Project5_test1")
+
+        assertEquals(expected2, res2)
+    }
+
+    fun testOnlyOwnFeatures() {
+        val query = """
+            find buildConfiguration with feature (type feature11 and param path1=111)
+        """.trimIndent()
+
+        val res = client.process(query).objects.map {it.externalId}.sorted()
+        val expected = listOf<String>()
+
+        assertEquals(expected, res)
+
+        val query2 = """
+            find buildConfiguration with template (feature (type feature11 and param path1=111))
+        """.trimIndent()
+
+        val res2 = client.process(query2).objects.map {it.externalId}.sorted()
+        val expected2 = listOf("Project5_test1")
+
+        assertEquals(expected2, res2)
     }
 }
