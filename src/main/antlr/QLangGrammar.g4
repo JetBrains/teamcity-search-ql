@@ -55,6 +55,9 @@ filter : idFilter
        | templateDepFilter
        | vcsRootFilter
        | checkoutRulesFilter
+       | dependencyFilter
+       | artifactFilter
+       | snapshotFilter
        ;
 
 condition : filter                     #conditionFilter
@@ -88,6 +91,9 @@ ancestorOrSelfFilter : ANCESTOR_OR_SELF filterOrCondition ;
 templateDepFilter : TEMPLATE filterOrCondition ;
 vcsRootFilter : VCS_ROOT filterOrCondition ;
 checkoutRulesFilter : RULES checkoutRulesString ;
+dependencyFilter : DEPENDENCY filterOrCondition ;
+artifactFilter : ARTIFACT ;
+snapshotFilter : SNAPSHOT ;
 
 
 stringCondition : stringFilter                         #stringConditionFilter

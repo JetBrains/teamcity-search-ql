@@ -10,4 +10,4 @@ interface VcsRootFilterType : Filter, VcsRootEntryFilter
 
 interface TemplateFilterType : Filter
 
-interface BuildConfFilterType : Filter
+interface BuildConfFilterType : Filter, DependencyFilterType

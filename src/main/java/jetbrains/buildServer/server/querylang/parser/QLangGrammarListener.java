@@ -478,6 +478,36 @@ public interface QLangGrammarListener extends ParseTreeListener {
 	 */
 	void exitCheckoutRulesFilter(QLangGrammarParser.CheckoutRulesFilterContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link QLangGrammarParser#dependencyFilter}.
+	 * @param ctx the parse tree
+	 */
+	void enterDependencyFilter(QLangGrammarParser.DependencyFilterContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link QLangGrammarParser#dependencyFilter}.
+	 * @param ctx the parse tree
+	 */
+	void exitDependencyFilter(QLangGrammarParser.DependencyFilterContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link QLangGrammarParser#artifactFilter}.
+	 * @param ctx the parse tree
+	 */
+	void enterArtifactFilter(QLangGrammarParser.ArtifactFilterContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link QLangGrammarParser#artifactFilter}.
+	 * @param ctx the parse tree
+	 */
+	void exitArtifactFilter(QLangGrammarParser.ArtifactFilterContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link QLangGrammarParser#snapshotFilter}.
+	 * @param ctx the parse tree
+	 */
+	void enterSnapshotFilter(QLangGrammarParser.SnapshotFilterContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link QLangGrammarParser#snapshotFilter}.
+	 * @param ctx the parse tree
+	 */
+	void exitSnapshotFilter(QLangGrammarParser.SnapshotFilterContext ctx);
+	/**
 	 * Enter a parse tree produced by the {@code stringConditionFilter}
 	 * labeled alternative in {@link QLangGrammarParser#stringCondition}.
 	 * @param ctx the parse tree

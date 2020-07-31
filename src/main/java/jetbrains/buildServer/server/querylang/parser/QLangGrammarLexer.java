@@ -111,6 +111,9 @@ public class QLangGrammarLexer extends Lexer {
 	        putToKeywords(AncestorFilter.Companion.getNames(), QLangGrammarParser.ANCESTOR);
 	        putToKeywords(AncestorOrSelfFilter.Companion.getNames(), QLangGrammarParser.ANCESTOR_OR_SELF);
 	        putToKeywords(CheckoutRulesFilter.Companion.getNames(), QLangGrammarParser.RULES);
+	        putToKeywords(DependencyFilter.Companion.getNames(), QLangGrammarParser.DEPENDENCY);
+	        putToKeywords(ArtifactFilter.Companion.getNames(), QLangGrammarParser.ARTIFACT);
+	        putToKeywords(SnapshotFilter.Companion.getNames(), QLangGrammarParser.SNAPSHOT);
 	    }
 
 	    private void putToKeywords(List<String> filterNames, Integer tokenType) {

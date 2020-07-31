@@ -2,7 +2,9 @@ package jetbrains.buildServer.server.querylang.filter
 
 import jetbrains.buildServer.server.querylang.ast.*
 import jetbrains.buildServer.server.querylang.filter.VcsRootEntryFilterBuilder.toMyVcsRootEntry
+import jetbrains.buildServer.serverSide.BuildTypeEx
 import jetbrains.buildServer.serverSide.BuildTypeTemplate
+import java.lang.IllegalStateException
 
 object TemplateFilterBuilder : FilterBuilder<TemplateFilterType, BuildTypeTemplate> {
     override fun createFilter(filter: TemplateFilterType, context: Any?): ObjectFilter<BuildTypeTemplate> {
@@ -61,6 +63,13 @@ object TemplateFilterBuilder : FilterBuilder<TemplateFilterType, BuildTypeTempla
                     buildType.ownParameters.any<String, String> {(key, value) ->
                         key == filter.option && stringFilter.accepts(value)
                     }
+                }
+            }
+            is DependencyFilter -> {
+                ObjectFilter {buildType ->
+                    val dependencyFilter = DependencyFilterBuilder.createFilter(filter.condition, buildType)
+                    buildType.dependencies.any {dependencyFilter.accepts(it.dependOn)}
+                            || buildType.artifactDependencies.any {dependencyFilter.accepts(it.sourceBuildType)}
                 }
             }
             else -> throw java.lang.IllegalStateException("Unknow TemplateFilterType")

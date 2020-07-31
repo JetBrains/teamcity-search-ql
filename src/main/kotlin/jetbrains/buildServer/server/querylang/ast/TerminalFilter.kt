@@ -14,3 +14,7 @@ interface StringTerminalFilter : TerminalFilter {
         return str.toIdentOrString()
     }
 }
+
+interface EmptyTerminalFilter : TerminalFilter {
+    override fun createStr() = names.first()
+}

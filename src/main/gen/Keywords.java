@@ -1,4 +1,4 @@
-// Generated from Keywords.g4 by ANTLR 4.8
+// Generated from /home/ilya/projects/teamcity/external-repos/query-lang/src/main/antlr/Keywords.g4 by ANTLR 4.8
 
 package jetbrains.buildServer.server.querylang.parser;
 

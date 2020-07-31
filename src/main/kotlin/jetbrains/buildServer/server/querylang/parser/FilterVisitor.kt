@@ -129,4 +129,27 @@ class FilterVisitor<T : Filter>(
             ctx.start
         )
     }
+
+    override fun visitDependencyFilter(ctx: QLangGrammarParser.DependencyFilterContext?): T {
+        return transform(
+            DependencyFilter(
+                ctx!!.filterOrCondition().accept(dependencyConditionVisitor)
+            ),
+            ctx.start
+        )
+    }
+
+    override fun visitArtifactFilter(ctx: QLangGrammarParser.ArtifactFilterContext?): T {
+        return transform(
+            ArtifactFilter(),
+            ctx!!.start
+        )
+    }
+
+    override fun visitSnapshotFilter(ctx: QLangGrammarParser.SnapshotFilterContext?): T {
+        return transform(
+            SnapshotFilter(),
+            ctx!!.start
+        )
+    }
 }

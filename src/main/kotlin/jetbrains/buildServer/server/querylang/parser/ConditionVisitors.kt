@@ -15,3 +15,4 @@ internal val parHolderConditionVisitor = getConditionVisitor<ParameterHolderFilt
 internal val anyFilterConditionVisitor = getConditionVisitor<Filter>()
 
 internal val vcsRootEntryConditionVisitor = getConditionVisitor<VcsRootEntryFilter>()
+internal val dependencyConditionVisitor = getConditionVisitor<DependencyFilterType>()

@@ -165,3 +165,28 @@ data class CheckoutRulesFilter(
 
     override fun createStr() = "rules(" + condition.createStr() + ")"
 }
+
+data class DependencyFilter(
+    override val condition: ConditionAST<DependencyFilterType>
+) : DependencyComplexFilter,
+    BuildConfFilterType,
+    TemplateFilterType
+{
+    companion object : Names("dependency")
+
+    override val names = CheckoutRulesFilter.names
+}
+
+data class ArtifactFilter(
+    private val placeholder: String = ""
+) : EmptyTerminalFilter, DependencyFilterType {
+    companion object : Names("artifact")
+    override val names = Companion.names
+}
+
+data class SnapshotFilter(
+    private val placeholder: String = ""
+) : EmptyTerminalFilter, DependencyFilterType {
+    companion object : Names("snapshot")
+    override val names = Companion.names
+}

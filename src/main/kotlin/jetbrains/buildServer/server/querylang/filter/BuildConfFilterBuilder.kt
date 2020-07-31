@@ -75,6 +75,14 @@ object BuildConfFilterBuilder : FilterBuilder<BuildConfFilterType, SBuildType> {
                     }
                 }
             }
+            is DependencyFilter -> {
+                ObjectFilter {buildType ->
+                    val dependencyFilter = DependencyFilterBuilder.createFilter(filter.condition, buildType)
+                    buildType as? BuildTypeEx ?: throw IllegalStateException("Should be BuildTypeEx")
+                    buildType.ownDependencies.any {dependencyFilter.accepts(it.dependOn)}
+                            || buildType.settings.ownArtifactDependencies.any {dependencyFilter.accepts(it.sourceBuildType)}
+                }
+            }
 
             else -> throw IllegalStateException("Unknow BCFilter")
         }

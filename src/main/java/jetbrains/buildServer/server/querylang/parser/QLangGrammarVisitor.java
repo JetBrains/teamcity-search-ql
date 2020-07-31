@@ -292,6 +292,24 @@ public interface QLangGrammarVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitCheckoutRulesFilter(QLangGrammarParser.CheckoutRulesFilterContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link QLangGrammarParser#dependencyFilter}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitDependencyFilter(QLangGrammarParser.DependencyFilterContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link QLangGrammarParser#artifactFilter}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitArtifactFilter(QLangGrammarParser.ArtifactFilterContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link QLangGrammarParser#snapshotFilter}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitSnapshotFilter(QLangGrammarParser.SnapshotFilterContext ctx);
+	/**
 	 * Visit a parse tree produced by the {@code stringConditionFilter}
 	 * labeled alternative in {@link QLangGrammarParser#stringCondition}.
 	 * @param ctx the parse tree

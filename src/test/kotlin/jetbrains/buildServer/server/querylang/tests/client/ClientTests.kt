@@ -1,5 +1,7 @@
 package jetbrains.buildServer.server.querylang.tests.client
 
+import jetbrains.buildServer.artifacts.BuildTagRevisionRule
+import jetbrains.buildServer.artifacts.RevisionRules
 import jetbrains.buildServer.server.querylang.objects.BuildConfiguration
 import jetbrains.buildServer.server.querylang.objects.Project
 import jetbrains.buildServer.server.querylang.parser.QueryParser
@@ -8,6 +10,7 @@ import jetbrains.buildServer.serverSide.Parameter
 import jetbrains.buildServer.serverSide.ProjectManager
 import jetbrains.buildServer.serverSide.SimpleParameter
 import jetbrains.buildServer.serverSide.impl.BaseServerTestCase
+import jetbrains.buildServer.serverSide.impl.dependency.UnresolvedDependency
 import jetbrains.buildServer.vcs.CheckoutRules
 import org.testng.annotations.BeforeClass
 import org.testng.annotations.Test
@@ -59,6 +62,8 @@ class ClientTests: BaseServerTestCase() {
         p4bt1.addBuildRunner("runner2", "runnerType2", mapOf(Pair("path", "abc")))
         p4bt1.addBuildFeature("featureType1", mapOf(Pair("path", "qwe")))
         p4bt1.addBuildParameter(SimpleParameter("path", "bcdbcdbcd"))
+        val dep = myFixture.artifactDependencyFactory.createArtifactDependency(p3bt2, "", RevisionRules.LAST_FINISHED_RULE)
+        p4bt1.addArtifactDependency(dep)
 
         val p4temp1 = project4.createBuildTypeTemplate("Project4_temp1", "Project4_temp1")
         p4temp1.addBuildRunner("temp_runner1", "temp_runner1", mapOf(Pair("home", "cde"), Pair("path1", "111")))
@@ -75,6 +80,7 @@ class ClientTests: BaseServerTestCase() {
         p5bt1.addVcsRoot(p5vcs1)
         p5bt1.setCheckoutRules(p5vcs1, CheckoutRules("abacaba"))
         p5bt1.addParameter(SimpleParameter("path", "dabacabadaba"))
+        myFixture.addDependency(p5bt1, p4bt1, true)
     }
 
     fun testSearchBuildConfigurationWithVcsTrigger() {
@@ -452,5 +458,27 @@ class ClientTests: BaseServerTestCase() {
         val expected2 = listOf("Project5_test1")
 
         assertEquals(expected2, res2)
+    }
+
+    fun testSnapshotDependency() {
+        val query = """
+            find buildConfiguration with dependency (snapshot and step type runnerType2)
+        """.trimIndent()
+
+        val res = client.process(query).objects.map {it.externalId}
+        val expected =  listOf("Project5_test1")
+
+        assertEquals(expected, res)
+    }
+
+    fun testArtifactDependency() {
+        val query = """
+            find buildConfiguration with dependency (artifact and step(type runnerType2 or type runnerType1))
+        """.trimIndent()
+
+        val res = client.process(query).objects.map {it.externalId}
+        val expected = listOf("Project4_test1")
+
+        assertEquals(expected, res)
     }
 }

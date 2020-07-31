@@ -19,3 +19,5 @@ interface ParHolderComplexFilter : ConditionContainer<ParameterHolderFilterType>
 interface VcsRootComplexFilter : ConditionContainer<VcsRootFilterType>
 
 interface VcsRootEntryComplexFilter : ConditionContainer<VcsRootEntryFilter>
+
+interface DependencyComplexFilter : ConditionContainer<DependencyFilterType>
