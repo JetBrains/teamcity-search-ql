@@ -1,6 +1,7 @@
 package jetbrains.buildServer.server.querylang.autocompl
 
 import java.util.*
+import java.util.concurrent.locks.ReentrantReadWriteLock
 
 class CompressedTrie<T> : AutocompletionIndexer<T> {
 
@@ -21,8 +22,11 @@ class CompressedTrie<T> : AutocompletionIndexer<T> {
     }
 
     val root = Node<T>("")
+    val lock = ReentrantReadWriteLock()
 
     override fun addString(str: String, obj: T?) {
+        lock.writeLock().lock()
+
         var node = root
         var i = 0
         while (i < str.length) {
@@ -54,18 +58,28 @@ class CompressedTrie<T> : AutocompletionIndexer<T> {
 
         node.terminalCnt += 1
         node.obj = obj
+
+        lock.writeLock().unlock()
     }
 
     override fun getCnt(str: String): Int {
+        lock.readLock().lock()
+
         val (node, strRest) = goDown(str) ?: return 0
-        if (node.isTerminal() && strRest == "") {
-            return node.terminalCnt
+        val res = if (node.isTerminal() && strRest == "") {
+            node.terminalCnt
         } else {
-            return 0
+            0
         }
+
+        lock.readLock().unlock()
+
+        return res
     }
 
     override fun complete(str: String, limit: Int): List<String> {
+        lock.readLock().lock()
+
         val (node, strRest) = goDown(str) ?: return emptyList()
 
         val firstNode = if (strRest.isEmpty()) node
@@ -73,12 +87,22 @@ class CompressedTrie<T> : AutocompletionIndexer<T> {
 
         val prefix = if (strRest.isEmpty()) ""
                      else firstNode.str.drop(strRest.length)
-        return getAllBfs(firstNode, limit).map {prefix + it}
+        val res = getAllBfs(firstNode, limit).map {prefix + it}
+
+        lock.readLock().unlock()
+
+        return res
     }
 
     override fun exists(str: String): Boolean {
+        lock.readLock().lock()
+
         val (node, strRest) = goDown(str) ?: return false
-        return node.isTerminal() && strRest.isEmpty()
+        val res = node.isTerminal() && strRest.isEmpty()
+
+        lock.readLock().unlock()
+
+        return res
     }
 
     private fun findLargestPrefix(str1: String, beg1: Int,  str2: String): String {

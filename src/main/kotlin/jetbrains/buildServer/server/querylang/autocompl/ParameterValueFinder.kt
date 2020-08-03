@@ -1,8 +1,8 @@
 package jetbrains.buildServer.server.querylang.autocompl
 
 class ParameterValueFinder: StringFinder {
-    val nameTrie: Trie<Any> = Trie()
-    val params: MutableMap<String, Trie<Any>> = mutableMapOf()
+    val nameTrie = CompressedTrie<Any>()
+    val params: MutableMap<String, CompressedTrie<Any>> = mutableMapOf()
 
     override fun completeString(prefix: String, limit: Int): List<String> {
         val wordRegex = """[\w.-_]*?""".toRegex()
@@ -23,7 +23,7 @@ class ParameterValueFinder: StringFinder {
 
     fun addParam(paramName: String, paramValue: String) {
         if (!params.contains(paramName)) {
-            params[paramName] = Trie()
+            params[paramName] = CompressedTrie()
         }
         params[paramName]!!.addString(paramValue)
         nameTrie.addString(paramName)
