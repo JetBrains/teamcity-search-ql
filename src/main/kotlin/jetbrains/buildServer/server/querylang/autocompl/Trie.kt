@@ -1,9 +1,10 @@
 package jetbrains.buildServer.server.querylang.autocompl
 
 import java.util.*
+import java.util.concurrent.locks.ReentrantReadWriteLock
 
 class Trie<T> : AutocompletionIndexer<T> {
-    class Node<T>(var obj: T? = null, var terminalCnt: Int = 0) {
+    private class Node<T>(var obj: T? = null, var terminalCnt: Int = 0) {
         val nodes: MutableMap<Char, Node<T>> = mutableMapOf()
         fun getNode(c: Char): Node<T>? {
             return nodes[c]
@@ -19,9 +20,12 @@ class Trie<T> : AutocompletionIndexer<T> {
         }
     }
 
-    val root = Node<T>()
+    private val root = Node<T>()
+    private val lock = ReentrantReadWriteLock()
 
     override fun addString(str: String, obj: T?) {
+        lock.writeLock().lock()
+
         var node = root
         str.forEach { c ->
             if (!node.exists(c)) {
@@ -32,9 +36,13 @@ class Trie<T> : AutocompletionIndexer<T> {
         }
         node.terminalCnt += 1
         node.obj = obj
+
+        lock.writeLock().unlock()
     }
 
     override fun exists(str: String): Boolean {
+        lock.readLock().lock()
+
         var node = root
         str.forEach { c ->
             if (!node.exists(c)) {
@@ -42,10 +50,14 @@ class Trie<T> : AutocompletionIndexer<T> {
             }
             node = node.getNode(c)!!
         }
+
+        lock.readLock().unlock()
+
         return node.isTerminal()
     }
 
     override fun getCnt(str: String): Int {
+        lock.readLock().lock()
         var node = root
         str.forEach { c ->
             if (!node.exists(c)) {
@@ -53,10 +65,12 @@ class Trie<T> : AutocompletionIndexer<T> {
             }
             node = node.getNode(c)!!
         }
+        lock.readLock().unlock()
         return node.terminalCnt
     }
 
     override fun complete(str: String, limit: Int): List<String> {
+        lock.readLock().lock()
         var node = root
         str.forEach { c ->
             if (!node.exists(c)) {
@@ -64,6 +78,7 @@ class Trie<T> : AutocompletionIndexer<T> {
             }
             node = node.getNode(c)!!
         }
+        lock.writeLock().lock()
         return getStringFromSubtree(node, limit)
     }
 

@@ -7,4 +7,9 @@
 >
     <bean class="jetbrains.buildServer.server.querylang.ui.SearchAdminPage"/>
     <bean class="jetbrains.buildServer.server.querylang.ui.SearchFormAutocompletionController"/>
+    <bean class="jetbrains.buildServer.server.querylang.autocompl.Completer"/>
+    <bean class="jetbrains.buildServer.server.querylang.autocompl.CompletionManager"/>
+    <bean class="jetbrains.buildServer.server.querylang.autocompl.AutoCompletion"/>
+    <bean class="jetbrains.buildServer.server.querylang.autocompl.TaskQueue"/>
+    <bean class="jetbrains.buildServer.server.querylang.autocompl.AutocompletionEventListener"/>
 </beans>

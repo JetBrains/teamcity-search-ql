@@ -10,19 +10,13 @@ import javax.servlet.http.HttpServletRequest
 
 
 class SearchFormAutocompletionController(
-    projectManager: ProjectManager,
     securityContext: SecurityContext,
-    webControllerManager: WebControllerManager
-) : BaseAutocompletionController(securityContext) {
-
+    webControllerManager: WebControllerManager,
     private val autoCompl: AutoCompletion
+) : BaseAutocompletionController(securityContext) {
 
     init {
         webControllerManager.registerController("/adminQueryAutocompletion.html", this)
-
-        autoCompl = AutoCompletion(
-            projectManager
-        )
     }
 
     override fun getCompletionData(request: HttpServletRequest): List<Completion?> {

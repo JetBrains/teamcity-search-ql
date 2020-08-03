@@ -13,7 +13,7 @@ import kotlin.reflect.full.companionObjectInstance
 import kotlin.reflect.full.isSubclassOf
 import kotlin.streams.toList
 
-class Completer(val projectManager: ProjectManager? = null) {
+class Completer(val completionManager: CompletionManager? = null) {
     private val graph = mutableMapOf<String, MutableList<String>>()
     private val reflections = Reflections("jetbrains.buildServer.server.querylang.ast")
     init {
@@ -106,15 +106,14 @@ class Completer(val projectManager: ProjectManager? = null) {
                 node = filterName
             }
         }
-        return if (graph[node]?.size == 0 && projectManager != null) {
+        return if (graph[node]?.size == 0 && completionManager != null) {
             val last2Filters = if (trace.size > 1) "${trace[trace.lastIndex - 1]}_${trace.last()}"
                                else "${startNode}_${trace.last()}"
-            CompletionManager(projectManager)
-                .completeString(
-                    word,
-                    last2Filters,
-                    limit
-                )
+            completionManager.completeString(
+                word,
+                last2Filters,
+                limit
+            )
         } else {
             graph[node]?.filterBegins(word)
                 ?: throw IllegalStateException("Unknow filter name ${node}")

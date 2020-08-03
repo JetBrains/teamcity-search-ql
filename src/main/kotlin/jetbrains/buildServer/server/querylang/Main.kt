@@ -2,14 +2,16 @@ package jetbrains.buildServer.server.querylang
 
 import jetbrains.buildServer.server.querylang.ast.*
 import jetbrains.buildServer.server.querylang.autocompl.AutoCompletion
+import jetbrains.buildServer.server.querylang.autocompl.Completer
+import jetbrains.buildServer.server.querylang.autocompl.CompletionManager
 import jetbrains.buildServer.server.querylang.parser.QueryParser
 import jetbrains.buildServer.server.querylang.parser.TypeDeduce
 
 
 fun main() {
 
-    val queryp = QueryParser
-    val autoCompl = AutoCompletion(null)
+    val completer = Completer(null)
+    val autoCompl = AutoCompletion(null, completer)
 
     while (true) {
         autoCompl.complete(readLine()!!).forEach {

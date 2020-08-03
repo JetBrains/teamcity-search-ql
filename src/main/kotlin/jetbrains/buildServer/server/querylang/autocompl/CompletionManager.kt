@@ -1,6 +1,10 @@
 package jetbrains.buildServer.server.querylang.autocompl
 
+import jetbrains.buildServer.serverSide.BuildTypeTemplate
 import jetbrains.buildServer.serverSide.ProjectManager
+import jetbrains.buildServer.serverSide.SBuildType
+import jetbrains.buildServer.serverSide.SProject
+import jetbrains.buildServer.vcs.SVcsRoot
 
 class CompletionManager(val projectManager: ProjectManager) {
     val map: MutableMap<String, StringFinder> = mutableMapOf()
@@ -33,66 +37,62 @@ class CompletionManager(val projectManager: ProjectManager) {
         map["feature_type"] = featureTypeFinder
         map["buildConfOrTemp_id"] = buildConfOrTempIdFinder
         map["vcsRoot_type"] = vcsRootTypeFinder
-
-        indexAll()
     }
 
     fun completeString(s: String, filterType: String, limit: Int): List<String> {
         return map[filterType]?.completeString(s, limit) ?: listOf()
     }
 
-    fun indexAll() {
-        projectManager.projects
-        projectManager.projects.forEach {project ->
-            projectIdFinder.addString(project.externalId)
-            project.buildTypes.forEach { bt ->
-                buildConfIdFinder.addString(bt.externalId)
-                bt.buildTriggersCollection.forEach { trig ->
-                    triggerTypeFinder.addString(trig.type)
-                    trig.parameters.forEach {name, value ->
-                        triggerParamValueFinder.addParam(name, value)
-                    }
-                }
-                bt.buildRunners.forEach {step ->
-                    stepTypeFinder.addString(step.type)
-                    step.parameters.forEach {name, value ->
-                        stepParamValueFinder.addParam(name, value)
-                    }
-                }
-                bt.buildFeatures.forEach { feat ->
-                    featureTypeFinder.addString(feat.type)
-                    feat.parameters.forEach {name, value ->
-                        featureParamValueFinder.addParam(name, value)
-                    }
-                }
-            }
+    fun updateProject(project: SProject) {
+        projectIdFinder.addString(project.externalId)
+    }
 
-            project.buildTypeTemplates.forEach { temp ->
-                templateIdFinder.addString(temp.externalId)
-                temp.buildTriggersCollection.forEach { trig ->
-                    triggerTypeFinder.addString(trig.type)
-                    trig.parameters.forEach {name, value ->
-                        triggerParamValueFinder.addParam(name, value)
-                    }
-                }
-                temp.buildRunners.forEach {step ->
-                    stepTypeFinder.addString(step.type)
-                    step.parameters.forEach {name, value ->
-                        stepParamValueFinder.addParam(name, value)
-                    }
-                }
-                temp.buildFeatures.forEach { feat ->
-                    featureTypeFinder.addString(feat.type)
-                    feat.parameters.forEach {name, value ->
-                        featureParamValueFinder.addParam(name, value)
-                    }
-                }
+    fun updateBuildType(bt: SBuildType) {
+        buildConfIdFinder.addString(bt.externalId)
+        bt.buildTriggersCollection.forEach { trig ->
+            triggerTypeFinder.addString(trig.type)
+            trig.parameters.forEach {name, value ->
+                triggerParamValueFinder.addParam(name, value)
             }
         }
-
-        projectManager.allVcsRoots.forEach { vcs ->
-            vcsRootIdFinder.addString(vcs.externalId)
-            vcsRootTypeFinder.addString(vcs.vcsName)
+        bt.buildRunners.forEach {step ->
+            stepTypeFinder.addString(step.type)
+            step.parameters.forEach {name, value ->
+                stepParamValueFinder.addParam(name, value)
+            }
         }
+        bt.buildFeatures.forEach { feat ->
+            featureTypeFinder.addString(feat.type)
+            feat.parameters.forEach {name, value ->
+                featureParamValueFinder.addParam(name, value)
+            }
+        }
+    }
+
+    fun updateTemplate(temp: BuildTypeTemplate) {
+        templateIdFinder.addString(temp.externalId)
+        temp.buildTriggersCollection.forEach { trig ->
+            triggerTypeFinder.addString(trig.type)
+            trig.parameters.forEach {name, value ->
+                triggerParamValueFinder.addParam(name, value)
+            }
+        }
+        temp.buildRunners.forEach {step ->
+            stepTypeFinder.addString(step.type)
+            step.parameters.forEach {name, value ->
+                stepParamValueFinder.addParam(name, value)
+            }
+        }
+        temp.buildFeatures.forEach { feat ->
+            featureTypeFinder.addString(feat.type)
+            feat.parameters.forEach {name, value ->
+                featureParamValueFinder.addParam(name, value)
+            }
+        }
+    }
+
+    fun updateVcsRoot(vcs: SVcsRoot) {
+        vcsRootIdFinder.addString(vcs.externalId)
+        vcsRootTypeFinder.addString(vcs.vcsName)
     }
 }
