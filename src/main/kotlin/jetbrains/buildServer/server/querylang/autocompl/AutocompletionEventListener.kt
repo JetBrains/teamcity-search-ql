@@ -2,12 +2,13 @@ package jetbrains.buildServer.server.querylang.autocompl
 
 import jetbrains.buildServer.serverSide.*
 import jetbrains.buildServer.users.SUser
+import jetbrains.buildServer.util.EventDispatcher
 import jetbrains.buildServer.vcs.SVcsRoot
 
 class AutocompletionEventListener(
     val queue: TaskQueue,
     val projectManager: ProjectManager,
-    eventDispatcher: BuildServerListenerEventDispatcher
+    eventDispatcher: EventDispatcher<BuildServerListener>
 ) : BuildServerAdapter() {
     init {
         eventDispatcher.addListener(this)

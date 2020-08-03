@@ -1,6 +1,8 @@
 package jetbrains.buildServer.server.querylang.tests.autocompl
 
 import jetbrains.buildServer.server.querylang.autocompl.AutoCompletion
+import jetbrains.buildServer.server.querylang.autocompl.Completer
+import jetbrains.buildServer.server.querylang.autocompl.CompletionManager
 import jetbrains.buildServer.serverSide.impl.BaseServerTestCase
 import org.testng.annotations.BeforeClass
 import org.testng.annotations.Test
@@ -41,7 +43,9 @@ class AutocompletionTests : BaseServerTestCase() {
 
         p5_bt1.addBuildTrigger("project", mapOf(Pair("param", "vcsRoot")))
 
-        autoCompl = AutoCompletion(myFixture.projectManager)
+        val complm = CompletionManager(myFixture.projectManager)
+        val compl = Completer(complm)
+        autoCompl = AutoCompletion(myFixture.projectManager, compl)
     }
 
     fun testProjectId() {

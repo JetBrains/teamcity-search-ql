@@ -1,13 +1,15 @@
 package jetbrains.buildServer.server.querylang.tests.autocompl
 
 import jetbrains.buildServer.server.querylang.autocompl.AutoCompletion
+import jetbrains.buildServer.server.querylang.autocompl.Completer
+import jetbrains.buildServer.server.querylang.autocompl.CompletionManager
 import org.testng.annotations.Test
 import kotlin.test.assertEquals
 
 
 @Test
 internal class KeywordAutocomletionTests {
-    val autoCompl = AutoCompletion()
+    val autoCompl = AutoCompletion(null, Completer(null))
 
     fun testFindAutoCompleteon() {
         val query = """

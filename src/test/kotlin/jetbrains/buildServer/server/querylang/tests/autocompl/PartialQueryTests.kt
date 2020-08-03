@@ -1,13 +1,14 @@
 package jetbrains.buildServer.server.querylang.tests.autocompl
 
 import jetbrains.buildServer.server.querylang.autocompl.AutoCompletion
+import jetbrains.buildServer.server.querylang.autocompl.Completer
 import jetbrains.buildServer.server.querylang.parser.QueryParser
 import org.testng.annotations.Test
 import kotlin.test.assertEquals
 
 @Test
 class PartialQueryTests {
-    val compl = AutoCompletion()
+    val compl = AutoCompletion(null, Completer(null))
 
     //initialization is necessary
     private val queryParser = QueryParser

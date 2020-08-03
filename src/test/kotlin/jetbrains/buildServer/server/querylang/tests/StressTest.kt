@@ -37,10 +37,4 @@ class StressTest : BaseServerTestCase() {
         println(time)
     }
 
-    fun testIndexTime() {
-        val time = measureTimeMillis {
-            val compl = AutoCompletion(myFixture.projectManager)
-        }
-        println(time)
-    }
 }
