@@ -13,6 +13,7 @@ import jetbrains.buildServer.serverSide.impl.BaseServerTestCase
 import jetbrains.buildServer.serverSide.impl.dependency.UnresolvedDependency
 import jetbrains.buildServer.vcs.CheckoutRules
 import org.testng.annotations.BeforeClass
+import org.testng.annotations.BeforeMethod
 import org.testng.annotations.Test
 
 @Test
@@ -21,7 +22,7 @@ class ClientTests: BaseServerTestCase() {
     private lateinit var client: RequestClient
     private val parser = QueryParser
 
-    @BeforeClass
+    @BeforeMethod
     override fun setUp() {
         super.setUp()
         pManager = myFixture.projectManager

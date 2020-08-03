@@ -8,18 +8,22 @@ import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 import kotlin.collections.LinkedHashSet
 
-class TaskQueue(val compl: CompletionManager) {
+class TaskQueue(
+    val compl: CompletionManager,
+    updatePeriod: Long = 300,
+    initialDelay: Long = 0,
+    tu: TimeUnit = TimeUnit.SECONDS
+) {
 
     private val queue: LinkedHashSet<ObjectUpdateTask> = LinkedHashSet()
     private val scheduledExecutor = Executors.newSingleThreadScheduledExecutor()
-    private val updatePeriod: Long = 300
 
     init {
         scheduledExecutor.scheduleAtFixedRate(
             { update() },
-            0,
+            initialDelay,
             updatePeriod,
-            TimeUnit.SECONDS
+            tu
         )
     }
 

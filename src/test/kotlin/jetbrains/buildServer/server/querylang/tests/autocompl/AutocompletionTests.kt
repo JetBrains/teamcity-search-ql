@@ -5,6 +5,7 @@ import jetbrains.buildServer.server.querylang.autocompl.Completer
 import jetbrains.buildServer.server.querylang.autocompl.CompletionManager
 import jetbrains.buildServer.serverSide.impl.BaseServerTestCase
 import org.testng.annotations.BeforeClass
+import org.testng.annotations.BeforeMethod
 import org.testng.annotations.Test
 
 @Test

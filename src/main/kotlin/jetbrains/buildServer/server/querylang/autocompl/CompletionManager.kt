@@ -37,6 +37,15 @@ class CompletionManager(val projectManager: ProjectManager) {
         map["feature_type"] = featureTypeFinder
         map["buildConfOrTemp_id"] = buildConfOrTempIdFinder
         map["vcsRoot_type"] = vcsRootTypeFinder
+
+        indexAll()
+    }
+
+    private fun indexAll() {
+        projectManager.projects.forEach { updateProject(it) }
+        projectManager.allBuildTypes.forEach { updateBuildType(it) }
+        projectManager.allTemplates.forEach { updateTemplate(it) }
+        projectManager.allVcsRoots.forEach { updateVcsRoot(it) }
     }
 
     fun completeString(s: String, filterType: String, limit: Int): List<String> {

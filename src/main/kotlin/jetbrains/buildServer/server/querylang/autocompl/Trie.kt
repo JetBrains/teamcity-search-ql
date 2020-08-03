@@ -78,7 +78,7 @@ class Trie<T> : AutocompletionIndexer<T> {
             }
             node = node.getNode(c)!!
         }
-        lock.writeLock().lock()
+        lock.readLock().unlock()
         return getStringFromSubtree(node, limit)
     }
 
