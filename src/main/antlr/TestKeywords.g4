@@ -33,13 +33,7 @@ SNAPSHOT : 'snapshot' ;
 ALL : 'all' ;
 
 STRING: '"' (~[\t\r\n"] | '""')* '"';
-IDENT: (LET | DIGIT | '_' | '.' | '-')+
-{
-   if ( keywords.containsKey(getText()) ) {
-       setType(keywords.get(getText()));
-   }
-}
-;
+IDENT: (LET | DIGIT | '_' | '.' | '-')+;
 
 SUFFIXS : '*' (IDENT | STRING) ;
 PREFIXS : (IDENT | STRING) '*' ;

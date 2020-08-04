@@ -38,8 +38,8 @@ class AutoCompletion(
         val treeFindNode = start.find()
         val treePartNode = start.partialQuery()
         if (treeFindNode != null) {
-            val (word, objectTypes, trace) = getFilterTrace(treeFindNode, input) ?: return emptyList()
-            val vars = compl.suggest(input.dropLast(word.length), objectTypes, trace, word, 100)
+            val (word, objectTypes, trace, completeModifier) = getFilterTrace(treeFindNode, input) ?: return emptyList()
+            val vars = compl.suggest(input.dropLast(word.length), objectTypes, trace, word, completeModifier, 100)
             return vars
         }
         if (treePartNode != null) {
@@ -68,6 +68,8 @@ class AutoCompletion(
 
         //the list of object types that we want to find
         var objectTypes = listOf<String>()
+
+        var completeModifier = false
         loop@ while (true) {
             if (node is QLangGrammarParser.FindContext) {
                 if (node.childCount < 1) {
@@ -137,6 +139,13 @@ class AutoCompletion(
 
                     if (node.parent is QLangGrammarParser.FilterContext) {
                         lastFilterIndex = getIndex(node, 0)
+                        val modifierListNode = getModifierListNode(node)
+                        if (modifierListNode != null && modifierListNode.stop.text != "]") {
+                            node = modifierListNode
+                            completeModifier = true
+                            continue@loop
+                        }
+
                         if (!(node.getChild(n - 1) is QLangGrammarParser.FilterOrConditionContext)) {
                             //get the last index of the filter name
                             lastParsedIndex = getIndex(node, 0)
@@ -161,18 +170,18 @@ class AutoCompletion(
             //if `lastWord` is empty then we want to complete empty string
             //but if the last symbol is not ' ' or '(' then
             //we want to complete the last word in `trace` not to start the new one.
-            if (input.last() !in listOf(' ', '(', ')')) {
+            if (input.last() !in listOf(' ', '(', ')', '[', ']')) {
                 if (lastFilterIndex == input.lastIndex) {
                     if (trace.size == 0) {
                         return null
                     }
-                    return Trace(trace.last(), objectTypes, trace.dropLast(1))
+                    return Trace(trace.last(), objectTypes, trace.dropLast(1), completeModifier)
                 }
                 return null
             }
         }
 
-        return Trace(lastWord, objectTypes, trace)
+        return Trace(lastWord, objectTypes, trace, completeModifier)
     }
 
     private fun completePartialQuery(input: String, rootNode: QLangGrammarParser.PartialQueryContext): List<CompletionResult> {
@@ -218,6 +227,16 @@ class AutoCompletion(
             is TerminalNode -> child.symbol.stopIndex
             else -> throw IllegalStateException("Unknown node type")
         }
+    }
+
+    private fun getModifierListNode(node: ParseTree): QLangGrammarParser.ModifierListContext? {
+        for (i in 0..node.childCount) {
+            val ch = node.getChild(i)
+            if (ch is QLangGrammarParser.ModifierListContext) {
+                return ch
+            }
+        }
+        return null
     }
 
     private fun hasErorNodeInSubtree(node: ParseTree): Boolean {

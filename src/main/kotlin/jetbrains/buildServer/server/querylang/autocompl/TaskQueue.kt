@@ -27,6 +27,8 @@ class TaskQueue(
         )
     }
 
+    constructor(compl: CompletionManager): this(compl, 300, 0, TimeUnit.SECONDS)
+
     fun addBuildType(bt: SBuildType) {
         addObject(BuildTypeUpdateTask(bt))
     }

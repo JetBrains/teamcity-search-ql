@@ -12,4 +12,5 @@
     <bean class="jetbrains.buildServer.server.querylang.autocompl.AutoCompletion"/>
     <bean class="jetbrains.buildServer.server.querylang.autocompl.TaskQueue"/>
     <bean class="jetbrains.buildServer.server.querylang.autocompl.AutocompletionEventListener"/>
+    <bean class="jetbrains.buildServer.server.querylang.parser.QueryParser"/>
 </beans>

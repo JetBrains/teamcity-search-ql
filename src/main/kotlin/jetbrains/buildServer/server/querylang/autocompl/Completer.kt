@@ -15,9 +15,12 @@ import kotlin.streams.toList
 
 class Completer(val completionManager: CompletionManager? = null) {
     private val graph = mutableMapOf<String, MutableList<String>>()
+    private val possibleModifiers = mutableMapOf<String, MutableList<String>>()
     private val reflections = Reflections("jetbrains.buildServer.server.querylang.ast")
+
     init {
         loadFilterGraph()
+        loadPossibleModifiers()
     }
 
     fun suggest(
@@ -25,6 +28,7 @@ class Completer(val completionManager: CompletionManager? = null) {
         objectTypes: List<String>?,
         trace: List<String>,
         word: String,
+        completeModifier: Boolean,
         limit: Int
     ): List<CompletionResult> {
 
@@ -56,7 +60,7 @@ class Completer(val completionManager: CompletionManager? = null) {
 
         //unite all variants
         return objectTypes.flatMap { objType ->
-            getVariants(objType, trace, word, limit)
+            getVariants(objType, trace, word, limit, completeModifier)
         }.toSet()
             .toList()
             .take(limit)
@@ -93,7 +97,13 @@ class Completer(val completionManager: CompletionManager? = null) {
         return emptyList()
     }
 
-    private fun getVariants(startNode: String, trace: List<String>, word: String, limit: Int): List<String> {
+    private fun getVariants(
+        startNode: String,
+        trace: List<String>,
+        word: String,
+        limit: Int,
+        completeModifier: Boolean
+    ): List<String> {
         var node = startNode
         for (filterName in trace) {
             if (graph[node] == null) {
@@ -106,6 +116,12 @@ class Completer(val completionManager: CompletionManager? = null) {
                 node = filterName
             }
         }
+
+        if (completeModifier) {
+            return possibleModifiers[node]?.filterBegins(word) ?:
+                throw IllegalStateException("Unknow filter name ${node}")
+        }
+
         return if (graph[node]?.size == 0 && completionManager != null) {
             val last2Filters = if (trace.size > 1) "${trace[trace.lastIndex - 1]}_${trace.last()}"
                                else "${startNode}_${trace.last()}"
@@ -158,6 +174,25 @@ class Completer(val completionManager: CompletionManager? = null) {
 
         FilterTypeRegistration.getConditionContainerFilterPairs().forEach { con ->
             createEdgesForMainClass(con.conditionc, con.filterc)
+        }
+    }
+
+    private fun loadPossibleModifiers() {
+        val modifiers = reflections.getSubTypesOf(FilterModifier::class.java)
+
+        modifiers.forEach {modClass ->
+            val companionObj = modClass.kotlin.companionObjectInstance as? FilterClasses
+                ?: throw IllegalStateException("All modifiers should have companion object")
+
+            val names = companionObj.names
+            companionObj.classes.map {it.filterClass}.forEach {filterClass ->
+                getNames(filterClass).forEach {
+                    if (!possibleModifiers.contains(it)) {
+                        possibleModifiers[it] = mutableListOf()
+                    }
+                    possibleModifiers[it]!!.addAll(names)
+                }
+            }
         }
     }
 
