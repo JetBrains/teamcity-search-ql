@@ -25,8 +25,8 @@ public class Keywords extends Lexer {
 		PROJECT=1, TEMPLATE=2, BUILD_CONFIGURATION=3, VCS_ROOT=4, ID=5, PARENT=6, 
 		TRIGGER=7, STEP=8, FEATURE=9, TYPE=10, PARAM=11, VAL=12, ENABLED=13, ANCESTOR=14, 
 		ANCESTOR_OR_SELF=15, RULES=16, DEPENDENCY=17, ARTIFACT=18, SNAPSHOT=19, 
-		OR=20, AND=21, NOT=22, STRING=23, IDENT=24, SUFFIXS=25, PREFIXS=26, SUBSTRINGS=27, 
-		WS=28;
+		ALL=20, OR=21, AND=22, NOT=23, STRING=24, IDENT=25, SUFFIXS=26, PREFIXS=27, 
+		SUBSTRINGS=28, WS=29;
 	public static String[] channelNames = {
 		"DEFAULT_TOKEN_CHANNEL", "HIDDEN"
 	};
@@ -46,7 +46,8 @@ public class Keywords extends Lexer {
 	private static String[] makeLiteralNames() {
 		return new String[] {
 			null, null, null, null, null, null, null, null, null, null, null, null, 
-			null, null, null, null, null, null, null, null, "'or'", "'and'", "'not'"
+			null, null, null, null, null, null, null, null, null, "'or'", "'and'", 
+			"'not'"
 		};
 	}
 	private static final String[] _LITERAL_NAMES = makeLiteralNames();
@@ -55,7 +56,7 @@ public class Keywords extends Lexer {
 			null, "PROJECT", "TEMPLATE", "BUILD_CONFIGURATION", "VCS_ROOT", "ID", 
 			"PARENT", "TRIGGER", "STEP", "FEATURE", "TYPE", "PARAM", "VAL", "ENABLED", 
 			"ANCESTOR", "ANCESTOR_OR_SELF", "RULES", "DEPENDENCY", "ARTIFACT", "SNAPSHOT", 
-			"OR", "AND", "NOT", "STRING", "IDENT", "SUFFIXS", "PREFIXS", "SUBSTRINGS", 
+			"ALL", "OR", "AND", "NOT", "STRING", "IDENT", "SUFFIXS", "PREFIXS", "SUBSTRINGS", 
 			"WS"
 		};
 	}
@@ -119,6 +120,7 @@ public class Keywords extends Lexer {
 	        putToKeywords(DependencyFilter.Companion.getNames(), QLangGrammarParser.DEPENDENCY);
 	        putToKeywords(ArtifactFilter.Companion.getNames(), QLangGrammarParser.ARTIFACT);
 	        putToKeywords(SnapshotFilter.Companion.getNames(), QLangGrammarParser.SNAPSHOT);
+	        putToKeywords(AllFilterModifier.Companion.getNames(), QLangGrammarParser.ALL);
 	    }
 
 	    private void putToKeywords(List<String> filterNames, Integer tokenType) {
@@ -172,15 +174,15 @@ public class Keywords extends Lexer {
 	}
 
 	public static final String _serializedATN =
-		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\2\36c\b\1\4\2\t\2\4"+
+		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\2\37c\b\1\4\2\t\2\4"+
 		"\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4\t\t\t\4\n\t\n\4\13\t"+
 		"\13\4\f\t\f\4\r\t\r\4\16\t\16\4\17\t\17\3\2\3\2\3\3\3\3\3\4\3\4\3\5\3"+
 		"\5\5\5(\n\5\3\6\3\6\3\7\3\7\3\7\3\b\3\b\3\b\3\b\3\t\3\t\3\t\3\t\3\n\3"+
 		"\n\3\n\3\n\7\n;\n\n\f\n\16\n>\13\n\3\n\3\n\3\13\3\13\3\13\6\13E\n\13\r"+
 		"\13\16\13F\3\13\3\13\3\f\3\f\3\f\5\fN\n\f\3\r\3\r\5\rR\n\r\3\r\3\r\3\16"+
 		"\3\16\3\16\5\16Y\n\16\3\16\3\16\3\17\6\17^\n\17\r\17\16\17_\3\17\3\17"+
-		"\2\2\20\3\2\5\2\7\2\t\2\13\2\r\26\17\27\21\30\23\31\25\32\27\33\31\34"+
-		"\33\35\35\36\3\2\b\3\2\62;\3\2c|\3\2C\\\5\2\13\f\17\17\"\"\5\2\13\f\17"+
+		"\2\2\20\3\2\5\2\7\2\t\2\13\2\r\27\17\30\21\31\23\32\25\33\27\34\31\35"+
+		"\33\36\35\37\3\2\b\3\2\62;\3\2c|\3\2C\\\5\2\13\f\17\17\"\"\5\2\13\f\17"+
 		"\17$$\4\2/\60aa\2g\2\r\3\2\2\2\2\17\3\2\2\2\2\21\3\2\2\2\2\23\3\2\2\2"+
 		"\2\25\3\2\2\2\2\27\3\2\2\2\2\31\3\2\2\2\2\33\3\2\2\2\2\35\3\2\2\2\3\37"+
 		"\3\2\2\2\5!\3\2\2\2\7#\3\2\2\2\t\'\3\2\2\2\13)\3\2\2\2\r+\3\2\2\2\17."+

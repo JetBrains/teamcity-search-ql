@@ -482,4 +482,15 @@ class ClientTests: BaseServerTestCase() {
 
         assertEquals(expected, res)
     }
+
+    fun testTriggerAllModifier() {
+        val query = """
+            find buildConfiguration with trigger[all] type vcsTrigger
+        """.trimIndent()
+
+        val res = client.process(query).objects.map {it.externalId}.sorted()
+        val expected = listOf("Project1_test1", "Project1_test2", "Project3_test1", "Project5_test1")
+
+        assertEquals(expected, res)
+    }
 }

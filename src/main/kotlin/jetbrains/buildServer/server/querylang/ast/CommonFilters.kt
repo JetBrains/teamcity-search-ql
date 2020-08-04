@@ -60,6 +60,8 @@ data class TriggerFilter(
 {
     companion object : Names("trigger")
     override val names = TriggerFilter.names
+
+    var includeInherited = false
 }
 
 data class StepFilter(

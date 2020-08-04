@@ -709,6 +709,42 @@ public class QLangGrammarBaseListener implements QLangGrammarListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitStringSubstringFilter(QLangGrammarParser.StringSubstringFilterContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterFilterModifier(QLangGrammarParser.FilterModifierContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitFilterModifier(QLangGrammarParser.FilterModifierContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterModifierList(QLangGrammarParser.ModifierListContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitModifierList(QLangGrammarParser.ModifierListContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterAllModifier(QLangGrammarParser.AllModifierContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitAllModifier(QLangGrammarParser.AllModifierContext ctx) { }
 
 	/**
 	 * {@inheritDoc}

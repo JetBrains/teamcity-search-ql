@@ -374,4 +374,22 @@ public interface QLangGrammarVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitStringSubstringFilter(QLangGrammarParser.StringSubstringFilterContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link QLangGrammarParser#filterModifier}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFilterModifier(QLangGrammarParser.FilterModifierContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link QLangGrammarParser#modifierList}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitModifierList(QLangGrammarParser.ModifierListContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link QLangGrammarParser#allModifier}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitAllModifier(QLangGrammarParser.AllModifierContext ctx);
 }

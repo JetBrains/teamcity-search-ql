@@ -25,7 +25,9 @@ object BuildConfFilterBuilder : FilterBuilder<BuildConfFilterType, SBuildType> {
                 ObjectFilter {buildType ->
                     buildType as? BuildTypeEx ?: throw IllegalStateException("Should be BuildTypeEx")
                     val condition = ParHolderFilterBuilder.createFilter(filter.condition, buildType)
-                    buildType.settings.ownBuildTriggers.any {trig ->
+                    val settings = if (!filter.includeInherited) buildType.settings.ownBuildTriggers
+                                   else buildType.buildTriggersCollection
+                    settings.any {trig ->
                         condition.accepts(trig)
                     }
                 }

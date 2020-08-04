@@ -13,7 +13,8 @@ not: NOT ;
 
 filterKeyword : PROJECT | TEMPLATE | BUILD_CONFIGURATION | VCS_ROOT
                  | PARENT | TRIGGER | STEP | FEATURE | TYPE | PARAM | VAL
-                 | ENABLED | ANCESTOR | ANCESTOR_OR_SELF
+                 | ENABLED | ANCESTOR | ANCESTOR_OR_SELF | RULES | DEPENDENCY
+                 | ARTIFACT | SNAPSHOT | ALL
                  ;
 identOrString : IDENT | STRING | filterKeyword;
 
@@ -79,7 +80,7 @@ stringFilterOrCondition : stringFilter             #singleStringFilter
 idFilter : ID objectId ;
 projectFilter : PROJECT filterOrCondition ;
 parentFilter : PARENT filterOrCondition ;
-triggerFilter : TRIGGER filterOrCondition ;
+triggerFilter : TRIGGER modifierList? filterOrCondition ;
 stepFilter : STEP filterOrCondition ;
 featureFilter : FEATURE filterOrCondition ;
 typeFilter : TYPE objectType ;
@@ -113,3 +114,10 @@ stringEqualsFilter : identOrString ;
 stringPrefixFilter : PREFIXS ;
 stringSuffixFilter : SUFFIXS ;
 stringSubstringFilter : SUBSTRINGS ;
+
+
+filterModifier : allModifier ;
+modifierList : '[' filterModifier (',' filterModifier)*? ']' ;
+
+
+allModifier : ALL ;
