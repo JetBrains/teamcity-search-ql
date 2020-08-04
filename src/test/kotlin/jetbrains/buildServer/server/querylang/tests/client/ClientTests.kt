@@ -74,6 +74,7 @@ class ClientTests: BaseServerTestCase() {
         p4temp1.setCheckoutRules(p3vcs1, CheckoutRules("dabadaba"))
         p4temp1.addParameter(SimpleParameter("path", "qwerasdf"))
         p4temp1.addParameter(SimpleParameter("qwerty", "abacaba"))
+        myFixture.addDependency(p4temp1, p2bt1, true)
 
         val p5bt1 = project5.createBuildType("Project5_test1", "Project5_test1")
         p5bt1.addTemplate(p4temp1, true)
@@ -520,6 +521,17 @@ class ClientTests: BaseServerTestCase() {
     fun testParamAllFilter() {
         val query = """
             find buildConfiguration with param[all] qwerty=*cab*
+        """.trimIndent()
+
+        val res = client.process(query).objects.map {it.externalId}.sorted()
+        val expected = listOf("Project5_test1")
+
+        assertEquals(expected, res)
+    }
+
+    fun testDependencyFilter() {
+        val query = """
+            find buildConfiguration with dependency[all] id *Project2*
         """.trimIndent()
 
         val res = client.process(query).objects.map {it.externalId}.sorted()

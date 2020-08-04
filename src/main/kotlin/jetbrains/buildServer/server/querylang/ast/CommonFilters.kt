@@ -183,6 +183,8 @@ data class DependencyFilter(
     companion object : Names("dependency")
 
     override val names = CheckoutRulesFilter.names
+
+    var includeInhereted = false
 }
 
 data class ArtifactFilter(

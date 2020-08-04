@@ -43,6 +43,8 @@ internal class ProjectSearchTests {
                         )
                 )
         ).wrap()
+
+        assertEquals(expected, parsed)
     }
 
     

@@ -290,7 +290,7 @@ class BuildConfSearchTests {
                 FilterConditionNode(
                         TempDepFilter(
                                 AndConditionNode<TemplateFilterType>(
-                                        FilterConditionNode(IdFilter("5555)".wrapEq())),
+                                        FilterConditionNode(IdFilter("5555".wrapEq())),
                                         FilterConditionNode(TriggerFilter(
                                                 FilterConditionNode(
                                                         TypeFilter("vcsTrigger")
@@ -300,6 +300,8 @@ class BuildConfSearchTests {
                         )
                 )
         ).wrap()
+
+        assertEquals(expected, parsed)
     }
 
     

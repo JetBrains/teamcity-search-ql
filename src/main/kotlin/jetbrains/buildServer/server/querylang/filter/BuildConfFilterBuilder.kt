@@ -88,8 +88,15 @@ object BuildConfFilterBuilder : FilterBuilder<BuildConfFilterType, SBuildType> {
                 ObjectFilter {buildType ->
                     val dependencyFilter = DependencyFilterBuilder.createFilter(filter.condition, buildType)
                     buildType as? BuildTypeEx ?: throw IllegalStateException("Should be BuildTypeEx")
-                    buildType.ownDependencies.any {dependencyFilter.accepts(it.dependOn)}
-                            || buildType.settings.ownArtifactDependencies.any {dependencyFilter.accepts(it.sourceBuildType)}
+
+                    val artifactDeps = if (filter.includeInhereted) buildType.artifactDependencies
+                                       else buildType.settings.ownArtifactDependencies
+
+                    val snapshotDeps = if (filter.includeInhereted) buildType.dependencies
+                                       else buildType.ownDependencies
+
+                    snapshotDeps.any {dependencyFilter.accepts(it.dependOn)}
+                            || artifactDeps.any {dependencyFilter.accepts(it.sourceBuildType)}
                 }
             }
 
