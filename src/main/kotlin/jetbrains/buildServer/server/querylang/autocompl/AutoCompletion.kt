@@ -262,6 +262,7 @@ class AutoCompletion(
     data class Trace(
         val word: String,
         val objectTypes: List<String>? = null,
-        val trace: List<String> = emptyList()
+        val trace: List<String> = emptyList(),
+        val completeModifier: Boolean = false
     )
 }
