@@ -73,6 +73,7 @@ class ClientTests: BaseServerTestCase() {
         p4temp1.addVcsRoot(p3vcs1)
         p4temp1.setCheckoutRules(p3vcs1, CheckoutRules("dabadaba"))
         p4temp1.addParameter(SimpleParameter("path", "qwerasdf"))
+        p4temp1.addParameter(SimpleParameter("qwerty", "abacaba"))
 
         val p5bt1 = project5.createBuildType("Project5_test1", "Project5_test1")
         p5bt1.addTemplate(p4temp1, true)
@@ -490,6 +491,39 @@ class ClientTests: BaseServerTestCase() {
 
         val res = client.process(query).objects.map {it.externalId}.sorted()
         val expected = listOf("Project1_test1", "Project1_test2", "Project3_test1", "Project5_test1")
+
+        assertEquals(expected, res)
+    }
+
+    fun testStepAllModifier() {
+        val query = """
+            find buildConfiguration with step[all] type temp_runner1
+        """.trimIndent()
+
+        val res = client.process(query).objects.map {it.externalId}.sorted()
+        val expected = listOf("Project5_test1")
+
+        assertEquals(expected, res)
+    }
+
+    fun testFeatureAllModifier() {
+        val query = """
+            find buildConfiguration with feature[all] type feature11
+        """.trimIndent()
+
+        val res = client.process(query).objects.map {it.externalId}.sorted()
+        val expected = listOf("Project5_test1")
+
+        assertEquals(expected, res)
+    }
+
+    fun testParamAllFilter() {
+        val query = """
+            find buildConfiguration with param[all] qwerty=*cab*
+        """.trimIndent()
+
+        val res = client.process(query).objects.map {it.externalId}.sorted()
+        val expected = listOf("Project5_test1")
 
         assertEquals(expected, res)
     }

@@ -60,7 +60,9 @@ object TemplateFilterBuilder : FilterBuilder<TemplateFilterType, BuildTypeTempla
             is ParameterFilter -> {
                 val stringFilter = StringFilterBuilder.createFilter(filter.valueCondition)
                 ObjectFilter {buildType ->
-                    buildType.ownParameters.any<String, String> {(key, value) ->
+                    val params = if (filter.includeInherited) buildType.parameters
+                                 else buildType.ownParameters
+                    params.any<String, String> {(key, value) ->
                         key == filter.option && stringFilter.accepts(value)
                     }
                 }

@@ -73,6 +73,8 @@ data class StepFilter(
 {
     companion object : Names("step")
     override val names = StepFilter.names
+
+    var includeInherited = false
 }
 
 data class FeatureFilter(
@@ -84,6 +86,8 @@ data class FeatureFilter(
 {
     companion object : Names("feature")
     override val names = FeatureFilter.names
+
+    var includeInherited = false
 }
 
 data class TempDepFilter(
@@ -126,6 +130,8 @@ data class ParameterFilter(
     override val names = ParameterFilter.names
 
     override fun createStr() = "param ${option.toIdentOrString()}=(${valueCondition.createStr()})"
+
+    var includeInherited = false
 }
 
 data class AncestorFilter(

@@ -1948,6 +1948,9 @@ public class QLangGrammarParser extends Parser {
 		public FilterOrConditionContext filterOrCondition() {
 			return getRuleContext(FilterOrConditionContext.class,0);
 		}
+		public ModifierListContext modifierList() {
+			return getRuleContext(ModifierListContext.class,0);
+		}
 		public ProjectFilterContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -1970,12 +1973,23 @@ public class QLangGrammarParser extends Parser {
 	public final ProjectFilterContext projectFilter() throws RecognitionException {
 		ProjectFilterContext _localctx = new ProjectFilterContext(_ctx, getState());
 		enterRule(_localctx, 50, RULE_projectFilter);
+		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
 			setState(230);
 			match(PROJECT);
-			setState(231);
+			setState(232);
+			_errHandler.sync(this);
+			_la = _input.LA(1);
+			if (_la==T__7) {
+				{
+				setState(231);
+				modifierList();
+				}
+			}
+
+			setState(234);
 			filterOrCondition();
 			}
 		}
@@ -1994,6 +2008,9 @@ public class QLangGrammarParser extends Parser {
 		public TerminalNode PARENT() { return getToken(QLangGrammarParser.PARENT, 0); }
 		public FilterOrConditionContext filterOrCondition() {
 			return getRuleContext(FilterOrConditionContext.class,0);
+		}
+		public ModifierListContext modifierList() {
+			return getRuleContext(ModifierListContext.class,0);
 		}
 		public ParentFilterContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -2017,12 +2034,23 @@ public class QLangGrammarParser extends Parser {
 	public final ParentFilterContext parentFilter() throws RecognitionException {
 		ParentFilterContext _localctx = new ParentFilterContext(_ctx, getState());
 		enterRule(_localctx, 52, RULE_parentFilter);
+		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(233);
+			setState(236);
 			match(PARENT);
-			setState(234);
+			setState(238);
+			_errHandler.sync(this);
+			_la = _input.LA(1);
+			if (_la==T__7) {
+				{
+				setState(237);
+				modifierList();
+				}
+			}
+
+			setState(240);
 			filterOrCondition();
 			}
 		}
@@ -2071,19 +2099,19 @@ public class QLangGrammarParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(236);
+			setState(242);
 			match(TRIGGER);
-			setState(238);
+			setState(244);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if (_la==T__7) {
 				{
-				setState(237);
+				setState(243);
 				modifierList();
 				}
 			}
 
-			setState(240);
+			setState(246);
 			filterOrCondition();
 			}
 		}
@@ -2102,6 +2130,9 @@ public class QLangGrammarParser extends Parser {
 		public TerminalNode STEP() { return getToken(QLangGrammarParser.STEP, 0); }
 		public FilterOrConditionContext filterOrCondition() {
 			return getRuleContext(FilterOrConditionContext.class,0);
+		}
+		public ModifierListContext modifierList() {
+			return getRuleContext(ModifierListContext.class,0);
 		}
 		public StepFilterContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -2125,12 +2156,23 @@ public class QLangGrammarParser extends Parser {
 	public final StepFilterContext stepFilter() throws RecognitionException {
 		StepFilterContext _localctx = new StepFilterContext(_ctx, getState());
 		enterRule(_localctx, 56, RULE_stepFilter);
+		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(242);
+			setState(248);
 			match(STEP);
-			setState(243);
+			setState(250);
+			_errHandler.sync(this);
+			_la = _input.LA(1);
+			if (_la==T__7) {
+				{
+				setState(249);
+				modifierList();
+				}
+			}
+
+			setState(252);
 			filterOrCondition();
 			}
 		}
@@ -2149,6 +2191,9 @@ public class QLangGrammarParser extends Parser {
 		public TerminalNode FEATURE() { return getToken(QLangGrammarParser.FEATURE, 0); }
 		public FilterOrConditionContext filterOrCondition() {
 			return getRuleContext(FilterOrConditionContext.class,0);
+		}
+		public ModifierListContext modifierList() {
+			return getRuleContext(ModifierListContext.class,0);
 		}
 		public FeatureFilterContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -2172,12 +2217,23 @@ public class QLangGrammarParser extends Parser {
 	public final FeatureFilterContext featureFilter() throws RecognitionException {
 		FeatureFilterContext _localctx = new FeatureFilterContext(_ctx, getState());
 		enterRule(_localctx, 58, RULE_featureFilter);
+		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(245);
+			setState(254);
 			match(FEATURE);
-			setState(246);
+			setState(256);
+			_errHandler.sync(this);
+			_la = _input.LA(1);
+			if (_la==T__7) {
+				{
+				setState(255);
+				modifierList();
+				}
+			}
+
+			setState(258);
 			filterOrCondition();
 			}
 		}
@@ -2196,6 +2252,9 @@ public class QLangGrammarParser extends Parser {
 		public TerminalNode TYPE() { return getToken(QLangGrammarParser.TYPE, 0); }
 		public ObjectTypeContext objectType() {
 			return getRuleContext(ObjectTypeContext.class,0);
+		}
+		public ModifierListContext modifierList() {
+			return getRuleContext(ModifierListContext.class,0);
 		}
 		public TypeFilterContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -2219,12 +2278,23 @@ public class QLangGrammarParser extends Parser {
 	public final TypeFilterContext typeFilter() throws RecognitionException {
 		TypeFilterContext _localctx = new TypeFilterContext(_ctx, getState());
 		enterRule(_localctx, 60, RULE_typeFilter);
+		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(248);
+			setState(260);
 			match(TYPE);
-			setState(249);
+			setState(262);
+			_errHandler.sync(this);
+			_la = _input.LA(1);
+			if (_la==T__7) {
+				{
+				setState(261);
+				modifierList();
+				}
+			}
+
+			setState(264);
 			objectType();
 			}
 		}
@@ -2246,6 +2316,9 @@ public class QLangGrammarParser extends Parser {
 		}
 		public ParameterValueContext parameterValue() {
 			return getRuleContext(ParameterValueContext.class,0);
+		}
+		public ModifierListContext modifierList() {
+			return getRuleContext(ModifierListContext.class,0);
 		}
 		public ParameterFilterContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -2269,16 +2342,27 @@ public class QLangGrammarParser extends Parser {
 	public final ParameterFilterContext parameterFilter() throws RecognitionException {
 		ParameterFilterContext _localctx = new ParameterFilterContext(_ctx, getState());
 		enterRule(_localctx, 62, RULE_parameterFilter);
+		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(251);
+			setState(266);
 			match(PARAM);
-			setState(252);
+			setState(268);
+			_errHandler.sync(this);
+			_la = _input.LA(1);
+			if (_la==T__7) {
+				{
+				setState(267);
+				modifierList();
+				}
+			}
+
+			setState(270);
 			parameterName();
-			setState(253);
+			setState(271);
 			match(T__6);
-			setState(254);
+			setState(272);
 			parameterValue();
 			}
 		}
@@ -2297,6 +2381,9 @@ public class QLangGrammarParser extends Parser {
 		public TerminalNode VAL() { return getToken(QLangGrammarParser.VAL, 0); }
 		public ParameterValueContext parameterValue() {
 			return getRuleContext(ParameterValueContext.class,0);
+		}
+		public ModifierListContext modifierList() {
+			return getRuleContext(ModifierListContext.class,0);
 		}
 		public ParValueFilterContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -2320,12 +2407,23 @@ public class QLangGrammarParser extends Parser {
 	public final ParValueFilterContext parValueFilter() throws RecognitionException {
 		ParValueFilterContext _localctx = new ParValueFilterContext(_ctx, getState());
 		enterRule(_localctx, 64, RULE_parValueFilter);
+		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(256);
+			setState(274);
 			match(VAL);
-			setState(257);
+			setState(276);
+			_errHandler.sync(this);
+			_la = _input.LA(1);
+			if (_la==T__7) {
+				{
+				setState(275);
+				modifierList();
+				}
+			}
+
+			setState(278);
 			parameterValue();
 			}
 		}
@@ -2342,6 +2440,9 @@ public class QLangGrammarParser extends Parser {
 
 	public static class EnabledFilterContext extends ParserRuleContext {
 		public TerminalNode ENABLED() { return getToken(QLangGrammarParser.ENABLED, 0); }
+		public ModifierListContext modifierList() {
+			return getRuleContext(ModifierListContext.class,0);
+		}
 		public EnabledFilterContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -2367,8 +2468,18 @@ public class QLangGrammarParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(259);
+			setState(280);
 			match(ENABLED);
+			setState(282);
+			_errHandler.sync(this);
+			switch ( getInterpreter().adaptivePredict(_input,20,_ctx) ) {
+			case 1:
+				{
+				setState(281);
+				modifierList();
+				}
+				break;
+			}
 			}
 		}
 		catch (RecognitionException re) {
@@ -2386,6 +2497,9 @@ public class QLangGrammarParser extends Parser {
 		public TerminalNode ANCESTOR() { return getToken(QLangGrammarParser.ANCESTOR, 0); }
 		public FilterOrConditionContext filterOrCondition() {
 			return getRuleContext(FilterOrConditionContext.class,0);
+		}
+		public ModifierListContext modifierList() {
+			return getRuleContext(ModifierListContext.class,0);
 		}
 		public AncestorFilterContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -2409,12 +2523,23 @@ public class QLangGrammarParser extends Parser {
 	public final AncestorFilterContext ancestorFilter() throws RecognitionException {
 		AncestorFilterContext _localctx = new AncestorFilterContext(_ctx, getState());
 		enterRule(_localctx, 68, RULE_ancestorFilter);
+		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(261);
+			setState(284);
 			match(ANCESTOR);
-			setState(262);
+			setState(286);
+			_errHandler.sync(this);
+			_la = _input.LA(1);
+			if (_la==T__7) {
+				{
+				setState(285);
+				modifierList();
+				}
+			}
+
+			setState(288);
 			filterOrCondition();
 			}
 		}
@@ -2433,6 +2558,9 @@ public class QLangGrammarParser extends Parser {
 		public TerminalNode ANCESTOR_OR_SELF() { return getToken(QLangGrammarParser.ANCESTOR_OR_SELF, 0); }
 		public FilterOrConditionContext filterOrCondition() {
 			return getRuleContext(FilterOrConditionContext.class,0);
+		}
+		public ModifierListContext modifierList() {
+			return getRuleContext(ModifierListContext.class,0);
 		}
 		public AncestorOrSelfFilterContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -2456,12 +2584,23 @@ public class QLangGrammarParser extends Parser {
 	public final AncestorOrSelfFilterContext ancestorOrSelfFilter() throws RecognitionException {
 		AncestorOrSelfFilterContext _localctx = new AncestorOrSelfFilterContext(_ctx, getState());
 		enterRule(_localctx, 70, RULE_ancestorOrSelfFilter);
+		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(264);
+			setState(290);
 			match(ANCESTOR_OR_SELF);
-			setState(265);
+			setState(292);
+			_errHandler.sync(this);
+			_la = _input.LA(1);
+			if (_la==T__7) {
+				{
+				setState(291);
+				modifierList();
+				}
+			}
+
+			setState(294);
 			filterOrCondition();
 			}
 		}
@@ -2480,6 +2619,9 @@ public class QLangGrammarParser extends Parser {
 		public TerminalNode TEMPLATE() { return getToken(QLangGrammarParser.TEMPLATE, 0); }
 		public FilterOrConditionContext filterOrCondition() {
 			return getRuleContext(FilterOrConditionContext.class,0);
+		}
+		public ModifierListContext modifierList() {
+			return getRuleContext(ModifierListContext.class,0);
 		}
 		public TemplateDepFilterContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -2503,12 +2645,23 @@ public class QLangGrammarParser extends Parser {
 	public final TemplateDepFilterContext templateDepFilter() throws RecognitionException {
 		TemplateDepFilterContext _localctx = new TemplateDepFilterContext(_ctx, getState());
 		enterRule(_localctx, 72, RULE_templateDepFilter);
+		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(267);
+			setState(296);
 			match(TEMPLATE);
-			setState(268);
+			setState(298);
+			_errHandler.sync(this);
+			_la = _input.LA(1);
+			if (_la==T__7) {
+				{
+				setState(297);
+				modifierList();
+				}
+			}
+
+			setState(300);
 			filterOrCondition();
 			}
 		}
@@ -2527,6 +2680,9 @@ public class QLangGrammarParser extends Parser {
 		public TerminalNode VCS_ROOT() { return getToken(QLangGrammarParser.VCS_ROOT, 0); }
 		public FilterOrConditionContext filterOrCondition() {
 			return getRuleContext(FilterOrConditionContext.class,0);
+		}
+		public ModifierListContext modifierList() {
+			return getRuleContext(ModifierListContext.class,0);
 		}
 		public VcsRootFilterContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -2550,12 +2706,23 @@ public class QLangGrammarParser extends Parser {
 	public final VcsRootFilterContext vcsRootFilter() throws RecognitionException {
 		VcsRootFilterContext _localctx = new VcsRootFilterContext(_ctx, getState());
 		enterRule(_localctx, 74, RULE_vcsRootFilter);
+		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(270);
+			setState(302);
 			match(VCS_ROOT);
-			setState(271);
+			setState(304);
+			_errHandler.sync(this);
+			_la = _input.LA(1);
+			if (_la==T__7) {
+				{
+				setState(303);
+				modifierList();
+				}
+			}
+
+			setState(306);
 			filterOrCondition();
 			}
 		}
@@ -2574,6 +2741,9 @@ public class QLangGrammarParser extends Parser {
 		public TerminalNode RULES() { return getToken(QLangGrammarParser.RULES, 0); }
 		public CheckoutRulesStringContext checkoutRulesString() {
 			return getRuleContext(CheckoutRulesStringContext.class,0);
+		}
+		public ModifierListContext modifierList() {
+			return getRuleContext(ModifierListContext.class,0);
 		}
 		public CheckoutRulesFilterContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -2597,12 +2767,23 @@ public class QLangGrammarParser extends Parser {
 	public final CheckoutRulesFilterContext checkoutRulesFilter() throws RecognitionException {
 		CheckoutRulesFilterContext _localctx = new CheckoutRulesFilterContext(_ctx, getState());
 		enterRule(_localctx, 76, RULE_checkoutRulesFilter);
+		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(273);
+			setState(308);
 			match(RULES);
-			setState(274);
+			setState(310);
+			_errHandler.sync(this);
+			_la = _input.LA(1);
+			if (_la==T__7) {
+				{
+				setState(309);
+				modifierList();
+				}
+			}
+
+			setState(312);
 			checkoutRulesString();
 			}
 		}
@@ -2621,6 +2802,9 @@ public class QLangGrammarParser extends Parser {
 		public TerminalNode DEPENDENCY() { return getToken(QLangGrammarParser.DEPENDENCY, 0); }
 		public FilterOrConditionContext filterOrCondition() {
 			return getRuleContext(FilterOrConditionContext.class,0);
+		}
+		public ModifierListContext modifierList() {
+			return getRuleContext(ModifierListContext.class,0);
 		}
 		public DependencyFilterContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -2644,12 +2828,23 @@ public class QLangGrammarParser extends Parser {
 	public final DependencyFilterContext dependencyFilter() throws RecognitionException {
 		DependencyFilterContext _localctx = new DependencyFilterContext(_ctx, getState());
 		enterRule(_localctx, 78, RULE_dependencyFilter);
+		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(276);
+			setState(314);
 			match(DEPENDENCY);
-			setState(277);
+			setState(316);
+			_errHandler.sync(this);
+			_la = _input.LA(1);
+			if (_la==T__7) {
+				{
+				setState(315);
+				modifierList();
+				}
+			}
+
+			setState(318);
 			filterOrCondition();
 			}
 		}
@@ -2666,6 +2861,9 @@ public class QLangGrammarParser extends Parser {
 
 	public static class ArtifactFilterContext extends ParserRuleContext {
 		public TerminalNode ARTIFACT() { return getToken(QLangGrammarParser.ARTIFACT, 0); }
+		public ModifierListContext modifierList() {
+			return getRuleContext(ModifierListContext.class,0);
+		}
 		public ArtifactFilterContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -2691,8 +2889,18 @@ public class QLangGrammarParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(279);
+			setState(320);
 			match(ARTIFACT);
+			setState(322);
+			_errHandler.sync(this);
+			switch ( getInterpreter().adaptivePredict(_input,27,_ctx) ) {
+			case 1:
+				{
+				setState(321);
+				modifierList();
+				}
+				break;
+			}
 			}
 		}
 		catch (RecognitionException re) {
@@ -2708,6 +2916,9 @@ public class QLangGrammarParser extends Parser {
 
 	public static class SnapshotFilterContext extends ParserRuleContext {
 		public TerminalNode SNAPSHOT() { return getToken(QLangGrammarParser.SNAPSHOT, 0); }
+		public ModifierListContext modifierList() {
+			return getRuleContext(ModifierListContext.class,0);
+		}
 		public SnapshotFilterContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -2733,8 +2944,18 @@ public class QLangGrammarParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(281);
+			setState(324);
 			match(SNAPSHOT);
+			setState(326);
+			_errHandler.sync(this);
+			switch ( getInterpreter().adaptivePredict(_input,28,_ctx) ) {
+			case 1:
+				{
+				setState(325);
+				modifierList();
+				}
+				break;
+			}
 			}
 		}
 		catch (RecognitionException re) {
@@ -2885,7 +3106,7 @@ public class QLangGrammarParser extends Parser {
 			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(292);
+			setState(337);
 			_errHandler.sync(this);
 			switch (_input.LA(1)) {
 			case STRING:
@@ -2917,7 +3138,7 @@ public class QLangGrammarParser extends Parser {
 				_ctx = _localctx;
 				_prevctx = _localctx;
 
-				setState(284);
+				setState(329);
 				stringFilter();
 				}
 				break;
@@ -2926,11 +3147,11 @@ public class QLangGrammarParser extends Parser {
 				_localctx = new StringConditionBracesContext(_localctx);
 				_ctx = _localctx;
 				_prevctx = _localctx;
-				setState(285);
+				setState(330);
 				match(T__4);
-				setState(286);
+				setState(331);
 				stringCondition(0);
-				setState(287);
+				setState(332);
 				match(T__5);
 				}
 				break;
@@ -2939,9 +3160,9 @@ public class QLangGrammarParser extends Parser {
 				_localctx = new StringConditionNotContext(_localctx);
 				_ctx = _localctx;
 				_prevctx = _localctx;
-				setState(289);
+				setState(334);
 				not();
-				setState(290);
+				setState(335);
 				stringCondition(3);
 				}
 				break;
@@ -2949,26 +3170,26 @@ public class QLangGrammarParser extends Parser {
 				throw new NoViableAltException(this);
 			}
 			_ctx.stop = _input.LT(-1);
-			setState(304);
+			setState(349);
 			_errHandler.sync(this);
-			_alt = getInterpreter().adaptivePredict(_input,15,_ctx);
+			_alt = getInterpreter().adaptivePredict(_input,31,_ctx);
 			while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
 				if ( _alt==1 ) {
 					if ( _parseListeners!=null ) triggerExitRuleEvent();
 					_prevctx = _localctx;
 					{
-					setState(302);
+					setState(347);
 					_errHandler.sync(this);
-					switch ( getInterpreter().adaptivePredict(_input,14,_ctx) ) {
+					switch ( getInterpreter().adaptivePredict(_input,30,_ctx) ) {
 					case 1:
 						{
 						_localctx = new StringConditionAndContext(new StringConditionContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_stringCondition);
-						setState(294);
+						setState(339);
 						if (!(precpred(_ctx, 2))) throw new FailedPredicateException(this, "precpred(_ctx, 2)");
-						setState(295);
+						setState(340);
 						and();
-						setState(296);
+						setState(341);
 						stringCondition(3);
 						}
 						break;
@@ -2976,20 +3197,20 @@ public class QLangGrammarParser extends Parser {
 						{
 						_localctx = new StringConditionOrContext(new StringConditionContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_stringCondition);
-						setState(298);
+						setState(343);
 						if (!(precpred(_ctx, 1))) throw new FailedPredicateException(this, "precpred(_ctx, 1)");
-						setState(299);
+						setState(344);
 						or();
-						setState(300);
+						setState(345);
 						stringCondition(2);
 						}
 						break;
 					}
 					} 
 				}
-				setState(306);
+				setState(351);
 				_errHandler.sync(this);
-				_alt = getInterpreter().adaptivePredict(_input,15,_ctx);
+				_alt = getInterpreter().adaptivePredict(_input,31,_ctx);
 			}
 			}
 		}
@@ -3040,7 +3261,7 @@ public class QLangGrammarParser extends Parser {
 		StringFilterContext _localctx = new StringFilterContext(_ctx, getState());
 		enterRule(_localctx, 86, RULE_stringFilter);
 		try {
-			setState(311);
+			setState(356);
 			_errHandler.sync(this);
 			switch (_input.LA(1)) {
 			case STRING:
@@ -3066,28 +3287,28 @@ public class QLangGrammarParser extends Parser {
 			case ALL:
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(307);
+				setState(352);
 				stringEqualsFilter();
 				}
 				break;
 			case PREFIXS:
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(308);
+				setState(353);
 				stringPrefixFilter();
 				}
 				break;
 			case SUFFIXS:
 				enterOuterAlt(_localctx, 3);
 				{
-				setState(309);
+				setState(354);
 				stringSuffixFilter();
 				}
 				break;
 			case SUBSTRINGS:
 				enterOuterAlt(_localctx, 4);
 				{
-				setState(310);
+				setState(355);
 				stringSubstringFilter();
 				}
 				break;
@@ -3135,7 +3356,7 @@ public class QLangGrammarParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(313);
+			setState(358);
 			identOrString();
 			}
 		}
@@ -3177,7 +3398,7 @@ public class QLangGrammarParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(315);
+			setState(360);
 			match(PREFIXS);
 			}
 		}
@@ -3219,7 +3440,7 @@ public class QLangGrammarParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(317);
+			setState(362);
 			match(SUFFIXS);
 			}
 		}
@@ -3261,7 +3482,7 @@ public class QLangGrammarParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(319);
+			setState(364);
 			match(SUBSTRINGS);
 			}
 		}
@@ -3305,7 +3526,7 @@ public class QLangGrammarParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(321);
+			setState(366);
 			allModifier();
 			}
 		}
@@ -3353,29 +3574,29 @@ public class QLangGrammarParser extends Parser {
 			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(323);
+			setState(368);
 			match(T__7);
-			setState(324);
+			setState(369);
 			filterModifier();
-			setState(329);
+			setState(374);
 			_errHandler.sync(this);
-			_alt = getInterpreter().adaptivePredict(_input,17,_ctx);
+			_alt = getInterpreter().adaptivePredict(_input,33,_ctx);
 			while ( _alt!=1 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
 				if ( _alt==1+1 ) {
 					{
 					{
-					setState(325);
+					setState(370);
 					match(T__1);
-					setState(326);
+					setState(371);
 					filterModifier();
 					}
 					} 
 				}
-				setState(331);
+				setState(376);
 				_errHandler.sync(this);
-				_alt = getInterpreter().adaptivePredict(_input,17,_ctx);
+				_alt = getInterpreter().adaptivePredict(_input,33,_ctx);
 			}
-			setState(332);
+			setState(377);
 			match(T__8);
 			}
 		}
@@ -3417,7 +3638,7 @@ public class QLangGrammarParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(334);
+			setState(379);
 			match(ALL);
 			}
 		}
@@ -3461,7 +3682,7 @@ public class QLangGrammarParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3(\u0153\4\2\t\2\4"+
+		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3(\u0180\4\2\t\2\4"+
 		"\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4\t\t\t\4\n\t\n\4\13\t"+
 		"\13\4\f\t\f\4\r\t\r\4\16\t\16\4\17\t\17\4\20\t\20\4\21\t\21\4\22\t\22"+
 		"\4\23\t\23\4\24\t\24\4\25\t\25\4\26\t\26\4\27\t\27\4\30\t\30\4\31\t\31"+
@@ -3477,99 +3698,121 @@ public class QLangGrammarParser extends Parser {
 		"\26\3\26\3\26\5\26\u00be\n\26\3\27\3\27\3\27\3\27\3\27\3\27\3\27\3\27"+
 		"\3\27\5\27\u00c9\n\27\3\27\3\27\3\27\3\27\3\27\3\27\3\27\3\27\7\27\u00d3"+
 		"\n\27\f\27\16\27\u00d6\13\27\3\30\3\30\3\30\3\30\3\30\5\30\u00dd\n\30"+
-		"\3\31\3\31\3\31\3\31\3\31\5\31\u00e4\n\31\3\32\3\32\3\32\3\33\3\33\3\33"+
-		"\3\34\3\34\3\34\3\35\3\35\5\35\u00f1\n\35\3\35\3\35\3\36\3\36\3\36\3\37"+
-		"\3\37\3\37\3 \3 \3 \3!\3!\3!\3!\3!\3\"\3\"\3\"\3#\3#\3$\3$\3$\3%\3%\3"+
-		"%\3&\3&\3&\3\'\3\'\3\'\3(\3(\3(\3)\3)\3)\3*\3*\3+\3+\3,\3,\3,\3,\3,\3"+
-		",\3,\3,\3,\5,\u0127\n,\3,\3,\3,\3,\3,\3,\3,\3,\7,\u0131\n,\f,\16,\u0134"+
-		"\13,\3-\3-\3-\3-\5-\u013a\n-\3.\3.\3/\3/\3\60\3\60\3\61\3\61\3\62\3\62"+
-		"\3\63\3\63\3\63\3\63\7\63\u014a\n\63\f\63\16\63\u014d\13\63\3\63\3\63"+
-		"\3\64\3\64\3\64\3\u014b\4,V\65\2\4\6\b\n\f\16\20\22\24\26\30\32\34\36"+
-		" \"$&(*,.\60\62\64\668:<>@BDFHJLNPRTVXZ\\^`bdf\2\3\4\2\25\30\32(\2\u0148"+
-		"\2j\3\2\2\2\4n\3\2\2\2\6p\3\2\2\2\br\3\2\2\2\nt\3\2\2\2\fy\3\2\2\2\16"+
-		"{\3\2\2\2\20}\3\2\2\2\22\177\3\2\2\2\24\u0081\3\2\2\2\26\u0083\3\2\2\2"+
-		"\30\u0085\3\2\2\2\32\u0087\3\2\2\2\34\u0089\3\2\2\2\36\u008b\3\2\2\2 "+
-		"\u008d\3\2\2\2\"\u008f\3\2\2\2$\u0093\3\2\2\2&\u009f\3\2\2\2(\u00a9\3"+
-		"\2\2\2*\u00bd\3\2\2\2,\u00c8\3\2\2\2.\u00dc\3\2\2\2\60\u00e3\3\2\2\2\62"+
-		"\u00e5\3\2\2\2\64\u00e8\3\2\2\2\66\u00eb\3\2\2\28\u00ee\3\2\2\2:\u00f4"+
-		"\3\2\2\2<\u00f7\3\2\2\2>\u00fa\3\2\2\2@\u00fd\3\2\2\2B\u0102\3\2\2\2D"+
-		"\u0105\3\2\2\2F\u0107\3\2\2\2H\u010a\3\2\2\2J\u010d\3\2\2\2L\u0110\3\2"+
-		"\2\2N\u0113\3\2\2\2P\u0116\3\2\2\2R\u0119\3\2\2\2T\u011b\3\2\2\2V\u0126"+
-		"\3\2\2\2X\u0139\3\2\2\2Z\u013b\3\2\2\2\\\u013d\3\2\2\2^\u013f\3\2\2\2"+
-		"`\u0141\3\2\2\2b\u0143\3\2\2\2d\u0145\3\2\2\2f\u0150\3\2\2\2hk\5\"\22"+
-		"\2ik\5 \21\2jh\3\2\2\2ji\3\2\2\2kl\3\2\2\2lm\7\2\2\3m\3\3\2\2\2no\7\r"+
-		"\2\2o\5\3\2\2\2pq\7\f\2\2q\7\3\2\2\2rs\7\16\2\2s\t\3\2\2\2tu\t\2\2\2u"+
-		"\13\3\2\2\2vz\7\20\2\2wz\7\17\2\2xz\5\n\6\2yv\3\2\2\2yw\3\2\2\2yx\3\2"+
-		"\2\2z\r\3\2\2\2{|\5\60\31\2|\17\3\2\2\2}~\5\f\7\2~\21\3\2\2\2\177\u0080"+
-		"\5\60\31\2\u0080\23\3\2\2\2\u0081\u0082\5\f\7\2\u0082\25\3\2\2\2\u0083"+
-		"\u0084\5\60\31\2\u0084\27\3\2\2\2\u0085\u0086\7\30\2\2\u0086\31\3\2\2"+
-		"\2\u0087\u0088\7\27\2\2\u0088\33\3\2\2\2\u0089\u008a\7\25\2\2\u008a\35"+
-		"\3\2\2\2\u008b\u008c\7\26\2\2\u008c\37\3\2\2\2\u008d\u008e\5,\27\2\u008e"+
-		"!\3\2\2\2\u008f\u0090\7\3\2\2\u0090\u0091\5$\23\2\u0091\u0092\5(\25\2"+
-		"\u0092#\3\2\2\2\u0093\u0098\5&\24\2\u0094\u0095\7\4\2\2\u0095\u0097\5"+
-		"&\24\2\u0096\u0094\3\2\2\2\u0097\u009a\3\2\2\2\u0098\u0096\3\2\2\2\u0098"+
-		"\u0099\3\2\2\2\u0099%\3\2\2\2\u009a\u0098\3\2\2\2\u009b\u00a0\5\34\17"+
-		"\2\u009c\u00a0\5\36\20\2\u009d\u00a0\5\32\16\2\u009e\u00a0\5\30\r\2\u009f"+
-		"\u009b\3\2\2\2\u009f\u009c\3\2\2\2\u009f\u009d\3\2\2\2\u009f\u009e\3\2"+
-		"\2\2\u00a0\'\3\2\2\2\u00a1\u00a2\7\5\2\2\u00a2\u00a4\5\16\b\2\u00a3\u00a1"+
-		"\3\2\2\2\u00a3\u00a4\3\2\2\2\u00a4\u00a5\3\2\2\2\u00a5\u00a6\7\6\2\2\u00a6"+
-		"\u00aa\5,\27\2\u00a7\u00a8\7\5\2\2\u00a8\u00aa\5\16\b\2\u00a9\u00a3\3"+
-		"\2\2\2\u00a9\u00a7\3\2\2\2\u00aa)\3\2\2\2\u00ab\u00be\5\62\32\2\u00ac"+
-		"\u00be\5\64\33\2\u00ad\u00be\5\66\34\2\u00ae\u00be\58\35\2\u00af\u00be"+
-		"\5:\36\2\u00b0\u00be\5<\37\2\u00b1\u00be\5> \2\u00b2\u00be\5@!\2\u00b3"+
-		"\u00be\5B\"\2\u00b4\u00be\5D#\2\u00b5\u00be\5F$\2\u00b6\u00be\5H%\2\u00b7"+
-		"\u00be\5J&\2\u00b8\u00be\5L\'\2\u00b9\u00be\5N(\2\u00ba\u00be\5P)\2\u00bb"+
-		"\u00be\5R*\2\u00bc\u00be\5T+\2\u00bd\u00ab\3\2\2\2\u00bd\u00ac\3\2\2\2"+
-		"\u00bd\u00ad\3\2\2\2\u00bd\u00ae\3\2\2\2\u00bd\u00af\3\2\2\2\u00bd\u00b0"+
-		"\3\2\2\2\u00bd\u00b1\3\2\2\2\u00bd\u00b2\3\2\2\2\u00bd\u00b3\3\2\2\2\u00bd"+
-		"\u00b4\3\2\2\2\u00bd\u00b5\3\2\2\2\u00bd\u00b6\3\2\2\2\u00bd\u00b7\3\2"+
-		"\2\2\u00bd\u00b8\3\2\2\2\u00bd\u00b9\3\2\2\2\u00bd\u00ba\3\2\2\2\u00bd"+
-		"\u00bb\3\2\2\2\u00bd\u00bc\3\2\2\2\u00be+\3\2\2\2\u00bf\u00c0\b\27\1\2"+
-		"\u00c0\u00c9\5*\26\2\u00c1\u00c2\7\7\2\2\u00c2\u00c3\5,\27\2\u00c3\u00c4"+
-		"\7\b\2\2\u00c4\u00c9\3\2\2\2\u00c5\u00c6\5\b\5\2\u00c6\u00c7\5,\27\5\u00c7"+
-		"\u00c9\3\2\2\2\u00c8\u00bf\3\2\2\2\u00c8\u00c1\3\2\2\2\u00c8\u00c5\3\2"+
-		"\2\2\u00c9\u00d4\3\2\2\2\u00ca\u00cb\f\4\2\2\u00cb\u00cc\5\4\3\2\u00cc"+
-		"\u00cd\5,\27\5\u00cd\u00d3\3\2\2\2\u00ce\u00cf\f\3\2\2\u00cf\u00d0\5\6"+
-		"\4\2\u00d0\u00d1\5,\27\4\u00d1\u00d3\3\2\2\2\u00d2\u00ca\3\2\2\2\u00d2"+
-		"\u00ce\3\2\2\2\u00d3\u00d6\3\2\2\2\u00d4\u00d2\3\2\2\2\u00d4\u00d5\3\2"+
-		"\2\2\u00d5-\3\2\2\2\u00d6\u00d4\3\2\2\2\u00d7\u00dd\5*\26\2\u00d8\u00d9"+
-		"\7\7\2\2\u00d9\u00da\5,\27\2\u00da\u00db\7\b\2\2\u00db\u00dd\3\2\2\2\u00dc"+
-		"\u00d7\3\2\2\2\u00dc\u00d8\3\2\2\2\u00dd/\3\2\2\2\u00de\u00e4\5X-\2\u00df"+
-		"\u00e0\7\7\2\2\u00e0\u00e1\5V,\2\u00e1\u00e2\7\b\2\2\u00e2\u00e4\3\2\2"+
-		"\2\u00e3\u00de\3\2\2\2\u00e3\u00df\3\2\2\2\u00e4\61\3\2\2\2\u00e5\u00e6"+
-		"\7\31\2\2\u00e6\u00e7\5\16\b\2\u00e7\63\3\2\2\2\u00e8\u00e9\7\25\2\2\u00e9"+
-		"\u00ea\5.\30\2\u00ea\65\3\2\2\2\u00eb\u00ec\7\32\2\2\u00ec\u00ed\5.\30"+
-		"\2\u00ed\67\3\2\2\2\u00ee\u00f0\7\33\2\2\u00ef\u00f1\5d\63\2\u00f0\u00ef"+
-		"\3\2\2\2\u00f0\u00f1\3\2\2\2\u00f1\u00f2\3\2\2\2\u00f2\u00f3\5.\30\2\u00f3"+
-		"9\3\2\2\2\u00f4\u00f5\7\34\2\2\u00f5\u00f6\5.\30\2\u00f6;\3\2\2\2\u00f7"+
-		"\u00f8\7\35\2\2\u00f8\u00f9\5.\30\2\u00f9=\3\2\2\2\u00fa\u00fb\7\36\2"+
-		"\2\u00fb\u00fc\5\20\t\2\u00fc?\3\2\2\2\u00fd\u00fe\7\37\2\2\u00fe\u00ff"+
-		"\5\24\13\2\u00ff\u0100\7\t\2\2\u0100\u0101\5\22\n\2\u0101A\3\2\2\2\u0102"+
-		"\u0103\7 \2\2\u0103\u0104\5\22\n\2\u0104C\3\2\2\2\u0105\u0106\7!\2\2\u0106"+
-		"E\3\2\2\2\u0107\u0108\7\"\2\2\u0108\u0109\5.\30\2\u0109G\3\2\2\2\u010a"+
-		"\u010b\7#\2\2\u010b\u010c\5.\30\2\u010cI\3\2\2\2\u010d\u010e\7\26\2\2"+
-		"\u010e\u010f\5.\30\2\u010fK\3\2\2\2\u0110\u0111\7\30\2\2\u0111\u0112\5"+
-		".\30\2\u0112M\3\2\2\2\u0113\u0114\7$\2\2\u0114\u0115\5\26\f\2\u0115O\3"+
-		"\2\2\2\u0116\u0117\7%\2\2\u0117\u0118\5.\30\2\u0118Q\3\2\2\2\u0119\u011a"+
-		"\7&\2\2\u011aS\3\2\2\2\u011b\u011c\7\'\2\2\u011cU\3\2\2\2\u011d\u011e"+
-		"\b,\1\2\u011e\u0127\5X-\2\u011f\u0120\7\7\2\2\u0120\u0121\5V,\2\u0121"+
-		"\u0122\7\b\2\2\u0122\u0127\3\2\2\2\u0123\u0124\5\b\5\2\u0124\u0125\5V"+
-		",\5\u0125\u0127\3\2\2\2\u0126\u011d\3\2\2\2\u0126\u011f\3\2\2\2\u0126"+
-		"\u0123\3\2\2\2\u0127\u0132\3\2\2\2\u0128\u0129\f\4\2\2\u0129\u012a\5\4"+
-		"\3\2\u012a\u012b\5V,\5\u012b\u0131\3\2\2\2\u012c\u012d\f\3\2\2\u012d\u012e"+
-		"\5\6\4\2\u012e\u012f\5V,\4\u012f\u0131\3\2\2\2\u0130\u0128\3\2\2\2\u0130"+
-		"\u012c\3\2\2\2\u0131\u0134\3\2\2\2\u0132\u0130\3\2\2\2\u0132\u0133\3\2"+
-		"\2\2\u0133W\3\2\2\2\u0134\u0132\3\2\2\2\u0135\u013a\5Z.\2\u0136\u013a"+
-		"\5\\/\2\u0137\u013a\5^\60\2\u0138\u013a\5`\61\2\u0139\u0135\3\2\2\2\u0139"+
-		"\u0136\3\2\2\2\u0139\u0137\3\2\2\2\u0139\u0138\3\2\2\2\u013aY\3\2\2\2"+
-		"\u013b\u013c\5\f\7\2\u013c[\3\2\2\2\u013d\u013e\7\22\2\2\u013e]\3\2\2"+
-		"\2\u013f\u0140\7\21\2\2\u0140_\3\2\2\2\u0141\u0142\7\23\2\2\u0142a\3\2"+
-		"\2\2\u0143\u0144\5f\64\2\u0144c\3\2\2\2\u0145\u0146\7\n\2\2\u0146\u014b"+
-		"\5b\62\2\u0147\u0148\7\4\2\2\u0148\u014a\5b\62\2\u0149\u0147\3\2\2\2\u014a"+
-		"\u014d\3\2\2\2\u014b\u014c\3\2\2\2\u014b\u0149\3\2\2\2\u014c\u014e\3\2"+
-		"\2\2\u014d\u014b\3\2\2\2\u014e\u014f\7\13\2\2\u014fe\3\2\2\2\u0150\u0151"+
-		"\7(\2\2\u0151g\3\2\2\2\24jy\u0098\u009f\u00a3\u00a9\u00bd\u00c8\u00d2"+
-		"\u00d4\u00dc\u00e3\u00f0\u0126\u0130\u0132\u0139\u014b";
+		"\3\31\3\31\3\31\3\31\3\31\5\31\u00e4\n\31\3\32\3\32\3\32\3\33\3\33\5\33"+
+		"\u00eb\n\33\3\33\3\33\3\34\3\34\5\34\u00f1\n\34\3\34\3\34\3\35\3\35\5"+
+		"\35\u00f7\n\35\3\35\3\35\3\36\3\36\5\36\u00fd\n\36\3\36\3\36\3\37\3\37"+
+		"\5\37\u0103\n\37\3\37\3\37\3 \3 \5 \u0109\n \3 \3 \3!\3!\5!\u010f\n!\3"+
+		"!\3!\3!\3!\3\"\3\"\5\"\u0117\n\"\3\"\3\"\3#\3#\5#\u011d\n#\3$\3$\5$\u0121"+
+		"\n$\3$\3$\3%\3%\5%\u0127\n%\3%\3%\3&\3&\5&\u012d\n&\3&\3&\3\'\3\'\5\'"+
+		"\u0133\n\'\3\'\3\'\3(\3(\5(\u0139\n(\3(\3(\3)\3)\5)\u013f\n)\3)\3)\3*"+
+		"\3*\5*\u0145\n*\3+\3+\5+\u0149\n+\3,\3,\3,\3,\3,\3,\3,\3,\3,\5,\u0154"+
+		"\n,\3,\3,\3,\3,\3,\3,\3,\3,\7,\u015e\n,\f,\16,\u0161\13,\3-\3-\3-\3-\5"+
+		"-\u0167\n-\3.\3.\3/\3/\3\60\3\60\3\61\3\61\3\62\3\62\3\63\3\63\3\63\3"+
+		"\63\7\63\u0177\n\63\f\63\16\63\u017a\13\63\3\63\3\63\3\64\3\64\3\64\3"+
+		"\u0178\4,V\65\2\4\6\b\n\f\16\20\22\24\26\30\32\34\36 \"$&(*,.\60\62\64"+
+		"\668:<>@BDFHJLNPRTVXZ\\^`bdf\2\3\4\2\25\30\32(\2\u0185\2j\3\2\2\2\4n\3"+
+		"\2\2\2\6p\3\2\2\2\br\3\2\2\2\nt\3\2\2\2\fy\3\2\2\2\16{\3\2\2\2\20}\3\2"+
+		"\2\2\22\177\3\2\2\2\24\u0081\3\2\2\2\26\u0083\3\2\2\2\30\u0085\3\2\2\2"+
+		"\32\u0087\3\2\2\2\34\u0089\3\2\2\2\36\u008b\3\2\2\2 \u008d\3\2\2\2\"\u008f"+
+		"\3\2\2\2$\u0093\3\2\2\2&\u009f\3\2\2\2(\u00a9\3\2\2\2*\u00bd\3\2\2\2,"+
+		"\u00c8\3\2\2\2.\u00dc\3\2\2\2\60\u00e3\3\2\2\2\62\u00e5\3\2\2\2\64\u00e8"+
+		"\3\2\2\2\66\u00ee\3\2\2\28\u00f4\3\2\2\2:\u00fa\3\2\2\2<\u0100\3\2\2\2"+
+		">\u0106\3\2\2\2@\u010c\3\2\2\2B\u0114\3\2\2\2D\u011a\3\2\2\2F\u011e\3"+
+		"\2\2\2H\u0124\3\2\2\2J\u012a\3\2\2\2L\u0130\3\2\2\2N\u0136\3\2\2\2P\u013c"+
+		"\3\2\2\2R\u0142\3\2\2\2T\u0146\3\2\2\2V\u0153\3\2\2\2X\u0166\3\2\2\2Z"+
+		"\u0168\3\2\2\2\\\u016a\3\2\2\2^\u016c\3\2\2\2`\u016e\3\2\2\2b\u0170\3"+
+		"\2\2\2d\u0172\3\2\2\2f\u017d\3\2\2\2hk\5\"\22\2ik\5 \21\2jh\3\2\2\2ji"+
+		"\3\2\2\2kl\3\2\2\2lm\7\2\2\3m\3\3\2\2\2no\7\r\2\2o\5\3\2\2\2pq\7\f\2\2"+
+		"q\7\3\2\2\2rs\7\16\2\2s\t\3\2\2\2tu\t\2\2\2u\13\3\2\2\2vz\7\20\2\2wz\7"+
+		"\17\2\2xz\5\n\6\2yv\3\2\2\2yw\3\2\2\2yx\3\2\2\2z\r\3\2\2\2{|\5\60\31\2"+
+		"|\17\3\2\2\2}~\5\f\7\2~\21\3\2\2\2\177\u0080\5\60\31\2\u0080\23\3\2\2"+
+		"\2\u0081\u0082\5\f\7\2\u0082\25\3\2\2\2\u0083\u0084\5\60\31\2\u0084\27"+
+		"\3\2\2\2\u0085\u0086\7\30\2\2\u0086\31\3\2\2\2\u0087\u0088\7\27\2\2\u0088"+
+		"\33\3\2\2\2\u0089\u008a\7\25\2\2\u008a\35\3\2\2\2\u008b\u008c\7\26\2\2"+
+		"\u008c\37\3\2\2\2\u008d\u008e\5,\27\2\u008e!\3\2\2\2\u008f\u0090\7\3\2"+
+		"\2\u0090\u0091\5$\23\2\u0091\u0092\5(\25\2\u0092#\3\2\2\2\u0093\u0098"+
+		"\5&\24\2\u0094\u0095\7\4\2\2\u0095\u0097\5&\24\2\u0096\u0094\3\2\2\2\u0097"+
+		"\u009a\3\2\2\2\u0098\u0096\3\2\2\2\u0098\u0099\3\2\2\2\u0099%\3\2\2\2"+
+		"\u009a\u0098\3\2\2\2\u009b\u00a0\5\34\17\2\u009c\u00a0\5\36\20\2\u009d"+
+		"\u00a0\5\32\16\2\u009e\u00a0\5\30\r\2\u009f\u009b\3\2\2\2\u009f\u009c"+
+		"\3\2\2\2\u009f\u009d\3\2\2\2\u009f\u009e\3\2\2\2\u00a0\'\3\2\2\2\u00a1"+
+		"\u00a2\7\5\2\2\u00a2\u00a4\5\16\b\2\u00a3\u00a1\3\2\2\2\u00a3\u00a4\3"+
+		"\2\2\2\u00a4\u00a5\3\2\2\2\u00a5\u00a6\7\6\2\2\u00a6\u00aa\5,\27\2\u00a7"+
+		"\u00a8\7\5\2\2\u00a8\u00aa\5\16\b\2\u00a9\u00a3\3\2\2\2\u00a9\u00a7\3"+
+		"\2\2\2\u00aa)\3\2\2\2\u00ab\u00be\5\62\32\2\u00ac\u00be\5\64\33\2\u00ad"+
+		"\u00be\5\66\34\2\u00ae\u00be\58\35\2\u00af\u00be\5:\36\2\u00b0\u00be\5"+
+		"<\37\2\u00b1\u00be\5> \2\u00b2\u00be\5@!\2\u00b3\u00be\5B\"\2\u00b4\u00be"+
+		"\5D#\2\u00b5\u00be\5F$\2\u00b6\u00be\5H%\2\u00b7\u00be\5J&\2\u00b8\u00be"+
+		"\5L\'\2\u00b9\u00be\5N(\2\u00ba\u00be\5P)\2\u00bb\u00be\5R*\2\u00bc\u00be"+
+		"\5T+\2\u00bd\u00ab\3\2\2\2\u00bd\u00ac\3\2\2\2\u00bd\u00ad\3\2\2\2\u00bd"+
+		"\u00ae\3\2\2\2\u00bd\u00af\3\2\2\2\u00bd\u00b0\3\2\2\2\u00bd\u00b1\3\2"+
+		"\2\2\u00bd\u00b2\3\2\2\2\u00bd\u00b3\3\2\2\2\u00bd\u00b4\3\2\2\2\u00bd"+
+		"\u00b5\3\2\2\2\u00bd\u00b6\3\2\2\2\u00bd\u00b7\3\2\2\2\u00bd\u00b8\3\2"+
+		"\2\2\u00bd\u00b9\3\2\2\2\u00bd\u00ba\3\2\2\2\u00bd\u00bb\3\2\2\2\u00bd"+
+		"\u00bc\3\2\2\2\u00be+\3\2\2\2\u00bf\u00c0\b\27\1\2\u00c0\u00c9\5*\26\2"+
+		"\u00c1\u00c2\7\7\2\2\u00c2\u00c3\5,\27\2\u00c3\u00c4\7\b\2\2\u00c4\u00c9"+
+		"\3\2\2\2\u00c5\u00c6\5\b\5\2\u00c6\u00c7\5,\27\5\u00c7\u00c9\3\2\2\2\u00c8"+
+		"\u00bf\3\2\2\2\u00c8\u00c1\3\2\2\2\u00c8\u00c5\3\2\2\2\u00c9\u00d4\3\2"+
+		"\2\2\u00ca\u00cb\f\4\2\2\u00cb\u00cc\5\4\3\2\u00cc\u00cd\5,\27\5\u00cd"+
+		"\u00d3\3\2\2\2\u00ce\u00cf\f\3\2\2\u00cf\u00d0\5\6\4\2\u00d0\u00d1\5,"+
+		"\27\4\u00d1\u00d3\3\2\2\2\u00d2\u00ca\3\2\2\2\u00d2\u00ce\3\2\2\2\u00d3"+
+		"\u00d6\3\2\2\2\u00d4\u00d2\3\2\2\2\u00d4\u00d5\3\2\2\2\u00d5-\3\2\2\2"+
+		"\u00d6\u00d4\3\2\2\2\u00d7\u00dd\5*\26\2\u00d8\u00d9\7\7\2\2\u00d9\u00da"+
+		"\5,\27\2\u00da\u00db\7\b\2\2\u00db\u00dd\3\2\2\2\u00dc\u00d7\3\2\2\2\u00dc"+
+		"\u00d8\3\2\2\2\u00dd/\3\2\2\2\u00de\u00e4\5X-\2\u00df\u00e0\7\7\2\2\u00e0"+
+		"\u00e1\5V,\2\u00e1\u00e2\7\b\2\2\u00e2\u00e4\3\2\2\2\u00e3\u00de\3\2\2"+
+		"\2\u00e3\u00df\3\2\2\2\u00e4\61\3\2\2\2\u00e5\u00e6\7\31\2\2\u00e6\u00e7"+
+		"\5\16\b\2\u00e7\63\3\2\2\2\u00e8\u00ea\7\25\2\2\u00e9\u00eb\5d\63\2\u00ea"+
+		"\u00e9\3\2\2\2\u00ea\u00eb\3\2\2\2\u00eb\u00ec\3\2\2\2\u00ec\u00ed\5."+
+		"\30\2\u00ed\65\3\2\2\2\u00ee\u00f0\7\32\2\2\u00ef\u00f1\5d\63\2\u00f0"+
+		"\u00ef\3\2\2\2\u00f0\u00f1\3\2\2\2\u00f1\u00f2\3\2\2\2\u00f2\u00f3\5."+
+		"\30\2\u00f3\67\3\2\2\2\u00f4\u00f6\7\33\2\2\u00f5\u00f7\5d\63\2\u00f6"+
+		"\u00f5\3\2\2\2\u00f6\u00f7\3\2\2\2\u00f7\u00f8\3\2\2\2\u00f8\u00f9\5."+
+		"\30\2\u00f99\3\2\2\2\u00fa\u00fc\7\34\2\2\u00fb\u00fd\5d\63\2\u00fc\u00fb"+
+		"\3\2\2\2\u00fc\u00fd\3\2\2\2\u00fd\u00fe\3\2\2\2\u00fe\u00ff\5.\30\2\u00ff"+
+		";\3\2\2\2\u0100\u0102\7\35\2\2\u0101\u0103\5d\63\2\u0102\u0101\3\2\2\2"+
+		"\u0102\u0103\3\2\2\2\u0103\u0104\3\2\2\2\u0104\u0105\5.\30\2\u0105=\3"+
+		"\2\2\2\u0106\u0108\7\36\2\2\u0107\u0109\5d\63\2\u0108\u0107\3\2\2\2\u0108"+
+		"\u0109\3\2\2\2\u0109\u010a\3\2\2\2\u010a\u010b\5\20\t\2\u010b?\3\2\2\2"+
+		"\u010c\u010e\7\37\2\2\u010d\u010f\5d\63\2\u010e\u010d\3\2\2\2\u010e\u010f"+
+		"\3\2\2\2\u010f\u0110\3\2\2\2\u0110\u0111\5\24\13\2\u0111\u0112\7\t\2\2"+
+		"\u0112\u0113\5\22\n\2\u0113A\3\2\2\2\u0114\u0116\7 \2\2\u0115\u0117\5"+
+		"d\63\2\u0116\u0115\3\2\2\2\u0116\u0117\3\2\2\2\u0117\u0118\3\2\2\2\u0118"+
+		"\u0119\5\22\n\2\u0119C\3\2\2\2\u011a\u011c\7!\2\2\u011b\u011d\5d\63\2"+
+		"\u011c\u011b\3\2\2\2\u011c\u011d\3\2\2\2\u011dE\3\2\2\2\u011e\u0120\7"+
+		"\"\2\2\u011f\u0121\5d\63\2\u0120\u011f\3\2\2\2\u0120\u0121\3\2\2\2\u0121"+
+		"\u0122\3\2\2\2\u0122\u0123\5.\30\2\u0123G\3\2\2\2\u0124\u0126\7#\2\2\u0125"+
+		"\u0127\5d\63\2\u0126\u0125\3\2\2\2\u0126\u0127\3\2\2\2\u0127\u0128\3\2"+
+		"\2\2\u0128\u0129\5.\30\2\u0129I\3\2\2\2\u012a\u012c\7\26\2\2\u012b\u012d"+
+		"\5d\63\2\u012c\u012b\3\2\2\2\u012c\u012d\3\2\2\2\u012d\u012e\3\2\2\2\u012e"+
+		"\u012f\5.\30\2\u012fK\3\2\2\2\u0130\u0132\7\30\2\2\u0131\u0133\5d\63\2"+
+		"\u0132\u0131\3\2\2\2\u0132\u0133\3\2\2\2\u0133\u0134\3\2\2\2\u0134\u0135"+
+		"\5.\30\2\u0135M\3\2\2\2\u0136\u0138\7$\2\2\u0137\u0139\5d\63\2\u0138\u0137"+
+		"\3\2\2\2\u0138\u0139\3\2\2\2\u0139\u013a\3\2\2\2\u013a\u013b\5\26\f\2"+
+		"\u013bO\3\2\2\2\u013c\u013e\7%\2\2\u013d\u013f\5d\63\2\u013e\u013d\3\2"+
+		"\2\2\u013e\u013f\3\2\2\2\u013f\u0140\3\2\2\2\u0140\u0141\5.\30\2\u0141"+
+		"Q\3\2\2\2\u0142\u0144\7&\2\2\u0143\u0145\5d\63\2\u0144\u0143\3\2\2\2\u0144"+
+		"\u0145\3\2\2\2\u0145S\3\2\2\2\u0146\u0148\7\'\2\2\u0147\u0149\5d\63\2"+
+		"\u0148\u0147\3\2\2\2\u0148\u0149\3\2\2\2\u0149U\3\2\2\2\u014a\u014b\b"+
+		",\1\2\u014b\u0154\5X-\2\u014c\u014d\7\7\2\2\u014d\u014e\5V,\2\u014e\u014f"+
+		"\7\b\2\2\u014f\u0154\3\2\2\2\u0150\u0151\5\b\5\2\u0151\u0152\5V,\5\u0152"+
+		"\u0154\3\2\2\2\u0153\u014a\3\2\2\2\u0153\u014c\3\2\2\2\u0153\u0150\3\2"+
+		"\2\2\u0154\u015f\3\2\2\2\u0155\u0156\f\4\2\2\u0156\u0157\5\4\3\2\u0157"+
+		"\u0158\5V,\5\u0158\u015e\3\2\2\2\u0159\u015a\f\3\2\2\u015a\u015b\5\6\4"+
+		"\2\u015b\u015c\5V,\4\u015c\u015e\3\2\2\2\u015d\u0155\3\2\2\2\u015d\u0159"+
+		"\3\2\2\2\u015e\u0161\3\2\2\2\u015f\u015d\3\2\2\2\u015f\u0160\3\2\2\2\u0160"+
+		"W\3\2\2\2\u0161\u015f\3\2\2\2\u0162\u0167\5Z.\2\u0163\u0167\5\\/\2\u0164"+
+		"\u0167\5^\60\2\u0165\u0167\5`\61\2\u0166\u0162\3\2\2\2\u0166\u0163\3\2"+
+		"\2\2\u0166\u0164\3\2\2\2\u0166\u0165\3\2\2\2\u0167Y\3\2\2\2\u0168\u0169"+
+		"\5\f\7\2\u0169[\3\2\2\2\u016a\u016b\7\22\2\2\u016b]\3\2\2\2\u016c\u016d"+
+		"\7\21\2\2\u016d_\3\2\2\2\u016e\u016f\7\23\2\2\u016fa\3\2\2\2\u0170\u0171"+
+		"\5f\64\2\u0171c\3\2\2\2\u0172\u0173\7\n\2\2\u0173\u0178\5b\62\2\u0174"+
+		"\u0175\7\4\2\2\u0175\u0177\5b\62\2\u0176\u0174\3\2\2\2\u0177\u017a\3\2"+
+		"\2\2\u0178\u0179\3\2\2\2\u0178\u0176\3\2\2\2\u0179\u017b\3\2\2\2\u017a"+
+		"\u0178\3\2\2\2\u017b\u017c\7\13\2\2\u017ce\3\2\2\2\u017d\u017e\7(\2\2"+
+		"\u017eg\3\2\2\2$jy\u0098\u009f\u00a3\u00a9\u00bd\u00c8\u00d2\u00d4\u00dc"+
+		"\u00e3\u00ea\u00f0\u00f6\u00fc\u0102\u0108\u010e\u0116\u011c\u0120\u0126"+
+		"\u012c\u0132\u0138\u013e\u0144\u0148\u0153\u015d\u015f\u0166\u0178";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {

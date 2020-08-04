@@ -78,23 +78,23 @@ stringFilterOrCondition : stringFilter             #singleStringFilter
 
 
 idFilter : ID objectId ;
-projectFilter : PROJECT filterOrCondition ;
-parentFilter : PARENT filterOrCondition ;
+projectFilter : PROJECT modifierList? filterOrCondition ;
+parentFilter : PARENT modifierList? filterOrCondition ;
 triggerFilter : TRIGGER modifierList? filterOrCondition ;
-stepFilter : STEP filterOrCondition ;
-featureFilter : FEATURE filterOrCondition ;
-typeFilter : TYPE objectType ;
-parameterFilter : PARAM  parameterName '=' parameterValue ;
-parValueFilter : VAL parameterValue ;
-enabledFilter : ENABLED ;
-ancestorFilter : ANCESTOR filterOrCondition ;
-ancestorOrSelfFilter : ANCESTOR_OR_SELF filterOrCondition ;
-templateDepFilter : TEMPLATE filterOrCondition ;
-vcsRootFilter : VCS_ROOT filterOrCondition ;
-checkoutRulesFilter : RULES checkoutRulesString ;
-dependencyFilter : DEPENDENCY filterOrCondition ;
-artifactFilter : ARTIFACT ;
-snapshotFilter : SNAPSHOT ;
+stepFilter : STEP modifierList? filterOrCondition ;
+featureFilter : FEATURE modifierList? filterOrCondition ;
+typeFilter : TYPE modifierList? objectType ;
+parameterFilter : PARAM modifierList?  parameterName '=' parameterValue ;
+parValueFilter : VAL modifierList? parameterValue ;
+enabledFilter : ENABLED modifierList?;
+ancestorFilter : ANCESTOR modifierList? filterOrCondition ;
+ancestorOrSelfFilter : ANCESTOR_OR_SELF modifierList? filterOrCondition ;
+templateDepFilter : TEMPLATE modifierList? filterOrCondition ;
+vcsRootFilter : VCS_ROOT modifierList? filterOrCondition ;
+checkoutRulesFilter : RULES modifierList? checkoutRulesString ;
+dependencyFilter : DEPENDENCY modifierList? filterOrCondition ;
+artifactFilter : ARTIFACT modifierList?;
+snapshotFilter : SNAPSHOT modifierList?;
 
 
 stringCondition : stringFilter                         #stringConditionFilter

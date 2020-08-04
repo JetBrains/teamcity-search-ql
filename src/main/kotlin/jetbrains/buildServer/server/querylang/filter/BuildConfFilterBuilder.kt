@@ -36,7 +36,9 @@ object BuildConfFilterBuilder : FilterBuilder<BuildConfFilterType, SBuildType> {
                 ObjectFilter {buildType ->
                     val condition = ParHolderFilterBuilder.createFilter(filter.condition, buildType)
                     buildType as? BuildTypeEx ?: throw IllegalStateException("Should be BuildTypeEx")
-                    buildType.settings.ownBuildRunners.any {step ->
+                    val settings = if (!filter.includeInherited) buildType.settings.ownBuildRunners
+                                   else buildType.buildRunners
+                    settings.any {step ->
                         condition.accepts(step)
                     }
                 }
@@ -45,7 +47,10 @@ object BuildConfFilterBuilder : FilterBuilder<BuildConfFilterType, SBuildType> {
                 ObjectFilter {buildType ->
                     val condition = ParHolderFilterBuilder.createFilter(filter.condition, buildType)
                     buildType as? BuildTypeEx ?: throw IllegalStateException("Should be BuildTypeEx")
-                    buildType.settings.ownBuildFeatures.any {feature ->
+
+                    val settings = if (!filter.includeInherited) buildType.settings.ownBuildFeatures
+                                   else buildType.buildFeatures
+                    settings.any {feature ->
                         condition.accepts(feature)
                     }
                 }
@@ -72,7 +77,9 @@ object BuildConfFilterBuilder : FilterBuilder<BuildConfFilterType, SBuildType> {
             is ParameterFilter -> {
                 val stringFilter = StringFilterBuilder.createFilter(filter.valueCondition)
                 ObjectFilter {buildType ->
-                    buildType.ownParameters.any<String, String> {(key, value) ->
+                    val params = if (filter.includeInherited) buildType.parameters
+                                   else buildType.ownParameters
+                    params.any<String, String> {(key, value) ->
                         key == filter.option && stringFilter.accepts(value)
                     }
                 }
