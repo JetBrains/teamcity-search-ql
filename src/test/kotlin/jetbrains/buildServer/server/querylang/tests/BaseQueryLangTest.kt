@@ -9,6 +9,7 @@ import jetbrains.buildServer.serverSide.*
 import jetbrains.buildServer.serverSide.dependency.DependencySettings
 import jetbrains.buildServer.serverSide.impl.BaseServerTestCase
 import jetbrains.buildServer.serverSide.impl.ProjectEx
+import jetbrains.buildServer.vcs.SVcsRoot
 import org.testng.annotations.BeforeMethod
 
 abstract class BaseQueryLangTest : BaseServerTestCase() {
@@ -34,6 +35,35 @@ abstract class BaseQueryLangTest : BaseServerTestCase() {
     private val steps = mutableMapOf<String, BuildRunnerDescriptor>()
     private val features = mutableMapOf<String, SBuildFeatureDescriptor>()
     private val triggers = mutableMapOf<String, BuildTriggerDescriptor>()
+    private val vcsRoots = mutableMapOf<String, SVcsRoot>()
+
+    protected fun project(key: String): ProjectEx {
+        return projects[key]!!
+    }
+
+    protected fun bc(key: String): BuildTypeEx {
+        return buildConfs[key]!!
+    }
+
+    protected fun temp(key: String): BuildTypeTemplateEx {
+        return templates[key]!!
+    }
+
+    protected fun step(key: String): BuildRunnerDescriptor {
+        return steps[key]!!
+    }
+
+    protected fun feature(key: String): SBuildFeatureDescriptor {
+        return features[key]!!
+    }
+
+    protected fun trigger(key: String): BuildTriggerDescriptor {
+        return triggers[key]!!
+    }
+
+    protected fun vcs(key: String): SVcsRoot {
+        return vcsRoots[key]!!
+    }
 
     interface TestObject
 
@@ -96,6 +126,9 @@ abstract class BaseQueryLangTest : BaseServerTestCase() {
                     is TTemplate -> {
                         obj.create(project)
                     }
+                    is TVcsRoot -> {
+                        obj.create(project)
+                    }
                 }
             }
 
@@ -125,6 +158,7 @@ abstract class BaseQueryLangTest : BaseServerTestCase() {
                     is TADependency -> obj.create(bt)
                     is TSDependency -> obj.create(bt)
                     is TParam -> obj.create(bt)
+                    is TVcsInst -> obj.create(bt)
                 }
             }
 
@@ -148,9 +182,28 @@ abstract class BaseQueryLangTest : BaseServerTestCase() {
                     is TADependency -> obj.create(temp)
                     is TSDependency -> obj.create(temp)
                     is TParam -> obj.create(temp)
+                    is TVcsInst -> obj.create(temp)
                 }
             }
             return temp
+        }
+    }
+
+    inner class TVcsRoot(
+        val name: String, val type: String, vararg val objects: TestObject
+    ) : TestStorableObject<SVcsRoot, ProjectEx>()
+    {
+        override val storage = vcsRoots
+
+        override fun createInner(context: ProjectEx): SVcsRoot {
+            val params = mutableListOf<Pair<String, String>>()
+            objects.forEach {
+                when(it) {
+                    is TParam -> params.add(Pair(it.name, it.v))
+                }
+            }
+            myFixture.registerVcsSupport(type)
+            return context.createVcsRoot(type, name, params.toMap())
         }
     }
 
@@ -237,25 +290,54 @@ abstract class BaseQueryLangTest : BaseServerTestCase() {
         }
     }
 
-    inner class TParam(val name: String, val v: String) :
-        TestStorableObject<Unit, UserParametersHolder>()
-    {
-        override val storage = mutableMapOf<String, Unit>()
+    inner class TVcsInst() : TestReferenceObject<BuildTypeSettings, SVcsRoot>() {
+        override val storage = vcsRoots
 
-        override fun createInner(bt: UserParametersHolder) {
+        constructor(ref_ : String): this() {
+            ref = ref_
+        }
+
+        constructor(vcs: SVcsRoot) : this() {
+            obj = vcs
+        }
+
+        override fun createInner(context: BuildTypeSettings, obj: SVcsRoot) {
+            context.addVcsRoot(obj)
+        }
+    }
+
+    inner class TParam(val name: String, val v: String) :
+        TestObject
+    {
+
+        fun create(bt: UserParametersHolder) {
             bt.addParameter(SimpleParameter(name, v))
         }
     }
 
-    class TRef(val key: String)
+    inner class TestDataProvider {
 
-    class TestDataProvider {
+        init {
+            setUp()
+        }
 
         private val tests: MutableList<Pair<String, List<String>>> = mutableListOf()
 
         fun addCase(query: String, vararg resultIds: String): TestDataProvider {
             tests.add(Pair(query, resultIds.toList()))
             return this
+        }
+
+        fun addProjectCase(query: String, vararg resultRefs: String): TestDataProvider {
+            return addCase(query, *(resultRefs.map {projects[it]!!.externalId}.toTypedArray()))
+        }
+
+        fun addBCCase(query: String, vararg resultRefs: String): TestDataProvider {
+            return addCase(query, *(resultRefs.map {buildConfs[it]!!.externalId}.toTypedArray()))
+        }
+
+        fun addTempCase(query: String, vararg resultRefs: String): TestDataProvider {
+            return addCase(query, *(resultRefs.map {templates[it]!!.externalId}.toTypedArray()))
         }
 
         fun end(): MutableIterator<Array<Any>> {
