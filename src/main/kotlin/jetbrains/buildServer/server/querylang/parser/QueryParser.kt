@@ -26,6 +26,8 @@ object QueryParser {
 
     private fun initParser(s: CharStream): GrammarParser {
         val lexer = QLangGrammarLexer(s)
+        lexer.removeErrorListeners()
+        lexer.addErrorListener(ErrorListener())
         val tokens = CommonTokenStream(lexer)
         return GrammarParser(tokens)
     }

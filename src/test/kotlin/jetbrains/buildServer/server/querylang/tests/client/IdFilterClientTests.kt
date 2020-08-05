@@ -1,10 +1,10 @@
 package jetbrains.buildServer.server.querylang.tests.client
 
+import jetbrains.buildServer.server.querylang.parser.QueryParser
 import jetbrains.buildServer.server.querylang.tests.BaseQueryLangTest
-import org.testng.annotations.BeforeClass
-import org.testng.annotations.BeforeMethod
 import org.testng.annotations.DataProvider
 import org.testng.annotations.Test
+import kotlin.test.assertFailsWith
 
 class IdFilterClientTests : BaseQueryLangTest() {
 
@@ -54,11 +54,26 @@ class IdFilterClientTests : BaseQueryLangTest() {
         )
         .end()
 
+    @DataProvider(name = "idFilterFailed")
+    fun idFaildedData() = TestFailedDataProvdier()
+        .addParseCase("find buildConf with id Base")
+        .addParseCase("find buildConfiguration with trigger id Base")
+        .addParseCase("find with id Base")
+        .addParseCase("find buildConfiguration, template with template id *Project*")
+        .addParseCase("find buildConfiguration with id **abacaba*")
+        .addParseCase("find buildConfiguration with id \"abacaba\"abadaba\"")
+        .end()
+
 
     @Test(dataProvider = "idFilterData")
     fun parametrizedIdTest(query: String, expected: List<String>) {
         val actual = getIds(query)
 
         assertEquals(expected, actual)
+    }
+
+    @Test(dataProvider = "idFilterFailed")
+    fun parametrizedFailedParsingTest(query: String, exc: Class<out Exception>) {
+        assertFailsWith(exc.kotlin) {QueryParser.parse(query)}
     }
 }

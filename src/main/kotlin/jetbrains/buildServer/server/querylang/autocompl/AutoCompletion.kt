@@ -23,6 +23,7 @@ class AutoCompletion(
     fun complete(input: String): List<CompletionResult> {
         val stream = CharStreams.fromString(input)
         val lexer = QLangGrammarLexer(stream)
+        lexer.removeErrorListeners()
         val tokens = CommonTokenStream(lexer)
         val parserTree = QLangGrammarParser(tokens)
         parserTree.removeErrorListeners()

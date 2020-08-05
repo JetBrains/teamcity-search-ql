@@ -2,6 +2,7 @@ package jetbrains.buildServer.server.querylang.tests
 
 import jetbrains.buildServer.artifacts.RevisionRules
 import jetbrains.buildServer.buildTriggers.BuildTriggerDescriptor
+import jetbrains.buildServer.server.querylang.parser.ParsingException
 import jetbrains.buildServer.server.querylang.requests.InternalApiQueryHandler
 import jetbrains.buildServer.server.querylang.requests.RequestClient
 import jetbrains.buildServer.server.querylang.tests.client.EmptyResultPrinter
@@ -338,6 +339,25 @@ abstract class BaseQueryLangTest : BaseServerTestCase() {
 
         fun addTempCase(query: String, vararg resultRefs: String): TestDataProvider {
             return addCase(query, *(resultRefs.map {templates[it]!!.externalId}.toTypedArray()))
+        }
+
+        fun end(): MutableIterator<Array<Any>> {
+            return tests.map {p ->
+                arrayOf(p.first, p.second)
+            }.toMutableList().iterator()
+        }
+    }
+
+    inner class TestFailedDataProvdier {
+        private val tests: MutableList<Pair<Any, Any>> = mutableListOf()
+
+        fun addCase(query: String, exc: Class<out Exception>): TestFailedDataProvdier {
+            tests.add(Pair(query, exc))
+            return this
+        }
+
+        fun addParseCase(query: String): TestFailedDataProvdier {
+            return addCase(query, ParsingException::class.java)
         }
 
         fun end(): MutableIterator<Array<Any>> {
