@@ -19,7 +19,7 @@
       <class name="jetbrains.buildServer.server.querylang.tests.client.ProjectFilterClientTests" />
       <class name="jetbrains.buildServer.server.querylang.tests.client.ParentFilterClientTests" />
       <class name="jetbrains.buildServer.server.querylang.tests.client.FilterTypeTests" />
-      <class name="jetbrains.buildServer.server.querylang.tests.client.FilterTriggerTest" />
+      <class name="jetbrains.buildServer.server.querylang.tests.client.FilterDependencyClientTests" />
     </classes>
   </test>
 </suite>

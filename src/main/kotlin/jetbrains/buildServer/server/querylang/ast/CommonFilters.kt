@@ -158,7 +158,6 @@ data class CheckoutRulesFilter(
     companion object : Names("rules")
 
     override val names: List<String> = CheckoutRulesFilter.names
-
 }
 
 data class DependencyFilter(
