@@ -51,6 +51,15 @@ class IdFilterClientTests : BaseQueryLangTest() {
         .addBCCase(
             "find buildConfiguration with parent id *Project3",
             "p3b1"
+        ).addTempCase(
+            "find template with id *temp1",
+            "te1"
+        ).addVcsCase(
+            "find vcsRoot with id *Vcs1 and project id Project1",
+            "vcs1"
+        ).addCase(
+            "find project, template, vcsRoot, buildConfiguration with id *2*",
+            "Project1_temp2", "Project1_Vcs2", "Project1_Project2", "Project1_Project2_test1"
         )
         .end()
 
@@ -69,7 +78,7 @@ class IdFilterClientTests : BaseQueryLangTest() {
     fun parametrizedIdTest(query: String, expected: List<String>) {
         val actual = getIds(query)
 
-        assertEquals(expected, actual)
+        assertEquals(expected.sorted(), actual)
     }
 
     @Test(dataProvider = "idFilterFailed")

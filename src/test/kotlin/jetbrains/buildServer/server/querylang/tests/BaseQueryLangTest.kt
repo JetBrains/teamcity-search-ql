@@ -341,6 +341,10 @@ abstract class BaseQueryLangTest : BaseServerTestCase() {
             return addCase(query, *(resultRefs.map {templates[it]!!.externalId}.toTypedArray()))
         }
 
+        fun addVcsCase(query: String, vararg resultRefs: String): TestDataProvider {
+            return addCase(query, *(resultRefs.map {vcsRoots[it]!!.externalId}.toTypedArray()))
+        }
+
         fun end(): MutableIterator<Array<Any>> {
             return tests.map {p ->
                 arrayOf(p.first, p.second)
