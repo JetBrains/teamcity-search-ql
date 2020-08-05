@@ -13,7 +13,13 @@ object VcsRootFilterBuilder : FilterBuilder<VcsRootFilterType, SVcsRoot> {
                 }
             }
             is ProjectFilter -> {
-                val projectFilter = ProjectFilterBuilder.createFilter(AncestorOrSelfFilter(filter.condition))
+                val projectFilter = ProjectFilterBuilder.createFilter(ProjectFilter(filter.condition))
+                ObjectFilter {vcs ->
+                    projectFilter.accepts(vcs.project)
+                }
+            }
+            is ParentFilter -> {
+                val projectFilter = ProjectFilterBuilder.createFilter(filter.condition)
                 ObjectFilter {vcs ->
                     projectFilter.accepts(vcs.project)
                 }

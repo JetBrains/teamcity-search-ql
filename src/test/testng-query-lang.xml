@@ -16,6 +16,8 @@
       <class name="jetbrains.buildServer.server.querylang.tests.autocompl.PartialQueryTests" />
       <class name="jetbrains.buildServer.server.querylang.tests.autocompl.AutocompletionUpdateTests" />
       <class name="jetbrains.buildServer.server.querylang.tests.client.IdFilterClientTests" />
+      <class name="jetbrains.buildServer.server.querylang.tests.client.ProjectFilterClientTests" />
+      <class name="jetbrains.buildServer.server.querylang.tests.client.ParentFilterClientTests" />
     </classes>
   </test>
 </suite>

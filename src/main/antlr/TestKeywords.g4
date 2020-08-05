@@ -25,7 +25,6 @@ PARAM : 'param' ;
 VAL : 'val' ;
 ENABLED : 'enabled' ;
 ANCESTOR : 'ancestor' ;
-ANCESTOR_OR_SELF : 'ancestorOrSelf' ;
 RULES : 'rules' ;
 DEPENDENCY : 'dependency' ;
 ARTIFACT : 'artifact' ;

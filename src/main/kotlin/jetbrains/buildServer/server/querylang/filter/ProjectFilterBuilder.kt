@@ -18,16 +18,16 @@ object ProjectFilterBuilder : FilterBuilder<ProjectFilterType, SProject> {
                     hasSuitableAncestor(project.parentProject, conditionFilter)
                 }
             }
-            is AncestorOrSelfFilter -> {
-                val conditionFilter = ProjectFilterBuilder.createFilter(filter.condition)
-                ObjectFilter {project ->
-                    hasSuitableAncestor(project, conditionFilter)
-                }
-            }
             is ParentFilter -> {
                 val conditionFilter = ProjectFilterBuilder.createFilter(filter.condition)
                 ObjectFilter {project ->
                     conditionFilter.accepts(project.parentProject)
+                }
+            }
+            is ProjectFilter -> {
+                val conditionFilter = ProjectFilterBuilder.createFilter(filter.condition)
+                ObjectFilter {project ->
+                    hasSuitableAncestor(project, conditionFilter)
                 }
             }
             else -> throw java.lang.IllegalStateException("Unknow ProjectFilterType")

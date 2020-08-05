@@ -510,18 +510,6 @@ public class QLangGrammarBaseListener implements QLangGrammarListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterAncestorOrSelfFilter(QLangGrammarParser.AncestorOrSelfFilterContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitAncestorOrSelfFilter(QLangGrammarParser.AncestorOrSelfFilterContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
 	@Override public void enterTemplateDepFilter(QLangGrammarParser.TemplateDepFilterContext ctx) { }
 	/**
 	 * {@inheritDoc}

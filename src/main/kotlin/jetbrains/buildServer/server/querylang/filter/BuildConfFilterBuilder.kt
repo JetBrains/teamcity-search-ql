@@ -10,7 +10,7 @@ object BuildConfFilterBuilder : FilterBuilder<BuildConfFilterType, SBuildType> {
     override fun createFilter(filter: BuildConfFilterType, context: Any?): ObjectFilter<SBuildType> {
         return when (filter) {
             is ProjectFilter -> {
-                val projectFilter = ProjectFilterBuilder.createFilter(AncestorOrSelfFilter(filter.condition))
+                val projectFilter = ProjectFilterBuilder.createFilter(ProjectFilter(filter.condition))
                 ObjectFilter {buildType ->
                     projectFilter.accepts(buildType.project)
                 }

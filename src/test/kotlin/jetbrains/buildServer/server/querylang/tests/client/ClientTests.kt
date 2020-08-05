@@ -201,7 +201,7 @@ class ClientTests: BaseServerTestCase() {
 
     fun testProjectWithAncestorOrSelfFIlter() {
         val query = """
-            find project with ancestorOrSelf (id Project3)
+            find project with project (id Project3)
         """.trimIndent()
 
         val res = client.process(query)

@@ -91,11 +91,6 @@ class FilterVisitor<T : Filter>(
             ctx!!.filterOrCondition().accept(projectConditionVisitor)
         ).transform(ctx)
 
-    override fun visitAncestorOrSelfFilter(ctx: QLangGrammarParser.AncestorOrSelfFilterContext?) =
-        AncestorOrSelfFilter(
-            ctx!!.filterOrCondition().accept(projectConditionVisitor)
-        ).transform(ctx)
-
     override fun visitTemplateDepFilter(ctx: QLangGrammarParser.TemplateDepFilterContext?) =
         TempDepFilter(
             ctx!!.filterOrCondition().accept(tempConditionVisitor)

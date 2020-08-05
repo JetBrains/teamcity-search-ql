@@ -268,12 +268,6 @@ public interface QLangGrammarVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitAncestorFilter(QLangGrammarParser.AncestorFilterContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link QLangGrammarParser#ancestorOrSelfFilter}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitAncestorOrSelfFilter(QLangGrammarParser.AncestorOrSelfFilterContext ctx);
-	/**
 	 * Visit a parse tree produced by {@link QLangGrammarParser#templateDepFilter}.
 	 * @param ctx the parse tree
 	 * @return the visitor result

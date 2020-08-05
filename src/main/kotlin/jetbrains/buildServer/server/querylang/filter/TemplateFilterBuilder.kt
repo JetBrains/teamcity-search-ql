@@ -10,7 +10,7 @@ object TemplateFilterBuilder : FilterBuilder<TemplateFilterType, BuildTypeTempla
     override fun createFilter(filter: TemplateFilterType, context: Any?): ObjectFilter<BuildTypeTemplate> {
         return when(filter) {
             is ProjectFilter -> {
-                val projectFilter = ProjectFilterBuilder.createFilter(AncestorOrSelfFilter(filter.condition))
+                val projectFilter = ProjectFilterBuilder.createFilter(ProjectFilter(filter.condition))
                 ObjectFilter {buildType ->
                     projectFilter.accepts(buildType.project)
                 }

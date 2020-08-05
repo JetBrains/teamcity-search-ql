@@ -19,9 +19,8 @@ class PartialQueryTests {
         val res = compl.complete(query).map { it.result }
         val expected = listOf(
             "find project with ancestor(id(BaseProject))",
-            "find project,buildConfiguration,template with parent(id(BaseProject))",
-            "find project with ancestorOrSelf(id(BaseProject))",
-            "find buildConfiguration,template,vcsRoot with project(id(BaseProject))",
+            "find project,buildConfiguration,template,vcsRoot with parent(id(BaseProject))",
+            "find project,buildConfiguration,template,vcsRoot with project(id(BaseProject))",
             "find buildConfiguration with template(id(BaseProject))",
             "find buildConfiguration,template with vcsRoot(id(BaseProject))",
             "find project,buildConfiguration,template,vcsRoot with id(BaseProject)"

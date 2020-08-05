@@ -28,7 +28,6 @@ import java.util.*;
         putToKeywords(ValueFilter.Companion.getNames(), QLangGrammarParser.VAL);
         putToKeywords(EnabledFilter.Companion.getNames(), QLangGrammarParser.ENABLED);
         putToKeywords(AncestorFilter.Companion.getNames(), QLangGrammarParser.ANCESTOR);
-        putToKeywords(AncestorOrSelfFilter.Companion.getNames(), QLangGrammarParser.ANCESTOR_OR_SELF);
         putToKeywords(CheckoutRulesFilter.Companion.getNames(), QLangGrammarParser.RULES);
         putToKeywords(DependencyFilter.Companion.getNames(), QLangGrammarParser.DEPENDENCY);
         putToKeywords(ArtifactFilter.Companion.getNames(), QLangGrammarParser.ARTIFACT);
@@ -46,7 +45,7 @@ import java.util.*;
 tokens {
        PROJECT, TEMPLATE, BUILD_CONFIGURATION, VCS_ROOT,
        ID, PARENT, TRIGGER, STEP, FEATURE, TYPE, PARAM, VAL,
-       ENABLED, ANCESTOR, ANCESTOR_OR_SELF, RULES, DEPENDENCY,
+       ENABLED, ANCESTOR, RULES, DEPENDENCY,
        ARTIFACT, SNAPSHOT, ALL
 }
 

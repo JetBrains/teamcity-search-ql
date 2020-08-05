@@ -13,7 +13,7 @@ not: NOT ;
 
 filterKeyword : PROJECT | TEMPLATE | BUILD_CONFIGURATION | VCS_ROOT
                  | PARENT | TRIGGER | STEP | FEATURE | TYPE | PARAM | VAL
-                 | ENABLED | ANCESTOR | ANCESTOR_OR_SELF | RULES | DEPENDENCY
+                 | ENABLED | ANCESTOR | RULES | DEPENDENCY
                  | ARTIFACT | SNAPSHOT | ALL
                  ;
 identOrString : IDENT | STRING | filterKeyword;
@@ -52,7 +52,6 @@ filter : idFilter
        | parValueFilter
        | enabledFilter
        | ancestorFilter
-       | ancestorOrSelfFilter
        | templateDepFilter
        | vcsRootFilter
        | checkoutRulesFilter
@@ -88,7 +87,6 @@ parameterFilter : PARAM modifierList?  parameterName '=' parameterValue ;
 parValueFilter : VAL modifierList? parameterValue ;
 enabledFilter : ENABLED modifierList?;
 ancestorFilter : ANCESTOR modifierList? filterOrCondition ;
-ancestorOrSelfFilter : ANCESTOR_OR_SELF modifierList? filterOrCondition ;
 templateDepFilter : TEMPLATE modifierList? filterOrCondition ;
 vcsRootFilter : VCS_ROOT modifierList? filterOrCondition ;
 checkoutRulesFilter : RULES modifierList? checkoutRulesString ;

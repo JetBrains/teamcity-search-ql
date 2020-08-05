@@ -20,6 +20,7 @@ data class ProjectFilter(
     override val condition: ConditionAST<ProjectFilterType>
 ) :
     ProjectComplexFilter,
+    ProjectFilterType,
     BuildConfFilterType,
     TemplateFilterType,
     VcsRootFilterType
@@ -34,7 +35,8 @@ data class ParentFilter(
     ProjectComplexFilter,
     BuildConfFilterType,
     TemplateFilterType,
-    ProjectFilterType
+    ProjectFilterType,
+    VcsRootFilterType
 {
     companion object : Names("parent")
     override val names = ParentFilter.names
@@ -142,16 +144,6 @@ data class AncestorFilter(
 {
     companion object : Names("ancestor")
     override val names = AncestorFilter.names
-}
-
-data class AncestorOrSelfFilter(
-    override val condition: ConditionAST<ProjectFilterType>
-) :
-    ProjectComplexFilter,
-    ProjectFilterType
-{
-    companion object : Names("ancestorOrSelf")
-    override val names = AncestorOrSelfFilter.names
 }
 
 data class VcsRootFilter(

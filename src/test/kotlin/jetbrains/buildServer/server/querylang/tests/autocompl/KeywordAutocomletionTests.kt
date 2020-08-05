@@ -30,9 +30,8 @@ internal class KeywordAutocomletionTests {
 
         val vars = autoCompl.complete(query).map {it.show}
 
-        assertEquals(2, vars.size)
+        assertEquals(1, vars.size)
         assertEquals("ancestor", vars[0])
-        assertEquals("ancestorOrSelf", vars[1])
     }
 
     
