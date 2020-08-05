@@ -17,7 +17,7 @@ object VcsRootEntryFilterBuilder : FilterBuilder<VcsRootEntryFilter, VcsRootEntr
                 }
             }
             is CheckoutRulesFilter -> {
-                val stringFilter = StringFilterBuilder.createFilter(filter.condition)
+                val stringFilter = StringFilterBuilder.createFilter(filter.strCondition)
                 ObjectFilter {entry ->
                     stringFilter.accepts(entry.checkoutRules)
                 }

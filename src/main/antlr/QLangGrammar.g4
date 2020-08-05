@@ -19,9 +19,9 @@ filterKeyword : PROJECT | TEMPLATE | BUILD_CONFIGURATION | VCS_ROOT
 identOrString : IDENT | STRING | filterKeyword;
 
 objectId : stringFilterOrCondition ;
-objectType : identOrString ;
+objectType : stringFilterOrCondition ;
 parameterValue : stringFilterOrCondition;
-parameterName : identOrString;
+parameterName : stringFilterOrCondition;
 checkoutRulesString : stringFilterOrCondition ;
 
 vcsRootKeyword : VCS_ROOT;

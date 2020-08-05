@@ -40,8 +40,8 @@ class BuildConfSearchTests {
                                 IdFilter("Project1".wrapEq())
                         ))),
                         FilterConditionNode(TriggerFilter(AndConditionNode<ParameterHolderFilterType>(
-                                FilterConditionNode(TypeFilter("vcsTrigger")),
-                                FilterConditionNode(ParameterFilter("par", "abc".wrapEq()))
+                                FilterConditionNode(TypeFilter("vcsTrigger".wrapEq())),
+                                FilterConditionNode(ParameterFilter("par".wrapEq(), "abc".wrapEq()))
                         )))
         )).wrap()
         assertEquals(expected, parsed)
@@ -61,8 +61,8 @@ class BuildConfSearchTests {
                 AndConditionNode<BuildConfFilterType>(
                         FilterConditionNode(TriggerFilter(
                                 AndConditionNode<ParameterHolderFilterType>(
-                                        FilterConditionNode(TypeFilter("vcsTrigger")),
-                                        FilterConditionNode(ParameterFilter("par", "abc".wrapEq()))
+                                        FilterConditionNode(TypeFilter("vcsTrigger".wrapEq())),
+                                        FilterConditionNode(ParameterFilter("par".wrapEq(), "abc".wrapEq()))
                                 ))
                         ),
                         FilterConditionNode(ProjectFilter(
@@ -85,8 +85,8 @@ class BuildConfSearchTests {
                 FilterConditionNode(
                         TriggerFilter(
                                 AndConditionNode<ParameterHolderFilterType>(
-                                        FilterConditionNode(TypeFilter("vcsTrigger")),
-                                        FilterConditionNode(ParameterFilter("par", "abc".wrapEq()))
+                                        FilterConditionNode(TypeFilter("vcsTrigger".wrapEq())),
+                                        FilterConditionNode(ParameterFilter("par".wrapEq(), "abc".wrapEq()))
                                 )
                         )
                 )
@@ -125,7 +125,7 @@ class BuildConfSearchTests {
                 FilterConditionNode(
                         TriggerFilter(
                                 FilterConditionNode(
-                                        TypeFilter("vcsTrigger")
+                                        TypeFilter("vcsTrigger".wrapEq())
                                 )
                         )
                 )
@@ -145,7 +145,7 @@ class BuildConfSearchTests {
                 FilterConditionNode(
                         TriggerFilter(
                                 FilterConditionNode(
-                                        TypeFilter("vcsTrigger")
+                                        TypeFilter("vcsTrigger".wrapEq())
                                 )
                         )
                 )
@@ -165,7 +165,7 @@ class BuildConfSearchTests {
                 FilterConditionNode(
                         TriggerFilter(
                                 FilterConditionNode(
-                                        ParameterFilter("path", "abacaba".wrapEq())
+                                        ParameterFilter("path".wrapEq(), "abacaba".wrapEq())
                                 )
                         )
                 )
@@ -225,7 +225,7 @@ class BuildConfSearchTests {
                 FilterConditionNode(
                         StepFilter(
                                 FilterConditionNode(
-                                        ParameterFilter("path", "abc".wrapEq())
+                                        ParameterFilter("path".wrapEq(), "abc".wrapEq())
                                 )
                         )
                 )
@@ -245,7 +245,7 @@ class BuildConfSearchTests {
                 FilterConditionNode(
                         FeatureFilter(
                                 FilterConditionNode(
-                                        ParameterFilter("path", "abc".wrapEq())
+                                        ParameterFilter("path".wrapEq(), "abc".wrapEq())
                                 )
                         )
                 )
@@ -293,7 +293,7 @@ class BuildConfSearchTests {
                                         FilterConditionNode(IdFilter("5555".wrapEq())),
                                         FilterConditionNode(TriggerFilter(
                                                 FilterConditionNode(
-                                                        TypeFilter("vcsTrigger")
+                                                        TypeFilter("vcsTrigger".wrapEq())
                                                 )
                                         ))
                                 )

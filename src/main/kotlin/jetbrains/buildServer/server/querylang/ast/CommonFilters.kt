@@ -1,11 +1,9 @@
 package jetbrains.buildServer.server.querylang.ast
 
-import jetbrains.buildServer.server.querylang.toIdentOrString
-
 
 data class IdFilter(
-    val strCondition: ConditionAST<StringFilter>
-) :
+    override val strCondition: ConditionAST<StringFilter>
+) : StringTerminalFilter,
     ProjectFilterType,
     BuildConfFilterType,
     TemplateFilterType,
@@ -13,7 +11,6 @@ data class IdFilter(
 {
     companion object : Names("id")
     override val names = IdFilter.names
-    override fun createStr() = "id(" + strCondition.createStr() + ")"
 }
 
 data class ProjectFilter(
@@ -43,7 +40,7 @@ data class ParentFilter(
 }
 
 data class TypeFilter(
-    override val str: String
+    override val strCondition: ConditionAST<StringFilter>
 ) :
     StringTerminalFilter,
     ParameterHolderFilterType,
@@ -103,13 +100,12 @@ data class TempDepFilter(
 }
 
 data class ValueFilter(
-    val strCondition: ConditionAST<StringFilter>
-) :
+    override val strCondition: ConditionAST<StringFilter>
+) : StringTerminalFilter,
     ParameterHolderFilterType
 {
     companion object : Names("val")
     override val names = ValueFilter.names
-    override fun createStr() = "val " + strCondition.createStr()
 }
 
 data class EnabledFilter(
@@ -124,14 +120,14 @@ data class EnabledFilter(
 }
 
 data class ParameterFilter(
-    val option: String,
+    val nameCondition: ConditionAST<StringFilter>,
     val valueCondition: ConditionAST<StringFilter>
 ) : ParameterHolderFilterType, BuildConfFilterType, TemplateFilterType
 {
     companion object : Names("param")
     override val names = ParameterFilter.names
 
-    override fun createStr() = "param ${option.toIdentOrString()}=(${valueCondition.createStr()})"
+    override fun createStr() = "param ${nameCondition.createStr()}=(${valueCondition.createStr()})"
 
     var includeInherited = false
 }
@@ -157,13 +153,12 @@ data class VcsRootFilter(
 }
 
 data class CheckoutRulesFilter(
-    val condition: ConditionAST<StringFilter>
-) : VcsRootEntryFilter {
+    override val strCondition: ConditionAST<StringFilter>
+) : StringTerminalFilter, VcsRootEntryFilter {
     companion object : Names("rules")
 
     override val names: List<String> = CheckoutRulesFilter.names
 
-    override fun createStr() = "rules(" + condition.createStr() + ")"
 }
 
 data class DependencyFilter(

@@ -70,11 +70,11 @@ class FilterVisitor<T : Filter>(
         ).transform(ctx)
 
     override fun visitTypeFilter(ctx: QLangGrammarParser.TypeFilterContext?) =
-        TypeFilter(ctx!!.objectType().text.fromIdentOrString()).transform(ctx)
+        TypeFilter(ctx!!.objectType().stringFilterOrCondition().accept(StringConditionVisitor)).transform(ctx)
 
     override fun visitParameterFilter(ctx: QLangGrammarParser.ParameterFilterContext?) =
         ParameterFilter(
-            ctx!!.parameterName().text.fromIdentOrString(),
+            ctx!!.parameterName().stringFilterOrCondition().accept(StringConditionVisitor),
             ctx.parameterValue().stringFilterOrCondition().accept(StringConditionVisitor)
         ).transform(ctx)
 

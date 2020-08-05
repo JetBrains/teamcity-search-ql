@@ -8,15 +8,18 @@ object ParHolderFilterBuilder : FilterBuilder<ParameterHolderFilterType, Paramet
     override fun createFilter(filter: ParameterHolderFilterType, context: Any?): ObjectFilter<ParametersDescriptor> {
         return when (filter) {
             is TypeFilter -> {
+                val strFilter = StringFilterBuilder.createFilter(filter.strCondition)
                 ObjectFilter {parHolder ->
-                    parHolder.type == filter.str
+                    strFilter.accepts(parHolder.type)
                 }
             }
             is ParameterFilter -> {
                 val conditionVal = StringFilterBuilder.createFilter(filter.valueCondition)
+                val conditionName = StringFilterBuilder.createFilter(filter.nameCondition)
                 ObjectFilter {parHolder ->
-                    parHolder.parameters.containsKey(filter.option)
-                            && conditionVal.accepts(parHolder.parameters[filter.option])
+                    parHolder.parameters.any {(key, value) ->
+                        conditionName.accepts(key) && conditionVal.accepts(value)
+                    }
                 }
             }
             is ValueFilter -> {

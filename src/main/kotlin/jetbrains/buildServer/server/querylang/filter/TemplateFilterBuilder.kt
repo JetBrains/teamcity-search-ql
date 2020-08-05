@@ -2,9 +2,7 @@ package jetbrains.buildServer.server.querylang.filter
 
 import jetbrains.buildServer.server.querylang.ast.*
 import jetbrains.buildServer.server.querylang.filter.VcsRootEntryFilterBuilder.toMyVcsRootEntry
-import jetbrains.buildServer.serverSide.BuildTypeEx
 import jetbrains.buildServer.serverSide.BuildTypeTemplate
-import java.lang.IllegalStateException
 
 object TemplateFilterBuilder : FilterBuilder<TemplateFilterType, BuildTypeTemplate> {
     override fun createFilter(filter: TemplateFilterType, context: Any?): ObjectFilter<BuildTypeTemplate> {
@@ -58,12 +56,13 @@ object TemplateFilterBuilder : FilterBuilder<TemplateFilterType, BuildTypeTempla
                 }
             }
             is ParameterFilter -> {
-                val stringFilter = StringFilterBuilder.createFilter(filter.valueCondition)
+                val valFilter = StringFilterBuilder.createFilter(filter.valueCondition)
+                val nameFilter = StringFilterBuilder.createFilter(filter.nameCondition)
                 ObjectFilter {buildType ->
                     val params = if (filter.includeInherited) buildType.parameters
                                  else buildType.ownParameters
                     params.any<String, String> {(key, value) ->
-                        key == filter.option && stringFilter.accepts(value)
+                        nameFilter.accepts(key) && valFilter.accepts(value)
                     }
                 }
             }

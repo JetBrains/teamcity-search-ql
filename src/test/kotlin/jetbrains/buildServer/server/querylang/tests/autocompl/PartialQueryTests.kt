@@ -18,12 +18,12 @@ class PartialQueryTests {
 
         val res = compl.complete(query).map { it.result }
         val expected = listOf(
-            "find project with ancestor(id(BaseProject))",
-            "find project,buildConfiguration,template,vcsRoot with parent(id(BaseProject))",
-            "find project,buildConfiguration,template,vcsRoot with project(id(BaseProject))",
-            "find buildConfiguration with template(id(BaseProject))",
-            "find buildConfiguration,template with vcsRoot(id(BaseProject))",
-            "find project,buildConfiguration,template,vcsRoot with id(BaseProject)"
+            "find project with ancestor(id BaseProject)",
+            "find project,buildConfiguration,template,vcsRoot with parent(id BaseProject)",
+            "find project,buildConfiguration,template,vcsRoot with project(id BaseProject)",
+            "find buildConfiguration with template(id BaseProject)",
+            "find buildConfiguration,template with vcsRoot(id BaseProject)",
+            "find project,buildConfiguration,template,vcsRoot with id BaseProject"
         )
 
         assertEquals(expected, res)
@@ -60,7 +60,7 @@ class PartialQueryTests {
 
         val res = compl.complete(query).map { it.result }
         val expected = listOf(
-            """find project with ancestor(id("Base^Project"))"""
+            """find project with ancestor(id "Base^Project")"""
         )
 
         assertEquals(expected.first(), res.first())
@@ -71,7 +71,7 @@ class PartialQueryTests {
 
         val res = compl.complete(query).map { it.result }
         val expected = listOf(
-            """find project with ancestor(id("Base""Project"))"""
+            """find project with ancestor(id "Base""Project")"""
         )
 
         assertEquals(expected.first(), res.first())
@@ -81,7 +81,7 @@ class PartialQueryTests {
         val query = """id "project" """
         val res = compl.complete(query).map {it.result}
         val expected = listOf(
-            """find project with ancestor(id("project"))"""
+            """find project with ancestor(id "project")"""
         )
 
         assertEquals(expected.first(), res.first())

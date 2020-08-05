@@ -25,8 +25,9 @@ object VcsRootFilterBuilder : FilterBuilder<VcsRootFilterType, SVcsRoot> {
                 }
             }
             is TypeFilter -> {
+                val strFilter = StringFilterBuilder.createFilter(filter.strCondition)
                 ObjectFilter {vcs ->
-                    vcs.vcsName == filter.str
+                    strFilter.accepts(vcs.vcsName)
                 }
             }
             else -> throw java.lang.IllegalStateException("Unknown VcsRootFilterType")

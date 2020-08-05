@@ -75,12 +75,13 @@ object BuildConfFilterBuilder : FilterBuilder<BuildConfFilterType, SBuildType> {
                 }
             }
             is ParameterFilter -> {
-                val stringFilter = StringFilterBuilder.createFilter(filter.valueCondition)
+                val valFilter = StringFilterBuilder.createFilter(filter.valueCondition)
+                val nameFilter = StringFilterBuilder.createFilter(filter.nameCondition)
                 ObjectFilter {buildType ->
                     val params = if (filter.includeInherited) buildType.parameters
                                    else buildType.ownParameters
                     params.any<String, String> {(key, value) ->
-                        key == filter.option && stringFilter.accepts(value)
+                        nameFilter.accepts(key) && valFilter.accepts(value)
                     }
                 }
             }

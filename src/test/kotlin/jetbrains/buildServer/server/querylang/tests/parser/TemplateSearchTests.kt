@@ -23,7 +23,7 @@ internal class TemplateSearchTests {
                         FilterConditionNode(IdFilter("Test1".wrapEq())),
                         FilterConditionNode(TriggerFilter(
                                 FilterConditionNode(
-                                        TypeFilter("vcsTrigger")
+                                        TypeFilter("vcsTrigger".wrapEq())
                                 )
                         ))
                 )

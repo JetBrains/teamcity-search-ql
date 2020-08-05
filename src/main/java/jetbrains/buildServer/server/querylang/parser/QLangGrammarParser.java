@@ -533,8 +533,8 @@ public class QLangGrammarParser extends Parser {
 	}
 
 	public static class ObjectTypeContext extends ParserRuleContext {
-		public IdentOrStringContext identOrString() {
-			return getRuleContext(IdentOrStringContext.class,0);
+		public StringFilterOrConditionContext stringFilterOrCondition() {
+			return getRuleContext(StringFilterOrConditionContext.class,0);
 		}
 		public ObjectTypeContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -562,7 +562,7 @@ public class QLangGrammarParser extends Parser {
 			enterOuterAlt(_localctx, 1);
 			{
 			setState(121);
-			identOrString();
+			stringFilterOrCondition();
 			}
 		}
 		catch (RecognitionException re) {
@@ -621,8 +621,8 @@ public class QLangGrammarParser extends Parser {
 	}
 
 	public static class ParameterNameContext extends ParserRuleContext {
-		public IdentOrStringContext identOrString() {
-			return getRuleContext(IdentOrStringContext.class,0);
+		public StringFilterOrConditionContext stringFilterOrCondition() {
+			return getRuleContext(StringFilterOrConditionContext.class,0);
 		}
 		public ParameterNameContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -650,7 +650,7 @@ public class QLangGrammarParser extends Parser {
 			enterOuterAlt(_localctx, 1);
 			{
 			setState(125);
-			identOrString();
+			stringFilterOrCondition();
 			}
 		}
 		catch (RecognitionException re) {
@@ -3643,10 +3643,10 @@ public class QLangGrammarParser extends Parser {
 		"\2\2\2hg\3\2\2\2ij\3\2\2\2jk\7\2\2\3k\3\3\2\2\2lm\7\r\2\2m\5\3\2\2\2n"+
 		"o\7\f\2\2o\7\3\2\2\2pq\7\16\2\2q\t\3\2\2\2rs\t\2\2\2s\13\3\2\2\2tx\7\20"+
 		"\2\2ux\7\17\2\2vx\5\n\6\2wt\3\2\2\2wu\3\2\2\2wv\3\2\2\2x\r\3\2\2\2yz\5"+
-		"\60\31\2z\17\3\2\2\2{|\5\f\7\2|\21\3\2\2\2}~\5\60\31\2~\23\3\2\2\2\177"+
-		"\u0080\5\f\7\2\u0080\25\3\2\2\2\u0081\u0082\5\60\31\2\u0082\27\3\2\2\2"+
-		"\u0083\u0084\7\30\2\2\u0084\31\3\2\2\2\u0085\u0086\7\27\2\2\u0086\33\3"+
-		"\2\2\2\u0087\u0088\7\25\2\2\u0088\35\3\2\2\2\u0089\u008a\7\26\2\2\u008a"+
+		"\60\31\2z\17\3\2\2\2{|\5\60\31\2|\21\3\2\2\2}~\5\60\31\2~\23\3\2\2\2\177"+
+		"\u0080\5\60\31\2\u0080\25\3\2\2\2\u0081\u0082\5\60\31\2\u0082\27\3\2\2"+
+		"\2\u0083\u0084\7\30\2\2\u0084\31\3\2\2\2\u0085\u0086\7\27\2\2\u0086\33"+
+		"\3\2\2\2\u0087\u0088\7\25\2\2\u0088\35\3\2\2\2\u0089\u008a\7\26\2\2\u008a"+
 		"\37\3\2\2\2\u008b\u008c\5,\27\2\u008c!\3\2\2\2\u008d\u008e\7\3\2\2\u008e"+
 		"\u008f\5$\23\2\u008f\u0090\5(\25\2\u0090#\3\2\2\2\u0091\u0096\5&\24\2"+
 		"\u0092\u0093\7\4\2\2\u0093\u0095\5&\24\2\u0094\u0092\3\2\2\2\u0095\u0098"+
