@@ -2,6 +2,10 @@ package jetbrains.buildServer.server.querylang.tests
 
 import jetbrains.buildServer.artifacts.RevisionRules
 import jetbrains.buildServer.buildTriggers.BuildTriggerDescriptor
+import jetbrains.buildServer.server.querylang.autocompl.AutoCompletion
+import jetbrains.buildServer.server.querylang.autocompl.Completer
+import jetbrains.buildServer.server.querylang.autocompl.CompletionManager
+import jetbrains.buildServer.server.querylang.autocompl.CompletionResult
 import jetbrains.buildServer.server.querylang.parser.ParsingException
 import jetbrains.buildServer.server.querylang.requests.InternalApiQueryHandler
 import jetbrains.buildServer.server.querylang.requests.RequestClient
@@ -19,6 +23,7 @@ import org.testng.annotations.BeforeMethod
 abstract class BaseQueryLangTest : BaseServerTestCase() {
     protected lateinit var client: RequestClient
     protected lateinit var projectManager: ProjectManager
+    protected lateinit var autoCompl: AutoCompletion
 
     @BeforeMethod
     override fun setUp() {
@@ -27,10 +32,31 @@ abstract class BaseQueryLangTest : BaseServerTestCase() {
         client = RequestClient(InternalApiQueryHandler(projectManager),
             EmptyResultPrinter
         )
+
+        val complm = CompletionManager(myFixture.projectManager)
+        val compl = Completer(complm)
+        autoCompl = AutoCompletion(myFixture.projectManager, compl)
     }
 
     fun getIds(query: String) : List<String> {
         return client.process(query).objects.map {it.externalId}.sorted()
+    }
+
+    protected fun List<String>.complSorted(): List<String> {
+        return this.sortedWith(compareBy({it.length}, {it}))
+    }
+
+    private fun getVars(query: String) : List<CompletionResult> {
+        return autoCompl.complete(query)
+    }
+
+    protected fun checkVars(query: String, expected: List<String>) {
+        val expect = expected.complSorted()
+        val vars = getVars(query)
+        assertEquals(expect.size, vars.size)
+        vars.zip(expect).forEach {(res, exp) ->
+            assertEquals(res.show, exp)
+        }
     }
 
     private val projects = mutableMapOf<String, ProjectEx>()
@@ -356,6 +382,10 @@ abstract class BaseQueryLangTest : BaseServerTestCase() {
 
         fun addVcsCase(query: String, vararg resultRefs: String): TestDataProvider {
             return addCase(query, *(resultRefs.map {vcsRoots[it]!!.externalId}.toTypedArray()))
+        }
+
+        fun addComplCase(query: String, vararg variants: String): TestDataProvider {
+            return addCase(query, *variants)
         }
 
         fun end(): MutableIterator<Array<Any>> {

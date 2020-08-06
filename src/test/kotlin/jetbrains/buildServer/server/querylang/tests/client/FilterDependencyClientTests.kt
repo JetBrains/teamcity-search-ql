@@ -89,6 +89,14 @@ class FilterDependencyClientTests : BaseQueryLangTest() {
         )
         .end()
 
+    @DataProvider(name = "compl")
+    fun complData() = TestDataProvider()
+        .addComplCase(
+            "find buildConfiguration with dep",
+            "dependency"
+        )
+        .end()
+
     @DataProvider(name = "failed")
     fun failedData() = TestFailedDataProvdier()
         .addParseCase("find buildConfiguration with dependency type vcs")
@@ -107,5 +115,10 @@ class FilterDependencyClientTests : BaseQueryLangTest() {
     @Test(dataProvider = "failed")
     fun parametrizedFailedParsingTest(query: String, exc: Class<out Exception>) {
         assertFailsWith(exc.kotlin) { QueryParser.parse(query)}
+    }
+
+    @Test(dataProvider = "compl")
+    fun parametrizedCompletionTests(query: String, expected: List<String>) {
+        checkVars(query, expected)
     }
 }
