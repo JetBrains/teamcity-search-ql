@@ -10,6 +10,7 @@ import jetbrains.buildServer.serverSide.*
 import jetbrains.buildServer.serverSide.dependency.DependencySettings
 import jetbrains.buildServer.serverSide.impl.BaseServerTestCase
 import jetbrains.buildServer.serverSide.impl.ProjectEx
+import jetbrains.buildServer.util.Option
 import jetbrains.buildServer.util.OptionSupport
 import jetbrains.buildServer.util.StringOption
 import jetbrains.buildServer.vcs.SVcsRoot
@@ -247,16 +248,21 @@ abstract class BaseQueryLangTest : BaseServerTestCase() {
     {
         override val storage = buildConfs
 
-        constructor(ref_: String): this() {
+        private var options = listOf<TOption>()
+
+        constructor(ref_: String, vararg options_: TOption): this() {
+            options = options_.toList()
             ref = ref_
         }
 
-        constructor(obj_ : BuildTypeEx): this() {
+        constructor(obj_ : BuildTypeEx, vararg options_: TOption): this() {
+            options = options_.toList()
             obj = obj_
         }
 
         override fun createInner(to: DependencySettings, from: BuildTypeEx) {
-            myFixture.addDependency(to, from, true)
+            val dep = myFixture.addDependency(to, from, true)
+            options.forEach { it.create(dep) }
         }
     }
     inner class TADependency() :

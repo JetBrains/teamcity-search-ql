@@ -69,8 +69,10 @@ object TemplateFilterBuilder : FilterBuilder<TemplateFilterType, BuildTypeTempla
             is DependencyFilter -> {
                 ObjectFilter {buildType ->
                     val dependencyFilter = DependencyFilterBuilder.createFilter(filter.condition, buildType)
-                    buildType.dependencies.any {dependencyFilter.accepts(it.dependOn)}
-                            || buildType.artifactDependencies.any {dependencyFilter.accepts(it.sourceBuildType)}
+                    buildType.dependencies.any {
+                        dependencyFilter.accepts(DependencyFilterBuilder.MySnapshotDependency(it))}
+                            || buildType.artifactDependencies.any {dependencyFilter.accepts(DependencyFilterBuilder.MyArtifactDependency(it))
+                    }
                 }
             }
             is OptionFilter -> {

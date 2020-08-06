@@ -33,6 +33,9 @@ interface FilterBuilder<T : Filter, S> {
             is FilterConditionNode -> {
                 this.createFilter(condition.filter, context)
             }
+            is EmptyConditionNode -> {
+                ObjectFilter {obj -> true}
+            }
         }
     }
 }

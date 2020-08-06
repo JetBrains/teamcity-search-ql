@@ -181,8 +181,9 @@ data class ArtifactFilter(
 }
 
 data class SnapshotFilter(
-    private val placeholder: String = ""
-) : EmptyTerminalFilter, DependencyFilterType {
+    override val condition: ConditionAST<SnapshotDepFilterType>
+) : SnapshotDepComplexFilter,
+    DependencyFilterType {
     companion object : Names("snapshot")
     override val names = Companion.names
 }
@@ -191,7 +192,10 @@ data class OptionFilter(
     val nameCondition: ConditionAST<StringFilter>,
     val valueCondition: ConditionAST<StringFilter>,
     var includeInherited: Boolean = false
-) : BuildConfFilterType, TemplateFilterType {
+) : BuildConfFilterType,
+    TemplateFilterType,
+    SnapshotDepFilterType
+{
     companion object : Names("option")
 
     override val names = Companion.names

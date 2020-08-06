@@ -19,6 +19,7 @@ class TypeDeduce {
             is OrConditionNode  -> getAllFilters(condition.left) + getAllFilters(condition.right)
             is NotConditionNode -> getAllFilters(condition.cond)
             is FilterConditionNode -> listOf(condition.filter)
+            is EmptyConditionNode -> listOf()
         }
     }
 

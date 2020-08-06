@@ -26,7 +26,9 @@ class FilterDependencyClientTests : BaseQueryLangTest() {
             ).bind("b4"),
 
             TTemplate("temp1",
-                TSDependency("b4")
+                TSDependency("b4",
+                    TOption("opt1", "bcd")
+                )
             ).bind("t1"),
 
             TTemplate("temp2",
@@ -34,8 +36,10 @@ class FilterDependencyClientTests : BaseQueryLangTest() {
             ).bind("t2"),
 
             TTemplate("temp3",
-                TSDependency("b3")
-            ),
+                TSDependency("b3",
+                    TOption("opt1", "abc")
+                )
+            ).bind("t3"),
 
             TBuildConf("test5",
                 TTempDependency("t1"),
@@ -46,6 +50,7 @@ class FilterDependencyClientTests : BaseQueryLangTest() {
                 TADependency("b4")
             ).bind("b6")
         ).create()
+        
     }
 
     @DataProvider(name = "data")
@@ -73,6 +78,14 @@ class FilterDependencyClientTests : BaseQueryLangTest() {
         .addBCCase(
             "find buildConfiguration with dependency[all] (id *4 and (snapshot or artifact))",
             "b5", "b6"
+        )
+        .addTempCase(
+            "find template with dependency (snapshot option opt1=abc)",
+            "t3"
+        )
+        .addBCCase(
+            "find buildConfiguration with dependency[all] (snapshot option opt1=bcd)",
+            "b5"
         )
         .end()
 

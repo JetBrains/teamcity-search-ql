@@ -93,7 +93,7 @@ vcsRootFilter : VCS_ROOT modifierList? filterOrCondition ;
 checkoutRulesFilter : RULES modifierList? checkoutRulesString ;
 dependencyFilter : DEPENDENCY modifierList? filterOrCondition ;
 artifactFilter : ARTIFACT modifierList?;
-snapshotFilter : SNAPSHOT modifierList?;
+snapshotFilter : SNAPSHOT modifierList? filterOrCondition?;
 optionFilter : OPTION modifierList? parameterName '=' parameterValue ;
 
 

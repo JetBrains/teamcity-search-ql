@@ -113,7 +113,9 @@ class FilterVisitor<T : Filter>(
         ArtifactFilter().transform(ctx!!)
 
     override fun visitSnapshotFilter(ctx: QLangGrammarParser.SnapshotFilterContext?) =
-        SnapshotFilter().transform(ctx!!)
+        SnapshotFilter(
+            ctx!!.filterOrCondition()?.accept(snapshotConditionVisitor) ?: EmptyConditionNode()
+        ).transform(ctx)
 
     override fun visitOptionFilter(ctx: QLangGrammarParser.OptionFilterContext?) =
         OptionFilter(

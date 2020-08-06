@@ -34,3 +34,9 @@ data class FilterConditionNode<T : Filter>(val filter: T) : ConditionAST<T>() {
                 return filter.createStr()
         }
 }
+
+data class EmptyConditionNode<T : Filter>(private val placeholder: String = "") : ConditionAST<T>() {
+        override fun createStr(): String {
+                return ""
+        }
+}

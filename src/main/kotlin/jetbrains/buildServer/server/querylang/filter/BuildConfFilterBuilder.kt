@@ -96,8 +96,12 @@ object BuildConfFilterBuilder : FilterBuilder<BuildConfFilterType, SBuildType> {
                     val snapshotDeps = if (filter.includeInhereted) buildType.dependencies
                                        else buildType.ownDependencies
 
-                    snapshotDeps.any {dependencyFilter.accepts(it.dependOn)}
-                            || artifactDeps.any {dependencyFilter.accepts(it.sourceBuildType)}
+                    snapshotDeps.any {dependencyFilter.accepts(DependencyFilterBuilder.MySnapshotDependency(it))}
+                            || artifactDeps.any {dependencyFilter.accepts(
+                        DependencyFilterBuilder.MyArtifactDependency(
+                            it
+                        )
+                    )}
                 }
             }
 
