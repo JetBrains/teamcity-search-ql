@@ -23,6 +23,7 @@ class PartialQueryTests {
             "find project,buildConfiguration,template,vcsRoot with project(id BaseProject)",
             "find buildConfiguration with template(id BaseProject)",
             "find buildConfiguration,template with vcsRoot(id BaseProject)",
+            "find buildConfiguration,template with dependency(id BaseProject)",
             "find project,buildConfiguration,template,vcsRoot with id BaseProject"
         )
 

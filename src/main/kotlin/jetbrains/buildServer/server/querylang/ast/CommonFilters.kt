@@ -23,7 +23,7 @@ data class ProjectFilter(
     VcsRootFilterType
 {
     companion object : Names("project")
-    override val names = ProjectFilter.names
+    override val names = Companion.names
 }
 
 data class ParentFilter(
@@ -36,7 +36,7 @@ data class ParentFilter(
     VcsRootFilterType
 {
     companion object : Names("parent")
-    override val names = ParentFilter.names
+    override val names = Companion.names
 }
 
 data class TypeFilter(
@@ -47,7 +47,7 @@ data class TypeFilter(
     VcsRootFilterType
 {
     companion object : Names("type")
-    override val names = TypeFilter.names
+    override val names = Companion.names
 }
 
 data class TriggerFilter(
@@ -58,7 +58,7 @@ data class TriggerFilter(
     TemplateFilterType
 {
     companion object : Names("trigger")
-    override val names = TriggerFilter.names
+    override val names = Companion.names
 
     var includeInherited = false
 }
@@ -71,7 +71,7 @@ data class StepFilter(
     TemplateFilterType
 {
     companion object : Names("step")
-    override val names = StepFilter.names
+    override val names = Companion.names
 
     var includeInherited = false
 }
@@ -84,7 +84,7 @@ data class FeatureFilter(
     TemplateFilterType
 {
     companion object : Names("feature")
-    override val names = FeatureFilter.names
+    override val names = Companion.names
 
     var includeInherited = false
 }
@@ -96,7 +96,7 @@ data class TempDepFilter(
     BuildConfFilterType
 {
     companion object : Names("template")
-    override val names = TempDepFilter.names
+    override val names = Companion.names
 }
 
 data class ValueFilter(
@@ -105,7 +105,7 @@ data class ValueFilter(
     ParameterHolderFilterType
 {
     companion object : Names("val")
-    override val names = ValueFilter.names
+    override val names = Companion.names
 }
 
 data class EnabledFilter(
@@ -115,7 +115,7 @@ data class EnabledFilter(
     ParameterHolderFilterType
 {
     companion object : Names("enabled")
-    override val names = EnabledFilter.names
+    override val names = Companion.names
     override fun createStr() = "enabled"
 }
 
@@ -125,7 +125,7 @@ data class ParameterFilter(
 ) : ParameterHolderFilterType, BuildConfFilterType, TemplateFilterType
 {
     companion object : Names("param")
-    override val names = ParameterFilter.names
+    override val names = Companion.names
 
     override fun createStr() = "param (${nameCondition.createStr()})=(${valueCondition.createStr()})"
 
@@ -139,7 +139,7 @@ data class AncestorFilter(
     ProjectFilterType
 {
     companion object : Names("ancestor")
-    override val names = AncestorFilter.names
+    override val names = Companion.names
 }
 
 data class VcsRootFilter(
@@ -149,7 +149,7 @@ data class VcsRootFilter(
     TemplateFilterType
 {
     companion object : Names("vcsRoot")
-    override val names = VcsRootFilter.names
+    override val names = Companion.names
 }
 
 data class CheckoutRulesFilter(
@@ -157,7 +157,7 @@ data class CheckoutRulesFilter(
 ) : StringTerminalFilter, VcsRootEntryFilter {
     companion object : Names("rules")
 
-    override val names: List<String> = CheckoutRulesFilter.names
+    override val names: List<String> = Companion.names
 }
 
 data class DependencyFilter(
@@ -168,7 +168,7 @@ data class DependencyFilter(
 {
     companion object : Names("dependency")
 
-    override val names = CheckoutRulesFilter.names
+    override val names = Companion.names
 
     var includeInhereted = false
 }

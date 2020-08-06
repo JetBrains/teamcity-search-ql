@@ -2,11 +2,13 @@ package jetbrains.buildServer.server.querylang.tests.client
 
 import jetbrains.buildServer.server.querylang.parser.QueryParser
 import jetbrains.buildServer.server.querylang.tests.BaseQueryLangTest
-import org.testng.annotations.DataProvider
-import org.testng.annotations.Test
+import org.testng.annotations.*
+import java.lang.Thread.sleep
 import kotlin.test.assertFailsWith
 
 class FilterDependencyClientTests : BaseQueryLangTest() {
+
+    @BeforeMethod
     override fun setUp() {
         super.setUp()
 
@@ -49,7 +51,7 @@ class FilterDependencyClientTests : BaseQueryLangTest() {
             TBuildConf("test6",
                 TADependency("b4")
             ).bind("b6")
-        ).create()
+        ).create(true)
         
     }
 
@@ -92,8 +94,24 @@ class FilterDependencyClientTests : BaseQueryLangTest() {
     @DataProvider(name = "compl")
     fun complData() = TestDataProvider()
         .addComplCase(
-            "find buildConfiguration with dep",
+            "find template with dependency snapshot option o",
+            "opt1"
+        )
+        .addComplCase(
+            "find template with dep",
             "dependency"
+        )
+        .addComplCase(
+            "find template with dependency sn",
+            "snapshot"
+        )
+        .addComplCase(
+            "find template with dependency ar",
+            "artifact"
+        )
+        .addComplCase(
+            "find template with dependency snapshot o",
+            "option"
         )
         .end()
 
@@ -119,6 +137,7 @@ class FilterDependencyClientTests : BaseQueryLangTest() {
 
     @Test(dataProvider = "compl")
     fun parametrizedCompletionTests(query: String, expected: List<String>) {
+        sleep(50)
         checkVars(query, expected)
     }
 }

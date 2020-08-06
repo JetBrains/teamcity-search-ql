@@ -3,11 +3,13 @@ package jetbrains.buildServer.server.querylang.tests.client
 import jetbrains.buildServer.server.querylang.parser.QueryParser
 import jetbrains.buildServer.server.querylang.tests.BaseQueryLangTest
 import jetbrains.buildServer.util.StringOption
+import org.testng.annotations.BeforeMethod
 import org.testng.annotations.DataProvider
 import org.testng.annotations.Test
 import kotlin.test.assertFailsWith
 
 class FilterOptionClientTests : BaseQueryLangTest() {
+    @BeforeMethod
     override fun setUp() {
         super.setUp()
 

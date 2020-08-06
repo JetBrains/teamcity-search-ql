@@ -1,11 +1,9 @@
 package jetbrains.buildServer.server.querylang.tests
 
+import com.sun.org.apache.xpath.internal.operations.Bool
 import jetbrains.buildServer.artifacts.RevisionRules
 import jetbrains.buildServer.buildTriggers.BuildTriggerDescriptor
-import jetbrains.buildServer.server.querylang.autocompl.AutoCompletion
-import jetbrains.buildServer.server.querylang.autocompl.Completer
-import jetbrains.buildServer.server.querylang.autocompl.CompletionManager
-import jetbrains.buildServer.server.querylang.autocompl.CompletionResult
+import jetbrains.buildServer.server.querylang.autocompl.*
 import jetbrains.buildServer.server.querylang.parser.ParsingException
 import jetbrains.buildServer.server.querylang.requests.InternalApiQueryHandler
 import jetbrains.buildServer.server.querylang.requests.RequestClient
@@ -19,13 +17,14 @@ import jetbrains.buildServer.util.OptionSupport
 import jetbrains.buildServer.util.StringOption
 import jetbrains.buildServer.vcs.SVcsRoot
 import org.testng.annotations.BeforeMethod
+import java.util.concurrent.TimeUnit
 
 abstract class BaseQueryLangTest : BaseServerTestCase() {
     protected lateinit var client: RequestClient
     protected lateinit var projectManager: ProjectManager
     protected lateinit var autoCompl: AutoCompletion
+    protected lateinit var eventListener: AutocompletionEventListener
 
-    @BeforeMethod
     override fun setUp() {
         super.setUp()
         projectManager = myFixture.projectManager
@@ -36,6 +35,10 @@ abstract class BaseQueryLangTest : BaseServerTestCase() {
         val complm = CompletionManager(myFixture.projectManager)
         val compl = Completer(complm)
         autoCompl = AutoCompletion(myFixture.projectManager, compl)
+
+        val taskQueue = TaskQueue(complm, 20, 0, TimeUnit.MILLISECONDS)
+
+        eventListener = AutocompletionEventListener(taskQueue, projectManager, myFixture.eventDispatcher)
     }
 
     fun getIds(query: String) : List<String> {
@@ -97,11 +100,11 @@ abstract class BaseQueryLangTest : BaseServerTestCase() {
 
     interface TestObject
 
-    abstract class TestStorableObject<T, L> : TestObject {
+    inner abstract class TestStorableObject<T, L> : TestObject {
 
         private var key: String = ""
 
-        protected abstract fun createInner(context: L): T
+        protected abstract fun createInner(context: L, persist: Boolean): T
         protected abstract val storage: MutableMap<String, T>?
 
         fun bind(key_: String): TestStorableObject<T, L> {
@@ -109,10 +112,13 @@ abstract class BaseQueryLangTest : BaseServerTestCase() {
             return this
         }
 
-        fun create(context: L): T {
-            val obj = createInner(context)
+        fun create(context: L, persist: Boolean): T {
+            val obj = createInner(context, persist)
             if (key != "" && storage != null) {
                 storage!![key] = obj
+            }
+            if (persist && obj is SPersistentEntity) {
+                persist(obj)
             }
             return obj
         }
@@ -142,22 +148,22 @@ abstract class BaseQueryLangTest : BaseServerTestCase() {
 
         override val storage = projects
 
-        override fun createInner(parent: ProjectEx): ProjectEx {
+        override fun createInner(parent: ProjectEx, persist: Boolean): ProjectEx {
             val project = myFixture.createProject(id, id, parent)
 
             objects.forEach {obj ->
                 when (obj) {
                     is TProject -> {
-                        obj.create(project)
+                        obj.create(project, persist)
                     }
                     is TBuildConf -> {
-                        obj.create(project)
+                        obj.create(project, persist)
                     }
                     is TTemplate -> {
-                        obj.create(project)
+                        obj.create(project, persist)
                     }
                     is TVcsRoot -> {
-                        obj.create(project)
+                        obj.create(project, persist)
                     }
                 }
             }
@@ -166,8 +172,8 @@ abstract class BaseQueryLangTest : BaseServerTestCase() {
         }
 
 
-        fun create(): ProjectEx {
-            return create(myFixture.projectManager.rootProject)
+        fun create(persist: Boolean = true): ProjectEx {
+            return create(myFixture.projectManager.rootProject, persist)
         }
     }
 
@@ -176,15 +182,15 @@ abstract class BaseQueryLangTest : BaseServerTestCase() {
 
         override val storage = buildConfs
 
-        override fun createInner(pr: ProjectEx): BuildTypeEx {
+        override fun createInner(pr: ProjectEx, persist: Boolean): BuildTypeEx {
             val bt = pr.createBuildType(id, id)
 
             objects.forEach { obj ->
                 when (obj) {
                     is TTempDependency -> obj.create(bt)
-                    is TTrigger -> obj.create(bt)
-                    is TStep -> obj.create(bt)
-                    is TFeature -> obj.create(bt)
+                    is TTrigger -> obj.create(bt, persist)
+                    is TStep -> obj.create(bt, persist)
+                    is TFeature -> obj.create(bt, persist)
                     is TADependency -> obj.create(bt)
                     is TSDependency -> obj.create(bt)
                     is TParam -> obj.create(bt)
@@ -202,14 +208,14 @@ abstract class BaseQueryLangTest : BaseServerTestCase() {
 
         override val storage = templates
 
-        override fun createInner(pr: ProjectEx): BuildTypeTemplateEx {
+        override fun createInner(pr: ProjectEx, persist: Boolean): BuildTypeTemplateEx {
             val temp = pr.createBuildTypeTemplate(id, id)
 
             objects.forEach { obj ->
                 when (obj) {
-                    is TTrigger -> obj.create(temp)
-                    is TStep -> obj.create(temp)
-                    is TFeature -> obj.create(temp)
+                    is TTrigger -> obj.create(temp, persist)
+                    is TStep -> obj.create(temp, persist)
+                    is TFeature -> obj.create(temp, persist)
                     is TADependency -> obj.create(temp)
                     is TSDependency -> obj.create(temp)
                     is TParam -> obj.create(temp)
@@ -227,7 +233,7 @@ abstract class BaseQueryLangTest : BaseServerTestCase() {
     {
         override val storage = vcsRoots
 
-        override fun createInner(context: ProjectEx): SVcsRoot {
+        override fun createInner(context: ProjectEx, persist: Boolean): SVcsRoot {
             val params = mutableListOf<Pair<String, String>>()
             objects.forEach {
                 when(it) {
@@ -244,7 +250,7 @@ abstract class BaseQueryLangTest : BaseServerTestCase() {
 
         override val storage = triggers
 
-        override fun createInner(bt: BuildTypeSettings): BuildTriggerDescriptor {
+        override fun createInner(bt: BuildTypeSettings, persist: Boolean): BuildTriggerDescriptor {
             return bt.addBuildTrigger(type, params.toMap())
         }
     }
@@ -253,7 +259,7 @@ abstract class BaseQueryLangTest : BaseServerTestCase() {
 
         override val storage = steps
 
-        override fun createInner(bt: BuildTypeSettings): BuildRunnerDescriptor {
+        override fun createInner(bt: BuildTypeSettings, persist: Boolean): BuildRunnerDescriptor {
             return bt.addBuildRunner(type, type, params.toMap())
         }
     }
@@ -264,7 +270,7 @@ abstract class BaseQueryLangTest : BaseServerTestCase() {
 
         override val storage = features
 
-        override fun createInner(bt: BuildTypeSettings): SBuildFeatureDescriptor {
+        override fun createInner(bt: BuildTypeSettings, persist: Boolean): SBuildFeatureDescriptor {
             return bt.addBuildFeature(type, params.toMap())
         }
     }
@@ -359,6 +365,7 @@ abstract class BaseQueryLangTest : BaseServerTestCase() {
 
         init {
             setUp()
+            tearDown()
         }
 
         private val tests: MutableList<Pair<String, List<String>>> = mutableListOf()

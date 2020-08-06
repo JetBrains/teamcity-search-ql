@@ -21,6 +21,8 @@ class CompletionManager(val projectManager: ProjectManager) {
     val stepTypeFinder = SimpleStringFinder()
     val featureTypeFinder = SimpleStringFinder()
     val vcsRootTypeFinder = SimpleStringFinder()
+    val snapshotOptionFinder = ParameterValueFinder()
+
     init {
         registerFinder(projectIdFinder, ProjectFilter::class, IdFilter::class)
         registerFinder(projectIdFinder, ParentFilter::class, IdFilter::class)
@@ -35,6 +37,7 @@ class CompletionManager(val projectManager: ProjectManager) {
         registerFinder(stepTypeFinder, StepFilter::class, TypeFilter::class)
         registerFinder(featureTypeFinder, FeatureFilter::class, TypeFilter::class)
         registerFinder(vcsRootTypeFinder, FindVcsRoot::class, TypeFilter::class)
+        registerFinder(snapshotOptionFinder, SnapshotFilter::class, OptionFilter::class)
 
         indexAll()
     }
@@ -93,6 +96,12 @@ class CompletionManager(val projectManager: ProjectManager) {
                 featureParamValueFinder.addParam(name, value)
             }
         }
+
+        bt.dependencies.forEach { dep ->
+            dep.ownOptions.forEach {opt ->
+                snapshotOptionFinder.addParam(opt.key, dep.getOption(opt).toString())
+            }
+        }
     }
 
     fun updateTemplate(temp: BuildTypeTemplate) {
@@ -113,6 +122,12 @@ class CompletionManager(val projectManager: ProjectManager) {
             featureTypeFinder.addString(feat.type)
             feat.parameters.forEach {name, value ->
                 featureParamValueFinder.addParam(name, value)
+            }
+        }
+
+        temp.dependencies.forEach { dep ->
+            dep.ownOptions.forEach {opt ->
+                snapshotOptionFinder.addParam(opt.key, dep.getOption(opt).toString())
             }
         }
     }
