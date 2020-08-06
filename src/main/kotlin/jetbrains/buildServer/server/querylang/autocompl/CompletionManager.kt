@@ -1,17 +1,18 @@
 package jetbrains.buildServer.server.querylang.autocompl
 
+import jetbrains.buildServer.server.querylang.ast.*
 import jetbrains.buildServer.serverSide.BuildTypeTemplate
 import jetbrains.buildServer.serverSide.ProjectManager
 import jetbrains.buildServer.serverSide.SBuildType
 import jetbrains.buildServer.serverSide.SProject
 import jetbrains.buildServer.vcs.SVcsRoot
+import kotlin.reflect.KClass
 
 class CompletionManager(val projectManager: ProjectManager) {
     val map: MutableMap<String, StringFinder> = mutableMapOf()
     val projectIdFinder = SimpleStringFinder()
     val buildConfIdFinder = SimpleStringFinder()
     val templateIdFinder = SimpleStringFinder()
-    val buildConfOrTempIdFinder = CombinedStringFinder(buildConfIdFinder, templateIdFinder)
     val vcsRootIdFinder = SimpleStringFinder()
     val triggerParamValueFinder = ParameterValueFinder()
     val stepParamValueFinder = ParameterValueFinder()
@@ -21,24 +22,40 @@ class CompletionManager(val projectManager: ProjectManager) {
     val featureTypeFinder = SimpleStringFinder()
     val vcsRootTypeFinder = SimpleStringFinder()
     init {
-        map["project_id"] = projectIdFinder
-        map["parent_id"] = projectIdFinder
-        map["ancestor_id"] = projectIdFinder
-        map["ancestor_id"] = projectIdFinder
-        map["ancestorOrSelf_id"] = projectIdFinder
-        map["trigger_param"] = triggerParamValueFinder
-        map["step_param"] = stepParamValueFinder
-        map["feature_param"] = featureParamValueFinder
-        map["buildConfiguration_id"] = buildConfIdFinder
-        map["template_id"] = templateIdFinder
-        map["vcsRoot_id"] = vcsRootIdFinder
-        map["trigger_type"] = triggerTypeFinder
-        map["step_type"] = stepTypeFinder
-        map["feature_type"] = featureTypeFinder
-        map["buildConfOrTemp_id"] = buildConfOrTempIdFinder
-        map["vcsRoot_type"] = vcsRootTypeFinder
+        registerFinder(projectIdFinder, ProjectFilter::class, IdFilter::class)
+        registerFinder(projectIdFinder, ParentFilter::class, IdFilter::class)
+        registerFinder(projectIdFinder, AncestorFilter::class, IdFilter::class)
+        registerFinder(triggerParamValueFinder, TriggerFilter::class, ParameterFilter::class)
+        registerFinder(stepParamValueFinder, StepFilter::class, ParameterFilter::class)
+        registerFinder(featureParamValueFinder, FeatureFilter::class, ParameterFilter::class)
+        registerFinder(buildConfIdFinder, FindBuildConf::class, IdFilter::class)
+        registerFinder(templateIdFinder, FindTemplate::class, IdFilter::class)
+        registerFinder(vcsRootIdFinder, FindVcsRoot::class, IdFilter::class)
+        registerFinder(triggerTypeFinder, TriggerFilter::class, TypeFilter::class)
+        registerFinder(stepTypeFinder, StepFilter::class, TypeFilter::class)
+        registerFinder(featureTypeFinder, FeatureFilter::class, TypeFilter::class)
+        registerFinder(vcsRootTypeFinder, FindVcsRoot::class, TypeFilter::class)
 
         indexAll()
+    }
+
+    private fun registerFinder(sf: StringFinder, vararg nameContext: KClass<out Named>) {
+        val vars = nameContext.map { Named.getNames(it) }
+
+        addToMapWithPrefix(sf, "", vars)
+    }
+
+    private fun addToMapWithPrefix(sf: StringFinder, prefix: String, vars: List<List<String>>) {
+        if (vars.isEmpty()) {
+            map[prefix] = sf
+            return
+        }
+
+        vars.first().forEach { str ->
+            val newprefix = if (prefix.isEmpty()) str else prefix + "_" + str
+
+            addToMapWithPrefix(sf, newprefix, vars.drop(1))
+        }
     }
 
     private fun indexAll() {
