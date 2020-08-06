@@ -24,6 +24,7 @@ repositories {
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
     antlr "org.antlr:antlr4:4.8"
+    implementation "org.antlr:antlr4-runtime:4.8"
     implementation "org.jetbrains.kotlin:kotlin-reflect:1.3.72"
     implementation "org.jetbrains.kotlin:kotlin-test:1.3.72"
     implementation "org.reflections:reflections:0.9.12"
@@ -32,6 +33,12 @@ dependencies {
     provided fileTree(dir: "$rootProject.ext.teamcityLibs", include: ['*.jar'])
     testImplementation fileTree(dir: "$rootProject.ext.teamcityTestLibs", include: ['*.jar'])
     testImplementation("org.testng:testng:6.8")
+}
+
+configurations {
+    compile {
+        extendsFrom = extendsFrom.findAll { it != configurations.antlr }
+    }
 }
 
 test {
@@ -47,14 +54,14 @@ compileTestKotlin {
     kotlinOptions.jvmTarget = "1.8"
 }
 
-generateGrammarSource {
-    outputDirectory = file("src/main/java/jetbrains/buildServer/server/querylang/parser")
-    arguments += ['-visitor', '-long-messages']
-}
-
 teamcity {
     version = '2020.1'
     server {
         descriptor = file("teamcity-plugin.xml")
     }
+}
+
+generateGrammarSource {
+    outputDirectory = file("src/main/java/jetbrains/buildServer/server/querylang/parser")
+    arguments += ['-visitor', '-long-messages']
 }

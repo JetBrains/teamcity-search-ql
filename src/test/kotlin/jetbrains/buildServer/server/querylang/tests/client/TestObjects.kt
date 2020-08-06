@@ -1,5 +1,0 @@
-package jetbrains.buildServer.server.querylang.tests.client
-
-import jetbrains.buildServer.serverSide.BuildTypeEx
-import jetbrains.buildServer.serverSide.BuildTypeTemplateEx
-import jetbrains.buildServer.serverSide.SProject
