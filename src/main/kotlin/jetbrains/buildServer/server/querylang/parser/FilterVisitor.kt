@@ -114,4 +114,10 @@ class FilterVisitor<T : Filter>(
 
     override fun visitSnapshotFilter(ctx: QLangGrammarParser.SnapshotFilterContext?) =
         SnapshotFilter().transform(ctx!!)
+
+    override fun visitOptionFilter(ctx: QLangGrammarParser.OptionFilterContext?) =
+        OptionFilter(
+            ctx!!.parameterName().accept(StringConditionVisitor),
+            ctx.parameterValue().accept(StringConditionVisitor)
+        ).transform(ctx)
 }

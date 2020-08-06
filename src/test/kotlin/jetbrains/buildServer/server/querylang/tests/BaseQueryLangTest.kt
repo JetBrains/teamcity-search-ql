@@ -10,6 +10,8 @@ import jetbrains.buildServer.serverSide.*
 import jetbrains.buildServer.serverSide.dependency.DependencySettings
 import jetbrains.buildServer.serverSide.impl.BaseServerTestCase
 import jetbrains.buildServer.serverSide.impl.ProjectEx
+import jetbrains.buildServer.util.OptionSupport
+import jetbrains.buildServer.util.StringOption
 import jetbrains.buildServer.vcs.SVcsRoot
 import org.testng.annotations.BeforeMethod
 
@@ -160,6 +162,7 @@ abstract class BaseQueryLangTest : BaseServerTestCase() {
                     is TSDependency -> obj.create(bt)
                     is TParam -> obj.create(bt)
                     is TVcsInst -> obj.create(bt)
+                    is TOption -> obj.create(bt)
                 }
             }
 
@@ -184,6 +187,7 @@ abstract class BaseQueryLangTest : BaseServerTestCase() {
                     is TSDependency -> obj.create(temp)
                     is TParam -> obj.create(temp)
                     is TVcsInst -> obj.create(temp)
+                    is TOption -> obj.create(temp)
                 }
             }
             return temp
@@ -307,12 +311,15 @@ abstract class BaseQueryLangTest : BaseServerTestCase() {
         }
     }
 
-    inner class TParam(val name: String, val v: String) :
-        TestObject
-    {
-
+    inner class TParam(val name: String, val v: String) : TestObject {
         fun create(bt: UserParametersHolder) {
             bt.addParameter(SimpleParameter(name, v))
+        }
+    }
+
+    inner class TOption(val name: String, val value: String) : TestObject {
+        fun create(bt: OptionSupport) {
+            bt.setOption(StringOption(name, ""), value)
         }
     }
 

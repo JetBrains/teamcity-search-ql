@@ -582,6 +582,18 @@ public class QLangGrammarBaseListener implements QLangGrammarListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterOptionFilter(QLangGrammarParser.OptionFilterContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitOptionFilter(QLangGrammarParser.OptionFilterContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterStringConditionFilter(QLangGrammarParser.StringConditionFilterContext ctx) { }
 	/**
 	 * {@inheritDoc}

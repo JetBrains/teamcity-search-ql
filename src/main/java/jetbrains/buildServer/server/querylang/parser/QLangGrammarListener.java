@@ -498,6 +498,16 @@ public interface QLangGrammarListener extends ParseTreeListener {
 	 */
 	void exitSnapshotFilter(QLangGrammarParser.SnapshotFilterContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link QLangGrammarParser#optionFilter}.
+	 * @param ctx the parse tree
+	 */
+	void enterOptionFilter(QLangGrammarParser.OptionFilterContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link QLangGrammarParser#optionFilter}.
+	 * @param ctx the parse tree
+	 */
+	void exitOptionFilter(QLangGrammarParser.OptionFilterContext ctx);
+	/**
 	 * Enter a parse tree produced by the {@code stringConditionFilter}
 	 * labeled alternative in {@link QLangGrammarParser#stringCondition}.
 	 * @param ctx the parse tree

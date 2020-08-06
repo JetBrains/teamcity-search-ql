@@ -7,7 +7,8 @@ data class AllFilterModifier(private val placeholder: String = "") : FilterModif
         StepFilter::class.java.connect { it.includeInherited = true },
         FeatureFilter::class.java.connect { it.includeInherited = true },
         ParameterFilter::class.java.connect { it.includeInherited = true },
-        DependencyFilter::class.java.connect { it.includeInhereted = true }
+        DependencyFilter::class.java.connect { it.includeInhereted = true },
+        OptionFilter::class.java.connect { it.includeInherited = true }
     )
 
     override val names = Companion.names

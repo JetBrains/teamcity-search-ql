@@ -348,6 +348,13 @@ public class QLangGrammarBaseVisitor<T> extends AbstractParseTreeVisitor<T> impl
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
+	@Override public T visitOptionFilter(QLangGrammarParser.OptionFilterContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
 	@Override public T visitStringConditionFilter(QLangGrammarParser.StringConditionFilterContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}

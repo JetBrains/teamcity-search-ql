@@ -101,6 +101,18 @@ object BuildConfFilterBuilder : FilterBuilder<BuildConfFilterType, SBuildType> {
                 }
             }
 
+            is OptionFilter -> {
+                val nameFilter = StringFilterBuilder.createFilter(filter.nameCondition)
+                val valFilter = StringFilterBuilder.createFilter(filter.valueCondition)
+                ObjectFilter {bt ->
+                    val options = if (filter.includeInherited) bt.options
+                                  else bt.ownOptions
+                    options.any {opt ->
+                        nameFilter.accepts(opt.key) && valFilter.accepts(bt.getOption(opt).toString())
+                    }
+                }
+            }
+
             else -> throw IllegalStateException("Unknow BCFilter")
         }
     }

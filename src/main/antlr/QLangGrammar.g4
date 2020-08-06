@@ -58,6 +58,7 @@ filter : idFilter
        | dependencyFilter
        | artifactFilter
        | snapshotFilter
+       | optionFilter
        ;
 
 condition : filter                     #conditionFilter
@@ -93,6 +94,7 @@ checkoutRulesFilter : RULES modifierList? checkoutRulesString ;
 dependencyFilter : DEPENDENCY modifierList? filterOrCondition ;
 artifactFilter : ARTIFACT modifierList?;
 snapshotFilter : SNAPSHOT modifierList?;
+optionFilter : OPTION modifierList? parameterName '=' parameterValue ;
 
 
 stringCondition : stringFilter                         #stringConditionFilter

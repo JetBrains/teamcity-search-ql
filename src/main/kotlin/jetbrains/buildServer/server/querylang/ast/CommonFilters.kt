@@ -127,7 +127,7 @@ data class ParameterFilter(
     companion object : Names("param")
     override val names = ParameterFilter.names
 
-    override fun createStr() = "param ${nameCondition.createStr()}=(${valueCondition.createStr()})"
+    override fun createStr() = "param (${nameCondition.createStr()})=(${valueCondition.createStr()})"
 
     var includeInherited = false
 }
@@ -185,4 +185,16 @@ data class SnapshotFilter(
 ) : EmptyTerminalFilter, DependencyFilterType {
     companion object : Names("snapshot")
     override val names = Companion.names
+}
+
+data class OptionFilter(
+    val nameCondition: ConditionAST<StringFilter>,
+    val valueCondition: ConditionAST<StringFilter>,
+    var includeInherited: Boolean = false
+) : BuildConfFilterType, TemplateFilterType {
+    companion object : Names("option")
+
+    override val names = Companion.names
+
+    override fun createStr() = "option (${nameCondition.createStr()})=(${valueCondition.createStr()})"
 }

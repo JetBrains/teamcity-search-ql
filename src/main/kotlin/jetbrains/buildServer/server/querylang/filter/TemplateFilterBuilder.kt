@@ -73,6 +73,17 @@ object TemplateFilterBuilder : FilterBuilder<TemplateFilterType, BuildTypeTempla
                             || buildType.artifactDependencies.any {dependencyFilter.accepts(it.sourceBuildType)}
                 }
             }
+            is OptionFilter -> {
+                val nameFilter = StringFilterBuilder.createFilter(filter.nameCondition)
+                val valFilter = StringFilterBuilder.createFilter(filter.valueCondition)
+                ObjectFilter {temp ->
+                    val options = if (filter.includeInherited) temp.options
+                    else temp.ownOptions
+                    options.any {opt ->
+                        nameFilter.accepts(opt.key) && valFilter.accepts(temp.getOption(opt).toString())
+                    }
+                }
+            }
             else -> throw java.lang.IllegalStateException("Unknow TemplateFilterType")
         }
     }
