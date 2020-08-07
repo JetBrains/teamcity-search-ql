@@ -19,12 +19,12 @@ class PartialQueryTests {
         val res = compl.complete(query).map { it.result }
         val expected = listOf(
             "find project with ancestor(id BaseProject)",
-            "find project,buildConfiguration,template,vcsRoot with parent(id BaseProject)",
-            "find project,buildConfiguration,template,vcsRoot with project(id BaseProject)",
-            "find buildConfiguration with template(id BaseProject)",
-            "find buildConfiguration,template with vcsRoot(id BaseProject)",
-            "find buildConfiguration,template with dependency(id BaseProject)",
-            "find project,buildConfiguration,template,vcsRoot with id BaseProject"
+            "find project,configuration,template,vcsRoot with parent(id BaseProject)",
+            "find project,configuration,template,vcsRoot with project(id BaseProject)",
+            "find configuration with template(id BaseProject)",
+            "find configuration,template with vcsRoot(id BaseProject)",
+            "find configuration,template with dependency(id BaseProject)",
+            "find project,configuration,template,vcsRoot with id BaseProject"
         )
 
         assertEquals(expected, res)
@@ -35,10 +35,10 @@ class PartialQueryTests {
 
         val res = compl.complete(query).map { it.result }
         val expected = listOf(
-            "find buildConfiguration,template with feature(type vcsTrigger)",
-            "find buildConfiguration,template with step(type vcsTrigger)",
-            "find buildConfiguration,template with trigger(type vcsTrigger)",
-            "find buildConfiguration,template with vcsRoot(type vcsTrigger)",
+            "find configuration,template with feature(type vcsTrigger)",
+            "find configuration,template with step(type vcsTrigger)",
+            "find configuration,template with trigger(type vcsTrigger)",
+            "find configuration,template with vcsRoot(type vcsTrigger)",
             "find vcsRoot with type vcsTrigger"
         )
 
@@ -50,7 +50,7 @@ class PartialQueryTests {
 
         val res = compl.complete(query).map { it.result }
         val expected = listOf(
-            """find buildConfiguration with template(param ("path&1")=("Base^"* and *"Project*"))"""
+            """find configuration with template(param ("path&1")=("Base^"* and *"Project*"))"""
         )
 
         assertEquals(expected.first(), res.first())

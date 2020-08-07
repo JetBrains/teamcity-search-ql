@@ -13,13 +13,13 @@ internal class KeywordAutocomletionTests {
 
     fun testFindAutoCompleteon() {
         val query = """
-            find buil
+            find conf
         """.trimIndent()
 
         val vars = autoCompl.complete(query).map {it.show}
 
         assertEquals(1, vars.size)
-        assertEquals("buildConfiguration", vars[0])
+        assertEquals("configuration", vars[0])
     }
 
     

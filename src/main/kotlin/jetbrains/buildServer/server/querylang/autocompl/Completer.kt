@@ -142,7 +142,7 @@ class Completer(val completionManager: CompletionManager? = null) {
             !it.isInterface && !(it.kotlin.isSubclassOf(StringFilter::class))
         }
 
-        graph["root"] = topLevelClasses.flatMap {getNames(it)}.toMutableList()
+        graph["root"] = topLevelClasses.map {getNames(it).first()}.toMutableList()
         filters.forEach { filterClass ->
             getNames(filterClass).forEach {filterName ->
                 graph[filterName] = mutableListOf()
@@ -166,7 +166,7 @@ class Completer(val completionManager: CompletionManager? = null) {
                 filters.filter { it.kotlin.isSubclassOf(filterClass.kotlin) }.forEach { filter ->
                     val subFilterNames = getNames(filter)
                     filterNames.forEach { filterName ->
-                        graph[filterName]!!.addAll(subFilterNames)
+                        graph[filterName]!!.add(subFilterNames.first())
                     }
                 }
             }

@@ -14,7 +14,7 @@ data class FindProject(override val condition: ConditionAST<ProjectFilterType>) 
 }
 
 data class FindBuildConf(override val condition: ConditionAST<BuildConfFilterType>) : TopLevelQuery<BuildConfFilterType>(), BuildConfComplexFilter {
-    companion object : Names("buildConfiguration", "configuration")
+    companion object : Names("configuration", "buildConfiguration")
     override val names = FindBuildConf.names
 }
 
