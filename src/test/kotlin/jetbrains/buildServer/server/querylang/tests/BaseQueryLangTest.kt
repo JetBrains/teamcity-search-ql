@@ -297,21 +297,22 @@ abstract class BaseQueryLangTest : BaseServerTestCase() {
             options.forEach { it.create(dep) }
         }
     }
-    inner class TADependency private constructor(val rules: String) :
+    inner class TADependency private constructor(val rules: String, val isClean: Boolean) :
         TestReferenceObject<BuildTypeSettings, BuildTypeEx>()
     {
         override val storage = buildConfs
 
-        constructor(ref_: String, rules: String): this(rules) {
+        constructor(ref_: String, rules: String, isClean: Boolean): this(rules, isClean) {
             ref = ref_
         }
 
-        constructor(obj_: BuildTypeEx, rules: String): this(rules) {
+        constructor(obj_: BuildTypeEx, rules: String, isClean: Boolean): this(rules, isClean) {
             obj = obj_
         }
 
         override fun createInner(to: BuildTypeSettings, from: BuildTypeEx) {
             val dep = myFixture.artifactDependencyFactory.createArtifactDependency(from, rules, RevisionRules.LAST_FINISHED_RULE)
+            dep.isCleanDestinationFolder = isClean
             to.addArtifactDependency(dep)
         }
     }

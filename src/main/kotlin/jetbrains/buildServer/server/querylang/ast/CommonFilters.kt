@@ -208,3 +208,13 @@ data class OptionFilter(
 
     override fun createStr() = "option (${nameCondition.createStr()})=(${valueCondition.createStr()})"
 }
+
+data class CleanFilter(
+    private val placeholder: String = ""
+) : EmptyTerminalFilter,
+    ArtifactDepFilterType
+{
+    companion object : Names("clean")
+
+    override val names = Companion.names
+}

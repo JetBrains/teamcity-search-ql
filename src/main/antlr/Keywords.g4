@@ -34,6 +34,7 @@ import java.util.*;
         putToKeywords(SnapshotFilter.Companion.getNames(), QLangGrammarParser.SNAPSHOT);
         putToKeywords(AllFilterModifier.Companion.getNames(), QLangGrammarParser.ALL);
         putToKeywords(OptionFilter.Companion.getNames(), QLangGrammarParser.OPTION);
+        putToKeywords(CleanFilter.Companion.getNames(), QLangGrammarParser.CLEAN);
     }
 
     private void putToKeywords(List<String> filterNames, Integer tokenType) {
@@ -47,7 +48,7 @@ tokens {
        PROJECT, TEMPLATE, BUILD_CONFIGURATION, VCS_ROOT,
        ID, PARENT, TRIGGER, STEP, FEATURE, TYPE, PARAM, VAL,
        ENABLED, ANCESTOR, RULES, DEPENDENCY,
-       ARTIFACT, SNAPSHOT, ALL, OPTION
+       ARTIFACT, SNAPSHOT, ALL, OPTION, CLEAN
 }
 
 fragment DIGIT: [0-9] ;

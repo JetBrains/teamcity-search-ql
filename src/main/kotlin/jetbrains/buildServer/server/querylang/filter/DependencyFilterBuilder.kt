@@ -21,9 +21,9 @@ object DependencyFilterBuilder : FilterBuilder<DependencyFilterType, DependencyF
                 }
             }
             is ArtifactFilter -> {
-                val buildType = context as? BuildTypeSettings ?: throw IllegalStateException("Context should be BuildTypeSettings")
+                val confFilter = ArtifactFilterBuilder.createFilter(filter.condition)
                 ObjectFilter {obj ->
-                    buildType.artifactDependencies.any {it.sourceBuildType!!.externalId == obj.dependOn?.externalId}
+                    (obj is MyArtifactDependency) && confFilter.accepts(obj)
                 }
             }
             is SnapshotFilter -> {

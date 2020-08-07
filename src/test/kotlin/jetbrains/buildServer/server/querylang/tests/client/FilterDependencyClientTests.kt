@@ -24,7 +24,7 @@ class FilterDependencyClientTests : BaseQueryLangTest() {
             ).bind("b2"),
 
             TBuildConf("btest4",
-                TADependency("b2", "qwerqwreqerq")
+                TADependency("b2", "qwerqwreqerq", false)
             ).bind("b4"),
 
             TTemplate("temp1",
@@ -34,7 +34,7 @@ class FilterDependencyClientTests : BaseQueryLangTest() {
             ).bind("t1"),
 
             TTemplate("temp2",
-                TADependency("b4", "abacabadaba")
+                TADependency("b4", "abacabadaba", false)
             ).bind("t2"),
 
             TTemplate("temp3",
@@ -43,13 +43,18 @@ class FilterDependencyClientTests : BaseQueryLangTest() {
                 )
             ).bind("t3"),
 
+            TTemplate("temp4",
+                TADependency("b4", "yuiouiyiioy", true)
+            ).bind("t4"),
+
             TBuildConf("test5",
                 TTempDependency("t1"),
-                TADependency("b3", "zxcvzxcvzc")
+                TTempDependency("t2"),
+                TADependency("b3", "zxcvzxcvzc", true)
             ).bind("b5"),
 
             TBuildConf("test6",
-                TADependency("b4", "irotiirtroi")
+                TADependency("b4", "irotiirtroi", false)
             ).bind("b6")
         ).create(true)
         
@@ -71,7 +76,7 @@ class FilterDependencyClientTests : BaseQueryLangTest() {
         )
         .addTempCase(
             "find template with dependency (id *4 and artifact)",
-            "t2"
+            "t2", "t4"
         )
         .addBCCase(
             "find buildConfiguration with dependency (id *4 and (snapshot or artifact))",
@@ -96,6 +101,14 @@ class FilterDependencyClientTests : BaseQueryLangTest() {
         .addBCCase(
             "find buildConfiguration with dependency (artifact (rules *tii*) and dependency (artifact rules *wer*))",
             "b6"
+        )
+        .addBCCase(
+            "find buildConfiguration with dependency artifact(not clean)",
+            "b6", "b4"
+        )
+        .addBCCase(
+            "find buildConfiguration with dependency[all] artifact(not clean)",
+            "b4", "b5", "b6"
         )
         .end()
 
@@ -127,7 +140,7 @@ class FilterDependencyClientTests : BaseQueryLangTest() {
         )
         .addComplCase(
             "find template with dependency artifact ",
-            "rules"
+            "rules", "clean"
         )
         .addComplCase(
             "find buildConfiguration with dependency artifact rules zxc",
@@ -136,6 +149,10 @@ class FilterDependencyClientTests : BaseQueryLangTest() {
         .addComplCase(
             "find template with dependency artifact rules abac",
             "abacabadaba"
+        )
+        .addComplCase(
+            "find template with dependency artifact c",
+            "clean"
         )
         .end()
 
