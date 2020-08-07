@@ -30,6 +30,7 @@ DEPENDENCY : 'dependency' ;
 ARTIFACT : 'artifact' ;
 SNAPSHOT : 'snapshot' ;
 ALL : 'all' ;
+OPTION : 'option' ;
 
 STRING: '"' (~[\t\r\n"] | '""')* '"';
 IDENT: (LET | DIGIT | '_' | '.' | '-')+;

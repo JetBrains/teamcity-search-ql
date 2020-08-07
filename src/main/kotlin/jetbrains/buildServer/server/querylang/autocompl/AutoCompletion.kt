@@ -32,9 +32,6 @@ class AutoCompletion(
         if (start.children == null) {
             return emptyList()
         }
-        if (start.children.size > 2) {
-            return emptyList()
-        }
 
         val treeFindNode = start.find()
         val treePartNode = start.partialQuery()
