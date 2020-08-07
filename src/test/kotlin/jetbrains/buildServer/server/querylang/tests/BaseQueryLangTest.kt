@@ -10,6 +10,7 @@ import jetbrains.buildServer.server.querylang.requests.InternalApiQueryHandler
 import jetbrains.buildServer.server.querylang.requests.RequestClient
 import jetbrains.buildServer.server.querylang.tests.client.EmptyResultPrinter
 import jetbrains.buildServer.serverSide.*
+import jetbrains.buildServer.serverSide.db.schema.TableKeyDef
 import jetbrains.buildServer.serverSide.dependency.DependencySettings
 import jetbrains.buildServer.serverSide.impl.BaseServerTestCase
 import jetbrains.buildServer.serverSide.impl.ProjectEx
@@ -17,6 +18,7 @@ import jetbrains.buildServer.util.Option
 import jetbrains.buildServer.util.OptionSupport
 import jetbrains.buildServer.util.StringOption
 import jetbrains.buildServer.vcs.SVcsRoot
+import org.testng.annotations.AfterMethod
 import org.testng.annotations.BeforeMethod
 import java.util.concurrent.TimeUnit
 
@@ -25,7 +27,10 @@ abstract class BaseQueryLangTest : BaseServerTestCase() {
     protected lateinit var projectManager: ProjectManager
     protected lateinit var autoCompl: AutoCompletion
     protected lateinit var eventListener: AutocompletionEventListener
+    protected lateinit var taskQueue: TaskQueue
 
+
+    @BeforeMethod(alwaysRun = true)
     override fun setUp() {
         super.setUp()
         projectManager = myFixture.projectManager
@@ -37,9 +42,17 @@ abstract class BaseQueryLangTest : BaseServerTestCase() {
         val compl = Completer(complm)
         autoCompl = AutoCompletion(myFixture.projectManager, compl)
 
-        val taskQueue = TaskQueue(complm, 20, 0, TimeUnit.MILLISECONDS)
+        taskQueue = TaskQueue(complm, 20, 0, TimeUnit.MILLISECONDS)
 
         eventListener = AutocompletionEventListener(taskQueue, projectManager, myFixture.eventDispatcher)
+    }
+
+
+    @AfterMethod(alwaysRun = true)
+    override fun tearDown() {
+        super.tearDown()
+
+        taskQueue.destroy()
     }
 
     fun getIds(query: String) : List<String> {
@@ -165,6 +178,9 @@ abstract class BaseQueryLangTest : BaseServerTestCase() {
                     }
                     is TVcsRoot -> {
                         obj.create(project, persist)
+                    }
+                    is TProjectFeature -> {
+                        obj.create(project)
                     }
                 }
             }
@@ -364,6 +380,12 @@ abstract class BaseQueryLangTest : BaseServerTestCase() {
     inner class TParam(val name: String, val v: String) : TestObject {
         fun create(bt: UserParametersHolder) {
             bt.addParameter(SimpleParameter(name, v))
+        }
+    }
+
+    inner class TProjectFeature(val type: String, vararg val params: Pair<String, String>) : TestObject {
+        fun create(pr: ProjectEx) {
+            pr.addFeature(type, params.toMap())
         }
     }
 

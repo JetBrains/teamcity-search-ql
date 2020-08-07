@@ -1,0 +1,105 @@
+package jetbrains.buildServer.server.querylang.tests.client
+
+import jetbrains.buildServer.server.querylang.parser.QueryParser
+import jetbrains.buildServer.server.querylang.tests.BaseQueryLangTest
+import org.testng.annotations.BeforeMethod
+import org.testng.annotations.DataProvider
+import org.testng.annotations.Test
+import kotlin.test.assertFailsWith
+
+class SearchProjectTests : BaseQueryLangTest() {
+
+    @BeforeMethod
+    override fun setUp() {
+        super.setUp()
+
+        TProject("BaseProject",
+            TProjectFeature("pfeat1", Pair("path", "abc")),
+
+            TProject("Project1",
+                TProjectFeature("qwerty", Pair("abc", "bcd")),
+
+                TProject("Project2").bind("p2")
+            ).bind("p1"),
+
+            TProject("Project3",
+                TProjectFeature("pfeat2")
+            ).bind("p3")
+
+        ).bind("p0")
+            .create(myFixture.projectManager.rootProject, true)
+
+    }
+
+    @DataProvider(name = "data")
+    fun dataProvider() = TestDataProvider()
+        .addProjectCase(
+            "find project with feature type pfeat1",
+            "p0"
+        )
+        .addProjectCase(
+            "find project with feature[all] type pfeat1",
+            "p0", "p1", "p2", "p3"
+        )
+        .addProjectCase(
+            "find project with feature param abc=bcd",
+            "p1"
+        )
+        .end()
+
+    @DataProvider(name = "compl")
+    fun complData() = TestDataProvider()
+        .addComplCase(
+            "find proje",
+            "project"
+        )
+        .addComplCase(
+            "find project",
+            "project"
+        )
+        .addComplCase(
+            "find project with fe",
+            "feature"
+        )
+        .addComplCase(
+            "find project with feature ty",
+            "type"
+        )
+        .addComplCase(
+            "find project with feature type pf",
+            "pfeat1", "pfeat2"
+        )
+        .addComplCase(
+            "find project with feature param pa",
+            "path"
+        )
+        .addComplCase(
+            "find project with feature param path=",
+            "path=abc"
+        )
+        .end()
+
+    @DataProvider(name = "failed")
+    fun failedData() = TestFailedDataProvdier()
+
+        .end()
+
+
+    @Test(dataProvider = "data")
+    fun parametrizedTest(query: String, expected: List<String>) {
+        val actual = getIds(query)
+
+        assertEquals(expected.sorted(), actual)
+    }
+
+    @Test(dataProvider = "failed")
+    fun parametrizedFailedParsingTest(query: String, exc: Class<out Exception>) {
+        assertFailsWith(exc.kotlin) { QueryParser.parse(query)}
+    }
+
+    @Test(dataProvider = "compl")
+    fun parametrizedCompletionTests(query: String, expected: List<String>) {
+        Thread.sleep(50)
+        checkVars(query, expected)
+    }
+}

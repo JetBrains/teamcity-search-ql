@@ -22,6 +22,7 @@
       <class name="jetbrains.buildServer.server.querylang.tests.client.FilterDependencyClientTests" />
       <class name="jetbrains.buildServer.server.querylang.tests.client.FilterOptionClientTests" />
       <class name="jetbrains.buildServer.server.querylang.tests.client.SearchBuildConfigurationTests" />
+      <class name="jetbrains.buildServer.server.querylang.tests.client.SearchProjectTests" />
     </classes>
   </test>
 </suite>

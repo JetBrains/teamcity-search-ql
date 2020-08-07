@@ -78,6 +78,13 @@ class CompletionManager(val projectManager: ProjectManager) {
 
     fun updateProject(project: SProject) {
         projectIdFinder.addString(project.externalId)
+
+        project.ownFeatures.forEach {feat ->
+            featureTypeFinder.addString(feat.type)
+            feat.parameters.forEach { (name, value) ->
+                featureParamValueFinder.addParam(name, value)
+            }
+        }
     }
 
     fun updateBuildType(bt: SBuildType) {

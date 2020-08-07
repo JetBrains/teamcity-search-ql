@@ -27,6 +27,11 @@ class TaskQueue(
         )
     }
 
+
+    fun destroy() {
+        scheduledExecutor.shutdown()
+    }
+
     constructor(compl: CompletionManager): this(compl, 300, 0, TimeUnit.SECONDS)
 
     fun addBuildType(bt: SBuildType) {

@@ -81,7 +81,8 @@ data class FeatureFilter(
 ) :
     ParHolderComplexFilter,
     BuildConfFilterType,
-    TemplateFilterType
+    TemplateFilterType,
+    ProjectFilterType
 {
     companion object : Names("feature")
     override val names = Companion.names

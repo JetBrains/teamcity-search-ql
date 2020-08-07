@@ -30,6 +30,17 @@ object ProjectFilterBuilder : FilterBuilder<ProjectFilterType, SProject> {
                     hasSuitableAncestor(project, conditionFilter)
                 }
             }
+            is FeatureFilter -> {
+                val condFilter = ParHolderFilterBuilder.createFilter(filter.condition)
+                ObjectFilter {project ->
+                    val features = if (filter.includeInherited) project.availableFeatures
+                                   else project.ownFeatures
+
+                    features.any { feat ->
+                        condFilter.accepts(feat)
+                    }
+                }
+            }
             else -> throw java.lang.IllegalStateException("Unknow ProjectFilterType")
         }
     }
