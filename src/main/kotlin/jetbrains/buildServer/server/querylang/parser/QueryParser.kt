@@ -16,6 +16,7 @@ object QueryParser {
         FilterTypeRegistration.connectFilterType(VcsRootEntryComplexFilter::class.java)
         FilterTypeRegistration.connectFilterType(DependencyComplexFilter::class.java)
         FilterTypeRegistration.connectFilterType(SnapshotDepComplexFilter::class.java)
+        FilterTypeRegistration.connectFilterType(ArtifactDepComplexFilter::class.java)
     }
 
     fun parse(input: String): MainQuery {

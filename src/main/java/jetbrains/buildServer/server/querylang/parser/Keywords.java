@@ -115,7 +115,7 @@ public class Keywords extends Lexer {
 	        putToKeywords(ValueFilter.Companion.getNames(), QLangGrammarParser.VAL);
 	        putToKeywords(EnabledFilter.Companion.getNames(), QLangGrammarParser.ENABLED);
 	        putToKeywords(AncestorFilter.Companion.getNames(), QLangGrammarParser.ANCESTOR);
-	        putToKeywords(CheckoutRulesFilter.Companion.getNames(), QLangGrammarParser.RULES);
+	        putToKeywords(RulesFilter.Companion.getNames(), QLangGrammarParser.RULES);
 	        putToKeywords(DependencyFilter.Companion.getNames(), QLangGrammarParser.DEPENDENCY);
 	        putToKeywords(ArtifactFilter.Companion.getNames(), QLangGrammarParser.ARTIFACT);
 	        putToKeywords(SnapshotFilter.Companion.getNames(), QLangGrammarParser.SNAPSHOT);

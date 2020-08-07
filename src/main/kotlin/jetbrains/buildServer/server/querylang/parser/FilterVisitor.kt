@@ -100,7 +100,7 @@ class FilterVisitor<T : Filter>(
         ).transform(ctx)
 
     override fun visitCheckoutRulesFilter(ctx: QLangGrammarParser.CheckoutRulesFilterContext?) =
-        CheckoutRulesFilter(
+        RulesFilter(
             ctx!!.checkoutRulesString().accept(StringConditionVisitor)
         ).transform(ctx)
 
@@ -110,7 +110,9 @@ class FilterVisitor<T : Filter>(
         ).transform(ctx)
 
     override fun visitArtifactFilter(ctx: QLangGrammarParser.ArtifactFilterContext?) =
-        ArtifactFilter().transform(ctx!!)
+        ArtifactFilter(
+            ctx!!.filterOrCondition()?.accept(artifactConditionVisitor) ?: EmptyConditionNode()
+        ).transform(ctx)
 
     override fun visitSnapshotFilter(ctx: QLangGrammarParser.SnapshotFilterContext?) =
         SnapshotFilter(

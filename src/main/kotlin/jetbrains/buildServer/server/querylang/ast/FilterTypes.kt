@@ -24,3 +24,6 @@ interface DependencyComplexFilter : ConditionContainer<DependencyFilterType>
 
 interface SnapshotDepFilterType : Filter
 interface SnapshotDepComplexFilter : ConditionContainer<SnapshotDepFilterType>
+
+interface ArtifactDepFilterType : Filter
+interface ArtifactDepComplexFilter : ConditionContainer<ArtifactDepFilterType>

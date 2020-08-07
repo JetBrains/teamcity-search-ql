@@ -92,7 +92,7 @@ templateDepFilter : TEMPLATE modifierList? filterOrCondition ;
 vcsRootFilter : VCS_ROOT modifierList? filterOrCondition ;
 checkoutRulesFilter : RULES modifierList? checkoutRulesString ;
 dependencyFilter : DEPENDENCY modifierList? filterOrCondition ;
-artifactFilter : ARTIFACT modifierList?;
+artifactFilter : ARTIFACT modifierList? filterOrCondition?;
 snapshotFilter : SNAPSHOT modifierList? filterOrCondition?;
 optionFilter : OPTION modifierList? parameterName '=' parameterValue ;
 

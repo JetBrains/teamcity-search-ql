@@ -152,9 +152,12 @@ data class VcsRootFilter(
     override val names = Companion.names
 }
 
-data class CheckoutRulesFilter(
+data class RulesFilter(
     override val strCondition: ConditionAST<StringFilter>
-) : StringTerminalFilter, VcsRootEntryFilter {
+) : StringTerminalFilter,
+    VcsRootEntryFilter,
+    ArtifactDepFilterType
+{
     companion object : Names("rules")
 
     override val names: List<String> = Companion.names
@@ -174,8 +177,10 @@ data class DependencyFilter(
 }
 
 data class ArtifactFilter(
-    private val placeholder: String = ""
-) : EmptyTerminalFilter, DependencyFilterType {
+    override val condition: ConditionAST<ArtifactDepFilterType>
+) : ArtifactDepComplexFilter,
+    DependencyFilterType
+{
     companion object : Names("artifact")
     override val names = Companion.names
 }
@@ -183,7 +188,8 @@ data class ArtifactFilter(
 data class SnapshotFilter(
     override val condition: ConditionAST<SnapshotDepFilterType>
 ) : SnapshotDepComplexFilter,
-    DependencyFilterType {
+    DependencyFilterType
+{
     companion object : Names("snapshot")
     override val names = Companion.names
 }

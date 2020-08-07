@@ -1,6 +1,6 @@
 package jetbrains.buildServer.server.querylang.filter
 
-import jetbrains.buildServer.server.querylang.ast.CheckoutRulesFilter
+import jetbrains.buildServer.server.querylang.ast.RulesFilter
 import jetbrains.buildServer.server.querylang.ast.VcsRootEntryFilter
 import jetbrains.buildServer.server.querylang.ast.VcsRootFilterType
 import jetbrains.buildServer.vcs.SVcsRoot
@@ -16,7 +16,7 @@ object VcsRootEntryFilterBuilder : FilterBuilder<VcsRootEntryFilter, VcsRootEntr
                     vcsFilter.accepts(entry.vcsRoot)
                 }
             }
-            is CheckoutRulesFilter -> {
+            is RulesFilter -> {
                 val stringFilter = StringFilterBuilder.createFilter(filter.strCondition)
                 ObjectFilter {entry ->
                     stringFilter.accepts(entry.checkoutRules)
