@@ -18,8 +18,10 @@ class SearchProjectTests : BaseQueryLangTest() {
 
             TProject("Project1",
                 TProjectFeature("qwerty", Pair("abc", "bcd")),
-
-                TProject("Project2").bind("p2")
+                TParam("param1", "abc"),
+                TProject("Project2",
+                    TParam("param2", "def")
+                ).bind("p2")
             ).bind("p1"),
 
             TProject("Project3",
@@ -44,6 +46,14 @@ class SearchProjectTests : BaseQueryLangTest() {
         .addProjectCase(
             "find project with feature param abc=bcd",
             "p1"
+        )
+        .addProjectCase(
+            "find project with param param1=abc",
+            "p1"
+        )
+        .addProjectCase(
+            "find project with param[all] param1=abc",
+            "p1", "p2"
         )
         .end()
 
@@ -76,6 +86,18 @@ class SearchProjectTests : BaseQueryLangTest() {
         .addComplCase(
             "find project with feature param path=",
             "path=abc"
+        )
+        .addComplCase(
+            "find project with para",
+            "param"
+        )
+        .addComplCase(
+            "find project with param par",
+            "param1", "param2"
+        )
+        .addComplCase(
+            "find project with param param1=a",
+            "param1=abc"
         )
         .end()
 

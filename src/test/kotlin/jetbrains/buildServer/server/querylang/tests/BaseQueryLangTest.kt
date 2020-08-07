@@ -182,6 +182,9 @@ abstract class BaseQueryLangTest : BaseServerTestCase() {
                     is TProjectFeature -> {
                         obj.create(project)
                     }
+                    is TParam -> {
+                        obj.create(project)
+                    }
                 }
             }
 

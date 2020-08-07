@@ -24,6 +24,8 @@ class CompletionManager(val projectManager: ProjectManager) {
     val snapshotOptionFinder = ParameterValueFinder()
     val artifactRulesFinder = SimpleStringFinder()
     val artifactRevRuleFinder = SimpleStringFinder()
+    val projectParamFinder = ParameterValueFinder()
+    val vcsParamFinder = ParameterValueFinder()
 
     init {
         registerFinder(projectIdFinder, ProjectFilter::class, IdFilter::class)
@@ -42,6 +44,8 @@ class CompletionManager(val projectManager: ProjectManager) {
         registerFinder(snapshotOptionFinder, SnapshotFilter::class, OptionFilter::class)
         registerFinder(artifactRulesFinder, ArtifactFilter::class, RulesFilter::class)
         registerFinder(artifactRevRuleFinder, ArtifactFilter::class, RevRuleFilter::class)
+        registerFinder(projectParamFinder, FindProject::class, ParameterFilter::class)
+        registerFinder(vcsParamFinder, FindVcsRoot::class, ParameterFilter::class)
 
         indexAll()
     }
@@ -84,6 +88,10 @@ class CompletionManager(val projectManager: ProjectManager) {
             feat.parameters.forEach { (name, value) ->
                 featureParamValueFinder.addParam(name, value)
             }
+        }
+
+        project.ownParameters.forEach {(name, value) ->
+            projectParamFinder.addParam(name, value)
         }
     }
 
@@ -156,5 +164,9 @@ class CompletionManager(val projectManager: ProjectManager) {
     fun updateVcsRoot(vcs: SVcsRoot) {
         vcsRootIdFinder.addString(vcs.externalId)
         vcsRootTypeFinder.addString(vcs.vcsName)
+
+        vcs.properties.forEach {(name, value) ->
+            vcsParamFinder.addParam(name, value)
+        }
     }
 }

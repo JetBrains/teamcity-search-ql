@@ -41,6 +41,19 @@ object ProjectFilterBuilder : FilterBuilder<ProjectFilterType, SProject> {
                     }
                 }
             }
+
+            is ParameterFilter -> {
+                val nameFilter = StringFilterBuilder.createFilter(filter.nameCondition)
+                val valFilter = StringFilterBuilder.createFilter(filter.valueCondition)
+
+                ObjectFilter {project ->
+                    val params = if (filter.includeInherited) project.parameters
+                                 else project.ownParameters
+                    params.any {(name, value) ->
+                        nameFilter.accepts(name) && valFilter.accepts(value)
+                    }
+                }
+            }
             else -> throw java.lang.IllegalStateException("Unknow ProjectFilterType")
         }
     }

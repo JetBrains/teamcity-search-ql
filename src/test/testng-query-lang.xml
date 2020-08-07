@@ -23,6 +23,7 @@
       <class name="jetbrains.buildServer.server.querylang.tests.client.FilterOptionClientTests" />
       <class name="jetbrains.buildServer.server.querylang.tests.client.SearchBuildConfigurationTests" />
       <class name="jetbrains.buildServer.server.querylang.tests.client.SearchProjectTests" />
+      <class name="jetbrains.buildServer.server.querylang.tests.client.SearchVcsRootTests" />
     </classes>
   </test>
 </suite>

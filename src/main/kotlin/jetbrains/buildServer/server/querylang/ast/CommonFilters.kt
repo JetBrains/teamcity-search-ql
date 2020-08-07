@@ -123,7 +123,11 @@ data class EnabledFilter(
 data class ParameterFilter(
     val nameCondition: ConditionAST<StringFilter>,
     val valueCondition: ConditionAST<StringFilter>
-) : ParameterHolderFilterType, BuildConfFilterType, TemplateFilterType
+) : ParameterHolderFilterType,
+    BuildConfFilterType,
+    TemplateFilterType,
+    ProjectFilterType,
+    VcsRootFilterType
 {
     companion object : Names("param")
     override val names = Companion.names

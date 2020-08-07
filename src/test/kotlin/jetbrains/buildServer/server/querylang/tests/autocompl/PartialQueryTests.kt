@@ -50,7 +50,7 @@ class PartialQueryTests {
 
         val res = compl.complete(query).map { it.result }
         val expected = listOf(
-            """find configuration with template(param ("path&1")=("Base^"* and *"Project*"))"""
+            """find project with ancestor(param ("path&1")=("Base^"* and *"Project*"))"""
         )
 
         assertEquals(expected.first(), res.first())
