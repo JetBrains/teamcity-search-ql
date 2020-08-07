@@ -126,4 +126,9 @@ class FilterVisitor<T : Filter>(
         ).transform(ctx)
 
     override fun visitCleanFilter(ctx: QLangGrammarParser.CleanFilterContext?) = CleanFilter().transform(ctx!!)
+
+    override fun visitRevRuleFilter(ctx: QLangGrammarParser.RevRuleFilterContext?) =
+        RevRuleFilter(
+            ctx!!.stringFilterOrCondition().accept(StringConditionVisitor)
+        ).transform(ctx)
 }

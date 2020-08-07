@@ -60,6 +60,7 @@ filter : idFilter
        | snapshotFilter
        | optionFilter
        | cleanFilter
+       | revRuleFilter
        ;
 
 condition : filter                     #conditionFilter
@@ -97,6 +98,7 @@ artifactFilter : ARTIFACT modifierList? filterOrCondition?;
 snapshotFilter : SNAPSHOT modifierList? filterOrCondition?;
 optionFilter : OPTION modifierList? parameterName '=' parameterValue ;
 cleanFilter : CLEAN modifierList? ;
+revRuleFilter : REV_RULE modifierList? stringFilterOrCondition ;
 
 
 stringCondition : stringFilter                         #stringConditionFilter

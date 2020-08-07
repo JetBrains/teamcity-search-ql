@@ -218,3 +218,13 @@ data class CleanFilter(
 
     override val names = Companion.names
 }
+
+data class RevRuleFilter(
+    override val strCondition: ConditionAST<StringFilter>
+) : StringTerminalFilter,
+    ArtifactDepFilterType
+{
+    companion object : Names("revRule")
+
+    override val names = Companion.names
+}

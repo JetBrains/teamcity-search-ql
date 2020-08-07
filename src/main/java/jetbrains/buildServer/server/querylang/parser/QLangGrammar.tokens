@@ -37,6 +37,7 @@ SNAPSHOT=36
 ALL=37
 OPTION=38
 CLEAN=39
+REV_RULE=40
 'find'=1
 ','=2
 'in'=3

@@ -1,6 +1,7 @@
 package jetbrains.buildServer.server.querylang.tests
 
 import com.sun.org.apache.xpath.internal.operations.Bool
+import jetbrains.buildServer.artifacts.RevisionRule
 import jetbrains.buildServer.artifacts.RevisionRules
 import jetbrains.buildServer.buildTriggers.BuildTriggerDescriptor
 import jetbrains.buildServer.server.querylang.autocompl.*
@@ -297,21 +298,31 @@ abstract class BaseQueryLangTest : BaseServerTestCase() {
             options.forEach { it.create(dep) }
         }
     }
-    inner class TADependency private constructor(val rules: String, val isClean: Boolean) :
+    inner class TADependency private constructor(val rules: String, val isClean: Boolean, val revRule: RevisionRule) :
         TestReferenceObject<BuildTypeSettings, BuildTypeEx>()
     {
         override val storage = buildConfs
 
-        constructor(ref_: String, rules: String, isClean: Boolean): this(rules, isClean) {
+        constructor(
+            ref_: String,
+            rules: String,
+            isClean: Boolean,
+            revRule: RevisionRule = RevisionRules.LAST_FINISHED_RULE
+        ): this(rules, isClean, revRule) {
             ref = ref_
         }
 
-        constructor(obj_: BuildTypeEx, rules: String, isClean: Boolean): this(rules, isClean) {
+        constructor(
+            obj_: BuildTypeEx,
+            rules: String,
+            isClean: Boolean,
+            revRule: RevisionRule = RevisionRules.LAST_FINISHED_RULE
+        ): this(rules, isClean, revRule) {
             obj = obj_
         }
 
         override fun createInner(to: BuildTypeSettings, from: BuildTypeEx) {
-            val dep = myFixture.artifactDependencyFactory.createArtifactDependency(from, rules, RevisionRules.LAST_FINISHED_RULE)
+            val dep = myFixture.artifactDependencyFactory.createArtifactDependency(from, rules, revRule)
             dep.isCleanDestinationFolder = isClean
             to.addArtifactDependency(dep)
         }

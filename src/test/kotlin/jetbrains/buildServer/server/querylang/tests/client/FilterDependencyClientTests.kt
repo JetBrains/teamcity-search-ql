@@ -1,5 +1,6 @@
 package jetbrains.buildServer.server.querylang.tests.client
 
+import jetbrains.buildServer.artifacts.RevisionRules
 import jetbrains.buildServer.server.querylang.parser.QueryParser
 import jetbrains.buildServer.server.querylang.tests.BaseQueryLangTest
 import org.testng.annotations.*
@@ -34,7 +35,7 @@ class FilterDependencyClientTests : BaseQueryLangTest() {
             ).bind("t1"),
 
             TTemplate("temp2",
-                TADependency("b4", "abacabadaba", false)
+                TADependency("b4", "abacabadaba", false, RevisionRules.LAST_SUCCESSFUL_RULE)
             ).bind("t2"),
 
             TTemplate("temp3",
@@ -50,7 +51,7 @@ class FilterDependencyClientTests : BaseQueryLangTest() {
             TBuildConf("test5",
                 TTempDependency("t1"),
                 TTempDependency("t2"),
-                TADependency("b3", "zxcvzxcvzc", true)
+                TADependency("b3", "zxcvzxcvzc", true, RevisionRules.LAST_FINISHED_SAME_CHAIN_RULE)
             ).bind("b5"),
 
             TBuildConf("test6",
@@ -110,6 +111,10 @@ class FilterDependencyClientTests : BaseQueryLangTest() {
             "find buildConfiguration with dependency[all] artifact(not clean)",
             "b4", "b5", "b6"
         )
+        .addBCCase(
+            "find buildConfiguration with dependency artifact revRule *Chain*",
+            "b5"
+        )
         .end()
 
     @DataProvider(name = "compl")
@@ -136,11 +141,11 @@ class FilterDependencyClientTests : BaseQueryLangTest() {
         )
         .addComplCase(
             "find template with dependency artifact r",
-            "rules"
+            "rules", "revRule"
         )
         .addComplCase(
             "find template with dependency artifact ",
-            "rules", "clean"
+            "rules", "clean", "revRule"
         )
         .addComplCase(
             "find buildConfiguration with dependency artifact rules zxc",
@@ -153,6 +158,22 @@ class FilterDependencyClientTests : BaseQueryLangTest() {
         .addComplCase(
             "find template with dependency artifact c",
             "clean"
+        )
+        .addComplCase(
+            "find buildConfiguration with dependency artifact revR",
+            "revRule"
+        )
+        .addComplCase(
+            "find buildConfiguration with dependency artifact",
+            "artifact"
+        )
+        .addComplCase(
+            "find template with dependency artifact revRule lastS",
+            "lastSuccessful"
+        )
+        .addComplCase(
+            "find buildConfiguration with dependency artifact revRule sameChainO",
+            "sameChainOrLastFinished"
         )
         .end()
 

@@ -23,6 +23,7 @@ class CompletionManager(val projectManager: ProjectManager) {
     val vcsRootTypeFinder = SimpleStringFinder()
     val snapshotOptionFinder = ParameterValueFinder()
     val artifactRulesFinder = SimpleStringFinder()
+    val artifactRevRuleFinder = SimpleStringFinder()
 
     init {
         registerFinder(projectIdFinder, ProjectFilter::class, IdFilter::class)
@@ -40,6 +41,7 @@ class CompletionManager(val projectManager: ProjectManager) {
         registerFinder(vcsRootTypeFinder, FindVcsRoot::class, TypeFilter::class)
         registerFinder(snapshotOptionFinder, SnapshotFilter::class, OptionFilter::class)
         registerFinder(artifactRulesFinder, ArtifactFilter::class, RulesFilter::class)
+        registerFinder(artifactRevRuleFinder, ArtifactFilter::class, RevRuleFilter::class)
 
         indexAll()
     }
@@ -107,6 +109,7 @@ class CompletionManager(val projectManager: ProjectManager) {
 
         bt.artifactDependencies.forEach {art ->
             artifactRulesFinder.addString(art.sourcePaths)
+            artifactRevRuleFinder.addString(art.revisionRule.name)
         }
     }
 
@@ -139,6 +142,7 @@ class CompletionManager(val projectManager: ProjectManager) {
 
         temp.artifactDependencies.forEach { art ->
             artifactRulesFinder.addString(art.sourcePaths)
+            artifactRevRuleFinder.addString(art.revisionRule.name)
         }
     }
 
