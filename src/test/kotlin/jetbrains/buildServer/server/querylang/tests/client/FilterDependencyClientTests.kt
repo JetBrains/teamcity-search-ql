@@ -121,6 +121,22 @@ class FilterDependencyClientTests : BaseQueryLangTest() {
             "find template with dependency snapshot o",
             "option"
         )
+        .addComplCase(
+            "find template with dependency artifact r",
+            "rules"
+        )
+        .addComplCase(
+            "find template with dependency artifact ",
+            "rules"
+        )
+        .addComplCase(
+            "find buildConfiguration with dependency artifact rules zxc",
+            "zxcvzxcvzc"
+        )
+        .addComplCase(
+            "find template with dependency artifact rules abac",
+            "abacabadaba"
+        )
         .end()
 
     @DataProvider(name = "failed")

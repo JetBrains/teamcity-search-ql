@@ -22,6 +22,7 @@ class CompletionManager(val projectManager: ProjectManager) {
     val featureTypeFinder = SimpleStringFinder()
     val vcsRootTypeFinder = SimpleStringFinder()
     val snapshotOptionFinder = ParameterValueFinder()
+    val artifactRulesFinder = SimpleStringFinder()
 
     init {
         registerFinder(projectIdFinder, ProjectFilter::class, IdFilter::class)
@@ -38,6 +39,7 @@ class CompletionManager(val projectManager: ProjectManager) {
         registerFinder(featureTypeFinder, FeatureFilter::class, TypeFilter::class)
         registerFinder(vcsRootTypeFinder, FindVcsRoot::class, TypeFilter::class)
         registerFinder(snapshotOptionFinder, SnapshotFilter::class, OptionFilter::class)
+        registerFinder(artifactRulesFinder, ArtifactFilter::class, RulesFilter::class)
 
         indexAll()
     }
@@ -102,6 +104,10 @@ class CompletionManager(val projectManager: ProjectManager) {
                 snapshotOptionFinder.addParam(opt.key, dep.getOption(opt).toString())
             }
         }
+
+        bt.artifactDependencies.forEach {art ->
+            artifactRulesFinder.addString(art.sourcePaths)
+        }
     }
 
     fun updateTemplate(temp: BuildTypeTemplate) {
@@ -129,6 +135,10 @@ class CompletionManager(val projectManager: ProjectManager) {
             dep.ownOptions.forEach {opt ->
                 snapshotOptionFinder.addParam(opt.key, dep.getOption(opt).toString())
             }
+        }
+
+        temp.artifactDependencies.forEach { art ->
+            artifactRulesFinder.addString(art.sourcePaths)
         }
     }
 
