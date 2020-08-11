@@ -154,7 +154,7 @@ class Completer(val completionManager: CompletionManager? = null) {
 
     private fun createEdges(filters: List<Class<out Filter>>) {
 
-        fun createEdgesForMainClass(mainClass: Class<out ConditionContainer<out Filter>>, filterClass: Class<out Filter>) {
+        fun createEdgesForMainClass(mainClass: Class<out ConditionContainer<out Filter, *>>, filterClass: Class<out Filter>) {
             val classes = reflections.getSubTypesOf(mainClass)
             classes.forEach { clazz ->
                 val filterNames = getNames(clazz)

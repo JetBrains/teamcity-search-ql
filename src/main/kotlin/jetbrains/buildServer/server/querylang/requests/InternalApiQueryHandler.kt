@@ -20,10 +20,10 @@ class InternalApiQueryHandler(
             is FindMultipleTypes -> {
                 mainQuery.findQueries.map { query ->
                     when (query) {
-                        is FindProject -> findProjects(query.condition)
-                        is FindBuildConf -> findBuildConfs(query.condition)
-                        is FindTemplate -> findTemplates(query.condition)
-                        is FindVcsRoot -> findVcsRoots(query.condition)
+                        is FindProject -> findProjects(query)
+                        is FindBuildConf -> findBuildConfs(query)
+                        is FindTemplate -> findTemplates(query)
+                        is FindVcsRoot -> findVcsRoots(query)
                     }
                 }.fold(QueryResult()) { q1, q2 -> q1.join(q2) }
             }
@@ -33,8 +33,8 @@ class InternalApiQueryHandler(
         }
     }
 
-    private fun findProjects(condition: ConditionAST<ProjectFilterType>): QueryResult {
-        val projectFilter = ProjectFilterBuilder.createFilter(condition)
+    private fun findProjects(query: FindProject): QueryResult {
+        val projectFilter = query.build()
         return QueryResult(
                 projectManager.projects
                         .filter {projectFilter.accepts(it)}
@@ -43,8 +43,8 @@ class InternalApiQueryHandler(
         )
     }
 
-    private fun findBuildConfs(condition: ConditionAST<BuildConfFilterType>): QueryResult {
-        val buildConfFilter = BuildConfFilterBuilder.createFilter(condition)
+    private fun findBuildConfs(query: FindBuildConf): QueryResult {
+        val buildConfFilter = query.build()
         return QueryResult(
                 projectManager
                         .allBuildTypes
@@ -54,8 +54,8 @@ class InternalApiQueryHandler(
         )
     }
 
-    private fun findTemplates(condition: ConditionAST<TemplateFilterType>): QueryResult {
-        val templateConfFilter = TemplateFilterBuilder.createFilter(condition)
+    private fun findTemplates(query: FindTemplate): QueryResult {
+        val templateConfFilter = query.build()
         return QueryResult(
                 projectManager
                         .allTemplates
@@ -65,8 +65,8 @@ class InternalApiQueryHandler(
         )
     }
 
-    private fun findVcsRoots(condition: ConditionAST<VcsRootFilterType>): QueryResult {
-        val vcsRootFilter = VcsRootFilterBuilder.createFilter(condition)
+    private fun findVcsRoots(query: FindVcsRoot): QueryResult {
+        val vcsRootFilter = query.build()
         return QueryResult(
                 projectManager
                         .allVcsRoots

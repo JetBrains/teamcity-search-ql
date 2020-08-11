@@ -1,27 +1,27 @@
-package jetbrains.buildServer.server.querylang.filter
+package jetbrains.buildServer.server.querylang.ast
 
 import jetbrains.buildServer.server.querylang.ast.*
 
-object StringFilterBuilder : FilterBuilder<StringFilter, String> {
-    override fun createFilter(filter: StringFilter, context: Any?): ObjectFilter<String> {
+object StringFilterBuilder {
+    fun createFilter(filter: StringFilter, context: Any?): ObjectFilter<String> {
         return when(filter) {
             is EqualsStringFilter -> {
-                ObjectFilter{str ->
+                ObjectFilter { str ->
                     str == filter.str
                 }
             }
             is PrefixStringFilter -> {
-                ObjectFilter {str ->
+                ObjectFilter { str ->
                     str.startsWith(filter.str)
                 }
             }
             is SuffixStringFilter -> {
-                ObjectFilter {str ->
+                ObjectFilter { str ->
                     str.endsWith(filter.str)
                 }
             }
             is SubstringFilter -> {
-                ObjectFilter {str ->
+                ObjectFilter { str ->
                     str.contains(filter.str)
                 }
             }

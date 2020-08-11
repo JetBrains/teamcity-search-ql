@@ -8,15 +8,15 @@ import org.antlr.v4.runtime.CommonTokenStream
 object QueryParser {
 
     init {
-        FilterTypeRegistration.connectFilterType(ProjectComplexFilter::class.java)
-        FilterTypeRegistration.connectFilterType(BuildConfComplexFilter::class.java)
-        FilterTypeRegistration.connectFilterType(TemplateComplexFilter::class.java)
-        FilterTypeRegistration.connectFilterType(ParHolderComplexFilter::class.java)
-        FilterTypeRegistration.connectFilterType(VcsRootComplexFilter::class.java)
-        FilterTypeRegistration.connectFilterType(VcsRootEntryComplexFilter::class.java)
-        FilterTypeRegistration.connectFilterType(DependencyComplexFilter::class.java)
-        FilterTypeRegistration.connectFilterType(SnapshotDepComplexFilter::class.java)
-        FilterTypeRegistration.connectFilterType(ArtifactDepComplexFilter::class.java)
+        FilterTypeRegistration.connectFilterType(ProjectConditionContainer::class.java)
+        FilterTypeRegistration.connectFilterType(BuildConfConditionContainer::class.java)
+        FilterTypeRegistration.connectFilterType(TemplateConditionContainer::class.java)
+        FilterTypeRegistration.connectFilterType(ParHolderConditionContainer::class.java)
+        FilterTypeRegistration.connectFilterType(VcsRootConditionContainer::class.java)
+        FilterTypeRegistration.connectFilterType(VcsRootEntryConditionContainer::class.java)
+        FilterTypeRegistration.connectFilterType(DependencyConditionContainer::class.java)
+        FilterTypeRegistration.connectFilterType(SnapshotDepConditionContainer::class.java)
+        FilterTypeRegistration.connectFilterType(ArtifactDepConditionContainer::class.java)
     }
 
     fun parse(input: String): MainQuery {

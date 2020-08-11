@@ -1,5 +1,6 @@
 package jetbrains.buildServer.server.querylang.ast
 
+
 sealed class ConditionAST<out T: Filter> : Printable
 
 data class NotConditionNode<T : Filter>(

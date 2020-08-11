@@ -16,7 +16,7 @@ data class IdFilter(
 data class ProjectFilter(
     override val condition: ConditionAST<ProjectFilterType>
 ) :
-    ProjectComplexFilter,
+    ProjectConditionContainer,
     ProjectFilterType,
     BuildConfFilterType,
     TemplateFilterType,
@@ -29,7 +29,7 @@ data class ProjectFilter(
 data class ParentFilter(
     override val condition: ConditionAST<ProjectFilterType>
 ) :
-    ProjectComplexFilter,
+    ProjectConditionContainer,
     BuildConfFilterType,
     TemplateFilterType,
     ProjectFilterType,
@@ -53,7 +53,7 @@ data class TypeFilter(
 data class TriggerFilter(
     override val condition: ConditionAST<ParameterHolderFilterType>
 ) :
-    ParHolderComplexFilter,
+    ParHolderConditionContainer,
     BuildConfFilterType,
     TemplateFilterType
 {
@@ -66,7 +66,7 @@ data class TriggerFilter(
 data class StepFilter(
     override val condition: ConditionAST<ParameterHolderFilterType>
 ) :
-    ParHolderComplexFilter,
+    ParHolderConditionContainer,
     BuildConfFilterType,
     TemplateFilterType
 {
@@ -79,7 +79,7 @@ data class StepFilter(
 data class FeatureFilter(
     override val condition: ConditionAST<ParameterHolderFilterType>
 ) :
-    ParHolderComplexFilter,
+    ParHolderConditionContainer,
     BuildConfFilterType,
     TemplateFilterType,
     ProjectFilterType
@@ -93,7 +93,7 @@ data class FeatureFilter(
 data class TempDepFilter(
     override val condition: ConditionAST<TemplateFilterType>
 ) :
-    TemplateComplexFilter,
+    TemplateConditionContainer,
     BuildConfFilterType
 {
     companion object : Names("template")
@@ -121,9 +121,10 @@ data class EnabledFilter(
 }
 
 data class ParameterFilter(
-    val nameCondition: ConditionAST<StringFilter>,
-    val valueCondition: ConditionAST<StringFilter>
-) : ParameterHolderFilterType,
+    override val nameCondition: ConditionAST<StringFilter>,
+    override val valCondition: ConditionAST<StringFilter>
+) : StringParameterTerminalFilter,
+    ParameterHolderFilterType,
     BuildConfFilterType,
     TemplateFilterType,
     ProjectFilterType,
@@ -132,15 +133,13 @@ data class ParameterFilter(
     companion object : Names("param")
     override val names = Companion.names
 
-    override fun createStr() = "param (${nameCondition.createStr()})=(${valueCondition.createStr()})"
-
     var includeInherited = false
 }
 
 data class AncestorFilter(
     override val condition: ConditionAST<ProjectFilterType>
 ) :
-    ProjectComplexFilter,
+    ProjectConditionContainer,
     ProjectFilterType
 {
     companion object : Names("ancestor")
@@ -149,7 +148,7 @@ data class AncestorFilter(
 
 data class VcsRootFilter(
     override val condition: ConditionAST<VcsRootEntryFilter>
-) : VcsRootEntryComplexFilter,
+) : VcsRootEntryConditionContainer,
     BuildConfFilterType,
     TemplateFilterType
 {
@@ -170,7 +169,7 @@ data class RulesFilter(
 
 data class DependencyFilter(
     override val condition: ConditionAST<DependencyFilterType>
-) : DependencyComplexFilter,
+) : DependencyConditionContainer,
     BuildConfFilterType,
     TemplateFilterType
 {
@@ -183,7 +182,7 @@ data class DependencyFilter(
 
 data class ArtifactFilter(
     override val condition: ConditionAST<ArtifactDepFilterType>
-) : ArtifactDepComplexFilter,
+) : ArtifactDepConditionContainer,
     DependencyFilterType
 {
     companion object : Names("artifact")
@@ -192,7 +191,7 @@ data class ArtifactFilter(
 
 data class SnapshotFilter(
     override val condition: ConditionAST<SnapshotDepFilterType>
-) : SnapshotDepComplexFilter,
+) : SnapshotDepConditionContainer,
     DependencyFilterType
 {
     companion object : Names("snapshot")
@@ -200,18 +199,17 @@ data class SnapshotFilter(
 }
 
 data class OptionFilter(
-    val nameCondition: ConditionAST<StringFilter>,
-    val valueCondition: ConditionAST<StringFilter>,
+    override val nameCondition: ConditionAST<StringFilter>,
+    override val valCondition: ConditionAST<StringFilter>,
     var includeInherited: Boolean = false
-) : BuildConfFilterType,
+) : StringParameterTerminalFilter,
+    BuildConfFilterType,
     TemplateFilterType,
     SnapshotDepFilterType
 {
     companion object : Names("option")
 
     override val names = Companion.names
-
-    override fun createStr() = "option (${nameCondition.createStr()})=(${valueCondition.createStr()})"
 }
 
 data class CleanFilter(

@@ -23,3 +23,8 @@ data class SubstringFilter(val str: String) : StringFilter {
     override val names = emptyList<String>()
     override fun createStr() = '*' + str.toIdentOrString() + '*'
 }
+
+interface DoubleStringFilter : Filter {
+    val strFilter1 : StringFilter
+    val strFilter2: StringFilter
+}

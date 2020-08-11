@@ -11,14 +11,14 @@ object FilterTypeRegistration {
     private val keywords = getNames(reflection.getSubTypesOf(Named::class.java).toList())
 
     inline fun <reified T : Filter> connectFilterType(
-        conditionContainerClass: Class<out ConditionContainer<T>>
+        conditionContainerClass: Class<out ConditionContainer<T, *>>
     )
     {
         connectFilterTypeInner(conditionContainerClass, T::class.java)
     }
 
     fun <T : Filter> connectFilterTypeInner(
-        conditionContainerClass: Class<out ConditionContainer<T>>,
+        conditionContainerClass: Class<out ConditionContainer<T, *>>,
         filterTypeClass: Class<T>)
     {
         conditionFilterList.add(Connector<T>(conditionContainerClass, filterTypeClass))
@@ -39,5 +39,5 @@ object FilterTypeRegistration {
         return res
     }
 
-    class Connector<T : Filter>(val conditionc: Class<out ConditionContainer<T>>,val filterc: Class<T>)
+    class Connector<T : Filter>(val conditionc: Class<out ConditionContainer<T, *>>,val filterc: Class<T>)
 }

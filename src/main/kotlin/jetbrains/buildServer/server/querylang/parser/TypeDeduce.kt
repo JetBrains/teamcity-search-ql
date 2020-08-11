@@ -27,7 +27,7 @@ class TypeDeduce {
         return reflections.getSubTypesOf(clazz).toList()
     }
 
-    private inline fun <reified T> createInstance(clazz: Class<out ConditionContainer<*>>, condition: ConditionAST<Filter>): T? {
+    private inline fun <reified T> createInstance(clazz: Class<out ConditionContainer<*, *>>, condition: ConditionAST<Filter>): T? {
         return try {
             clazz.kotlin.primaryConstructor!!.call(condition) as? T
         } catch (e: Exception) {
@@ -42,16 +42,16 @@ class TypeDeduce {
         val filters = getAllFilters(condition)
 
         val res = mutableListOf<FindMultipleTypes>()
-        val new = mutableListOf<TopLevelQuery<*>>()
+        val new = mutableListOf<TopLevelQuery<*, *>>()
 
-        fun rec(conditionClass: KClass<out ConditionContainer<out Filter>>, filterClass: KClass<out Filter>) {
+        fun rec(conditionClass: KClass<out ConditionContainer<out Filter, *>>, filterClass: KClass<out Filter>) {
 
             if (filters.all { filterClass.isInstance(it) }) {
                 val filterClasses = getSubclasses(conditionClass.java)
                 filterClasses.forEach { clazz ->
                     when {
                         clazz.kotlin.isSubclassOf(TopLevelQuery::class) ->
-                            createInstance<TopLevelQuery<*>>(clazz, condition)?.let { new.add(it) }
+                            createInstance<TopLevelQuery<*, *>>(clazz, condition)?.let { new.add(it) }
 
                         clazz.kotlin.isSubclassOf(Filter::class) && level != 0 ->
                             createInstance<Filter>(clazz, condition)?.let {
