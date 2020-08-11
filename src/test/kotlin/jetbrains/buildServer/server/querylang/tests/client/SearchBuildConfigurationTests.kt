@@ -1,5 +1,7 @@
 package jetbrains.buildServer.server.querylang.tests.client
 
+import jetbrains.buildServer.server.querylang.ast.FindMultipleTypes
+import jetbrains.buildServer.server.querylang.ast.TopLevelQuery
 import jetbrains.buildServer.server.querylang.parser.QueryParser
 import jetbrains.buildServer.server.querylang.tests.BaseQueryLangTest
 import org.testng.annotations.BeforeMethod
@@ -12,6 +14,11 @@ class SearchBuildConfigurationTests : BaseQueryLangTest() {
     @BeforeMethod
     override fun setUp() {
         super.setUp()
+
+        TProject("BaseProject",
+            TBuildConf("test1").bind("b1"),
+            TBuildConf("test2").bind("b2")
+        ).create()
     }
 
     @DataProvider(name = "data")
@@ -35,6 +42,14 @@ class SearchBuildConfigurationTests : BaseQueryLangTest() {
 
         .end()
 
+    @DataProvider(name = "eval")
+    fun evalData() = TestDataProvider()
+        .addBCCase(
+            "find buildConfiguration with id test1",
+            "b1"
+        )
+        .end()
+
 
     @Test(dataProvider = "data")
     fun parametrizedTest(query: String, expected: List<String>) {
@@ -52,5 +67,11 @@ class SearchBuildConfigurationTests : BaseQueryLangTest() {
     fun parametrizedCompletionTests(query: String, expected: List<String>) {
         Thread.sleep(50)
         checkVars(query, expected)
+    }
+
+    @Test(dataProvider = "eval")
+    fun evalTest(query: String, expected: List<String>) {
+       Thread.sleep(50)
+        checkEval(query, expected)
     }
 }

@@ -1,20 +1,20 @@
 package jetbrains.buildServer.server.querylang.tests
 
-import com.sun.org.apache.xpath.internal.operations.Bool
 import jetbrains.buildServer.artifacts.RevisionRule
 import jetbrains.buildServer.artifacts.RevisionRules
 import jetbrains.buildServer.buildTriggers.BuildTriggerDescriptor
+import jetbrains.buildServer.server.querylang.MyProjectManagerInit
+import jetbrains.buildServer.server.querylang.ast.FindMultipleTypes
 import jetbrains.buildServer.server.querylang.autocompl.*
 import jetbrains.buildServer.server.querylang.parser.ParsingException
+import jetbrains.buildServer.server.querylang.parser.QueryParser
 import jetbrains.buildServer.server.querylang.requests.InternalApiQueryHandler
 import jetbrains.buildServer.server.querylang.requests.RequestClient
 import jetbrains.buildServer.server.querylang.tests.client.EmptyResultPrinter
 import jetbrains.buildServer.serverSide.*
-import jetbrains.buildServer.serverSide.db.schema.TableKeyDef
 import jetbrains.buildServer.serverSide.dependency.DependencySettings
 import jetbrains.buildServer.serverSide.impl.BaseServerTestCase
 import jetbrains.buildServer.serverSide.impl.ProjectEx
-import jetbrains.buildServer.util.Option
 import jetbrains.buildServer.util.OptionSupport
 import jetbrains.buildServer.util.StringOption
 import jetbrains.buildServer.vcs.SVcsRoot
@@ -45,6 +45,8 @@ abstract class BaseQueryLangTest : BaseServerTestCase() {
         taskQueue = TaskQueue(complm, 20, 0, TimeUnit.MILLISECONDS)
 
         eventListener = AutocompletionEventListener(taskQueue, projectManager, myFixture.eventDispatcher)
+
+        MyProjectManagerInit(projectManager)
     }
 
 
@@ -74,6 +76,15 @@ abstract class BaseQueryLangTest : BaseServerTestCase() {
         vars.zip(expect).forEach {(res, exp) ->
             assertEquals(res.show, exp)
         }
+    }
+
+    protected fun checkEval(query: String, expected: List<String>) {
+        val expect = expected.sorted()
+        val res = (QueryParser.parse(query) as FindMultipleTypes).findQueries.first()
+
+        val ids = res.eval().objects.map {(it as SPersistentEntity).externalId}
+
+        assertEquals(ids, expected)
     }
 
     private val projects = mutableMapOf<String, ProjectEx>()

@@ -1,12 +1,10 @@
 package jetbrains.buildServer.server.querylang.requests
 
 import jetbrains.buildServer.server.querylang.ast.*
-import jetbrains.buildServer.server.querylang.filter.*
 import jetbrains.buildServer.server.querylang.objects.BuildConfiguration
 import jetbrains.buildServer.server.querylang.objects.BuildTemplate
 import jetbrains.buildServer.server.querylang.objects.Project
 import jetbrains.buildServer.server.querylang.objects.VcsRoot
-import jetbrains.buildServer.serverSide.BuildTypeTemplate
 import jetbrains.buildServer.serverSide.ProjectManager
 import jetbrains.buildServer.serverSide.SBuildType
 import jetbrains.buildServer.serverSide.SProject
@@ -44,13 +42,11 @@ class InternalApiQueryHandler(
     }
 
     private fun findBuildConfs(query: FindBuildConf): QueryResult {
-        val buildConfFilter = query.build()
+        val (filter, result) = query.eval()
+        val res = if (filter is NoneObjectFilter) result
+                  else projectManager.allBuildTypes.filter {bt -> bt !in result && filter.accepts(bt)}
         return QueryResult(
-                projectManager
-                        .allBuildTypes
-                        .filter {buildConfFilter.accepts(it)}
-                        .map {BuildConfiguration(it)}
-                        .toMutableList()
+                res.map {BuildConfiguration(it)}.toMutableList()
         )
     }
 

@@ -2,8 +2,8 @@ package jetbrains.buildServer.server.querylang.ast
 
 import jetbrains.buildServer.server.querylang.ast.*
 
-object StringFilterBuilder {
-    fun createFilter(filter: StringFilter, context: Any?): ObjectFilter<String> {
+object StringFilterBuilder : FilterBuilder<StringFilter, String> {
+    override fun buildFilter(filter: StringFilter, context: Any?): ObjectFilter<String> {
         return when(filter) {
             is EqualsStringFilter -> {
                 ObjectFilter { str ->
@@ -27,5 +27,9 @@ object StringFilterBuilder {
             }
             else -> throw IllegalStateException("Unknown StringFilter")
         }
+    }
+
+    override fun build(context: Any?): ObjectFilter<String> {
+        throw java.lang.IllegalStateException("Can't call build() from StringFilterBuilder, use buildFilter(...)")
     }
 }

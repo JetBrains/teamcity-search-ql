@@ -1,7 +1,7 @@
 package jetbrains.buildServer.server.querylang.ast
 
 
-interface ConditionContainer<T : Filter, S : Any> : Printable, Named, FilterBuilder<T, S> {
+interface ConditionContainer<T : Filter, S : Any> : Printable, Named, FilterBuilder<T, S>, Evaluator<T, S> {
     val condition: ConditionAST<T>
 
     override fun createStr(): String {
@@ -9,4 +9,12 @@ interface ConditionContainer<T : Filter, S : Any> : Printable, Named, FilterBuil
     }
 
     override fun build(context: Any?) = buildFilter(condition, context)
+
+    override fun evalCondition(condition: ConditionAST<T>) = buildFilter(condition)
+
+    override fun eval(): EvalResult<S> = eval(condition)
+
+    override fun evalFilter(filter: T): EvalResult<S> {
+        return EvalResult(filter.buildRev(), listOf())
+    }
 }

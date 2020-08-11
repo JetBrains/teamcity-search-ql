@@ -1,6 +1,7 @@
 package jetbrains.buildServer.server.querylang.ast
 
 import jetbrains.buildServer.server.querylang.ast.wrappers.*
+import jetbrains.buildServer.server.querylang.myProjectManager
 import jetbrains.buildServer.serverSide.*
 import jetbrains.buildServer.vcs.SVcsRoot
 
@@ -359,6 +360,21 @@ interface BuildConfConditionContainer : ConditionContainer<BuildConfFilterType, 
             else -> throw java.lang.IllegalStateException("Unknow BCFilter")
         }
     }
+
+    override fun eval(): EvalResult<SBuildType> {
+        return eval(condition)
+    }
+
+    override fun evalFilter(filter: BuildConfFilterType): EvalResult<SBuildType> {
+        return when(filter) {
+            is IdFilter -> {
+                val vars = retrieveEquals(filter.strCondition) ?: return EvalResult(filter.buildRev(), emptyList())
+                val buildTypes = vars.mapNotNull { myProjectManager.findBuildTypeByExternalId(it)}
+                return EvalResult(NoneObjectFilter(), buildTypes)
+            }
+            else -> EvalResult(filter.buildRev(), emptyList())
+        }
+    }
 }
 
 interface VcsRootEntryFilter : Filter
@@ -431,6 +447,7 @@ interface SnapshotDepConditionContainer : ConditionContainer<SnapshotDepFilterTy
 }
 
 interface ArtifactDepFilterType : Filter
+
 interface ArtifactDepConditionContainer : ConditionContainer<ArtifactDepFilterType, MyArtifactDependency> {
     override fun buildFilter(filter: ArtifactDepFilterType, context: Any?): ObjectFilter<MyArtifactDependency> {
         return when(filter) {

@@ -13,7 +13,7 @@ interface StringTerminalFilter : TerminalFilter, FilterBuilder<StringFilter, Str
     }
 
     override fun buildFilter(filter: StringFilter, context: Any?): ObjectFilter<String> {
-        return StringFilterBuilder.createFilter(filter, context)
+        return StringFilterBuilder.buildFilter(filter, context)
     }
 
     override fun build(context: Any?): ObjectFilter<String> = buildFilter(strCondition, context)
@@ -27,7 +27,7 @@ interface StringParameterTerminalFilter : TerminalFilter, FilterBuilder<StringFi
         "${names.first()} (${nameCondition.createStr()})=(${valCondition.createStr()})"
 
     override fun buildFilter(filter: StringFilter, context: Any?): ObjectFilter<String> {
-        return StringFilterBuilder.createFilter(filter, context)
+        return StringFilterBuilder.buildFilter(filter, context)
     }
 
     override fun build(context: Any?): ObjectFilter<String> = buildFilter(nameCondition, context)
