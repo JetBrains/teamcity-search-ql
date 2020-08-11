@@ -16,7 +16,8 @@ interface StringTerminalFilter : TerminalFilter, FilterBuilder<StringFilter, Str
         return StringFilterBuilder.buildFilter(filter, context)
     }
 
-    override fun build(context: Any?): ObjectFilter<String> = buildFilter(strCondition, context)
+    override fun build(context: Any?): ObjectFilter<String> =
+        buildFilter(strCondition, context)
 }
 
 interface StringParameterTerminalFilter : TerminalFilter, FilterBuilder<StringFilter, String> {
@@ -30,10 +31,14 @@ interface StringParameterTerminalFilter : TerminalFilter, FilterBuilder<StringFi
         return StringFilterBuilder.buildFilter(filter, context)
     }
 
-    override fun build(context: Any?): ObjectFilter<String> = buildFilter(nameCondition, context)
+    override fun build(context: Any?): ObjectFilter<String> =
+        buildFilter(nameCondition, context)
 
     fun buildP(): Pair<ObjectFilter<String>, ObjectFilter<String>> =
-        Pair(buildFilter(nameCondition), buildFilter(valCondition))
+        Pair(
+            buildFilter(nameCondition),
+            buildFilter(valCondition)
+        )
 }
 
 interface EmptyTerminalFilter : TerminalFilter {

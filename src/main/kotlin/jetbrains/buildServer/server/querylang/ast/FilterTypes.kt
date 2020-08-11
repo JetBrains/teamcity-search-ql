@@ -48,24 +48,14 @@ interface ProjectFilterType: Filter
 interface ProjectConditionContainer : ConditionContainer<ProjectFilterType, SProject> {
     override fun buildFilter(filter: ProjectFilterType, context: Any?): ObjectFilter<SProject> {
         return when (filter) {
-            is IdFilter -> {
-                val condition = filter.build()
-                ObjectFilter { project ->
-                    condition.accepts(project.externalId)
-                }
-            }
+            is IdFilter -> filter.wrapFilter(filter.build())
             is AncestorFilter -> {
                 val conditionFilter = filter.build()
                 ObjectFilter { project ->
                     hasSuitableAncestor(project.parentProject, conditionFilter)
                 }
             }
-            is ParentFilter -> {
-                val conditionFilter = filter.build()
-                ObjectFilter { project ->
-                    conditionFilter.accepts(project.parentProject)
-                }
-            }
+            is ParentFilter -> filter.wrapFilterP(filter.build())
             is ProjectFilter -> {
                 val conditionFilter = filter.build()
                 ObjectFilter { project ->
@@ -107,6 +97,13 @@ interface ProjectConditionContainer : ConditionContainer<ProjectFilterType, SPro
                 val projects = vars.mapNotNull { myProjectManager.findProjectByExternalId(it)}
                 EvalResult(NoneObjectFilter(), projects)
             }
+            is ParentFilter -> {
+                val res = filter.eval()
+
+                val projects = res.objects.flatMap { it.ownProjects }
+
+                EvalResult(filter.wrapFilterP(res.filter), projects)
+            }
             else -> emptyEval(filter)
         }
     }
@@ -128,24 +125,14 @@ interface VcsRootFilterType : Filter, VcsRootEntryFilter
 interface VcsRootConditionContainer : ConditionContainer<VcsRootFilterType, SVcsRoot> {
     override fun buildFilter(filter: VcsRootFilterType, context: Any?): ObjectFilter<SVcsRoot> {
         return when(filter) {
-            is IdFilter -> {
-                val condition = filter.build()
-                ObjectFilter { vcs ->
-                    condition.accepts(vcs.externalId)
-                }
-            }
+            is IdFilter -> filter.wrapFilter(filter.build())
             is ProjectFilter -> {
                 val projectFilter = ProjectFilter(FilterConditionNode(filter)).build()
                 ObjectFilter { vcs ->
                     projectFilter.accepts(vcs.project)
                 }
             }
-            is ParentFilter -> {
-                val projectFilter = filter.build()
-                ObjectFilter { vcs ->
-                    projectFilter.accepts(vcs.project)
-                }
-            }
+            is ParentFilter -> filter.wrapFilterV(filter.build())
             is TypeFilter -> {
                 val strFilter = filter.build()
                 ObjectFilter { vcs ->
@@ -177,12 +164,7 @@ interface TemplateConditionContainer : ConditionContainer<TemplateFilterType, Bu
                     projectFilter.accepts(buildType.project)
                 }
             }
-            is IdFilter -> {
-                val condition = filter.build()
-                ObjectFilter { buildType ->
-                    condition.accepts(buildType.externalId)
-                }
-            }
+            is IdFilter -> filter.wrapFilter(filter.build())
             is TriggerFilter -> {
                 ObjectFilter { buildType ->
                     val condition = filter.build(buildType)
@@ -264,12 +246,7 @@ interface BuildConfConditionContainer : ConditionContainer<BuildConfFilterType, 
                     projectFilter.accepts(buildType.project)
                 }
             }
-            is IdFilter -> {
-                val condition = filter.build()
-                ObjectFilter { buildType ->
-                    condition.accepts(buildType.externalId)
-                }
-            }
+            is IdFilter -> filter.wrapFilter(filter.build())
             is TriggerFilter -> {
                 ObjectFilter { buildType ->
                     buildType as? BuildTypeEx ?: throw java.lang.IllegalStateException("Should be BuildTypeEx")
@@ -311,13 +288,7 @@ interface BuildConfConditionContainer : ConditionContainer<BuildConfFilterType, 
                 }
             }
 
-            is ParentFilter -> {
-                val projectFilter = filter.build()
-
-                ObjectFilter { buildType ->
-                    projectFilter.accepts(buildType.project)
-                }
-            }
+            is ParentFilter -> filter.wrapFilterB(filter.build())
             is TempDepFilter -> {
                 val tempFilter = filter.build()
 

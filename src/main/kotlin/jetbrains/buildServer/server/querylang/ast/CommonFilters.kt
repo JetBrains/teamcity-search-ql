@@ -1,5 +1,11 @@
 package jetbrains.buildServer.server.querylang.ast
 
+import jetbrains.buildServer.serverSide.BuildTypeTemplate
+import jetbrains.buildServer.serverSide.SBuildType
+import jetbrains.buildServer.serverSide.SPersistentEntity
+import jetbrains.buildServer.serverSide.SProject
+import jetbrains.buildServer.vcs.SVcsRoot
+
 
 data class IdFilter(
     override val strCondition: ConditionAST<StringFilter>
@@ -11,6 +17,10 @@ data class IdFilter(
 {
     companion object : Names("id")
     override val names = IdFilter.names
+
+    fun wrapFilter(ofilter: ObjectFilter<String>) = ofilter.use<SPersistentEntity> {obj ->
+        ofilter.accepts(obj.externalId)
+    }
 }
 
 data class ProjectFilter(
@@ -37,6 +47,18 @@ data class ParentFilter(
 {
     companion object : Names("parent")
     override val names = Companion.names
+
+    fun wrapFilterP(ofilter: ObjectFilter<SProject>) =
+        ofilter.use<SProject> {ofilter.accepts(it.parentProject)}
+
+    fun wrapFilterV(ofilter: ObjectFilter<SProject>) =
+        ofilter.use<SVcsRoot> {ofilter.accepts(it.project)}
+
+    fun wrapFilterB(ofilter: ObjectFilter<SProject>) =
+        ofilter.use<SBuildType> {ofilter.accepts(it.project)}
+
+    fun wrapFilterT(ofilter: ObjectFilter<SProject>) =
+        ofilter.use<BuildTypeTemplate> {ofilter.accepts(it.project)}
 }
 
 data class TypeFilter(
