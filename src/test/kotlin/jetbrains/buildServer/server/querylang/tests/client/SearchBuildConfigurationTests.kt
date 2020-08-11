@@ -71,7 +71,7 @@ class SearchBuildConfigurationTests : BaseQueryLangTest() {
 
     @Test(dataProvider = "eval")
     fun evalTest(query: String, expected: List<String>) {
-       Thread.sleep(50)
+        Thread.sleep(50)
         checkEval(query, expected)
     }
 }

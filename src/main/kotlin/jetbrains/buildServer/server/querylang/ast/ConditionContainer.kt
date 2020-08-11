@@ -17,4 +17,6 @@ interface ConditionContainer<T : Filter, S : Any> : Printable, Named, FilterBuil
     override fun evalFilter(filter: T): EvalResult<S> {
         return EvalResult(filter.buildRev(), listOf())
     }
+
+    fun emptyEval(filter: T) = EvalResult(filter.buildRev(), listOf())
 }

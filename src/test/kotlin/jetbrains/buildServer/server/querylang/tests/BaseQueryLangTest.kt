@@ -5,6 +5,7 @@ import jetbrains.buildServer.artifacts.RevisionRules
 import jetbrains.buildServer.buildTriggers.BuildTriggerDescriptor
 import jetbrains.buildServer.server.querylang.MyProjectManagerInit
 import jetbrains.buildServer.server.querylang.ast.FindMultipleTypes
+import jetbrains.buildServer.server.querylang.ast.NoneObjectFilter
 import jetbrains.buildServer.server.querylang.autocompl.*
 import jetbrains.buildServer.server.querylang.parser.ParsingException
 import jetbrains.buildServer.server.querylang.parser.QueryParser
@@ -79,12 +80,24 @@ abstract class BaseQueryLangTest : BaseServerTestCase() {
     }
 
     protected fun checkEval(query: String, expected: List<String>) {
-        val expect = expected.sorted()
-        val res = (QueryParser.parse(query) as FindMultipleTypes).findQueries.first()
+        var isNone = false
+        val expect = if (expected.last() == "") {
+            isNone = true
+            expected.dropLast(1).sorted()
+        } else {
+            expected.sorted()
+        }
+        val parsed = (QueryParser.parse(query) as FindMultipleTypes).findQueries.first()
 
-        val ids = res.eval().objects.map {(it as SPersistentEntity).externalId}
+        val res = parsed.eval()
 
-        assertEquals(ids, expected)
+        val ids = res.objects.map {(it as SPersistentEntity).externalId}
+
+        assertEquals(expect, ids)
+
+        if (isNone) {
+            assertTrue(res.filter is NoneObjectFilter)
+        }
     }
 
     private val projects = mutableMapOf<String, ProjectEx>()
@@ -441,6 +454,11 @@ abstract class BaseQueryLangTest : BaseServerTestCase() {
 
         fun addComplCase(query: String, vararg variants: String): TestDataProvider {
             return addCase(query, *variants)
+        }
+
+        fun addNoneEvalCase(query: String, vararg variants: String): TestDataProvider {
+            val res = variants.toMutableList() + listOf("")
+            return addCase(query, *res.toTypedArray())
         }
 
         fun end(): MutableIterator<Array<Any>> {

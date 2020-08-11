@@ -106,6 +106,18 @@ class SearchProjectTests : BaseQueryLangTest() {
 
         .end()
 
+    @DataProvider(name = "eval")
+    fun evalData() = TestDataProvider()
+        .addNoneEvalCase(
+            "find project with id BaseProject",
+            "BaseProject"
+        )
+        .addNoneEvalCase(
+            "find project with (id (BaseProject or Project2) or id Project3) and (not param param2=def)",
+            "BaseProject", "Project3"
+         )
+        .end()
+
 
     @Test(dataProvider = "data")
     fun parametrizedTest(query: String, expected: List<String>) {
@@ -123,5 +135,11 @@ class SearchProjectTests : BaseQueryLangTest() {
     fun parametrizedCompletionTests(query: String, expected: List<String>) {
         Thread.sleep(50)
         checkVars(query, expected)
+    }
+
+    @Test(dataProvider = "eval")
+    fun evalTest(query: String, expected: List<String>) {
+        Thread.sleep(50)
+        checkEval(query, expected)
     }
 }

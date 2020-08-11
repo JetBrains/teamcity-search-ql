@@ -99,6 +99,18 @@ interface ProjectConditionContainer : ConditionContainer<ProjectFilterType, SPro
         }
     }
 
+    override fun evalFilter(filter: ProjectFilterType): EvalResult<SProject> {
+        return when (filter) {
+            is IdFilter -> {
+                val vars = retrieveEquals(filter.strCondition) ?: return emptyEval(filter)
+
+                val projects = vars.mapNotNull { myProjectManager.findProjectByExternalId(it)}
+                EvalResult(NoneObjectFilter(), projects)
+            }
+            else -> emptyEval(filter)
+        }
+    }
+
     private fun hasSuitableAncestor(project: SProject?, filter: ObjectFilter<SProject>): Boolean {
         var curProject: SProject? = project
         while (curProject != null) {
