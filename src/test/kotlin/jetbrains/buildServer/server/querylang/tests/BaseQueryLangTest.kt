@@ -4,8 +4,8 @@ import jetbrains.buildServer.artifacts.RevisionRule
 import jetbrains.buildServer.artifacts.RevisionRules
 import jetbrains.buildServer.buildTriggers.BuildTriggerDescriptor
 import jetbrains.buildServer.server.querylang.MyProjectManagerInit
-import jetbrains.buildServer.server.querylang.ast.FindMultipleTypes
-import jetbrains.buildServer.server.querylang.ast.NoneObjectFilter
+import jetbrains.buildServer.server.querylang.ast_old.FindMultipleTypes
+import jetbrains.buildServer.server.querylang.ast_old.NoneObjectFilter
 import jetbrains.buildServer.server.querylang.autocompl.*
 import jetbrains.buildServer.server.querylang.parser.ParsingException
 import jetbrains.buildServer.server.querylang.parser.QueryParser

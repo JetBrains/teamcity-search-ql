@@ -1,6 +1,4 @@
-package jetbrains.buildServer.server.querylang.ast
-
-import jetbrains.buildServer.server.querylang.ast.*
+package jetbrains.buildServer.server.querylang.ast_old
 
 object StringFilterBuilder : FilterBuilder<StringFilter, String> {
     override fun buildFilter(filter: StringFilter, context: Any?): ObjectFilter<String> {

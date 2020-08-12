@@ -1,4 +1,4 @@
-package jetbrains.buildServer.server.querylang.ast
+package jetbrains.buildServer.server.querylang.ast_old
 
 data class AllFilterModifier(private val placeholder: String = "") : FilterModifier {
     companion object : FilterClasses(

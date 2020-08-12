@@ -1,8 +1,8 @@
 package jetbrains.buildServer.server.querylang.parser
 
-import jetbrains.buildServer.server.querylang.ast.AllFilterModifier
-import jetbrains.buildServer.server.querylang.ast.Filter
-import jetbrains.buildServer.server.querylang.ast.FilterModifier
+import jetbrains.buildServer.server.querylang.ast_old.AllFilterModifier
+import jetbrains.buildServer.server.querylang.ast_old.Filter
+import jetbrains.buildServer.server.querylang.ast_old.FilterModifier
 import org.antlr.v4.runtime.ParserRuleContext
 
 object ModifierVisitor : QLangGrammarBaseVisitor<FilterModifier>() {

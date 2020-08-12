@@ -1,17 +1,10 @@
 package jetbrains.buildServer.server.querylang.autocompl
 
-import jetbrains.buildServer.server.querylang.ast.*
-import jetbrains.buildServer.serverSide.ProjectManager
+import jetbrains.buildServer.server.querylang.ast_old.*
 import org.reflections.Reflections
-import java.io.BufferedReader
-import java.io.InputStreamReader
 import java.lang.IllegalStateException
-import java.util.*
-import kotlin.reflect.full.allSuperclasses
-import kotlin.reflect.full.companionObject
 import kotlin.reflect.full.companionObjectInstance
 import kotlin.reflect.full.isSubclassOf
-import kotlin.streams.toList
 
 class Completer(val completionManager: CompletionManager? = null) {
     private val graph = mutableMapOf<String, MutableList<String>>()

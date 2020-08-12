@@ -1,4 +1,4 @@
-package jetbrains.buildServer.server.querylang.ast
+package jetbrains.buildServer.server.querylang.ast_old
 
 import jetbrains.buildServer.serverSide.BuildTypeTemplate
 import jetbrains.buildServer.serverSide.SBuildType

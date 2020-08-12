@@ -1,6 +1,6 @@
 package jetbrains.buildServer.server.querylang.autocompl
 
-import jetbrains.buildServer.server.querylang.ast.*
+import jetbrains.buildServer.server.querylang.ast_old.*
 import jetbrains.buildServer.serverSide.BuildTypeTemplate
 import jetbrains.buildServer.serverSide.ProjectManager
 import jetbrains.buildServer.serverSide.SBuildType

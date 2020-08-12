@@ -1,6 +1,6 @@
 package jetbrains.buildServer.server.querylang.autocompl
 
-import jetbrains.buildServer.server.querylang.ast.MultipleMainQuery
+import jetbrains.buildServer.server.querylang.ast_old.MultipleMainQuery
 import jetbrains.buildServer.server.querylang.parser.ParsingException
 import jetbrains.buildServer.server.querylang.parser.QLangGrammarLexer
 import jetbrains.buildServer.server.querylang.parser.QLangGrammarParser

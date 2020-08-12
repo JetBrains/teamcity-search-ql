@@ -2,50 +2,45 @@ package jetbrains.buildServer.server.querylang.ast
 
 import java.lang.IllegalStateException
 
-open class ObjectFilter<in T>(val condition: (obj: T) -> Boolean) {
-    open fun accepts(obj: T?): Boolean = obj?.let {condition(it)} ?: false
+sealed class ObjectFilter<in Obj>(val action: (Obj) -> Boolean) {
+    open fun accepts(obj: Obj?): Boolean = obj?.let(action) ?: false
 
-    fun <L : Any> use(action: (L) -> Boolean): ObjectFilter<L> {
-        if (this is NoneObjectFilter) {
-            return NoneObjectFilter()
+    fun <T: Obj>and(other: ObjectFilter<T>): ObjectFilter<T> {
+        return if (this is NoneObjectFilter || other is NoneObjectFilter) {
+            NoneObjectFilter()
         } else {
-            return ObjectFilter(action)
+            RealObjectFilter {obj ->
+                this.accepts(obj) && other.accepts(obj)
+            }
         }
     }
 
-    fun <L: T> and(other: ObjectFilter<L>): ObjectFilter<L> {
-        if (this is NoneObjectFilter || other is NoneObjectFilter) {
-            return NoneObjectFilter()
-        }
-
-        return ObjectFilter { obj ->
-            this.condition(obj) && other.condition(obj)
-        }
-    }
-
-    fun <L: T>or(other: ObjectFilter<L>): ObjectFilter<L> {
+    fun <T: Obj>or(other: ObjectFilter<T>): ObjectFilter<T> {
         if (this is NoneObjectFilter) {
             return other
         }
         if (other is NoneObjectFilter) {
             return this
         }
-
-        return ObjectFilter { obj ->
-            this.condition(obj) || other.condition(obj)
+        return RealObjectFilter {obj ->
+            this.accepts(obj) || other.accepts(obj)
         }
     }
 
-    fun not(): ObjectFilter<T> {
-        return ObjectFilter { obj ->
-            !this.condition(obj)
+    fun <T: Obj> not(): ObjectFilter<T> {
+        if (this is NoneObjectFilter) {
+            throw IllegalStateException()
+        }
+        return RealObjectFilter {obj ->
+            !this.accepts(obj)
         }
     }
-
 }
 
-class NoneObjectFilter<T> : ObjectFilter<T>({false}) {
-    override fun accepts(obj: T?): Boolean {
-        throw IllegalStateException("Can't call accepts method for NoneObjectFilter")
+class RealObjectFilter<Object>(action: (Object) -> Boolean): ObjectFilter<Object>(action)
+
+class NoneObjectFilter<Object> : ObjectFilter<Object>({false}) {
+    override fun accepts(obj: Object?): Boolean {
+        throw IllegalStateException()
     }
 }

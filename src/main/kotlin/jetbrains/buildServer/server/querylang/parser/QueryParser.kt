@@ -1,6 +1,6 @@
 package jetbrains.buildServer.server.querylang.parser
 
-import jetbrains.buildServer.server.querylang.ast.*
+import jetbrains.buildServer.server.querylang.ast_old.*
 import org.antlr.v4.runtime.CharStream
 import org.antlr.v4.runtime.CharStreams
 import org.antlr.v4.runtime.CommonTokenStream

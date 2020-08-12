@@ -1,6 +1,6 @@
 package jetbrains.buildServer.server.querylang.parser
 
-import jetbrains.buildServer.server.querylang.ast.*
+import jetbrains.buildServer.server.querylang.ast_old.*
 
 inline fun <reified T: Filter> getConditionVisitor(): ConditionVisitor<T> {
     return ConditionVisitor<T>(FilterVisitor<T>(T::class), T::class)

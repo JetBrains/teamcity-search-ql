@@ -1,7 +1,5 @@
 package jetbrains.buildServer.server.querylang.tests.client
 
-import jetbrains.buildServer.server.querylang.ast.FindMultipleTypes
-import jetbrains.buildServer.server.querylang.ast.TopLevelQuery
 import jetbrains.buildServer.server.querylang.parser.QueryParser
 import jetbrains.buildServer.server.querylang.tests.BaseQueryLangTest
 import org.testng.annotations.BeforeMethod

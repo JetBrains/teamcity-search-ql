@@ -1,4 +1,4 @@
-package jetbrains.buildServer.server.querylang.ast
+package jetbrains.buildServer.server.querylang.ast_old
 
 import kotlin.reflect.full.companionObjectInstance
 

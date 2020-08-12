@@ -1,3 +1,3 @@
 package jetbrains.buildServer.server.querylang.ast
 
-interface Filter : Named, Printable
+interface Filter<FObject> : FilterBuilder<FObject>, Named, Printable

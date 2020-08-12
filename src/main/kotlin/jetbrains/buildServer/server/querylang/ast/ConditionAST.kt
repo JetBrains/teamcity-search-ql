@@ -1,43 +1,55 @@
 package jetbrains.buildServer.server.querylang.ast
 
+sealed class ConditionAST<NestedObject> : FilterBuilder<NestedObject>, Printable
 
-sealed class ConditionAST<out T: Filter> : Printable
+sealed class RealConditionAST<NestedObject> : ConditionAST<NestedObject>()
 
-data class NotConditionNode<T : Filter>(
-        val cond: ConditionAST<T>
-) : ConditionAST<T>()
-{
-        override fun createStr(): String {
-                return "not ${cond.createStr()}"
-        }
+class NoneConditionAST<NestedObject> : ConditionAST<NestedObject>() {
+    override fun build(context: Any?): ObjectFilter<NestedObject> {
+        return NoneObjectFilter()
+    }
+
+    override fun createStr(): String {
+        return ""
+    }
 }
 
-data class AndConditionNode<T : Filter>(
-        val left: ConditionAST<T>,
-        val right: ConditionAST<T>
-) : ConditionAST<T>() {
-        override fun createStr(): String {
-                return "${left.createStr()} and ${right.createStr()}"
-        }
+class NotConditionNode<NestedObject>(
+    val cond: RealConditionAST<NestedObject>
+) : RealConditionAST<NestedObject>() {
+    override fun build(context: Any?): ObjectFilter<NestedObject> {
+        return cond.build(context)
+    }
+
+    override fun createStr(): String = "(not ${cond.createStr()})"
 }
 
-data class OrConditionNode<T : Filter>(
-        val left: ConditionAST<T>,
-        val right: ConditionAST<T>
-) : ConditionAST<T>() {
-        override fun createStr(): String {
-                return "${left.createStr()} or ${right.createStr()}"
-        }
+class AndConditionNode<NestedObject>(
+    val left: RealConditionAST<NestedObject>,
+    val right: RealConditionAST<NestedObject>
+) : RealConditionAST<NestedObject>() {
+    override fun build(context: Any?): ObjectFilter<NestedObject> {
+        return left.build(context).and(right.build(context))
+    }
+
+    override fun createStr(): String = "(${left.createStr()} and ${right.createStr()})"
 }
 
-data class FilterConditionNode<T : Filter>(val filter: T) : ConditionAST<T>() {
-        override fun createStr(): String {
-                return filter.createStr()
-        }
+class OrConditionNode<NestedObject>(
+    val left: RealConditionAST<NestedObject>,
+    val right: RealConditionAST<NestedObject>
+) : RealConditionAST<NestedObject>() {
+    override fun build(context: Any?): ObjectFilter<NestedObject> {
+        return left.build(context).or(right.build(context))
+    }
+
+    override fun createStr(): String = "(${left.createStr()} or ${right.createStr()})"
 }
 
-data class EmptyConditionNode<T : Filter>(private val placeholder: String = "") : ConditionAST<T>() {
-        override fun createStr(): String {
-                return ""
-        }
+class FilterConditionNode<NestedObject>(val filter: Filter<NestedObject>) : RealConditionAST<NestedObject>(){
+    override fun build(context: Any?): ObjectFilter<NestedObject> {
+        return filter.build(context)
+    }
+
+    override fun createStr(): String = filter.createStr()
 }

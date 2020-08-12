@@ -1,6 +1,6 @@
 package jetbrains.buildServer.server.querylang.autocompl
 
-import jetbrains.buildServer.server.querylang.ast.FilterTypeRegistration
+import jetbrains.buildServer.server.querylang.ast_old.FilterTypeRegistration
 
 internal fun String.escape(): String {
     if (this.startsWith("\"") && this.endsWith("\"")) {

@@ -1,6 +1,6 @@
 package jetbrains.buildServer.server.querylang.parser
 
-import jetbrains.buildServer.server.querylang.ast.*
+import jetbrains.buildServer.server.querylang.ast_old.*
 
 object StringConditionVisitor : QLangGrammarBaseVisitor<ConditionAST<StringFilter>>() {
     override fun visitSingleStringFilter(ctx: QLangGrammarParser.SingleStringFilterContext?): ConditionAST<StringFilter> {

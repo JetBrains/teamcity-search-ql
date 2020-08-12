@@ -1,6 +1,6 @@
-package jetbrains.buildServer.server.querylang.ast
+package jetbrains.buildServer.server.querylang.ast_old
 
-import jetbrains.buildServer.server.querylang.ast.wrappers.*
+import jetbrains.buildServer.server.querylang.ast_old.wrappers.*
 import jetbrains.buildServer.server.querylang.myProjectManager
 import jetbrains.buildServer.serverSide.*
 import jetbrains.buildServer.vcs.SVcsRoot
@@ -120,7 +120,8 @@ interface ProjectConditionContainer : ConditionContainer<ProjectFilterType, SPro
     }
 }
 
-interface VcsRootFilterType : Filter, VcsRootEntryFilter
+interface VcsRootFilterType : Filter,
+    VcsRootEntryFilter
 
 interface VcsRootConditionContainer : ConditionContainer<VcsRootFilterType, SVcsRoot> {
     override fun buildFilter(filter: VcsRootFilterType, context: Any?): ObjectFilter<SVcsRoot> {

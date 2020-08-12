@@ -1,14 +1,11 @@
 package jetbrains.buildServer.server.querylang.requests
 
-import jetbrains.buildServer.server.querylang.ast.*
+import jetbrains.buildServer.server.querylang.ast_old.*
 import jetbrains.buildServer.server.querylang.objects.BuildConfiguration
 import jetbrains.buildServer.server.querylang.objects.BuildTemplate
 import jetbrains.buildServer.server.querylang.objects.Project
 import jetbrains.buildServer.server.querylang.objects.VcsRoot
 import jetbrains.buildServer.serverSide.ProjectManager
-import jetbrains.buildServer.serverSide.SBuildType
-import jetbrains.buildServer.serverSide.SProject
-import jetbrains.buildServer.vcs.SVcsRoot
 
 class InternalApiQueryHandler(
         val projectManager: ProjectManager

@@ -1,4 +1,4 @@
-package jetbrains.buildServer.server.querylang.ast.wrappers
+package jetbrains.buildServer.server.querylang.ast_old.wrappers
 
 import jetbrains.buildServer.serverSide.SBuildType
 import jetbrains.buildServer.serverSide.artifacts.SArtifactDependency
