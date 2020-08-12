@@ -1,5 +1,9 @@
 package jetbrains.buildServer.server.querylang.ast.wrappers
 
+import jetbrains.buildServer.serverSide.artifacts.SArtifactDependency
+import jetbrains.buildServer.serverSide.dependency.Dependency
+import jetbrains.buildServer.util.Option
+
 
 interface FIdContainer {
     val id: String
@@ -10,7 +14,7 @@ interface FProjectContainer {
 }
 
 interface FBuildConfContainer {
-    val buildConfs : List<WBuilConf>
+    val buildConfs : List<WBuildConf>
 }
 
 interface FVcsRootContainer {
@@ -53,4 +57,24 @@ interface FAncestorContainer {
 
 interface FVcsRootEntryContainer {
     val vcsRootEntry: WVcsRootEntry
+}
+
+interface FDependencyContainer {
+    val dependencies: List<WDependency>
+    val ownDependencies: List<WDependency>
+}
+
+interface OnlyArtifactDependency {
+    val adep: SArtifactDependency
+}
+
+interface OnlySnapshotDependency {
+    val sdep: Dependency
+}
+
+interface FOptionContainer {
+    val options: Collection<Option<Any>>
+    val ownOptions: Collection<Option<Any>>
+
+    fun getOption(opt: Option<Any>) : Any
 }

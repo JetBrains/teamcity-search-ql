@@ -334,7 +334,7 @@ interface BuildConfConditionContainer : ConditionContainer<BuildConfFilterType, 
                 val (nameFilter, valFilter) = filter.buildP()
                 ObjectFilter { bt ->
                     val options = if (filter.includeInherited) bt.options
-                    else bt.ownOptions
+                        else bt.ownOptions
                     options.any {opt ->
                         nameFilter.accepts(opt.key) && valFilter.accepts(bt.getOption(opt).toString())
                     }
