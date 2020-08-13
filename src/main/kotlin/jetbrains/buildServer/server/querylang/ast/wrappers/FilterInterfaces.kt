@@ -68,8 +68,18 @@ interface OnlyArtifactDependency {
     val adep: SArtifactDependency
 }
 
-interface OnlySnapshotDependency {
+interface OnlySnapshotDependency : FOptionContainer {
     val sdep: Dependency
+
+    override val options: Collection<Option<Any>>
+        get() = sdep.options
+
+    override val ownOptions: Collection<Option<Any>>
+        get() = sdep.ownOptions
+
+    override fun getOption(opt: Option<Any>): Any {
+        return sdep.getOption(opt)
+    }
 }
 
 interface FOptionContainer {
@@ -77,4 +87,8 @@ interface FOptionContainer {
     val ownOptions: Collection<Option<Any>>
 
     fun getOption(opt: Option<Any>) : Any
+}
+
+interface FTypeContainer {
+    val type: String
 }

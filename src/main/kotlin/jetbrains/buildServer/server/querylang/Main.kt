@@ -1,11 +1,11 @@
 package jetbrains.buildServer.server.querylang
 
+import jetbrains.buildServer.server.querylang.ast.FilterRegistration
 import jetbrains.buildServer.server.querylang.autocompl.AutoCompletion
 import jetbrains.buildServer.server.querylang.autocompl.Completer
 import jetbrains.buildServer.server.querylang.parser.QueryParser
 
 fun main() {
-
     val parser = QueryParser
     val completer = Completer(null)
     val autoCompl = AutoCompletion(null, completer)

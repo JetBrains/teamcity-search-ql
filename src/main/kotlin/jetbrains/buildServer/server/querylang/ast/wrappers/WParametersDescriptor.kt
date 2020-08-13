@@ -6,12 +6,15 @@ import jetbrains.buildServer.serverSide.ParametersDescriptor
 import jetbrains.buildServer.serverSide.SBuildFeatureDescriptor
 import jetbrains.buildServer.serverSide.SProjectFeatureDescriptor
 
-abstract class WParametersDescriptor(val obj: ParametersDescriptor): FParamContainer, FEnabledContainer {
+abstract class WParametersDescriptor(val obj: ParametersDescriptor): FParamContainer, FEnabledContainer, FTypeContainer {
     override val params: Map<String, String>
         get() = obj.parameters
 
     override val ownParams: Map<String, String>
         get() = params
+
+    override val type: String
+        get() = obj.type
 }
 
 fun BuildTriggerDescriptor.wrap() = WTrigger(this)

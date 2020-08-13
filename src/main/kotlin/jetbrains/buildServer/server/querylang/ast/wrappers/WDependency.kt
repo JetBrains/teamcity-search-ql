@@ -1,9 +1,9 @@
 package jetbrains.buildServer.server.querylang.ast.wrappers
 
+import jetbrains.buildServer.serverSide.SBuildType
 import jetbrains.buildServer.serverSide.artifacts.SArtifactDependency
 import jetbrains.buildServer.serverSide.dependency.Dependency
-import jetbrains.buildServer.util.Option
-import java.lang.IllegalStateException
+import kotlin.IllegalStateException
 
 sealed class WDependency {
     abstract val dependsOn: WBuildConf?
@@ -18,19 +18,9 @@ class WArtifactDependency(override val adep: SArtifactDependency): WDependency()
 
 fun Dependency.wrap() = WSnapshotDependency(this)
 
-class WSnapshotDependency(override val sdep: Dependency): WDependency(), OnlySnapshotDependency, FOptionContainer {
+class WSnapshotDependency(override val sdep: Dependency): WDependency(), OnlySnapshotDependency {
     override val dependsOn: WBuildConf?
         get() = sdep.dependOn?.wrap()
-
-    override val options: Collection<Option<Any>>
-        get() = sdep.options
-
-    override val ownOptions: Collection<Option<Any>>
-        get() = sdep.ownOptions
-
-    override fun getOption(opt: Option<Any>): Any {
-        return sdep.getOption(opt)
-    }
 }
 
 class WCombinedDependency(override val sdep: Dependency, override val adep: SArtifactDependency): WDependency(), OnlySnapshotDependency, OnlyArtifactDependency {

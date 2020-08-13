@@ -212,6 +212,20 @@ data class ValueFilter(
     }
 }
 
+data class TypeFilter(
+    override val condition: ConditionAST<String>
+) : ConditionFilter<FTypeContainer, String>()
+{
+    companion object : Names("type")
+    override val names = Companion.names
+
+    override fun buildFrom(filter: ObjectFilter<String>, context: Any?): ObjectFilter<FTypeContainer> {
+        return RealObjectFilter {obj ->
+            filter.accepts(obj.type)
+        }
+    }
+}
+
 data class EnabledFilter(private val placeholder: String = "") : Filter<FEnabledContainer> {
 
     companion object : Names("enabled")

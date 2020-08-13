@@ -2,20 +2,23 @@ package jetbrains.buildServer.server.querylang.ast.wrappers
 
 import jetbrains.buildServer.serverSide.BuildTypeEx
 import jetbrains.buildServer.serverSide.SBuildType
+import jetbrains.buildServer.util.Option
 
 fun SBuildType.wrap() = WBuildConf(this)
 
-class WBuildConf(
-    val sbuildConf: SBuildType
-) : FIdContainer,
+abstract class AbstractWBuildConf :
+    FIdContainer,
     FProjectContainer,
     FParentContainer,
     FTriggerContainer,
     FStepContainer,
     FTemplateContainer,
     FParamContainer,
-    FDependencyContainer
+    FDependencyContainer,
+    FOptionContainer
 {
+    abstract val sbuildConf: SBuildType
+
     val buildTypeEx: BuildTypeEx by lazy {
         sbuildConf as? BuildTypeEx ?: throw IllegalStateException("Should be BuildTypeEx")
     }
@@ -57,9 +60,23 @@ class WBuildConf(
     override val params: Map<String, String>
         get() = sbuildConf.parameters
 
+    override val options: Collection<Option<Any>>
+        get() = sbuildConf.options
+
+    override val ownOptions: Collection<Option<Any>>
+        get() = sbuildConf.ownOptions
+
+    override fun getOption(opt: Option<Any>): Any {
+        return sbuildConf.getOption(opt)
+    }
+
     override val dependencies: List<WDependency>
         get() = (sbuildConf.dependencies.map {it.wrap()} + sbuildConf.artifactDependencies.map {it.wrap()}).uniteEqual()
 
     override val ownDependencies: List<WDependency>
         get() = (sbuildConf.ownDependencies.map {it.wrap()} + buildTypeEx.settings.ownArtifactDependencies.map {it.wrap()}).uniteEqual()
 }
+
+class WBuildConf(
+    override val sbuildConf: SBuildType
+) : AbstractWBuildConf()

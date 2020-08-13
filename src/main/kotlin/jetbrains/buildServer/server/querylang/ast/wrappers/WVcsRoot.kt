@@ -6,10 +6,12 @@ import jetbrains.buildServer.vcs.VcsRootInstanceEntry
 
 fun SVcsRoot.wrap() = WSimpleVcsRoot(this)
 
-abstract class WVcsRoot() : FIdContainer,
+abstract class WVcsRoot() :
+    FIdContainer,
     FProjectContainer,
     FParentContainer,
-    FParamContainer
+    FParamContainer,
+    FTypeContainer
 {
     abstract val svcsRoot: SVcsRoot
 
@@ -27,6 +29,9 @@ abstract class WVcsRoot() : FIdContainer,
 
     override val params: Map<String, String>
         get() = ownParams
+
+    override val type: String
+        get() = svcsRoot.vcsName
 }
 
 class WSimpleVcsRoot(override val svcsRoot: SVcsRoot) : WVcsRoot()

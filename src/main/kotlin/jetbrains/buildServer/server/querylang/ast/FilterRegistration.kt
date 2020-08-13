@@ -4,6 +4,13 @@ import kotlin.reflect.KClass
 import kotlin.reflect.full.isSuperclassOf
 
 object FilterRegistration {
+    private val filterGraph: MutableMap< KClass<out Filter<*>> , MutableSet<KClass<out Filter<*>>> > = mutableMapOf()
+
+    data class ConditionFilterTypes<Obj : Any, NestedObj : Any>(val filterClass: KClass<Obj>, val subFilterClass: KClass<NestedObj>)
+    private val conditionFilters: MutableMap< KClass<out ConditionFilter<*, *>>, ConditionFilterTypes<*, *>> = mutableMapOf()
+
+    private val terminalFilters: MutableMap< KClass<out Filter<*>>, KClass<*> > = mutableMapOf()
+
     init {
         registerTerminalFilter(EqualsStringFilter::class)
         registerTerminalFilter(PrefixStringFilter::class)
@@ -11,6 +18,7 @@ object FilterRegistration {
         registerTerminalFilter(SubstringFilter::class)
         registerTerminalFilter(EnabledFilter::class)
         registerTerminalFilter(CleanFilter::class)
+        registerTerminalFilter(StringParamFilter::class)
 
         registerConditionFilter(IdFilter::class)
         registerConditionFilter(BuildConfFilter::class)
@@ -22,6 +30,7 @@ object FilterRegistration {
         registerConditionFilter(FeatureFilter::class)
         registerConditionFilter(TemplateFilter::class)
         registerConditionFilter(ParameterFilter::class)
+        registerConditionFilter(ValueFilter::class)
         registerConditionFilter(AncestorFilter::class)
         registerConditionFilter(VcsRootEntryFilter::class)
         registerConditionFilter(RulesFilter::class)
@@ -30,13 +39,16 @@ object FilterRegistration {
         registerConditionFilter(SnapshotFilter::class)
         registerConditionFilter(RevRuleFilter::class)
         registerConditionFilter(OptionFilter::class)
+        registerConditionFilter(TypeFilter::class)
     }
-    private val filterGraph: MutableMap< KClass<out Filter<*>> , MutableSet<KClass<out Filter<*>>> > = mutableMapOf()
 
-    data class ConditionFilterTypes<Obj : Any, NestedObj : Any>(val filterClass: KClass<Obj>, val subFilterClass: KClass<NestedObj>)
-    private val conditionFilters: MutableMap< KClass<out ConditionFilter<*, *>>, ConditionFilterTypes<*, *>> = mutableMapOf()
-
-    private val terminalFilters: MutableMap< KClass<out Filter<*>>, KClass<*> > = mutableMapOf()
+    fun printaAllRelations() {
+        filterGraph.forEach {(fc, fsubc) ->
+            println("${fc.simpleName}(${fc.getName()})")
+            println(fsubc.joinToString(separator = ", ") {"${it.simpleName}(${it.getName()})"})
+            println()
+        }
+    }
 
     private inline fun <reified Obj : Any,reified NestedObj : Any> registerConditionFilter(filter: KClass<out ConditionFilter<Obj, NestedObj>>) {
         conditionFilters[filter] = ConditionFilterTypes(Obj::class, NestedObj::class)

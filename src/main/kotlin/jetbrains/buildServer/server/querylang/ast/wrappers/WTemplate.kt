@@ -1,6 +1,7 @@
 package jetbrains.buildServer.server.querylang.ast.wrappers
 
 import jetbrains.buildServer.serverSide.BuildTypeTemplate
+import jetbrains.buildServer.util.Option
 
 fun BuildTypeTemplate.wrap() = WTemplate(this)
 
@@ -12,7 +13,8 @@ class WTemplate(
     FTriggerContainer,
     FStepContainer,
     FParamContainer,
-    FDependencyContainer
+    FDependencyContainer,
+    FOptionContainer
 {
     override val id: String
         get() = stemplate.externalId
@@ -47,6 +49,16 @@ class WTemplate(
 
     override val params: Map<String, String>
         get() = stemplate.parameters
+
+    override val options: Collection<Option<Any>>
+        get() = stemplate.options
+
+    override val ownOptions: Collection<Option<Any>>
+        get() = stemplate.ownOptions
+
+    override fun getOption(opt: Option<Any>): Any {
+        return stemplate.getOption(opt)
+    }
 
     override val dependencies: List<WDependency>
         get() = (stemplate.dependencies.map {it.wrap()} + stemplate.artifactDependencies.map {it.wrap()}).uniteEqual()
