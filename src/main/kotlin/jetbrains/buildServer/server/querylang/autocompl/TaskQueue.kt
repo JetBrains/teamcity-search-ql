@@ -30,6 +30,7 @@ class TaskQueue(
 
     fun destroy() {
         scheduledExecutor.shutdown()
+        scheduledExecutor.awaitTermination(10, TimeUnit.SECONDS)
     }
 
     constructor(compl: CompletionManager): this(compl, 300, 0, TimeUnit.SECONDS)
@@ -54,11 +55,12 @@ class TaskQueue(
     }
 
     private fun update() {
+        lateinit var tasks: List<ObjectUpdateTask>
         synchronized(this) {
-            val tasks = queue.toList()
+            tasks = queue.toList()
             queue.clear()
-            Thread { update(tasks) }.start()
         }
+        update(tasks)
     }
 
     private fun update(tasks: List<ObjectUpdateTask>) {

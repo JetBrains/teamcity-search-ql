@@ -1,7 +1,10 @@
 package jetbrains.buildServer.server.querylang.ast
 
 import jetbrains.buildServer.server.querylang.ast.wrappers.*
+import jetbrains.buildServer.server.querylang.myProjectManager
 import java.lang.IllegalStateException
+
+interface TopLevelQuery
 
 data class IdFilter(
     override val condition: ConditionAST<String>
@@ -17,8 +20,10 @@ data class IdFilter(
 
 data class BuildConfFilter(
     override val condition: ConditionAST<WBuildConf>
-) : ConditionFilter<FBuildConfContainer, WBuildConf>() {
-    companion object : Names("configuration, buildConfiguration")
+) : ConditionFilter<FBuildConfContainer, WBuildConf>(),
+    TopLevelQuery
+{
+    companion object : Names("configuration", "buildConfiguration")
     override val names = Companion.names
 
     override fun buildFrom(filter: ObjectFilter<WBuildConf>, context: Any?): ObjectFilter<FBuildConfContainer> {
@@ -28,9 +33,11 @@ data class BuildConfFilter(
     }
 }
 
-data class VcsEntryFilter(
+data class VcsRootFilter(
     override val condition: ConditionAST<WVcsRoot>
-) : ConditionFilter<FVcsRootContainer, WVcsRoot>() {
+) : ConditionFilter<FVcsRootContainer, WVcsRoot>(),
+    TopLevelQuery
+{
     companion object : Names("vcsRoot")
     override val names = Companion.names
 
@@ -43,7 +50,8 @@ data class VcsEntryFilter(
 
 data class ProjectFilter(
     override val condition: ConditionAST<WProject>
-) : ConditionFilter<FProjectContainer, WProject>()
+) : ConditionFilter<FProjectContainer, WProject>(),
+    TopLevelQuery
 {
     companion object : Names("project")
     override val names = Companion.names
@@ -60,6 +68,22 @@ data class ProjectFilter(
             }
 
             false
+        }
+    }
+
+    override fun evalFilter(filter: Filter<WProject>): EvalResult<WProject> {
+        return when(filter) {
+            is IdFilter -> {
+                val (restFilter, ids) = filter.eval()
+                return if (restFilter is NoneObjectFilter) {
+                    val projects = ids.mapNotNull { myProjectManager.findProjectByExternalId(it)?.wrap() }
+                    EvalResult(NoneObjectFilter(), projects)
+                }
+                else {
+                    super.evalFilter(filter)
+                }
+            }
+            else -> super.evalFilter(filter)
         }
     }
 }
@@ -159,9 +183,10 @@ data class FeatureFilter(
     }
 }
 
-data class TempDepFilter(
+data class TemplateFilter(
     override val condition: ConditionAST<WTemplate>
-) : ConditionFilter<FTemplateContainer, WTemplate>()
+) : ConditionFilter<FTemplateContainer, WTemplate>(),
+    TopLevelQuery
 {
     companion object : Names("template")
     override val names = Companion.names

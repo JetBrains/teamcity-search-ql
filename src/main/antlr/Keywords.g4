@@ -3,7 +3,7 @@ lexer grammar Keywords;
 @lexer::header {
 package jetbrains.buildServer.server.querylang.parser;
 
-import jetbrains.buildServer.server.querylang.ast.*;
+import jetbrains.buildServer.server.querylang.ast_old.*;
 import java.util.*;
 }
 
