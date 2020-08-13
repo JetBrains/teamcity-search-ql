@@ -4,8 +4,6 @@ import jetbrains.buildServer.server.querylang.ast.wrappers.*
 import jetbrains.buildServer.server.querylang.myProjectManager
 import java.lang.IllegalStateException
 
-interface TopLevelQuery
-
 data class IdFilter(
     override val condition: ConditionAST<String>
 ) : ConditionFilter<FIdContainer, String>()
@@ -20,8 +18,7 @@ data class IdFilter(
 
 data class BuildConfFilter(
     override val condition: ConditionAST<WBuildConf>
-) : ConditionFilter<FBuildConfContainer, WBuildConf>(),
-    TopLevelQuery
+) : ConditionFilter<FBuildConfContainer, WBuildConf>()
 {
     companion object : Names("configuration", "buildConfiguration")
     override val names = Companion.names
@@ -34,14 +31,13 @@ data class BuildConfFilter(
 }
 
 data class VcsRootFilter(
-    override val condition: ConditionAST<WVcsRoot>
-) : ConditionFilter<FVcsRootContainer, WVcsRoot>(),
-    TopLevelQuery
+    override val condition: ConditionAST<AbstractWVcsRoot>
+) : ConditionFilter<FVcsRootContainer, AbstractWVcsRoot>()
 {
     companion object : Names("vcsRoot")
     override val names = Companion.names
 
-    override fun buildFrom(filter: ObjectFilter<WVcsRoot>, context: Any?): ObjectFilter<FVcsRootContainer> {
+    override fun buildFrom(filter: ObjectFilter<AbstractWVcsRoot>, context: Any?): ObjectFilter<FVcsRootContainer> {
         return RealObjectFilter {obj ->
             obj.vcsRoots.any {filter.accepts(it)}
         }
@@ -50,8 +46,7 @@ data class VcsRootFilter(
 
 data class ProjectFilter(
     override val condition: ConditionAST<WProject>
-) : ConditionFilter<FProjectContainer, WProject>(),
-    TopLevelQuery
+) : ConditionFilter<FProjectContainer, WProject>()
 {
     companion object : Names("project")
     override val names = Companion.names
@@ -185,8 +180,7 @@ data class FeatureFilter(
 
 data class TemplateFilter(
     override val condition: ConditionAST<WTemplate>
-) : ConditionFilter<FTemplateContainer, WTemplate>(),
-    TopLevelQuery
+) : ConditionFilter<FTemplateContainer, WTemplate>()
 {
     companion object : Names("template")
     override val names = Companion.names
@@ -311,8 +305,8 @@ data class RulesFilter(
 }
 
 data class DependencyFilter(
-    override val condition: ConditionAST<WDependency>
-) : ConditionFilter<FDependencyContainer, WDependency>()
+    override val condition: ConditionAST<SuperDependency>
+) : ConditionFilter<FDependencyContainer, SuperDependency>()
 {
     companion object : Names("dependency")
 
@@ -320,28 +314,29 @@ data class DependencyFilter(
 
     var includeInhereted = false
 
-    override fun buildFrom(filter: ObjectFilter<WDependency>, context: Any?): ObjectFilter<FDependencyContainer> {
+    override fun buildFrom(filter: ObjectFilter<SuperDependency>, context: Any?): ObjectFilter<FDependencyContainer> {
         return RealObjectFilter {obj ->
             val dependencies = if (includeInhereted) obj.dependencies
                                else obj.ownDependencies
-            dependencies.any {filter.accepts(it)}
+            dependencies.any {filter.accepts(SuperDependency(it))}
         }
     }
 }
 
 data class ArtifactFilter(
     override val condition: ConditionAST<OnlyArtifactDependency>
-) : ConditionFilter<WDependency, OnlyArtifactDependency>()
+) : ConditionFilter<SuperDependency, OnlyArtifactDependency>()
 {
     companion object : Names("artifact")
     override val names = Companion.names
 
-    override fun buildFrom(filter: ObjectFilter<OnlyArtifactDependency>, context: Any?): ObjectFilter<WDependency> {
+    override fun buildFrom(filter: ObjectFilter<OnlyArtifactDependency>, context: Any?): ObjectFilter<SuperDependency> {
         return RealObjectFilter {obj ->
-            when(obj) {
-                is WArtifactDependency -> filter.accepts(obj)
+            val dep = obj.dep
+            when(dep) {
+                is WArtifactDependency -> filter.accepts(dep)
                 is WSnapshotDependency -> false
-                is WCombinedDependency -> filter.accepts(obj)
+                is WCombinedDependency -> filter.accepts(dep)
             }
         }
     }
@@ -349,17 +344,18 @@ data class ArtifactFilter(
 
 data class SnapshotFilter(
     override val condition: ConditionAST<OnlySnapshotDependency>
-) : ConditionFilter<WDependency, OnlySnapshotDependency>()
+) : ConditionFilter<SuperDependency, OnlySnapshotDependency>()
 {
     companion object : Names("snapshot")
     override val names = Companion.names
 
-    override fun buildFrom(filter: ObjectFilter<OnlySnapshotDependency>, context: Any?): ObjectFilter<WDependency> {
+    override fun buildFrom(filter: ObjectFilter<OnlySnapshotDependency>, context: Any?): ObjectFilter<SuperDependency> {
         return RealObjectFilter {obj ->
-            when(obj) {
+            val dep = obj.dep
+            when(dep) {
                 is WArtifactDependency -> false
-                is WSnapshotDependency -> filter.accepts(obj)
-                is WCombinedDependency -> filter.accepts(obj)
+                is WSnapshotDependency -> filter.accepts(dep)
+                is WCombinedDependency -> filter.accepts(dep)
             }
         }
     }

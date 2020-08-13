@@ -5,6 +5,8 @@ import jetbrains.buildServer.serverSide.dependency.Dependency
 import jetbrains.buildServer.util.Option
 
 
+interface TopLevelObject
+
 interface FIdContainer {
     val id: String
 }
@@ -18,7 +20,7 @@ interface FBuildConfContainer {
 }
 
 interface FVcsRootContainer {
-    val vcsRoots : List<WVcsRoot>
+    val vcsRoots : List<AbstractWVcsRoot>
 }
 
 interface FParentContainer {

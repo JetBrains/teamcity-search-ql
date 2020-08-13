@@ -4,21 +4,25 @@ import kotlin.reflect.KClass
 import kotlin.reflect.full.isSuperclassOf
 
 object FilterRegistration {
-    private val filterGraph: MutableMap< KClass<out Filter<*>> , MutableSet<KClass<out Filter<*>>> > = mutableMapOf()
+    private val filterGraph: MutableMap< KClass<out ConditionContainer<*>> , MutableSet<KClass<out Filter<*>>> > = mutableMapOf()
 
-    data class ConditionFilterTypes<Obj : Any, NestedObj : Any>(val filterClass: KClass<Obj>, val subFilterClass: KClass<NestedObj>)
-    private val conditionFilters: MutableMap< KClass<out ConditionFilter<*, *>>, ConditionFilterTypes<*, *>> = mutableMapOf()
+    private val conditionContainers: MutableMap< KClass<out ConditionContainer<*>>, KClass<*>> = mutableMapOf()
 
-    private val terminalFilters: MutableMap< KClass<out Filter<*>>, KClass<*> > = mutableMapOf()
+    private val filters: MutableMap< KClass<out Filter<*>>, KClass<*> > = mutableMapOf()
 
     init {
-        registerTerminalFilter(EqualsStringFilter::class)
-        registerTerminalFilter(PrefixStringFilter::class)
-        registerTerminalFilter(SuffixStringFilter::class)
-        registerTerminalFilter(SubstringFilter::class)
-        registerTerminalFilter(EnabledFilter::class)
-        registerTerminalFilter(CleanFilter::class)
-        registerTerminalFilter(StringParamFilter::class)
+        registerConditionContainer(ProjectTopLevelQuery::class)
+        registerConditionContainer(BuildConfTopLevelQuery::class)
+        registerConditionContainer(TemplateTopLevelQuery::class)
+        registerConditionContainer(VcsRootTopLevelQuery::class)
+
+        registerFilter(EqualsStringFilter::class)
+        registerFilter(PrefixStringFilter::class)
+        registerFilter(SuffixStringFilter::class)
+        registerFilter(SubstringFilter::class)
+        registerFilter(EnabledFilter::class)
+        registerFilter(CleanFilter::class)
+        registerFilter(StringParamFilter::class)
 
         registerConditionFilter(IdFilter::class)
         registerConditionFilter(BuildConfFilter::class)
@@ -50,32 +54,40 @@ object FilterRegistration {
         }
     }
 
+    fun canBeSubfilter(filter: KClass<out ConditionContainer<*>>, subf: KClass<out Filter<*>>): Boolean {
+        return filterGraph[filter]?.contains(subf) ?: false
+    }
+
     private inline fun <reified Obj : Any,reified NestedObj : Any> registerConditionFilter(filter: KClass<out ConditionFilter<Obj, NestedObj>>) {
-        conditionFilters[filter] = ConditionFilterTypes(Obj::class, NestedObj::class)
-
-        conditionFilters.forEach {(filterClass, objTypes) ->
-            if (Obj::class.isSuperclassOf(objTypes.subFilterClass)) {
-                filterGraph.getOrPut(filterClass, { mutableSetOf()}).add(filter)
-            }
-            if (objTypes.filterClass.isSuperclassOf(NestedObj::class)) {
-                filterGraph.getOrPut(filter, { mutableSetOf()}).add(filterClass)
-            }
-        }
-
-        terminalFilters.forEach { (filterClass, objClass) ->
-            if (objClass.isSuperclassOf(NestedObj::class)) {
-                filterGraph.getOrPut(filter, { mutableSetOf() }).add(filterClass)
-            }
-        }
+        registerFilter(filter)
+        registerConditionContainer(filter)
     }
 
-    private inline fun <reified Obj> registerTerminalFilter(filter: KClass<out Filter<Obj>>) {
-        terminalFilters[filter] = Obj::class
+    private inline fun <reified Obj> registerFilter(filter: KClass<out Filter<Obj>>) {
+        filters[filter] = Obj::class
 
-        conditionFilters.forEach {(filterClass, objTypes) ->
-            if (Obj::class.isSuperclassOf(objTypes.subFilterClass)) {
+        conditionContainers.forEach {(filterClass, objTypes) ->
+            if (Obj::class.isSuperclassOf(objTypes)) {
                 filterGraph.getOrPut(filterClass, { mutableSetOf()}).add(filter)
             }
         }
     }
+
+    private inline fun <reified NestedObj> registerConditionContainer(conditionContainer: KClass<out ConditionContainer<NestedObj>>) {
+        conditionContainers[conditionContainer] = NestedObj::class
+
+        filters.forEach {(filterClass, objType) ->
+            if (objType.isSuperclassOf(NestedObj::class)) {
+                filterGraph.getOrPut(conditionContainer, { mutableSetOf()}).add(filterClass)
+            }
+        }
+    }
+}
+
+fun <NestedObj> Filter<*>.checkAndCast(filter: KClass<out ConditionContainer<NestedObj>>): Filter<NestedObj>? {
+    val res = this as? Filter<NestedObj>
+    if (!FilterRegistration.canBeSubfilter(filter, this::class)) {
+        return null
+    }
+    return res
 }

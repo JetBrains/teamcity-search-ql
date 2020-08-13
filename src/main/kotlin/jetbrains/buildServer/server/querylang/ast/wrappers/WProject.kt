@@ -18,7 +18,8 @@ class WProject(
     FParentContainer,
     FFeatureContainer,
     FAncestorContainer,
-    FParamContainer
+    FParamContainer,
+    TopLevelObject
 {
     override val id: String
         get() = sproject.externalId

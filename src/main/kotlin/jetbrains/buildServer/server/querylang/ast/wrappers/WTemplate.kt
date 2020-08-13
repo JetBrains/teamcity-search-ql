@@ -14,7 +14,8 @@ class WTemplate(
     FStepContainer,
     FParamContainer,
     FDependencyContainer,
-    FOptionContainer
+    FOptionContainer,
+    TopLevelObject
 {
     override val id: String
         get() = stemplate.externalId

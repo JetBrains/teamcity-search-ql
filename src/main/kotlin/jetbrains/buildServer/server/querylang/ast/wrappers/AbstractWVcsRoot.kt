@@ -4,9 +4,9 @@ import jetbrains.buildServer.vcs.SVcsRoot
 import jetbrains.buildServer.vcs.VcsRootEntry
 import jetbrains.buildServer.vcs.VcsRootInstanceEntry
 
-fun SVcsRoot.wrap() = WSimpleVcsRoot(this)
+fun SVcsRoot.wrap() = WVcsRoot(this)
 
-abstract class WVcsRoot() :
+abstract class AbstractWVcsRoot() :
     FIdContainer,
     FProjectContainer,
     FParentContainer,
@@ -34,9 +34,9 @@ abstract class WVcsRoot() :
         get() = svcsRoot.vcsName
 }
 
-class WSimpleVcsRoot(override val svcsRoot: SVcsRoot) : WVcsRoot()
+class WVcsRoot(override val svcsRoot: SVcsRoot) : AbstractWVcsRoot(), TopLevelObject
 
-abstract class WVcsRootEntry : WVcsRoot() {
+abstract class WVcsRootEntry : AbstractWVcsRoot() {
     abstract val rules: String
     abstract override val svcsRoot: SVcsRoot
 }

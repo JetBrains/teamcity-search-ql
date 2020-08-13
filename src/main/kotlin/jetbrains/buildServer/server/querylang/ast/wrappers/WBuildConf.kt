@@ -79,4 +79,4 @@ abstract class AbstractWBuildConf :
 
 class WBuildConf(
     override val sbuildConf: SBuildType
-) : AbstractWBuildConf()
+) : AbstractWBuildConf(), TopLevelObject

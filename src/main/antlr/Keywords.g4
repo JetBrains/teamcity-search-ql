@@ -3,7 +3,7 @@ lexer grammar Keywords;
 @lexer::header {
 package jetbrains.buildServer.server.querylang.parser;
 
-import jetbrains.buildServer.server.querylang.ast_old.*;
+import jetbrains.buildServer.server.querylang.ast.*;
 import java.util.*;
 }
 
@@ -11,14 +11,14 @@ import java.util.*;
     Map<String, Integer> keywords = new HashMap<String, Integer>();
 
     {
-        putToKeywords(FindProject.Companion.getNames(), QLangGrammarParser.PROJECT);
-        putToKeywords(FindBuildConf.Companion.getNames(), QLangGrammarParser.BUILD_CONFIGURATION);
-        putToKeywords(FindTemplate.Companion.getNames(), QLangGrammarParser.TEMPLATE);
-        putToKeywords(FindVcsRoot.Companion.getNames(), QLangGrammarParser.VCS_ROOT);
+        putToKeywords(ProjectTopLevelQuery.Companion.getNames(), QLangGrammarParser.PROJECT);
+        putToKeywords(BuildConfTopLevelQuery.Companion.getNames(), QLangGrammarParser.BUILD_CONFIGURATION);
+        putToKeywords(TemplateTopLevelQuery.Companion.getNames(), QLangGrammarParser.TEMPLATE);
+        putToKeywords(VcsRootTopLevelQuery.Companion.getNames(), QLangGrammarParser.VCS_ROOT);
 
         putToKeywords(IdFilter.Companion.getNames() , QLangGrammarParser.ID);
         putToKeywords(ProjectFilter.Companion.getNames(), QLangGrammarParser.PROJECT);
-        putToKeywords(TempDepFilter.Companion.getNames(), QLangGrammarParser.TEMPLATE);
+        putToKeywords(TemplateFilter.Companion.getNames(), QLangGrammarParser.TEMPLATE);
         putToKeywords(ParentFilter.Companion.getNames(), QLangGrammarParser.PARENT);
         putToKeywords(TriggerFilter.Companion.getNames(), QLangGrammarParser.TRIGGER);
         putToKeywords(StepFilter.Companion.getNames(), QLangGrammarParser.STEP);

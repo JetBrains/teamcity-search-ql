@@ -1,12 +1,12 @@
 package jetbrains.buildServer.server.querylang.parser
 
-import jetbrains.buildServer.server.querylang.ast_old.AllFilterModifier
-import jetbrains.buildServer.server.querylang.ast_old.Filter
-import jetbrains.buildServer.server.querylang.ast_old.FilterModifier
+import jetbrains.buildServer.server.querylang.ast.AllFilterModifier
+import jetbrains.buildServer.server.querylang.ast.Filter
+import jetbrains.buildServer.server.querylang.ast.FilterModifier
 import org.antlr.v4.runtime.ParserRuleContext
 
 object ModifierVisitor : QLangGrammarBaseVisitor<FilterModifier>() {
-    fun FilterModifier.applyAndCheck(filter: Filter): FilterModifier {
+    fun FilterModifier.applyAndCheck(filter: Filter<*>): FilterModifier {
         if (!this.apply(filter)) {
             throw ParsingException("${this.names.first()} is not a modifier of ${filter.names[0]}")
         }
@@ -15,7 +15,7 @@ object ModifierVisitor : QLangGrammarBaseVisitor<FilterModifier>() {
         }
     }
 
-    fun visitAndApply(ctx: ParserRuleContext, filter: Filter): FilterModifier {
+    fun visitAndApply(ctx: ParserRuleContext, filter: Filter<*>): FilterModifier {
         return ctx.accept(this).applyAndCheck(filter)
     }
 

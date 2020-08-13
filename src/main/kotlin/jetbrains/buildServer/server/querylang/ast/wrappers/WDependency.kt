@@ -5,6 +5,11 @@ import jetbrains.buildServer.serverSide.artifacts.SArtifactDependency
 import jetbrains.buildServer.serverSide.dependency.Dependency
 import kotlin.IllegalStateException
 
+class SuperDependency(val dep: WDependency): AbstractWBuildConf() {
+    override val sbuildConf: SBuildType
+        get() = dep.dependsOn!!.sbuildConf
+}
+
 sealed class WDependency {
     abstract val dependsOn: WBuildConf?
 }
