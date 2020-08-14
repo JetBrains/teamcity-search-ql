@@ -11,7 +11,7 @@ import kotlin.collections.LinkedHashSet
 class TaskQueue(
     val compl: CompletionManager,
     updatePeriod: Long = 300,
-    initialDelay: Long = 0,
+    initialDelay: Long = 30,
     tu: TimeUnit = TimeUnit.SECONDS
 ) {
 
@@ -33,7 +33,7 @@ class TaskQueue(
         scheduledExecutor.awaitTermination(10, TimeUnit.SECONDS)
     }
 
-    constructor(compl: CompletionManager): this(compl, 300, 0, TimeUnit.SECONDS)
+    constructor(compl: CompletionManager): this(compl, 300, 30, TimeUnit.SECONDS)
 
     fun addBuildType(bt: SBuildType) {
         addObject(BuildTypeUpdateTask(bt))

@@ -33,7 +33,9 @@ class Completer(val completionManager: CompletionManager? = null) {
                 .toCompletionResult(input)
         }
 
-        if (objectTypes.any {!graph.contains(it)}) throw IllegalStateException("Unkwnow type name")
+        objectTypes.forEach {
+            if (!graph.contains(it)) throw IllegalStateException("Unkwnow type name $it")
+        }
 
 
         //complete first level filter name (e.g `find project with par`)

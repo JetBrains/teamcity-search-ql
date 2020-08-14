@@ -59,7 +59,7 @@ abstract class AbstractWBuildConf :
         if (obj !is WParametersDescriptor) {
             throw IllegalStateException()
         }
-        return sbuildConf.isEnabled(obj.obj.id)
+        return  sbuildConf.isEnabled(obj.obj.id)
     }
 
     override val ownParams: Map<String, String>
