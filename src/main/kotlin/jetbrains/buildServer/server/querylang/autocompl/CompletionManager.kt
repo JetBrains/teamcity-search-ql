@@ -51,7 +51,7 @@ class CompletionManager(val projectManager: ProjectManager) {
     }
 
     private fun registerFinder(sf: StringFinder, vararg nameContext: KClass<out Named>) {
-        val vars = nameContext.map { it.getNames() }
+        val vars = nameContext.map { it.getNames()!! }
 
         addToMapWithPrefix(sf, "", vars)
     }

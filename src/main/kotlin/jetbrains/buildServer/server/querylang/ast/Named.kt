@@ -19,8 +19,8 @@ fun KClass<out Named>.getName(): String? {
     return companion?.names?.first()
 }
 
-fun KClass<out Named>.getNames(): List<String> {
-    val companion = this.companionObjectInstance as? Names ?: return emptyList()
+fun KClass<out Named>.getNames(): List<String>? {
+    val companion = this.companionObjectInstance as? Names
 
-    return companion.names
+    return companion?.names
 }

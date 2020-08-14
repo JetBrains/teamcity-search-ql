@@ -7,7 +7,15 @@ import kotlin.reflect.full.companionObjectInstance
 import kotlin.reflect.full.isSubclassOf
 
 class Completer(val completionManager: CompletionManager? = null) {
-    private val graph = mutableMapOf<String, MutableSet<String>>()
+    data class CompletionVars(val variants: Set<String>) {
+        fun first(): String = variants.first()
+        fun contains(str: String) = variants.contains(str)
+    }
+
+    private fun List<CompletionVars>.toStringList() : List<String> = this.map {it.first()}
+    private fun List<CompletionVars>.toFullStringList() : List<String> = this.flatMap {it.variants}
+
+    private val graph = mutableMapOf<String, MutableList<CompletionVars>>()
     private val possibleModifiers = mutableMapOf<String, MutableSet<String>>()
     private val reflections = Reflections("jetbrains.buildServer.server.querylang.ast")
 
@@ -27,7 +35,7 @@ class Completer(val completionManager: CompletionManager? = null) {
 
         //complete object type name
         if (objectTypes == null) {
-            return graph["root"]!!
+            return graph["root"]!!.map {it.first()}
                 .filterBegins(word)
                 .autocomplSort()
                 .toCompletionResult(input)
@@ -43,13 +51,14 @@ class Completer(val completionManager: CompletionManager? = null) {
             if (objectTypes.isEmpty()) {
                 throw IllegalStateException("objectTypes shouldn't be empty")
             }
-            return objectTypes.fold(graph[objectTypes.first()]!!.toSet()) {acc, s ->
-                acc.intersect(graph[s]!!)
+            return objectTypes.map {graph[it]!!.map {it.first()}.toSet()}.
+            reduce{acc, s ->
+                acc.intersect(s)
             }.toList().filterBegins(word).toCompletionResult(input)
         }
 
         //some of the types doesn't contain first filter
-        if (!objectTypes.all {graph[it]!!.contains(trace[0])}) {
+        if (!objectTypes.all {graph[it]!!.any {it.contains(trace.first())}}) {
             return listOf()
         }
 
@@ -64,7 +73,7 @@ class Completer(val completionManager: CompletionManager? = null) {
     }
 
     fun suggestBasedOnOther(input: String, otherFilters: List<String>, word: String): List<CompletionResult> {
-        val vars = graph.values.filter { value ->
+        val vars = graph.values.map{it.toStringList()}.filter { value ->
             otherFilters.all {it in value}
         }.flatMap { it.filterBegins(word) }.toSet().toList()
 
@@ -80,14 +89,14 @@ class Completer(val completionManager: CompletionManager? = null) {
         graph[node] ?: return emptyList()
 
         trace.drop(1).forEach { filterName ->
-            if (filterName !in graph[node]!!) {
+            if (filterName !in graph[node]!!.toFullStringList()) {
                 return emptyList()
             }
             node = filterName
         }
 
         if (graph.contains(node)) {
-            return graph[node]!!.filterBegins(word).toCompletionResult(input)
+            return graph[node]!!.toStringList().filterBegins(word).toCompletionResult(input)
         }
         return emptyList()
     }
@@ -105,7 +114,7 @@ class Completer(val completionManager: CompletionManager? = null) {
                 throw IllegalStateException("Unknow filter name ${filterName}")
             }
 
-            if (!graph[node]!!.contains(filterName)) {
+            if (!graph[node]!!.toFullStringList().contains(filterName)) {
                 return emptyList()
             } else {
                 node = filterName
@@ -126,7 +135,7 @@ class Completer(val completionManager: CompletionManager? = null) {
                 limit
             )
         } else {
-            graph[node]?.filterBegins(word)
+            graph[node]?.toStringList()?.filterBegins(word)
                 ?: throw IllegalStateException("Unknow filter name ${node}")
         }
     }
@@ -134,15 +143,28 @@ class Completer(val completionManager: CompletionManager? = null) {
     private fun loadFilterGraph() {
         val topLevelClasses = reflections.getSubTypesOf(TopLevelQuery::class.java)
 
-        graph["root"] = topLevelClasses.mapNotNull {it.kotlin.getName()}.toMutableSet()
+        graph["root"] = topLevelClasses.mapNotNull {
+            it.kotlin.getNames()?.let {CompletionVars(it.toSet())}
+        }.toMutableList()
 
-        FilterRegistration.getFilters().forEach { it.getName()?.let {graph[it] = mutableSetOf()} }
+        FilterRegistration.getFilters().forEach {filterClass ->
+            filterClass.getNames()?.let {names ->
+                names.forEach {graph[it] = mutableListOf<CompletionVars>()}
+            }
+        }
 
-        FilterRegistration.getConditionContainers().forEach { it.getName()?.let {graph[it] = mutableSetOf()} }
+        FilterRegistration.getConditionContainers().forEach {ccontainer ->
+            ccontainer.getNames()?.let {names ->
+                names.forEach {graph[it] = mutableListOf()}
+            }
+        }
 
         val filterGraph = FilterRegistration.getFilterGraph()
-        filterGraph.forEach {(container, filterSet) -> container.getName()?.let {name ->
-            graph.getOrPut(name, { mutableSetOf() }).addAll(filterSet.mapNotNull { it.getName() })
+        filterGraph.forEach {(container, filterSet) -> container.getNames()?.let {names ->
+            names.forEach { name ->
+                graph.getOrPut(name, { mutableListOf() })
+                    .addAll(filterSet.mapNotNull { it.getNames()?.let{CompletionVars(it.toSet())} })
+            }
         } }
     }
 

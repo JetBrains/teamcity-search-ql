@@ -21,7 +21,10 @@ class SearchBuildConfigurationTests : BaseQueryLangTest() {
 
     @DataProvider(name = "data")
     fun dataProvider() = TestDataProvider()
-
+        .addBCCase(
+            "find buildConfiguration with id test2",
+            "b2"
+        )
         .end()
 
     @DataProvider(name = "compl")
@@ -32,6 +35,10 @@ class SearchBuildConfigurationTests : BaseQueryLangTest() {
         )
         .addComplCase(
             "find buildConfigura"
+        )
+        .addComplCase(
+            "find buildConfiguration with trigger ty",
+            "type"
         )
         .end()
 
