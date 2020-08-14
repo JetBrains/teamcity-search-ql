@@ -8,7 +8,9 @@ import jetbrains.buildServer.server.querylang.objects.Project
 import jetbrains.buildServer.server.querylang.objects.VcsRoot
 import jetbrains.buildServer.server.querylang.requests.QueryResult
 
-class MainQuery(val queries: List<TopLevelQuery>) {
+sealed class MainQuery
+
+class FullQuery(val queries: List<TopLevelQuery>): MainQuery() {
     fun eval(): QueryResult {
         val res = queries.flatMap { query ->
             when (query) {
@@ -21,6 +23,8 @@ class MainQuery(val queries: List<TopLevelQuery>) {
         return QueryResult(res)
     }
 }
+
+class PartialQuery(val fullQueries: List<FullQuery>): MainQuery()
 
 sealed class TopLevelQuery
 

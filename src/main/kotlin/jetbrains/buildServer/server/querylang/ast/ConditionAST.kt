@@ -1,8 +1,8 @@
 package jetbrains.buildServer.server.querylang.ast
 
-sealed class ConditionAST<NestedObject> : FilterBuilder<NestedObject>, Printable
+sealed class ConditionAST<in NestedObject> : FilterBuilder<NestedObject>, Printable
 
-sealed class RealConditionAST<NestedObject> : ConditionAST<NestedObject>()
+sealed class RealConditionAST<in NestedObject> : ConditionAST<NestedObject>()
 
 class NoneConditionAST<NestedObject> : ConditionAST<NestedObject>() {
     override fun build(context: Any?): ObjectFilter<NestedObject> {

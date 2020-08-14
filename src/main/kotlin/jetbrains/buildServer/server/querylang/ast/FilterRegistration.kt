@@ -5,6 +5,7 @@ import kotlin.reflect.full.isSuperclassOf
 
 object FilterRegistration {
     private val filterGraph: MutableMap< KClass<out ConditionContainer<*>> , MutableSet<KClass<out Filter<*>>> > = mutableMapOf()
+    private val revFilterGraph: MutableMap < KClass<out Filter<*>>, MutableSet<KClass<out ConditionContainer<*>>> > = mutableMapOf()
 
     private val conditionContainers: MutableMap< KClass<out ConditionContainer<*>>, KClass<*>> = mutableMapOf()
 
@@ -58,6 +59,10 @@ object FilterRegistration {
         return filterGraph[filter]?.contains(subf) ?: false
     }
 
+    fun getPossibleConditionContainers(filterClass: KClass<out Filter<*>>): Set<KClass<out ConditionContainer<*>>> {
+        return revFilterGraph[filterClass]?.toSet() ?: emptySet()
+    }
+
     private inline fun <reified Obj : Any,reified NestedObj : Any> registerConditionFilter(filter: KClass<out ConditionFilter<Obj, NestedObj>>) {
         registerFilter(filter)
         registerConditionContainer(filter)
@@ -68,7 +73,7 @@ object FilterRegistration {
 
         conditionContainers.forEach {(filterClass, objTypes) ->
             if (Obj::class.isSuperclassOf(objTypes)) {
-                filterGraph.getOrPut(filterClass, { mutableSetOf()}).add(filter)
+                addEdge(filterClass, filter)
             }
         }
     }
@@ -78,9 +83,14 @@ object FilterRegistration {
 
         filters.forEach {(filterClass, objType) ->
             if (objType.isSuperclassOf(NestedObj::class)) {
-                filterGraph.getOrPut(conditionContainer, { mutableSetOf()}).add(filterClass)
+                addEdge(conditionContainer, filterClass)
             }
         }
+    }
+
+    private fun addEdge(conditionContainer: KClass<out ConditionContainer<*>>, filter: KClass<out Filter<*>>) {
+        filterGraph.getOrPut(conditionContainer, { mutableSetOf()}).add(filter)
+        revFilterGraph.getOrPut(filter, { mutableSetOf()}).add(conditionContainer)
     }
 }
 

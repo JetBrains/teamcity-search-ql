@@ -1,75 +1,62 @@
 package jetbrains.buildServer.server.querylang.parser
 
-import jetbrains.buildServer.server.querylang.ast_old.*
-import org.reflections.Reflections
+import jetbrains.buildServer.server.querylang.ast.*
 import kotlin.reflect.KClass
 import kotlin.reflect.full.*
 
 class TypeDeduce {
-    val reflections = Reflections("jetbrains.buildServer.server.querylang.ast")
-
-    fun deduceQueryType(condition: ConditionAST<Filter>, level: Int): List<FindMultipleTypes> {
+    fun deduceQueryType(condition: ConditionAST<*>, level: Int): List<FullQuery> {
 
         return getMainQueries(condition, level)
     }
 
-    private fun getAllFilters(condition: ConditionAST<Filter>): List<Filter> {
+    private fun getAllFilters(condition: ConditionAST<*>): List<Filter<*>> {
         return when (condition) {
             is AndConditionNode -> getAllFilters(condition.left) + getAllFilters(condition.right)
             is OrConditionNode  -> getAllFilters(condition.left) + getAllFilters(condition.right)
             is NotConditionNode -> getAllFilters(condition.cond)
             is FilterConditionNode -> listOf(condition.filter)
-            is EmptyConditionNode -> listOf()
+            is NoneConditionAST -> listOf()
         }
     }
 
-    private fun <T> getSubclasses(clazz: Class<T>): List<Class<out T>> {
-        return reflections.getSubTypesOf(clazz).toList()
-    }
-
-    private inline fun <reified T> createInstance(clazz: Class<out ConditionContainer<*, *>>, condition: ConditionAST<Filter>): T? {
+    private inline fun <reified T> createInstance(clazz: KClass<out ConditionContainer<*>>, condition: ConditionAST<*>): T? {
         return try {
-            clazz.kotlin.primaryConstructor!!.call(condition) as? T
+            clazz.primaryConstructor!!.call(condition) as? T
         } catch (e: Exception) {
             null
         }
     }
 
     private fun getMainQueries(
-        condition: ConditionAST<Filter>,
+        condition: ConditionAST<*>,
         level: Int
-    ): List<FindMultipleTypes> {
+    ): List<FullQuery> {
         val filters = getAllFilters(condition)
 
-        val res = mutableListOf<FindMultipleTypes>()
-        val new = mutableListOf<TopLevelQuery<*, *>>()
+        val res = mutableListOf<FullQuery>()
+        val new = mutableListOf<TopLevelQuery>()
 
-        fun rec(conditionClass: KClass<out ConditionContainer<out Filter, *>>, filterClass: KClass<out Filter>) {
+        val possibleConditionContainers = filters
+            .map { FilterRegistration.getPossibleConditionContainers(it::class) }
+            .reduce {acc, elem -> acc.intersect(elem)}
 
-            if (filters.all { filterClass.isInstance(it) }) {
-                val filterClasses = getSubclasses(conditionClass.java)
-                filterClasses.forEach { clazz ->
-                    when {
-                        clazz.kotlin.isSubclassOf(TopLevelQuery::class) ->
-                            createInstance<TopLevelQuery<*, *>>(clazz, condition)?.let { new.add(it) }
+        possibleConditionContainers.forEach { clazz ->
+            when {
+                clazz.isSubclassOf(TopLevelQuery::class) ->
+                    createInstance<TopLevelQuery>(clazz, condition)?.let { new.add(it) }
 
-                        clazz.kotlin.isSubclassOf(Filter::class) && level != 0 ->
-                            createInstance<Filter>(clazz, condition)?.let {
-                                res.addAll(deduceQueryType(FilterConditionNode(it), level - 1))
-                            }
+                clazz.isSubclassOf(Filter::class) && level != 0 ->
+                    createInstance<Filter<*>>(clazz, condition)?.let {
+                        res.addAll(deduceQueryType(it.toConditiion(), level - 1))
                     }
-                }
             }
         }
 
-        FilterTypeRegistration.getConditionContainerFilterPairs().forEach { r ->
-            rec(r.conditionc.kotlin, r.filterc.kotlin)
-        }
-
         if (new.isNotEmpty()) {
-            res.add(FindMultipleTypes(new))
+            res.add(FullQuery(new))
         }
-        return res
+        return res.reversed()
     }
 
 }

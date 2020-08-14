@@ -10,7 +10,7 @@ object MainQueryVisitor : QLangGrammarBaseVisitor<MainQuery>() {
                else ctx.partialQuery().accept(this)
     }
 
-    override fun visitFind(ctx: QLangGrammarParser.FindContext?): MainQuery {
+    override fun visitFind(ctx: QLangGrammarParser.FindContext?): FullQuery {
         val objectKeywords = ctx!!.multipleObjects().objectKeyword()
         val queries: List<TopLevelQuery> = objectKeywords.map { objKeyword ->
             when (objKeyword.getChild(0)) {
@@ -29,14 +29,26 @@ object MainQueryVisitor : QLangGrammarBaseVisitor<MainQuery>() {
                 else -> throw IllegalStateException("Unknown keyword in search query")
             }
         }
-        return MainQuery(queries)
+        return FullQuery(queries)
     }
 
-    override fun visitPartialQuery(ctx: QLangGrammarParser.PartialQueryContext?): MainQuery {
-        /*val condition: ConditionAST<Filter> = ctx!!.condition().accept(anyFilterConditionVisitor)
+    override fun visitPartialQuery(ctx: QLangGrammarParser.PartialQueryContext?): PartialQuery {
+        val condition: ConditionAST<Filter<*>> = ctx!!.condition().accept(ConditionVisitor(
+            anyConditionContainer::class
+        ))
         val queryVars = TypeDeduce().deduceQueryType(condition, 1)
+        return PartialQuery(queryVars)
+    }
 
-         */
-        return MainQuery(emptyList())
+    val anyConditionContainer = object : ConditionContainer<Any> {
+        override val condition: ConditionAST<Any>
+            get() = NoneConditionAST()
+
+        override val names: List<String>
+            get() = listOf()
+
+        override fun eval(): EvalResult<Any> {
+            return EvalResult(NoneObjectFilter(), emptyList())
+        }
     }
 }
