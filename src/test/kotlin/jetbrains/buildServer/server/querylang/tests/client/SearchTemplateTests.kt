@@ -7,47 +7,31 @@ import org.testng.annotations.DataProvider
 import org.testng.annotations.Test
 import kotlin.test.assertFailsWith
 
-class SearchBuildConfigurationTests : BaseQueryLangTest() {
-
+class SearchTemplateTests : BaseQueryLangTest() {
     @BeforeMethod
     override fun setUp() {
         super.setUp()
 
         TProject("BaseProject",
-            TBuildConf("test1",
+            TTemplate("test1",
                 TOption("abc", "bcd")
             ).bind("b1"),
-            TBuildConf("test2").bind("b2")
+            TTemplate("test2").bind("b2")
         ).create()
     }
 
     @DataProvider(name = "data")
     fun dataProvider() = TestDataProvider()
-        .addBCCase(
-            "find buildConfiguration with id test2",
-            "b2"
-        )
         .end()
 
     @DataProvider(name = "compl")
     fun complData() = TestDataProvider()
         .addComplCase(
-            "find co",
-            "configuration"
-        )
-        .addComplCase(
-            "find buildConfigura"
-        )
-        .addComplCase(
-            "find buildConfiguration with trigger ty",
-            "type"
-        )
-        .addComplCase(
-            "find configuration with option a",
+            "find template with option a",
             "abc"
         )
         .addComplCase(
-            "find configuration with option abc=",
+            "find template with option abc=",
             "abc=bcd"
         )
         .end()
@@ -59,10 +43,6 @@ class SearchBuildConfigurationTests : BaseQueryLangTest() {
 
     @DataProvider(name = "eval")
     fun evalData() = TestDataProvider()
-        .addBCCase(
-            "find buildConfiguration with id test1",
-            "b1"
-        )
         .end()
 
 

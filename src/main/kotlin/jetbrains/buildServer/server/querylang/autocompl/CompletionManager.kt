@@ -26,6 +26,8 @@ class CompletionManager(val projectManager: ProjectManager) {
     val artifactRevRuleFinder = SimpleStringFinder()
     val projectParamFinder = ParameterValueFinder()
     val vcsParamFinder = ParameterValueFinder()
+    val templateOptionFinder = ParameterValueFinder()
+    val buildConfOptionFinder = ParameterValueFinder()
 
     init {
         registerFinder(projectIdFinder, ProjectFilter::class, IdFilter::class)
@@ -46,6 +48,8 @@ class CompletionManager(val projectManager: ProjectManager) {
         registerFinder(artifactRevRuleFinder, ArtifactFilter::class, RevRuleFilter::class)
         registerFinder(projectParamFinder, ProjectTopLevelQuery::class, ParameterFilter::class)
         registerFinder(vcsParamFinder, VcsRootTopLevelQuery::class, ParameterFilter::class)
+        registerFinder(buildConfOptionFinder, BuildConfTopLevelQuery::class, OptionFilter::class)
+        registerFinder(templateOptionFinder, TemplateTopLevelQuery::class, OptionFilter::class)
 
         indexAll()
     }
@@ -126,6 +130,10 @@ class CompletionManager(val projectManager: ProjectManager) {
             artifactRulesFinder.addString(art.sourcePaths)
             artifactRevRuleFinder.addString(art.revisionRule.name)
         }
+
+        bt.ownOptions.forEach {opt ->
+            buildConfOptionFinder.addParam(opt.key, bt.getOption(opt).toString())
+        }
     }
 
     fun updateTemplate(temp: BuildTypeTemplate) {
@@ -158,6 +166,10 @@ class CompletionManager(val projectManager: ProjectManager) {
         temp.artifactDependencies.forEach { art ->
             artifactRulesFinder.addString(art.sourcePaths)
             artifactRevRuleFinder.addString(art.revisionRule.name)
+        }
+
+        temp.options.forEach {opt ->
+            templateOptionFinder.addParam(opt.key, temp.getOption(opt).toString())
         }
     }
 
