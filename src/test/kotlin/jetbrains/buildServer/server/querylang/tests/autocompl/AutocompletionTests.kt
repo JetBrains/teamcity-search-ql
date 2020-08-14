@@ -51,7 +51,7 @@ class AutocompletionTests : BaseServerTestCase() {
 
     fun testProjectId() {
         val query = """
-            find buildConfiguration with project id BaseProject_p1
+            find configuration with project id BaseProject_p1
         """.trimIndent()
 
         val vars = autoCompl.complete(query).map {it.show}
@@ -62,7 +62,7 @@ class AutocompletionTests : BaseServerTestCase() {
 
     fun testBuildConfId() {
         val query = """
-            find buildConfiguration with project(id 5555) and (((id BaseProject_p1
+            find configuration with project(id 5555) and (((id BaseProject_p1
         """.trimIndent()
 
         val vars = autoCompl.complete(query).map {it.show}
@@ -84,7 +84,7 @@ class AutocompletionTests : BaseServerTestCase() {
 
     fun testTemplateId() {
         val query = """
-            find buildConfiguration with id 5555 or template (id 55555 or id BaseProject_p1
+            find configuration with id 5555 or template (id 55555 or id BaseProject_p1
         """.trimIndent()
 
         val vars = autoCompl.complete(query).map {it.show}
@@ -95,7 +95,7 @@ class AutocompletionTests : BaseServerTestCase() {
 
     fun testBuildConfOrTempId() {
         val query = """
-            find buildConfiguration, template with (id 5555 and id 6666) or (((id BaseProject_p
+            find configuration, template with (id 5555 and id 6666) or (((id BaseProject_p
         """.trimIndent()
 
         val vars = autoCompl.complete(query).map {it.show}
@@ -113,7 +113,7 @@ class AutocompletionTests : BaseServerTestCase() {
 
     fun testTriggerParamName() {
         val query = """
-            find buildConfiguration with (id 5555 or id 6666) and (id 7777 or ( ( trigger param pat
+            find configuration with (id 5555 or id 6666) and (id 7777 or ( ( trigger param pat
         """.trimIndent()
 
         val vars = autoCompl.complete(query).map {it.show}
@@ -124,7 +124,7 @@ class AutocompletionTests : BaseServerTestCase() {
 
     fun testTriggerParamValue() {
         val query = """
-            find buildConfiguration with (id 5555 or id 6666) and (id 7777 or ( ( trigger param path = "ab
+            find configuration with (id 5555 or id 6666) and (id 7777 or ( ( trigger param path = "ab
         """.trimIndent()
 
         val vars = autoCompl.complete(query).map {it.show}
@@ -135,11 +135,11 @@ class AutocompletionTests : BaseServerTestCase() {
 
     fun testTriggerEmptyParam() {
         val query = """
-            find buildConfiguration with (id 5555 or id 6666) and (id 7777 or ( ( trigger param 
+            find configuration with (id 5555 or id 6666) and (id 7777 or ( ( trigger param 
         """.trimIndent()
 
         val vars = autoCompl.complete(query).map {it.show}
-        val expected = listOf("abc", "path", "patabc", "\"param\"")
+        val expected = listOf("abc", "path", "param", "patabc")
 
         assertEquals(expected, vars)
     }
@@ -168,7 +168,7 @@ class AutocompletionTests : BaseServerTestCase() {
 
     fun testTriggerParamWithQuotes1() {
         val query = """
-            find buildConfiguration with trigger param "path"=a
+            find configuration with trigger param "path"=a
         """.trimIndent()
 
         val vars = autoCompl.complete(query).map {it.show}
@@ -179,18 +179,18 @@ class AutocompletionTests : BaseServerTestCase() {
 
     fun testEscapeKeywordParameterName() {
         val query = """
-            find buildConfiguration with trigger param pa
+            find configuration with trigger param pa
         """.trimIndent()
 
         val vars = autoCompl.complete(query).map {it.show}
-        val expected = listOf("path", "patabc", "\"param\"")
+        val expected = listOf("path", "param", "patabc")
 
         assertEquals(expected, vars)
     }
 
     fun testVcsRootCheckoutRulesFilter() {
         val query = """
-            find buildConfiguration with vcsRoot (ru
+            find configuration with vcs (ru
         """.trimIndent()
 
         val vars = autoCompl.complete(query).map {it.show}

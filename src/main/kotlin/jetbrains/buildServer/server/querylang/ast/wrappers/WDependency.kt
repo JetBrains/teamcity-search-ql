@@ -45,13 +45,15 @@ fun List<WDependency>.uniteEqual(): List<WDependency> {
                 val dep1 = deps[0]
                 val dep2 = deps[1]
 
-                if (dep1 is WArtifactDependency && dep2 is WSnapshotDependency) {
-                    WCombinedDependency(dep2.sdep, dep1.adep)
+                when {
+                    (dep1 is WArtifactDependency && dep2 is WSnapshotDependency) -> {
+                        WCombinedDependency(dep2.sdep, dep1.adep)
+                    }
+                    (dep1 is WSnapshotDependency && dep2 is WArtifactDependency) -> {
+                        WCombinedDependency(dep1.sdep, dep2.adep)
+                    }
+                    else -> throw IllegalStateException()
                 }
-                if (dep1 is WSnapshotDependency && dep2 is WArtifactDependency) {
-                    WCombinedDependency(dep1.sdep, dep2.adep)
-                }
-                throw IllegalStateException()
             }
             else -> throw IllegalStateException()
         }

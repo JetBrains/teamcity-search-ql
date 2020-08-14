@@ -6,6 +6,7 @@ import jetbrains.buildServer.buildTriggers.BuildTriggerDescriptor
 import jetbrains.buildServer.server.querylang.MyProjectManagerInit
 import jetbrains.buildServer.server.querylang.ast.FullQuery
 import jetbrains.buildServer.server.querylang.ast.NoneObjectFilter
+import jetbrains.buildServer.server.querylang.ast.wrappers.FIdContainer
 import jetbrains.buildServer.server.querylang.autocompl.*
 import jetbrains.buildServer.server.querylang.parser.ParsingException
 import jetbrains.buildServer.server.querylang.parser.QueryParser
@@ -73,10 +74,7 @@ abstract class BaseQueryLangTest : BaseServerTestCase() {
     protected fun checkVars(query: String, expected: List<String>) {
         val expect = expected.complSorted()
         val vars = getVars(query)
-        assertEquals(expect.size, vars.size)
-        vars.zip(expect).forEach {(res, exp) ->
-            assertEquals(res.show, exp)
-        }
+        assertEquals(expect, vars.map {it.show})
     }
 
     protected fun checkEval(query: String, expected: List<String>) {
@@ -91,7 +89,7 @@ abstract class BaseQueryLangTest : BaseServerTestCase() {
 
         val res = parsed.eval()
 
-        val ids = res.objects.map {(it as SPersistentEntity).externalId}
+        val ids = res.objects.map {(it as FIdContainer).id}
 
         assertEquals(expect, ids)
 

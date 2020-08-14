@@ -162,7 +162,7 @@ data class FeatureFilter(
 
     override fun build(context: Any?): ObjectFilter<FFeatureContainer> {
         return RealObjectFilter {obj ->
-            val settings = if (!this.includeInherited) obj.ownFeatures
+            val settings = if (this.includeInherited) obj.features
             else obj.ownFeatures
 
             val objectFilterWithContext = condition.build(obj)
@@ -276,28 +276,31 @@ data class AncestorFilter(
 }
 
 data class VcsRootEntryFilter(
-    override val condition: ConditionAST<WVcsRootEntry>
+    override val condition: ConditionAST<WVcsRootEntry>,
+    var includeInherited: Boolean = false
 ) : ConditionFilter<FVcsRootEntryContainer, WVcsRootEntry>()
 {
-    companion object : Names("vcsRoot")
+    companion object : Names("vcs")
     override val names = Companion.names
 
     override fun buildFrom(filter: ObjectFilter<WVcsRootEntry>, context: Any?): ObjectFilter<FVcsRootEntryContainer> {
         return RealObjectFilter {obj ->
-            filter.accepts(obj.vcsRootEntry)
+            val vcss = if (includeInherited) obj.vcsRootEntries
+                       else obj.ownVcsRootEntries
+            vcss.any {filter.accepts(it)}
         }
     }
 }
 
 data class RulesFilter(
     override val condition: ConditionAST<String>
-) : ConditionFilter<WVcsRootEntry, String>()
+) : ConditionFilter<FRulesContainer, String>()
 {
     companion object : Names("rules")
 
     override val names: List<String> = Companion.names
 
-    override fun buildFrom(filter: ObjectFilter<String>, context: Any?): ObjectFilter<WVcsRootEntry> {
+    override fun buildFrom(filter: ObjectFilter<String>, context: Any?): ObjectFilter<FRulesContainer> {
         return RealObjectFilter {obj ->
             filter.accepts(obj.rules)
         }

@@ -12,10 +12,12 @@ abstract class AbstractWBuildConf :
     FParentContainer,
     FTriggerContainer,
     FStepContainer,
+    FFeatureContainer,
     FTemplateContainer,
     FParamContainer,
     FDependencyContainer,
-    FOptionContainer
+    FOptionContainer,
+    FVcsRootEntryContainer
 {
     abstract val sbuildConf: SBuildType
 
@@ -44,6 +46,12 @@ abstract class AbstractWBuildConf :
     override val steps: List<WStep>
         get() = sbuildConf.buildRunners.map { it.wrap() }
 
+    override val features: List<WFeature>
+        get() = sbuildConf.buildFeatures.map {it.wrap()}
+
+    override val ownFeatures: List<WFeature>
+        get() = buildTypeEx.settings.ownBuildFeatures.map {it.wrap()}
+
     override val templates: List<WTemplate>
         get() = sbuildConf.templates.map {it.wrap()}
 
@@ -69,6 +77,12 @@ abstract class AbstractWBuildConf :
     override fun getOption(opt: Option<Any>): Any {
         return sbuildConf.getOption(opt)
     }
+
+    override val vcsRootEntries: List<WVcsRootEntry>
+        get() = sbuildConf.vcsRootEntries.map {it.wrap()}
+
+    override val ownVcsRootEntries: List<WVcsRootEntry>
+        get() = sbuildConf.ownVcsRootEntries.map {it.wrap()}
 
     override val dependencies: List<WDependency>
         get() = (sbuildConf.dependencies.map {it.wrap()} + sbuildConf.artifactDependencies.map {it.wrap()}).uniteEqual()

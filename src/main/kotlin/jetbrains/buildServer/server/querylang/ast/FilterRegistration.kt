@@ -61,6 +61,10 @@ object FilterRegistration {
 
     fun getFilterGraph() = filterGraph.toMap()
 
+    fun getFilters() = filters.keys.toList()
+
+    fun getConditionContainers() = conditionContainers.keys.toList()
+
     fun printaAllRelations() {
         filterGraph.forEach {(fc, fsubc) ->
             println("${fc.simpleName}(${fc.getName()})")

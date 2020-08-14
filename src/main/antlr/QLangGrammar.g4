@@ -14,7 +14,8 @@ not: NOT ;
 filterKeyword : PROJECT | TEMPLATE | BUILD_CONFIGURATION | VCS_ROOT
                  | PARENT | TRIGGER | STEP | FEATURE | TYPE | PARAM | VAL
                  | ENABLED | ANCESTOR | RULES | DEPENDENCY
-                 | ARTIFACT | SNAPSHOT | ALL
+                 | ARTIFACT | SNAPSHOT | ALL | VCS_ENTRY | REV_RULE | CLEAN
+                 | OPTION
                  ;
 identOrString : IDENT | STRING | filterKeyword;
 
@@ -61,6 +62,7 @@ filter : idFilter
        | optionFilter
        | cleanFilter
        | revRuleFilter
+       | vcsRootEntryFilter
        ;
 
 condition : filter                     #conditionFilter
@@ -92,6 +94,7 @@ enabledFilter : ENABLED modifierList?;
 ancestorFilter : ANCESTOR modifierList? filterOrCondition ;
 templateDepFilter : TEMPLATE modifierList? filterOrCondition ;
 vcsRootFilter : VCS_ROOT modifierList? filterOrCondition ;
+vcsRootEntryFilter : VCS_ENTRY modifierList? filterOrCondition ;
 checkoutRulesFilter : RULES modifierList? checkoutRulesString ;
 dependencyFilter : DEPENDENCY modifierList? filterOrCondition ;
 artifactFilter : ARTIFACT modifierList? filterOrCondition?;

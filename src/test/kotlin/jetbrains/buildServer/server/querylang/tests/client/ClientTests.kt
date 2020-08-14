@@ -356,7 +356,7 @@ class ClientTests: BaseServerTestCase() {
 
     fun testBuildConfVcsRootFilter() {
         val query = """
-            find buildConfiguration with vcsRoot( id Project5_vcs1 and rules *bac*)
+            find buildConfiguration with vcs( id Project5_vcs1 and rules *bac*)
         """.trimIndent()
 
         val res = client.process(query).objects.map {it.externalId}
@@ -369,7 +369,7 @@ class ClientTests: BaseServerTestCase() {
 
     fun testTemplateVcsRootFilter() {
         val query = """
-            find template with vcsRoot( rules *abad* )
+            find template with vcs( rules *abad* )
         """.trimIndent()
 
         val res = client.process(query).objects.map {it.externalId}

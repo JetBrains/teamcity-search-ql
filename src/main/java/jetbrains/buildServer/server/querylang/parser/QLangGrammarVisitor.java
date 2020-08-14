@@ -280,6 +280,12 @@ public interface QLangGrammarVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitVcsRootFilter(QLangGrammarParser.VcsRootFilterContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link QLangGrammarParser#vcsRootEntryFilter}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitVcsRootEntryFilter(QLangGrammarParser.VcsRootEntryFilterContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link QLangGrammarParser#checkoutRulesFilter}.
 	 * @param ctx the parse tree
 	 * @return the visitor result

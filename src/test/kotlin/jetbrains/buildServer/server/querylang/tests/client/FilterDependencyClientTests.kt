@@ -51,7 +51,8 @@ class FilterDependencyClientTests : BaseQueryLangTest() {
             TBuildConf("test5",
                 TTempDependency("t1"),
                 TTempDependency("t2"),
-                TADependency("b3", "zxcvzxcvzc", true, RevisionRules.LAST_FINISHED_SAME_CHAIN_RULE)
+                TADependency("b3", "zxcvzxcvzc", true, RevisionRules.LAST_FINISHED_SAME_CHAIN_RULE),
+                TSDependency("b3")
             ).bind("b5"),
 
             TBuildConf("test6",
@@ -64,11 +65,11 @@ class FilterDependencyClientTests : BaseQueryLangTest() {
     @DataProvider(name = "data")
     fun dataProvider() = TestDataProvider()
         .addBCCase(
-            "find buildConfiguration with dependency (id *3 and snapshot)",
-            "b2"
+            "find configuration with dependency (id *3 and snapshot)",
+            "b2", "b5"
         )
         .addBCCase(
-            "find buildConfiguration with dependency (dependency(id *3 and snapshot) and artifact)",
+            "find configuration with dependency (dependency(id *3 and snapshot) and artifact)",
             "b4"
         )
         .addTempCase(
@@ -80,11 +81,11 @@ class FilterDependencyClientTests : BaseQueryLangTest() {
             "t2", "t4"
         )
         .addBCCase(
-            "find buildConfiguration with dependency (id *4 and (snapshot or artifact))",
+            "find configuration with dependency (id *4 and (snapshot or artifact))",
             "b6"
         )
         .addBCCase(
-            "find buildConfiguration with dependency[all] (id *4 and (snapshot or artifact))",
+            "find configuration with dependency[all] (id *4 and (snapshot or artifact))",
             "b5", "b6"
         )
         .addTempCase(
@@ -92,7 +93,7 @@ class FilterDependencyClientTests : BaseQueryLangTest() {
             "t3"
         )
         .addBCCase(
-            "find buildConfiguration with dependency[all] (snapshot option opt1=bcd)",
+            "find configuration with dependency[all] (snapshot option opt1=bcd)",
             "b5"
         )
         .addTempCase(
@@ -100,19 +101,23 @@ class FilterDependencyClientTests : BaseQueryLangTest() {
             "t2"
         )
         .addBCCase(
-            "find buildConfiguration with dependency (artifact (rules *tii*) and dependency (artifact rules *wer*))",
+            "find configuration with dependency (artifact (rules *tii*) and dependency (artifact rules *wer*))",
             "b6"
         )
         .addBCCase(
-            "find buildConfiguration with dependency artifact(not clean)",
+            "find configuration with dependency artifact(not clean)",
             "b6", "b4"
         )
         .addBCCase(
-            "find buildConfiguration with dependency[all] artifact(not clean)",
+            "find configuration with dependency[all] artifact(not clean)",
             "b4", "b5", "b6"
         )
         .addBCCase(
-            "find buildConfiguration with dependency artifact revRule *Chain*",
+            "find configuration with dependency artifact revRule *Chain*",
+            "b5"
+        )
+        .addBCCase(
+            "find configuration with dependency(artifact rules *xcv* and snapshot)",
             "b5"
         )
         .end()
@@ -148,7 +153,7 @@ class FilterDependencyClientTests : BaseQueryLangTest() {
             "rules", "clean", "revRule"
         )
         .addComplCase(
-            "find buildConfiguration with dependency artifact rules zxc",
+            "find configuration with dependency artifact rules zxc",
             "zxcvzxcvzc"
         )
         .addComplCase(
@@ -160,11 +165,11 @@ class FilterDependencyClientTests : BaseQueryLangTest() {
             "clean"
         )
         .addComplCase(
-            "find buildConfiguration with dependency artifact revR",
+            "find configuration with dependency artifact revR",
             "revRule"
         )
         .addComplCase(
-            "find buildConfiguration with dependency artifact",
+            "find configuration with dependency artifact",
             "artifact"
         )
         .addComplCase(
@@ -172,14 +177,14 @@ class FilterDependencyClientTests : BaseQueryLangTest() {
             "lastSuccessful"
         )
         .addComplCase(
-            "find buildConfiguration with dependency artifact revRule sameChainO",
+            "find configuration with dependency artifact revRule sameChainO",
             "sameChainOrLastFinished"
         )
         .end()
 
     @DataProvider(name = "failed")
     fun failedData() = TestFailedDataProvdier()
-        .addParseCase("find buildConfiguration with dependency type vcs")
+        .addParseCase("find configuration with dependency type vcs")
         .addParseCase("find project with dependency id Base")
         .addParseCase("find vcsRoot with dependency")
         .end()

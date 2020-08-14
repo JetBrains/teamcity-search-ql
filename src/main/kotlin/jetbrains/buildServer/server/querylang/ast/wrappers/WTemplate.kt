@@ -12,10 +12,12 @@ class WTemplate(
     FParentContainer,
     FTriggerContainer,
     FStepContainer,
+    FFeatureContainer,
     FParamContainer,
     FDependencyContainer,
     FOptionContainer,
-    TopLevelObject
+    TopLevelObject,
+    FVcsRootEntryContainer
 {
     override val id: String
         get() = stemplate.externalId
@@ -37,6 +39,12 @@ class WTemplate(
 
     override val steps: List<WStep>
         get() = ownSteps
+
+    override val features: List<WFeature>
+        get() = stemplate.buildFeatures.map {it.wrap()}
+
+    override val ownFeatures: List<WFeature>
+        get() = features
 
     override fun isEnabled(obj: FEnabledContainer): Boolean {
         if (obj !is WParametersDescriptor) {
@@ -60,6 +68,12 @@ class WTemplate(
     override fun getOption(opt: Option<Any>): Any {
         return stemplate.getOption(opt)
     }
+
+    override val vcsRootEntries: List<WVcsRootEntry>
+        get() = stemplate.vcsRootEntries.map {it.wrap()}
+
+    override val ownVcsRootEntries: List<WVcsRootEntry>
+        get() = vcsRootEntries
 
     override val dependencies: List<WDependency>
         get() = (stemplate.dependencies.map {it.wrap()} + stemplate.artifactDependencies.map {it.wrap()}).uniteEqual()

@@ -458,6 +458,16 @@ public interface QLangGrammarListener extends ParseTreeListener {
 	 */
 	void exitVcsRootFilter(QLangGrammarParser.VcsRootFilterContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link QLangGrammarParser#vcsRootEntryFilter}.
+	 * @param ctx the parse tree
+	 */
+	void enterVcsRootEntryFilter(QLangGrammarParser.VcsRootEntryFilterContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link QLangGrammarParser#vcsRootEntryFilter}.
+	 * @param ctx the parse tree
+	 */
+	void exitVcsRootEntryFilter(QLangGrammarParser.VcsRootEntryFilterContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link QLangGrammarParser#checkoutRulesFilter}.
 	 * @param ctx the parse tree
 	 */

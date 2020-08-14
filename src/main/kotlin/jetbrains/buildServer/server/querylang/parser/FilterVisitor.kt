@@ -94,14 +94,14 @@ class FilterVisitor<Obj>(val parentFilter: KClass<out ConditionContainer<Obj>>) 
         ).transform(ctx)
 
     override fun visitVcsRootFilter(ctx: QLangGrammarParser.VcsRootFilterContext?) =
-        if (parentFilter is FVcsRootContainer)
-            VcsRootFilter(
-                ctx!!.filterOrCondition().accept(getCondVisitor(VcsRootFilter::class))
-            ).transform(ctx)
-        else
-            VcsRootEntryFilter(
-                ctx!!.filterOrCondition().accept(getCondVisitor(VcsRootEntryFilter::class))
-            ).transform(ctx)
+        VcsRootFilter(
+            ctx!!.filterOrCondition().accept(getCondVisitor(VcsRootFilter::class))
+        ).transform(ctx)
+
+    override fun visitVcsRootEntryFilter(ctx: QLangGrammarParser.VcsRootEntryFilterContext?) =
+        VcsRootEntryFilter(
+            ctx!!.filterOrCondition().accept(getCondVisitor(VcsRootEntryFilter::class))
+        ).transform(ctx)
 
     override fun visitCheckoutRulesFilter(ctx: QLangGrammarParser.CheckoutRulesFilterContext?) =
         RulesFilter(

@@ -36,8 +36,8 @@ abstract class AbstractWVcsRoot() :
 
 class WVcsRoot(override val svcsRoot: SVcsRoot) : AbstractWVcsRoot(), TopLevelObject
 
-abstract class WVcsRootEntry : AbstractWVcsRoot() {
-    abstract val rules: String
+abstract class WVcsRootEntry : AbstractWVcsRoot(), FRulesContainer {
+    abstract override val rules: String
     abstract override val svcsRoot: SVcsRoot
 }
 

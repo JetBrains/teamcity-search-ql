@@ -132,12 +132,16 @@ class Completer(val completionManager: CompletionManager? = null) {
     private fun loadFilterGraph() {
         val topLevelClasses = reflections.getSubTypesOf(TopLevelQuery::class.java)
 
-        graph["root"] = topLevelClasses.map {it.kotlin.getName()}.toMutableSet()
+        graph["root"] = topLevelClasses.mapNotNull {it.kotlin.getName()}.toMutableSet()
+
+        FilterRegistration.getFilters().forEach { it.getName()?.let {graph[it] = mutableSetOf()} }
+
+        FilterRegistration.getConditionContainers().forEach { it.getName()?.let {graph[it] = mutableSetOf()} }
 
         val filterGraph = FilterRegistration.getFilterGraph()
-        filterGraph.forEach {(container, filterSet) ->
-            graph.getOrPut(container.getName(), { mutableSetOf()}).addAll(filterSet.map {it.getName()})
-        }
+        filterGraph.forEach {(container, filterSet) -> container.getName()?.let {name ->
+            graph.getOrPut(name, { mutableSetOf() }).addAll(filterSet.mapNotNull { it.getName() })
+        } }
     }
 
     private fun loadPossibleModifiers() {

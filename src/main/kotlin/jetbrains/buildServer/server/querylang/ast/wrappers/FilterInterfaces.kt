@@ -58,7 +58,8 @@ interface FAncestorContainer {
 }
 
 interface FVcsRootEntryContainer {
-    val vcsRootEntry: WVcsRootEntry
+    val ownVcsRootEntries: List<WVcsRootEntry>
+    val vcsRootEntries: List<WVcsRootEntry>
 }
 
 interface FDependencyContainer {
@@ -66,8 +67,11 @@ interface FDependencyContainer {
     val ownDependencies: List<WDependency>
 }
 
-interface OnlyArtifactDependency {
+interface OnlyArtifactDependency : FRulesContainer{
     val adep: SArtifactDependency
+
+    override val rules: String
+        get() = adep.sourcePaths
 }
 
 interface OnlySnapshotDependency : FOptionContainer {
@@ -93,4 +97,8 @@ interface FOptionContainer {
 
 interface FTypeContainer {
     val type: String
+}
+
+interface FRulesContainer {
+    val rules: String
 }

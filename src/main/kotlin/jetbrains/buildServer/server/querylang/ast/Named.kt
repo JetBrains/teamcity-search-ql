@@ -13,10 +13,10 @@ abstract class Names(vararg _names: String) {
     val names: List<String> = _names.toList()
 }
 
-fun KClass<out Named>.getName(): String {
-    val companion = this.companionObjectInstance as? Names ?: return this.simpleName ?: "{Unnamed}"
+fun KClass<out Named>.getName(): String? {
+    val companion = this.companionObjectInstance as? Names
 
-    return companion.names.first()
+    return companion?.names?.first()
 }
 
 fun KClass<out Named>.getNames(): List<String> {

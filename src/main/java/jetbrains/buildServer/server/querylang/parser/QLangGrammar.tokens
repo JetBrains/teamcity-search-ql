@@ -38,6 +38,7 @@ ALL=37
 OPTION=38
 CLEAN=39
 REV_RULE=40
+VCS_ENTRY=41
 'find'=1
 ','=2
 'in'=3

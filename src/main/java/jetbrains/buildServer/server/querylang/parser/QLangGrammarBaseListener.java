@@ -534,6 +534,18 @@ public class QLangGrammarBaseListener implements QLangGrammarListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterVcsRootEntryFilter(QLangGrammarParser.VcsRootEntryFilterContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitVcsRootEntryFilter(QLangGrammarParser.VcsRootEntryFilterContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterCheckoutRulesFilter(QLangGrammarParser.CheckoutRulesFilterContext ctx) { }
 	/**
 	 * {@inheritDoc}

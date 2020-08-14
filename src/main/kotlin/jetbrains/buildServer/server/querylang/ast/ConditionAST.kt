@@ -6,7 +6,7 @@ sealed class RealConditionAST<in NestedObject> : ConditionAST<NestedObject>()
 
 class NoneConditionAST<NestedObject> : ConditionAST<NestedObject>() {
     override fun build(context: Any?): ObjectFilter<NestedObject> {
-        return NoneObjectFilter()
+        return RealObjectFilter {true}
     }
 
     override fun createStr(): String {
@@ -18,7 +18,7 @@ data class NotConditionNode<NestedObject>(
     val cond: RealConditionAST<NestedObject>
 ) : RealConditionAST<NestedObject>() {
     override fun build(context: Any?): ObjectFilter<NestedObject> {
-        return cond.build(context)
+        return cond.build(context).not()
     }
 
     override fun createStr(): String = "(not ${cond.createStr()})"

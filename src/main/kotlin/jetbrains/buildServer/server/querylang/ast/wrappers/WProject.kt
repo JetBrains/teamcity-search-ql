@@ -19,7 +19,8 @@ class WProject(
     FFeatureContainer,
     FAncestorContainer,
     FParamContainer,
-    TopLevelObject
+    TopLevelObject,
+    FVcsRootContainer
 {
     override val id: String
         get() = sproject.externalId
@@ -48,4 +49,7 @@ class WProject(
 
     override val params: Map<String, String>
         get() = sproject.parameters
+
+    override val vcsRoots: List<AbstractWVcsRoot>
+        get() = sproject.vcsRoots.map {it.wrap()}
 }
