@@ -14,7 +14,7 @@ class NoneConditionAST<NestedObject> : ConditionAST<NestedObject>() {
     }
 }
 
-class NotConditionNode<NestedObject>(
+data class NotConditionNode<NestedObject>(
     val cond: RealConditionAST<NestedObject>
 ) : RealConditionAST<NestedObject>() {
     override fun build(context: Any?): ObjectFilter<NestedObject> {
@@ -24,7 +24,7 @@ class NotConditionNode<NestedObject>(
     override fun createStr(): String = "(not ${cond.createStr()})"
 }
 
-class AndConditionNode<NestedObject>(
+data class AndConditionNode<NestedObject>(
     val left: RealConditionAST<NestedObject>,
     val right: RealConditionAST<NestedObject>
 ) : RealConditionAST<NestedObject>() {
@@ -35,7 +35,7 @@ class AndConditionNode<NestedObject>(
     override fun createStr(): String = "(${left.createStr()} and ${right.createStr()})"
 }
 
-class OrConditionNode<NestedObject>(
+data class OrConditionNode<NestedObject>(
     val left: RealConditionAST<NestedObject>,
     val right: RealConditionAST<NestedObject>
 ) : RealConditionAST<NestedObject>() {
@@ -46,7 +46,7 @@ class OrConditionNode<NestedObject>(
     override fun createStr(): String = "(${left.createStr()} or ${right.createStr()})"
 }
 
-class FilterConditionNode<NestedObject>(val filter: Filter<NestedObject>) : RealConditionAST<NestedObject>(){
+data class FilterConditionNode<NestedObject>(val filter: Filter<NestedObject>) : RealConditionAST<NestedObject>(){
     override fun build(context: Any?): ObjectFilter<NestedObject> {
         return filter.build(context)
     }

@@ -43,6 +43,14 @@ class ConditionVisitor<NestedObj>(
         return ctx!!.condition().accept(this)
     }
 
+    override fun visitSingleStringFilter(ctx: QLangGrammarParser.SingleStringFilterContext?): RealConditionAST<NestedObj> {
+        return FilterConditionNode(ctx!!.stringFilter().accept(filterVisitor))
+    }
+
+    override fun visitMultipleStringFilter(ctx: QLangGrammarParser.MultipleStringFilterContext?): RealConditionAST<NestedObj> {
+        return ctx!!.stringCondition().accept(this)
+    }
+
     override fun visitConditionAnd(ctx: QLangGrammarParser.ConditionAndContext?): RealConditionAST<NestedObj> {
         return AndConditionNode(
                 ctx!!.condition(0).accept(this),
@@ -69,5 +77,33 @@ class ConditionVisitor<NestedObj>(
 
     override fun visitConditionFilter(ctx: QLangGrammarParser.ConditionFilterContext?): RealConditionAST<NestedObj> {
         return FilterConditionNode(ctx!!.filter().accept(filterVisitor))
+    }
+
+    override fun visitStringConditionAnd(ctx: QLangGrammarParser.StringConditionAndContext?): RealConditionAST<NestedObj> {
+        return AndConditionNode(
+            ctx!!.stringCondition(0).accept(this),
+            ctx.stringCondition(1).accept(this)
+        )
+    }
+
+    override fun visitStringConditionOr(ctx: QLangGrammarParser.StringConditionOrContext?): RealConditionAST<NestedObj> {
+        return OrConditionNode(
+            ctx!!.stringCondition(0).accept(this),
+            ctx.stringCondition(1).accept(this)
+        )
+    }
+
+    override fun visitStringConditionNot(ctx: QLangGrammarParser.StringConditionNotContext?): RealConditionAST<NestedObj> {
+        return NotConditionNode(
+            ctx!!.stringCondition().accept(this)
+        )
+    }
+
+    override fun visitStringConditionBraces(ctx: QLangGrammarParser.StringConditionBracesContext?): RealConditionAST<NestedObj> {
+        return ctx!!.stringCondition().accept(this)
+    }
+
+    override fun visitStringConditionFilter(ctx: QLangGrammarParser.StringConditionFilterContext?): RealConditionAST<NestedObj> {
+        return FilterConditionNode(ctx!!.stringFilter().accept(filterVisitor))
     }
 }

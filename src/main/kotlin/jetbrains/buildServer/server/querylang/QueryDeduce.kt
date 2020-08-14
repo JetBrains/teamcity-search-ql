@@ -1,6 +1,8 @@
 package jetbrains.buildServer.server.querylang
 
 import jetbrains.buildServer.server.querylang.ast.FilterRegistration
+import jetbrains.buildServer.server.querylang.ast.FullQuery
+import jetbrains.buildServer.server.querylang.ast.PartialQuery
 import jetbrains.buildServer.server.querylang.parser.QueryParser
 import jetbrains.buildServer.server.querylang.parser.TypeDeduce
 

@@ -4,6 +4,18 @@ import kotlin.reflect.KClass
 import kotlin.reflect.full.isSuperclassOf
 
 object FilterRegistration {
+    val anyConditionContainer = object : ConditionContainer<Any> {
+        override val condition: ConditionAST<Any>
+            get() = NoneConditionAST()
+
+        override val names: List<String>
+            get() = listOf()
+
+        override fun eval(): EvalResult<Any> {
+            return EvalResult(NoneObjectFilter(), emptyList())
+        }
+    }
+
     private val filterGraph: MutableMap< KClass<out ConditionContainer<*>> , MutableSet<KClass<out Filter<*>>> > = mutableMapOf()
     private val revFilterGraph: MutableMap < KClass<out Filter<*>>, MutableSet<KClass<out ConditionContainer<*>>> > = mutableMapOf()
 
@@ -56,6 +68,9 @@ object FilterRegistration {
     }
 
     fun canBeSubfilter(filter: KClass<out ConditionContainer<*>>, subf: KClass<out Filter<*>>): Boolean {
+        if (filter == anyConditionContainer::class) {
+            return true
+        }
         return filterGraph[filter]?.contains(subf) ?: false
     }
 

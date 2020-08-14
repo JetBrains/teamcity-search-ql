@@ -34,21 +34,9 @@ object MainQueryVisitor : QLangGrammarBaseVisitor<MainQuery>() {
 
     override fun visitPartialQuery(ctx: QLangGrammarParser.PartialQueryContext?): PartialQuery {
         val condition: ConditionAST<Filter<*>> = ctx!!.condition().accept(ConditionVisitor(
-            anyConditionContainer::class
+            FilterRegistration.anyConditionContainer::class
         ))
         val queryVars = TypeDeduce().deduceQueryType(condition, 1)
         return PartialQuery(queryVars)
-    }
-
-    val anyConditionContainer = object : ConditionContainer<Any> {
-        override val condition: ConditionAST<Any>
-            get() = NoneConditionAST()
-
-        override val names: List<String>
-            get() = listOf()
-
-        override fun eval(): EvalResult<Any> {
-            return EvalResult(NoneObjectFilter(), emptyList())
-        }
     }
 }

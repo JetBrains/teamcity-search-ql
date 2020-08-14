@@ -10,7 +10,7 @@ import jetbrains.buildServer.server.querylang.requests.QueryResult
 
 sealed class MainQuery
 
-class FullQuery(val queries: List<TopLevelQuery>): MainQuery() {
+data class FullQuery(val queries: List<TopLevelQuery>): MainQuery() {
     fun eval(): QueryResult {
         val res = queries.flatMap { query ->
             when (query) {
@@ -24,11 +24,11 @@ class FullQuery(val queries: List<TopLevelQuery>): MainQuery() {
     }
 }
 
-class PartialQuery(val fullQueries: List<FullQuery>): MainQuery()
+data class PartialQuery(val fullQueries: List<FullQuery>): MainQuery()
 
 sealed class TopLevelQuery
 
-class ProjectTopLevelQuery(override val condition: ConditionAST<WProject>): ConditionContainer<WProject>, TopLevelQuery() {
+data class ProjectTopLevelQuery(override val condition: ConditionAST<WProject>): ConditionContainer<WProject>, TopLevelQuery() {
     companion object : Names(*(ProjectFilter.names.toTypedArray()))
 
     override val names = Companion.names
@@ -45,7 +45,7 @@ class ProjectTopLevelQuery(override val condition: ConditionAST<WProject>): Cond
     }
 }
 
-class BuildConfTopLevelQuery(override val condition: ConditionAST<WBuildConf>) : ConditionContainer<WBuildConf>, TopLevelQuery() {
+data class BuildConfTopLevelQuery(override val condition: ConditionAST<WBuildConf>) : ConditionContainer<WBuildConf>, TopLevelQuery() {
     companion object : Names(*(BuildConfFilter.names.toTypedArray()))
 
     override val names = Companion.names
@@ -62,7 +62,7 @@ class BuildConfTopLevelQuery(override val condition: ConditionAST<WBuildConf>) :
     }
 }
 
-class TemplateTopLevelQuery(override val condition: ConditionAST<WTemplate>) : ConditionContainer<WTemplate>, TopLevelQuery() {
+data class TemplateTopLevelQuery(override val condition: ConditionAST<WTemplate>) : ConditionContainer<WTemplate>, TopLevelQuery() {
     companion object : Names(*(TemplateFilter.names.toTypedArray()))
 
     override val names = Companion.names
@@ -79,7 +79,7 @@ class TemplateTopLevelQuery(override val condition: ConditionAST<WTemplate>) : C
     }
 }
 
-class VcsRootTopLevelQuery(override val condition: ConditionAST<WVcsRoot>) : ConditionContainer<WVcsRoot>, TopLevelQuery() {
+data class VcsRootTopLevelQuery(override val condition: ConditionAST<WVcsRoot>) : ConditionContainer<WVcsRoot>, TopLevelQuery() {
     companion object : Names(*(VcsRootFilter.names.toTypedArray()))
 
     override val names = Companion.names
