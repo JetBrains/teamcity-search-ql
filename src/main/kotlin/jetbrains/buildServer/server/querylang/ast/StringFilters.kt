@@ -56,6 +56,17 @@ data class StringParamFilter(
     }
 }
 
+data class AnyStringFilter(
+    private val placeholder: String = ""
+) : Filter<String> {
+    override val names: List<String> = emptyList()
+    override fun createStr() = "*"
+
+    override fun build(context: Any?): ObjectFilter<String> {
+        return RealObjectFilter {true}
+    }
+}
+
 fun retrieveEquals(condition: ConditionAST<String>) : List<String>? {
     fun retrieveEqualsReq(condition: ConditionAST<String>) : Set<String>? {
         when (condition) {

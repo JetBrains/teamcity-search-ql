@@ -115,12 +115,14 @@ stringFilter : stringEqualsFilter
              | stringPrefixFilter
              | stringSuffixFilter
              | stringSubstringFilter
+             | anyStringFilter
              ;
 
 stringEqualsFilter : identOrString ;
 stringPrefixFilter : PREFIXS ;
 stringSuffixFilter : SUFFIXS ;
 stringSubstringFilter : SUBSTRINGS ;
+anyStringFilter : ANY_STRING ;
 
 
 filterModifier : allModifier ;

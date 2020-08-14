@@ -76,5 +76,6 @@ IDENT: (LET | DIGIT | '_' | '.' | '-')+
 SUFFIXS : '*' (IDENT | STRING) ;
 PREFIXS : (IDENT | STRING) '*' ;
 SUBSTRINGS : '*' (IDENT | STRING) '*' ;
+ANY_STRING : '*' ;
 WS : [ \t\r\n]+ -> skip ;
 

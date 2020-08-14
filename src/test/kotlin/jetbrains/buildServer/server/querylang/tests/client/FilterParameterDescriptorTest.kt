@@ -74,6 +74,10 @@ class FilterParameterDescriptorTest : BaseQueryLangTest() {
             "find template with trigger type vcsTrigger and step type step1 and feature type feature1",
             "t1"
         )
+        .addBCCase(
+            "find configuration with feature param asd=*",
+            "b3"
+         )
         .end()
 
     @DataProvider(name = "failed")

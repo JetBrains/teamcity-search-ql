@@ -148,4 +148,7 @@ class FilterVisitor<Obj>(val parentFilter: KClass<out ConditionContainer<Obj>>) 
 
     override fun visitStringSubstringFilter(ctx: QLangGrammarParser.StringSubstringFilterContext?) =
         SubstringFilter(ctx!!.SUBSTRINGS().text.drop(1).dropLast(1).fromIdentOrString()).transform(ctx)
+
+    override fun visitAnyStringFilter(ctx: QLangGrammarParser.AnyStringFilterContext?) =
+        AnyStringFilter().transform(ctx!!)
 }

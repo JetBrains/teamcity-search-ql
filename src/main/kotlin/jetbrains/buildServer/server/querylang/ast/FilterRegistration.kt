@@ -36,6 +36,7 @@ object FilterRegistration {
         registerFilter(EnabledFilter::class)
         registerFilter(CleanFilter::class)
         registerFilter(StringParamFilter::class)
+        registerFilter(AnyStringFilter::class)
 
         registerConditionFilter(IdFilter::class)
         registerConditionFilter(BuildConfFilter::class)
