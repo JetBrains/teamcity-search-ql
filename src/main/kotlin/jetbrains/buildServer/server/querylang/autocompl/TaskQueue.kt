@@ -15,7 +15,7 @@ class TaskQueue(
     private val updatePeriod: Long = 300,
     private val initialDelay: Long = 30,
     private val tu: TimeUnit = TimeUnit.SECONDS
-) : ServerListener {
+) {
 
     private val queue: LinkedHashSet<ObjectUpdateTask> = LinkedHashSet()
     private val scheduledExecutor = Executors.newSingleThreadScheduledExecutor()
@@ -29,11 +29,8 @@ class TaskQueue(
         )
     }
 
-    override fun serverStartup() {
 
-    }
-
-    override fun serverShutdown() {
+    fun destroy() {
         ThreadUtil.shutdownGracefully(scheduledExecutor, "Query Language executor")
     }
 

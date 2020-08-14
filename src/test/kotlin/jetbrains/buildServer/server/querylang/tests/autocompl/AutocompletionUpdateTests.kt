@@ -21,7 +21,6 @@ class AutocompletionUpdateTests : BaseServerTestCase(){
         super.setUp()
         compl = CompletionManager(myFixture.projectManager)
         val taskQueue = TaskQueue(compl, updatePeriod, 0, TimeUnit.MILLISECONDS)
-        taskQueue.serverStartup()
 
         eventListener = AutocompletionEventListener(taskQueue ,myFixture.projectManager,  myFixture.eventDispatcher)
     }

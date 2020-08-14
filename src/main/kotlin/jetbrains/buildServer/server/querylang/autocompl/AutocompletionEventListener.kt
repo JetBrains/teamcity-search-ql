@@ -14,6 +14,10 @@ class AutocompletionEventListener(
         eventDispatcher.addListener(this)
     }
 
+    override fun serverShutdown() {
+        queue.destroy()
+    }
+
     override fun buildTypePersisted(buildType: SBuildType) {
         queue.addBuildType(buildType)
     }

@@ -45,7 +45,6 @@ abstract class BaseQueryLangTest : BaseServerTestCase() {
         autoCompl = AutoCompletion(myFixture.projectManager, compl)
 
         taskQueue = TaskQueue(complm, 20, 0, TimeUnit.MILLISECONDS)
-        taskQueue.serverStartup()
 
         eventListener = AutocompletionEventListener(taskQueue, projectManager, myFixture.eventDispatcher)
 
@@ -57,7 +56,7 @@ abstract class BaseQueryLangTest : BaseServerTestCase() {
     override fun tearDown() {
         super.tearDown()
 
-        taskQueue.serverShutdown()
+        taskQueue.destroy()
     }
 
     fun getIds(query: String) : List<String> {
