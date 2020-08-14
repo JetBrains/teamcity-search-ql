@@ -1,6 +1,6 @@
 package jetbrains.buildServer.server.querylang.autocompl
 
-import jetbrains.buildServer.server.querylang.ast_old.*
+import jetbrains.buildServer.server.querylang.ast.*
 import jetbrains.buildServer.serverSide.BuildTypeTemplate
 import jetbrains.buildServer.serverSide.ProjectManager
 import jetbrains.buildServer.serverSide.SBuildType
@@ -34,24 +34,24 @@ class CompletionManager(val projectManager: ProjectManager) {
         registerFinder(triggerParamValueFinder, TriggerFilter::class, ParameterFilter::class)
         registerFinder(stepParamValueFinder, StepFilter::class, ParameterFilter::class)
         registerFinder(featureParamValueFinder, FeatureFilter::class, ParameterFilter::class)
-        registerFinder(buildConfIdFinder, FindBuildConf::class, IdFilter::class)
-        registerFinder(templateIdFinder, FindTemplate::class, IdFilter::class)
-        registerFinder(vcsRootIdFinder, FindVcsRoot::class, IdFilter::class)
+        registerFinder(buildConfIdFinder, BuildConfTopLevelQuery::class, IdFilter::class)
+        registerFinder(templateIdFinder, TemplateTopLevelQuery::class, IdFilter::class)
+        registerFinder(vcsRootIdFinder, VcsRootTopLevelQuery::class, IdFilter::class)
         registerFinder(triggerTypeFinder, TriggerFilter::class, TypeFilter::class)
         registerFinder(stepTypeFinder, StepFilter::class, TypeFilter::class)
         registerFinder(featureTypeFinder, FeatureFilter::class, TypeFilter::class)
-        registerFinder(vcsRootTypeFinder, FindVcsRoot::class, TypeFilter::class)
+        registerFinder(vcsRootTypeFinder, VcsRootTopLevelQuery::class, TypeFilter::class)
         registerFinder(snapshotOptionFinder, SnapshotFilter::class, OptionFilter::class)
         registerFinder(artifactRulesFinder, ArtifactFilter::class, RulesFilter::class)
         registerFinder(artifactRevRuleFinder, ArtifactFilter::class, RevRuleFilter::class)
-        registerFinder(projectParamFinder, FindProject::class, ParameterFilter::class)
-        registerFinder(vcsParamFinder, FindVcsRoot::class, ParameterFilter::class)
+        registerFinder(projectParamFinder, ProjectTopLevelQuery::class, ParameterFilter::class)
+        registerFinder(vcsParamFinder, VcsRootTopLevelQuery::class, ParameterFilter::class)
 
         indexAll()
     }
 
     private fun registerFinder(sf: StringFinder, vararg nameContext: KClass<out Named>) {
-        val vars = nameContext.map { Named.getNames(it) }
+        val vars = nameContext.map { it.getNames() }
 
         addToMapWithPrefix(sf, "", vars)
     }

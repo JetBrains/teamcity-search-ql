@@ -35,7 +35,7 @@ class TypeDeduce {
         val filters = getAllFilters(condition)
 
         val res = mutableListOf<FullQuery>()
-        val new = mutableListOf<TopLevelQuery>()
+        val new = mutableListOf<TopLevelQuery<*>>()
 
         val possibleConditionContainers = filters
             .map { FilterRegistration.getPossibleConditionContainers(it::class) }
@@ -44,7 +44,7 @@ class TypeDeduce {
         possibleConditionContainers.forEach { clazz ->
             when {
                 clazz.isSubclassOf(TopLevelQuery::class) ->
-                    createInstance<TopLevelQuery>(clazz, condition)?.let { new.add(it) }
+                    createInstance<TopLevelQuery<*>>(clazz, condition)?.let { new.add(it) }
 
                 clazz.isSubclassOf(Filter::class) && level != 0 ->
                     createInstance<Filter<*>>(clazz, condition)?.let {

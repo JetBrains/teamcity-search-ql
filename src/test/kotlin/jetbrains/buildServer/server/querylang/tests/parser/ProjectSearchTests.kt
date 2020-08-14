@@ -1,5 +1,7 @@
 package jetbrains.buildServer.server.querylang.tests.parser
 
+/*
+
 import jetbrains.buildServer.server.querylang.ast_old.*
 import jetbrains.buildServer.server.querylang.parser.ParsingException
 import jetbrains.buildServer.server.querylang.parser.QueryParser
@@ -56,3 +58,5 @@ internal class ProjectSearchTests {
         assertFailsWith<ParsingException> { parser.parse(query) }
     }
 }
+
+ */

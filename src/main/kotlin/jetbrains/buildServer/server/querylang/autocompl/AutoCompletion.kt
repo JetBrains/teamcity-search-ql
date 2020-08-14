@@ -1,6 +1,7 @@
 package jetbrains.buildServer.server.querylang.autocompl
 
-import jetbrains.buildServer.server.querylang.ast_old.MultipleMainQuery
+import jetbrains.buildServer.server.querylang.ast.FullQuery
+import jetbrains.buildServer.server.querylang.ast.PartialQuery
 import jetbrains.buildServer.server.querylang.parser.ParsingException
 import jetbrains.buildServer.server.querylang.parser.QLangGrammarLexer
 import jetbrains.buildServer.server.querylang.parser.QLangGrammarParser
@@ -42,8 +43,8 @@ class AutoCompletion(
         }
         if (treePartNode != null) {
             try {
-                val multipleQueries = parser.parse(input) as? MultipleMainQuery ?: return emptyList()
-                return multipleQueries.queries.map {it.createStr()}.map {CompletionResult(it, it)}
+                val multipleQueries = parser.parse(input) as? PartialQuery ?: return emptyList()
+                return multipleQueries.fullQueries.map {it.createStr()}.map {CompletionResult(it, it)}
             } catch (e: ParsingException) {
                 return completePartialQuery(input, treePartNode)
             }

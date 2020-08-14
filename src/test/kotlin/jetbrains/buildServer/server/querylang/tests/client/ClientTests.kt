@@ -2,6 +2,7 @@ package jetbrains.buildServer.server.querylang.tests.client
 
 import jetbrains.buildServer.artifacts.BuildTagRevisionRule
 import jetbrains.buildServer.artifacts.RevisionRules
+import jetbrains.buildServer.server.querylang.MyProjectManagerInit
 import jetbrains.buildServer.server.querylang.objects.BuildConfiguration
 import jetbrains.buildServer.server.querylang.objects.Project
 import jetbrains.buildServer.server.querylang.parser.QueryParser
@@ -84,6 +85,8 @@ class ClientTests: BaseServerTestCase() {
         p5bt1.setCheckoutRules(p5vcs1, CheckoutRules("abacaba"))
         p5bt1.addParameter(SimpleParameter("path", "dabacabadaba"))
         myFixture.addDependency(p5bt1, p4bt1, true)
+
+        MyProjectManagerInit(pManager)
     }
 
     fun testSearchBuildConfigurationWithVcsTrigger() {

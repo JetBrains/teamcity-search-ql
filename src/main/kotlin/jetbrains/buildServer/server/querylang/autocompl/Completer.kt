@@ -1,14 +1,14 @@
 package jetbrains.buildServer.server.querylang.autocompl
 
-import jetbrains.buildServer.server.querylang.ast_old.*
+import jetbrains.buildServer.server.querylang.ast.*
 import org.reflections.Reflections
 import java.lang.IllegalStateException
 import kotlin.reflect.full.companionObjectInstance
 import kotlin.reflect.full.isSubclassOf
 
 class Completer(val completionManager: CompletionManager? = null) {
-    private val graph = mutableMapOf<String, MutableList<String>>()
-    private val possibleModifiers = mutableMapOf<String, MutableList<String>>()
+    private val graph = mutableMapOf<String, MutableSet<String>>()
+    private val possibleModifiers = mutableMapOf<String, MutableSet<String>>()
     private val reflections = Reflections("jetbrains.buildServer.server.querylang.ast")
 
     init {
@@ -131,42 +131,12 @@ class Completer(val completionManager: CompletionManager? = null) {
 
     private fun loadFilterGraph() {
         val topLevelClasses = reflections.getSubTypesOf(TopLevelQuery::class.java)
-        val filters = reflections.getSubTypesOf(Filter::class.java).filter{
-            !it.isInterface && !(it.kotlin.isSubclassOf(StringFilter::class))
-        }
 
-        graph["root"] = topLevelClasses.map {getNames(it).first()}.toMutableList()
-        filters.forEach { filterClass ->
-            getNames(filterClass).forEach {filterName ->
-                graph[filterName] = mutableListOf()
-            }
-        }
+        graph["root"] = topLevelClasses.map {it.kotlin.getName()}.toMutableSet()
 
-        createEdges(filters)
-    }
-
-    private fun createEdges(filters: List<Class<out Filter>>) {
-
-        fun createEdgesForMainClass(mainClass: Class<out ConditionContainer<out Filter, *>>, filterClass: Class<out Filter>) {
-            val classes = reflections.getSubTypesOf(mainClass)
-            classes.forEach { clazz ->
-                val filterNames = getNames(clazz)
-                filterNames.forEach { filterName ->
-                    if (!graph.contains(filterName)) {
-                        graph[filterName] = mutableListOf()
-                    }
-                }
-                filters.filter { it.kotlin.isSubclassOf(filterClass.kotlin) }.forEach { filter ->
-                    val subFilterNames = getNames(filter)
-                    filterNames.forEach { filterName ->
-                        graph[filterName]!!.add(subFilterNames.first())
-                    }
-                }
-            }
-        }
-
-        FilterTypeRegistration.getConditionContainerFilterPairs().forEach { con ->
-            createEdgesForMainClass(con.conditionc, con.filterc)
+        val filterGraph = FilterRegistration.getFilterGraph()
+        filterGraph.forEach {(container, filterSet) ->
+            graph.getOrPut(container.getName(), { mutableSetOf()}).addAll(filterSet.map {it.getName()})
         }
     }
 
@@ -181,7 +151,7 @@ class Completer(val completionManager: CompletionManager? = null) {
             companionObj.classes.map {it.filterClass}.forEach {filterClass ->
                 getNames(filterClass).forEach {
                     if (!possibleModifiers.contains(it)) {
-                        possibleModifiers[it] = mutableListOf()
+                        possibleModifiers[it] = mutableSetOf()
                     }
                     possibleModifiers[it]!!.addAll(names)
                 }
@@ -202,7 +172,7 @@ class Completer(val completionManager: CompletionManager? = null) {
         }
     }
 
-    private fun List<String>.filterBegins(word: String): List<String> {
+    private fun Collection<String>.filterBegins(word: String): List<String> {
         return this.filter {it.startsWith(word)}
     }
 

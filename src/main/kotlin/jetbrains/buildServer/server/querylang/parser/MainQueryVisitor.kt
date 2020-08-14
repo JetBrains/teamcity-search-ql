@@ -12,10 +12,10 @@ object MainQueryVisitor : QLangGrammarBaseVisitor<MainQuery>() {
 
     override fun visitFind(ctx: QLangGrammarParser.FindContext?): FullQuery {
         val objectKeywords = ctx!!.multipleObjects().objectKeyword()
-        val queries: List<TopLevelQuery> = objectKeywords.map { objKeyword ->
+        val queries: List<TopLevelQuery<*>> = objectKeywords.map { objKeyword ->
             when (objKeyword.getChild(0)) {
                 is QLangGrammarParser.ProjectKewordContext -> {
-                    ProjectTopLevelQuery(ctx.conditionInSubproject().accept(ConditionVisitor(ProjectTopLevelQuery::class))) as TopLevelQuery
+                    ProjectTopLevelQuery(ctx.conditionInSubproject().accept(ConditionVisitor(ProjectTopLevelQuery::class)))
                 }
                 is QLangGrammarParser.BuildConfKewordContext -> {
                     BuildConfTopLevelQuery(ctx.conditionInSubproject().accept(ConditionVisitor(BuildConfTopLevelQuery::class)))

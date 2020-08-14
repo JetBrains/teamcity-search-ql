@@ -1,11 +1,8 @@
 package jetbrains.buildServer.server.querylang
 
-import jetbrains.buildServer.server.querylang.ast.Filter
-import jetbrains.buildServer.server.querylang.ast_old.FilterTypeRegistration
-import kotlin.reflect.KClass
-
 internal fun String.toIdentOrString(): String {
-    if (this.all {it.isLetter() || it.isDigit() || it in "_.-"} && !FilterTypeRegistration.isKeyWord(this)) {
+    //was ... && !FilterTypeRegistration.isKeyWord(this)
+    if (this.all {it.isLetter() || it.isDigit() || it in "_.-"}) {
         return this
     } else {
         return "\"" + this.escapeQuotes() + "\""

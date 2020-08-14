@@ -3,9 +3,6 @@
   <test name="Tests for Query Language">
     <classes>
       <class name="jetbrains.buildServer.server.querylang.tests.client.ClientTests" />
-      <class name="jetbrains.buildServer.server.querylang.tests.parser.BuildConfSearchTests" />
-      <class name="jetbrains.buildServer.server.querylang.tests.parser.ProjectSearchTests" />
-      <class name="jetbrains.buildServer.server.querylang.tests.parser.TemplateSearchTests" />
       <class name="jetbrains.buildServer.server.querylang.tests.autocompl.KeywordAutocomletionTests" />
       <class name="jetbrains.buildServer.server.querylang.tests.autocompl.AutocompletionTests" />
       <class name="jetbrains.buildServer.server.querylang.tests.autocompl.CompletionManagerFeatureParamTests" />
@@ -14,7 +11,7 @@
       <class name="jetbrains.buildServer.server.querylang.tests.autocompl.TrieTests" />
       <class name="jetbrains.buildServer.server.querylang.tests.autocompl.CompletionManagerTriggerParamTests" />
       <class name="jetbrains.buildServer.server.querylang.tests.autocompl.PartialQueryTests" />
-      <class name="jetbrains.buildServer.server.querylang.tests.autocompl.AutocompletionUpdateTests" />
+      <class name="jetbrains.buildServer.server.querylang.tests.autocompl.AutocompletionUpdateTests"/>
       <class name="jetbrains.buildServer.server.querylang.tests.client.IdFilterClientTests" />
       <class name="jetbrains.buildServer.server.querylang.tests.client.ProjectFilterClientTests" />
       <class name="jetbrains.buildServer.server.querylang.tests.client.ParentFilterClientTests" />

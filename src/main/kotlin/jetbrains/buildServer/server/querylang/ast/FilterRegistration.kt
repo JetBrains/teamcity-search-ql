@@ -59,6 +59,8 @@ object FilterRegistration {
         registerConditionFilter(TypeFilter::class)
     }
 
+    fun getFilterGraph() = filterGraph.toMap()
+
     fun printaAllRelations() {
         filterGraph.forEach {(fc, fsubc) ->
             println("${fc.simpleName}(${fc.getName()})")
