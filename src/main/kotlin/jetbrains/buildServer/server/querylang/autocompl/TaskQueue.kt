@@ -3,17 +3,19 @@ package jetbrains.buildServer.server.querylang.autocompl
 import jetbrains.buildServer.serverSide.BuildTypeTemplate
 import jetbrains.buildServer.serverSide.SBuildType
 import jetbrains.buildServer.serverSide.SProject
+import jetbrains.buildServer.serverSide.ServerListener
+import jetbrains.buildServer.util.ThreadUtil
 import jetbrains.buildServer.vcs.SVcsRoot
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 import kotlin.collections.LinkedHashSet
 
 class TaskQueue(
-    val compl: CompletionManager,
-    updatePeriod: Long = 300,
-    initialDelay: Long = 30,
-    tu: TimeUnit = TimeUnit.SECONDS
-) {
+    private val compl: CompletionManager,
+    private val updatePeriod: Long = 300,
+    private val initialDelay: Long = 30,
+    private val tu: TimeUnit = TimeUnit.SECONDS
+) : ServerListener {
 
     private val queue: LinkedHashSet<ObjectUpdateTask> = LinkedHashSet()
     private val scheduledExecutor = Executors.newSingleThreadScheduledExecutor()
@@ -27,10 +29,12 @@ class TaskQueue(
         )
     }
 
+    override fun serverStartup() {
 
-    fun destroy() {
-        scheduledExecutor.shutdown()
-        scheduledExecutor.awaitTermination(10, TimeUnit.SECONDS)
+    }
+
+    override fun serverShutdown() {
+        ThreadUtil.shutdownGracefully(scheduledExecutor, "Query Language executor")
     }
 
     constructor(compl: CompletionManager): this(compl, 300, 30, TimeUnit.SECONDS)
