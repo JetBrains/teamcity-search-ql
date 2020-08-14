@@ -20,6 +20,7 @@ class PartialQueryTests {
         val expected = listOf(
             "find project,configuration,template,vcsRoot with id BaseProject",
             "find configuration,template with dependency id BaseProject",
+            "find configuration,template with vcs id BaseProject",
             "find project with ancestor id BaseProject",
             "find configuration with template id BaseProject",
             "find project,configuration,template,vcsRoot with parent id BaseProject",
@@ -36,6 +37,7 @@ class PartialQueryTests {
         val res = compl.complete(query).map { it.result }
         val expected = listOf(
             "find vcsRoot with type vcsTrigger",
+            "find configuration,template with vcs type vcsTrigger",
             "find project,configuration,template with feature type vcsTrigger",
             "find configuration,template with step type vcsTrigger",
             "find configuration,template with trigger type vcsTrigger",

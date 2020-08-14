@@ -276,10 +276,10 @@ data class AncestorFilter(
 }
 
 data class VcsRootEntryFilter(
-    override val condition: ConditionAST<WVcsRootEntry>,
-    var includeInherited: Boolean = false
+    override val condition: ConditionAST<WVcsRootEntry>
 ) : ConditionFilter<FVcsRootEntryContainer, WVcsRootEntry>()
 {
+    var includeInherited: Boolean = false
     companion object : Names("vcs")
     override val names = Companion.names
 
@@ -397,10 +397,11 @@ data class RevRuleFilter(
 }
 
 data class OptionFilter(
-    override val condition: ConditionAST<WParam>,
-    var includeInherited: Boolean = false
+    override val condition: ConditionAST<WParam>
 ) : ConditionFilter<FOptionContainer, WParam>()
 {
+    var includeInherited: Boolean = false
+
     companion object : Names("option")
 
     override val names = Companion.names

@@ -14,5 +14,12 @@ fun main() {
     val query = "type vcsTrigger"
 
     val parsed = parser.parse(query)
-    println(parsed)
+    if (parsed is PartialQuery) {
+        parsed.fullQueries.forEach {
+            println(it.createStr())
+        }
+    }
+    else {
+        println(parsed)
+    }
 }
