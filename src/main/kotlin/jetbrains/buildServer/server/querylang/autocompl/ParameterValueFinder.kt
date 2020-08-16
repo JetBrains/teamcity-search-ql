@@ -7,10 +7,10 @@ class ParameterValueFinder: StringFinder {
     val params: MutableMap<String, CompressedTrie<Any>> = mutableMapOf()
 
     override fun completeString(prefix: String, limit: Int): List<String> {
-        val wordRegex = """[\w.-_]*?""".toRegex()
+        val wordRegex = """[\w.\-_]*?""".toRegex()
         val withQuoteRegex = """"[\s\S]*?""".toRegex()
         val paramOnlyRegex = """$wordRegex|$withQuoteRegex""".toRegex()
-        val withValueRegex = """(([\w.-_]+?)|("[\s\S]+?"))\s*=\s*($withQuoteRegex|$wordRegex)""".toRegex()
+        val withValueRegex = """(([\w.\-_]+?)|("[\s\S]+?"))\s*=\s*($withQuoteRegex|$wordRegex)""".toRegex()
         return when {
             prefix.matches(withValueRegex) -> {
                 val paramName = prefix.substringBefore("=").trim().removeQuotationMarks()

@@ -36,7 +36,8 @@ class FilterParameterDescriptorTest : BaseQueryLangTest() {
                 TTrigger("trigger", Pair("path", "abc")),
                 TStep("step", Pair("abc", "def")),
                 TFeature("feature", Pair("asd", "fgh")),
-                TFeature("feature2", Pair("abc", ""))
+                TFeature("feature2", Pair("abc", "")),
+                TStep("step22", Pair("abc-bcd", "qwe-rty"))
             ).bind("b3")
         ).create()
     }
@@ -92,6 +93,14 @@ class FilterParameterDescriptorTest : BaseQueryLangTest() {
     fun complData() = TestDataProvider()
         .addComplCase("find configuration with feature param abc=",
             "abc=\"\""
+        )
+        .addComplCase(
+            "find configuration with step param abc-",
+            "abc-bcd"
+        )
+        .addComplCase(
+            "find configuration with step param abc-bcd=qwe-",
+            "abc-bcd=qwe-rty"
         )
         .end()
 
