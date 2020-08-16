@@ -149,17 +149,22 @@ class CompressedTrie<T> : AutocompletionIndexer<T> {
     }
 
     private fun getAllBfs(startNode: Node<T>, limit: Int): List<String> {
-        val queue = LinkedList<Pair<Node<T>, String>>()
-        queue.add(Pair(startNode, ""))
+        val queue = LinkedList<Triple<Node<T>, String, Int>>()
+        queue.add(Triple(startNode, "", 0))
         val res = mutableListOf<String>()
 
         while (res.size < limit && !queue.isEmpty()) {
-            val (node, str) = queue.poll()
-            node.nodes.forEach {_, nextNode ->
-                queue.add(Pair(nextNode, str + nextNode.str))
+            val (node, str, prefixLength) = queue.poll()
+            if (node.str.length == prefixLength) {
+                node.nodes.forEach { _, nextNode ->
+                    queue.add(Triple(nextNode, str + nextNode.str, 1))
+                }
+                if (node.isTerminal()) {
+                    res.add(str)
+                }
             }
-            if (node.isTerminal()) {
-                res.add(str)
+            else {
+                queue.add(Triple(node, str, prefixLength + 1))
             }
         }
         return res

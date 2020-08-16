@@ -15,7 +15,7 @@ class TrieTests {
     private var patht = createTempDir().toPath()
 
     private fun getTrie(): List<AutocompletionIndexer<String>> {
-        return listOf(ExternalAutocompletionIndexer(patht), CompressedTrie(), Trie())
+        return listOf(CompressedTrie(), Trie(), ExternalAutocompletionIndexer(patht))
     }
 
     @BeforeMethod
@@ -73,11 +73,10 @@ class TrieTests {
 
 
             val l = t.complete("abac", 4).sorted()
-            assertEquals(4, l.size)
-            assertEquals("", l[0])
-            assertEquals("DA", l[1])
-            assertEquals("DD", l[2])
-            assertEquals("DDD", l[3])
+            val expected = listOf(
+                "", "DA", "DD", "DDD"
+            )
+            assertEquals(expected, l)
         }
     }
 
