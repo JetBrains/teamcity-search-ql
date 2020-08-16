@@ -79,7 +79,7 @@ class Trie<T> : AutocompletionIndexer<T> {
             node = node.getNode(c)!!
         }
         lock.readLock().unlock()
-        return getStringFromSubtree(node, limit)
+        return getStringFromSubtree(node, limit).map {str + it}
     }
 
     private fun getStringFromSubtree(fnode: Node<T>, limit: Int): List<String> {

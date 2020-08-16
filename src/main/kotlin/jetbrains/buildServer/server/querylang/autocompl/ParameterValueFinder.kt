@@ -16,9 +16,9 @@ class ParameterValueFinder: StringFinder {
                 val paramName = prefix.substringBefore("=").trim().removeQuotationMarks()
                 val paramValue = prefix.substringAfter("=").trimStart().removeStartMarks()
                 val vars = completeParamValue(paramName, paramValue, limit)
-                vars.map {paramName.escape() + "=" + (paramValue + it).escape()}
+                vars.map {paramName.escape() + "=" + (it).escape()}
             }
-            prefix.matches(paramOnlyRegex) || prefix.isEmpty() -> completeParamName(prefix.removeStartMarks(), limit).map {(prefix + it).escape()}
+            prefix.matches(paramOnlyRegex) || prefix.isEmpty() -> completeParamName(prefix.removeStartMarks(), limit).map {(it).escape()}
             else -> listOf()
         }
     }

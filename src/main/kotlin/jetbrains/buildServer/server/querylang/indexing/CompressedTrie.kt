@@ -94,7 +94,7 @@ class CompressedTrie<T> : AutocompletionIndexer<T> {
 
         lock.readLock().unlock()
 
-        return res
+        return res.map {str + it}
     }
 
     override fun exists(str: String): Boolean {

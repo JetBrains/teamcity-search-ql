@@ -1,21 +1,20 @@
-package jetbrains.buildServer.server.querylang.tests.autocompl
+package jetbrains.buildServer.server.querylang.tests.indexer
 
 import jetbrains.buildServer.server.querylang.indexing.AutocompletionIndexer
 import jetbrains.buildServer.server.querylang.indexing.CompressedTrie
-import jetbrains.buildServer.server.querylang.indexing.ExternalAutocompletionIndexer
+import jetbrains.buildServer.server.querylang.indexing.ExternalPrefixIndexer
 import jetbrains.buildServer.server.querylang.indexing.Trie
-import org.testng.annotations.AfterClass
 import org.testng.annotations.AfterMethod
 import org.testng.annotations.BeforeMethod
 import org.testng.annotations.Test
 import kotlin.test.*
 
 @Test
-class TrieTests {
+class PrefixIndexerTests {
     private var patht = createTempDir().toPath()
 
     private fun getTrie(): List<AutocompletionIndexer<String>> {
-        return listOf(CompressedTrie(), Trie(), ExternalAutocompletionIndexer(patht))
+        return listOf(CompressedTrie(), Trie(), ExternalPrefixIndexer(patht))
     }
 
     @BeforeMethod
@@ -74,7 +73,23 @@ class TrieTests {
 
             val l = t.complete("abac", 4).sorted()
             val expected = listOf(
-                "", "DA", "DD", "DDD"
+                "abac", "abacDA", "abacDD", "abacDDD"
+            )
+            assertEquals(expected, l)
+        }
+    }
+
+    fun testCompleteWithSpecialCharachter() {
+        getTrie().forEach { t ->
+            t.addString("?*@aba")
+            t.addString("?*@caba")
+            t.addString("?*@daba")
+            t.addString("?@&&&&")
+
+
+            val l = t.complete("?*@", 4).sorted()
+            val expected = listOf(
+                "?*@aba", "?*@caba", "?*@daba"
             )
             assertEquals(expected, l)
         }

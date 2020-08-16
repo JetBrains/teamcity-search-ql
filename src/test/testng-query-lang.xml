@@ -8,7 +8,8 @@
       <class name="jetbrains.buildServer.server.querylang.tests.autocompl.CompletionManagerFeatureParamTests" />
       <class name="jetbrains.buildServer.server.querylang.tests.autocompl.CompletionManagerProjectIdTests" />
       <class name="jetbrains.buildServer.server.querylang.tests.autocompl.CompletionManagerStepParamTests" />
-      <class name="jetbrains.buildServer.server.querylang.tests.autocompl.TrieTests" />
+      <class name="jetbrains.buildServer.server.querylang.tests.indexer.PrefixIndexerTests" />
+      <class name="jetbrains.buildServer.server.querylang.tests.indexer.SubstringIndexerTests" />
       <class name="jetbrains.buildServer.server.querylang.tests.autocompl.CompletionManagerTriggerParamTests" />
       <class name="jetbrains.buildServer.server.querylang.tests.autocompl.PartialQueryTests" />
       <class name="jetbrains.buildServer.server.querylang.tests.autocompl.AutocompletionUpdateTests"/>
