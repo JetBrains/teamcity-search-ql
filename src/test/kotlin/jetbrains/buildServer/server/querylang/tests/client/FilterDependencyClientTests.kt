@@ -14,10 +14,12 @@ class FilterDependencyClientTests : BaseQueryLangTest() {
         super.setUp()
 
         TProject("BaseProject",
-            TBuildConf("btest1").bind("b1"),
+            TBuildConf("BuildConf1").bind("b1"),
 
             TProject("Project2",
-                TBuildConf("btest3").bind("b3")
+                TBuildConf("btest3",
+                    TOption("qwerty", "abcdefg")
+                ).bind("b3")
             ),
 
             TBuildConf("btest2",
@@ -25,7 +27,8 @@ class FilterDependencyClientTests : BaseQueryLangTest() {
             ).bind("b2"),
 
             TBuildConf("btest4",
-                TADependency("b2", "qwerqwreqerq", false)
+                TADependency("b2", "qwerqwreqerq", false),
+                TParam("path", "abacaba")
             ).bind("b4"),
 
             TTemplate("temp1",
@@ -179,6 +182,26 @@ class FilterDependencyClientTests : BaseQueryLangTest() {
         .addComplCase(
             "find configuration with dependency artifact revRule sameChainO",
             "sameChainOrLastFinished"
+        )
+        .addComplCase(
+            "find configuration with dependency param pa",
+            "path"
+        )
+        .addComplCase(
+            "find configuration with dependency param path=",
+            "path=abacaba"
+        )
+        .addComplCase(
+            "find configuration with dependency option qwe",
+            "qwerty"
+        )
+        .addComplCase(
+            "find configuration with dependency option qwerty=abc",
+            "qwerty=abcdefg"
+        )
+        .addComplCase(
+            "find configuration with dependency id Build",
+            "BuildConf1"
         )
         .end()
 
