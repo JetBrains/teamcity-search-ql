@@ -11,23 +11,33 @@ import kotlin.reflect.KClass
 class CompletionManager(val projectManager: ProjectManager) {
     val map: MutableMap<String, StringFinder> = mutableMapOf()
     val projectIdFinder = SimpleStringFinder()
+    val projectParamFinder = ParameterValueFinder()
+
     val buildConfIdFinder = SimpleStringFinder()
+    val buildConfOptionFinder = ParameterValueFinder()
+    val buildConfParamFinder = ParameterValueFinder()
+
     val templateIdFinder = SimpleStringFinder()
+    val templateOptionFinder = ParameterValueFinder()
+    val templateParamFinder = ParameterValueFinder()
+
     val vcsRootIdFinder = SimpleStringFinder()
-    val triggerParamValueFinder = ParameterValueFinder()
-    val stepParamValueFinder = ParameterValueFinder()
-    val featureParamValueFinder = ParameterValueFinder()
-    val triggerTypeFinder = SimpleStringFinder()
-    val stepTypeFinder = SimpleStringFinder()
-    val featureTypeFinder = SimpleStringFinder()
     val vcsRootTypeFinder = SimpleStringFinder()
+    val vcsParamFinder = ParameterValueFinder()
+
+    val triggerParamValueFinder = ParameterValueFinder()
+    val triggerTypeFinder = SimpleStringFinder()
+
+    val stepParamValueFinder = ParameterValueFinder()
+    val stepTypeFinder = SimpleStringFinder()
+
+    val featureParamValueFinder = ParameterValueFinder()
+    val featureTypeFinder = SimpleStringFinder()
+
     val snapshotOptionFinder = ParameterValueFinder()
+
     val artifactRulesFinder = SimpleStringFinder()
     val artifactRevRuleFinder = SimpleStringFinder()
-    val projectParamFinder = ParameterValueFinder()
-    val vcsParamFinder = ParameterValueFinder()
-    val templateOptionFinder = ParameterValueFinder()
-    val buildConfOptionFinder = ParameterValueFinder()
 
     init {
         registerFinder(projectIdFinder, ProjectFilter::class, IdFilter::class)
@@ -50,6 +60,8 @@ class CompletionManager(val projectManager: ProjectManager) {
         registerFinder(vcsParamFinder, VcsRootTopLevelQuery::class, ParameterFilter::class)
         registerFinder(buildConfOptionFinder, BuildConfTopLevelQuery::class, OptionFilter::class)
         registerFinder(templateOptionFinder, TemplateTopLevelQuery::class, OptionFilter::class)
+        registerFinder(buildConfParamFinder, BuildConfTopLevelQuery::class, ParameterFilter::class)
+        registerFinder(templateParamFinder, TemplateFilter::class, ParameterFilter::class)
 
         indexAll()
     }
@@ -131,9 +143,11 @@ class CompletionManager(val projectManager: ProjectManager) {
             artifactRevRuleFinder.addString(art.revisionRule.name)
         }
 
-        bt.ownOptions.forEach {opt ->
+        bt.options.forEach {opt ->
             buildConfOptionFinder.addParam(opt.key, bt.getOption(opt).toString())
         }
+
+        bt.ownParameters.forEach {(a, b) -> buildConfParamFinder.addParam(a, b)}
     }
 
     fun updateTemplate(temp: BuildTypeTemplate) {
@@ -171,6 +185,8 @@ class CompletionManager(val projectManager: ProjectManager) {
         temp.options.forEach {opt ->
             templateOptionFinder.addParam(opt.key, temp.getOption(opt).toString())
         }
+
+        temp.ownParameters.forEach {(a, b) -> templateParamFinder.addParam(a, b)}
     }
 
     fun updateVcsRoot(vcs: SVcsRoot) {

@@ -14,9 +14,12 @@ class SearchTemplateTests : BaseQueryLangTest() {
 
         TProject("BaseProject",
             TTemplate("test1",
-                TOption("abc", "bcd")
+                TOption("abc", "bcd"),
+                TParam("path", "abacaba")
             ).bind("b1"),
-            TTemplate("test2").bind("b2")
+            TTemplate("test2",
+                TParam("path", "abadaba")
+            ).bind("b2")
         ).create()
     }
 
@@ -33,6 +36,14 @@ class SearchTemplateTests : BaseQueryLangTest() {
         .addComplCase(
             "find template with option abc=",
             "abc=bcd"
+        )
+        .addComplCase(
+            "find template with param pa",
+            "path"
+        )
+        .addComplCase(
+            "find template with param path=aba",
+            "path=abacaba", "path=abadaba"
         )
         .end()
 

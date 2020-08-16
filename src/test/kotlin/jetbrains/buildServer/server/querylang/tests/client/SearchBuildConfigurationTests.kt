@@ -15,9 +15,12 @@ class SearchBuildConfigurationTests : BaseQueryLangTest() {
 
         TProject("BaseProject",
             TBuildConf("test1",
-                TOption("abc", "bcd")
+                TOption("abc", "bcd"),
+                TParam("path", "abccaba")
             ).bind("b1"),
-            TBuildConf("test2").bind("b2")
+            TBuildConf("test2",
+                TParam("path", "abacaba")
+            ).bind("b2")
         ).create()
     }
 
@@ -49,6 +52,14 @@ class SearchBuildConfigurationTests : BaseQueryLangTest() {
         .addComplCase(
             "find configuration with option abc=",
             "abc=bcd"
+        )
+        .addComplCase(
+            "find configuration with param pa",
+            "path"
+        )
+        .addComplCase(
+            "find configuration with param path=aba",
+            "path=abacaba"
         )
         .end()
 
