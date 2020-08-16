@@ -54,6 +54,10 @@ class SearchVcsRootTests : BaseQueryLangTest() {
             "find vcsRoot with param param1=",
             "param1=abc", "param1=def"
         )
+        .addComplCase(
+            "find vcsRoot with id BaseProject_",
+            "BaseProject_Vcs1", "BaseProject_Vcs2"
+        )
         .end()
 
     @DataProvider(name = "failed")

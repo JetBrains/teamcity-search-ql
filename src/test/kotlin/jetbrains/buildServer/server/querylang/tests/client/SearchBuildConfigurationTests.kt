@@ -14,6 +14,10 @@ class SearchBuildConfigurationTests : BaseQueryLangTest() {
         super.setUp()
 
         TProject("BaseProject",
+            TVcsRoot("vcs1", "git",
+                TParam("path", "abc"),
+                TOption("qwerty", "bcd")
+            ),
             TBuildConf("test1",
                 TOption("abc", "bcd"),
                 TParam("path", "abccaba")
@@ -60,6 +64,22 @@ class SearchBuildConfigurationTests : BaseQueryLangTest() {
         .addComplCase(
             "find configuration with param path=aba",
             "path=abacaba"
+        )
+        .addComplCase(
+            "find configuration with vcs type g",
+            "git"
+        )
+        .addComplCase(
+            "find configuration with vcs param pa",
+            "path"
+        )
+        .addComplCase(
+            "find configuration with vcs param path=a",
+            "path=abc"
+        )
+        .addComplCase(
+            "find configuration with vcs id BaseProject_",
+            "BaseProject_Vcs1"
         )
         .end()
 

@@ -65,6 +65,9 @@ class CompletionManager(val projectManager: ProjectManager) {
         registerFinder(buildConfIdFinder, DependencyFilter::class, IdFilter::class)
         registerFinder(buildConfParamFinder, DependencyFilter::class, ParameterFilter::class)
         registerFinder(buildConfOptionFinder, DependencyFilter::class, OptionFilter::class)
+        registerFinder(vcsRootIdFinder, VcsRootEntryFilter::class, IdFilter::class)
+        registerFinder(vcsRootTypeFinder, VcsRootEntryFilter::class, TypeFilter::class)
+        registerFinder(vcsParamFinder, VcsRootEntryFilter::class, ParameterFilter::class)
 
         indexAll()
     }
