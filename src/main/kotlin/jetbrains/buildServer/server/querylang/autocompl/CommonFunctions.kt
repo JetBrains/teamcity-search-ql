@@ -1,6 +1,9 @@
 package jetbrains.buildServer.server.querylang.autocompl
 
 internal fun String.escape(): String {
+    if (this == "") {
+        return "\"\""
+    }
     if (this.startsWith("\"") && this.endsWith("\"")) {
         return this
     }

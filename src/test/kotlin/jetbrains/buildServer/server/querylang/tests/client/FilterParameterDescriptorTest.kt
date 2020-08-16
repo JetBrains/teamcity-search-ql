@@ -35,7 +35,8 @@ class FilterParameterDescriptorTest : BaseQueryLangTest() {
             TBuildConf("test3",
                 TTrigger("trigger", Pair("path", "abc")),
                 TStep("step", Pair("abc", "def")),
-                TFeature("feature", Pair("asd", "fgh"))
+                TFeature("feature", Pair("asd", "fgh")),
+                TFeature("feature2", Pair("abc", ""))
             ).bind("b3")
         ).create()
     }
@@ -87,6 +88,13 @@ class FilterParameterDescriptorTest : BaseQueryLangTest() {
         .addParseCase("find buildConfiguration with trigger par abc=bcd")
         .end()
 
+    @DataProvider(name = "compl")
+    fun complData() = TestDataProvider()
+        .addComplCase("find configuration with feature param abc=",
+            "abc=\"\""
+        )
+        .end()
+
 
     @Test(dataProvider = "data")
     fun parametrizedTest(query: String, expected: List<String>) {
@@ -98,5 +106,11 @@ class FilterParameterDescriptorTest : BaseQueryLangTest() {
     @Test(dataProvider = "failed")
     fun parametrizedFailedParsingTest(query: String, exc: Class<out Exception>) {
         assertFailsWith(exc.kotlin) { QueryParser.parse(query)}
+    }
+
+    @Test(dataProvider = "compl")
+    fun parametrizedCompletionTests(query: String, expected: List<String>) {
+        Thread.sleep(50)
+        checkVars(query, expected)
     }
 }
