@@ -1,6 +1,7 @@
 package jetbrains.buildServer.server.querylang.autocompl
 
-import jetbrains.buildServer.serverSide.ProjectManager
+import jetbrains.buildServer.server.querylang.indexing.AutocompletionIndexer
+import jetbrains.buildServer.server.querylang.indexing.CompressedTrie
 
 class SimpleStringFinder(val trie: AutocompletionIndexer<Any> = CompressedTrie()) : StringFinder {
     override fun completeString(prefix: String, limit: Int): List<String> {

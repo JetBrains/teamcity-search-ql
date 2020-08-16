@@ -1,9 +1,7 @@
-package jetbrains.buildServer.server.querylang.autocompl
+package jetbrains.buildServer.server.querylang.indexing
 
 interface AutocompletionIndexer<T> {
     fun addString(str: String, obj: T? = null)
-
-    fun getCnt(str: String): Int
 
     fun exists(str: String): Boolean
 

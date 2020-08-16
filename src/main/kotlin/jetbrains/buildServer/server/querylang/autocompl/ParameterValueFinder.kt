@@ -1,5 +1,7 @@
 package jetbrains.buildServer.server.querylang.autocompl
 
+import jetbrains.buildServer.server.querylang.indexing.CompressedTrie
+
 class ParameterValueFinder: StringFinder {
     val nameTrie = CompressedTrie<Any>()
     val params: MutableMap<String, CompressedTrie<Any>> = mutableMapOf()

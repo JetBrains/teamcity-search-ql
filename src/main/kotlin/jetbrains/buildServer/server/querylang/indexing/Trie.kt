@@ -1,4 +1,4 @@
-package jetbrains.buildServer.server.querylang.autocompl
+package jetbrains.buildServer.server.querylang.indexing
 
 import java.util.*
 import java.util.concurrent.locks.ReentrantReadWriteLock
@@ -56,7 +56,7 @@ class Trie<T> : AutocompletionIndexer<T> {
         return node.isTerminal()
     }
 
-    override fun getCnt(str: String): Int {
+    fun getCnt(str: String): Int {
         lock.readLock().lock()
         var node = root
         str.forEach { c ->

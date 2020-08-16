@@ -1,15 +1,31 @@
 package jetbrains.buildServer.server.querylang.tests.autocompl
 
-import jetbrains.buildServer.server.querylang.autocompl.AutocompletionIndexer
-import jetbrains.buildServer.server.querylang.autocompl.CompressedTrie
-import jetbrains.buildServer.server.querylang.autocompl.Trie
+import jetbrains.buildServer.server.querylang.indexing.AutocompletionIndexer
+import jetbrains.buildServer.server.querylang.indexing.CompressedTrie
+import jetbrains.buildServer.server.querylang.indexing.ExternalAutocompletionIndexer
+import jetbrains.buildServer.server.querylang.indexing.Trie
+import org.testng.annotations.AfterClass
+import org.testng.annotations.AfterMethod
+import org.testng.annotations.BeforeMethod
 import org.testng.annotations.Test
 import kotlin.test.*
 
 @Test
 class TrieTests {
-    private fun getTrie(): List<AutocompletionIndexer<Any>> {
-        return listOf(CompressedTrie())
+    private var patht = createTempDir().toPath()
+
+    private fun getTrie(): List<AutocompletionIndexer<String>> {
+        return listOf(ExternalAutocompletionIndexer(patht), CompressedTrie(), Trie())
+    }
+
+    @BeforeMethod
+    private fun setUp() {
+        patht = createTempDir().toPath()
+    }
+
+    @AfterMethod
+    private fun tearDown() {
+        patht.toFile().deleteRecursively()
     }
 
     fun simpleTest() {
@@ -39,20 +55,6 @@ class TrieTests {
             assertFalse(t.exists("aba"))
             assertFalse(t.exists("abada"))
             assertFalse(t.exists("abadac"))
-        }
-    }
-
-    
-    fun testMultipleString() {
-        getTrie().forEach { t ->
-            t.addString("abacaba")
-            t.addString("abacaba")
-            t.addString("abacabad")
-            t.addString("abacab")
-
-            assertEquals(2, t.getCnt("abacaba"))
-            assertEquals(1, t.getCnt(("abacabad")))
-            assertEquals(1, t.getCnt("abacab"))
         }
     }
 

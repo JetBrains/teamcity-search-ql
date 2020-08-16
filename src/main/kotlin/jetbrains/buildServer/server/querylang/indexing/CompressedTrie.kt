@@ -1,4 +1,4 @@
-package jetbrains.buildServer.server.querylang.autocompl
+package jetbrains.buildServer.server.querylang.indexing
 
 import java.util.*
 import java.util.concurrent.locks.ReentrantReadWriteLock
@@ -33,7 +33,9 @@ class CompressedTrie<T> : AutocompletionIndexer<T> {
             val c = str[i]
             var nextNode = node.getNode(c)
             if (nextNode == null) {
-                nextNode = Node(str.substring(i))
+                nextNode = Node(
+                    str.substring(i)
+                )
                 node.addEdge(c, nextNode)
                 i = str.length
                 node = nextNode
@@ -46,7 +48,8 @@ class CompressedTrie<T> : AutocompletionIndexer<T> {
                 i += prefix.length
                 node = nextNode
             } else {
-                val newNode1 = Node<T>(prefix)
+                val newNode1 =
+                    Node<T>(prefix)
 
                 node.addEdge(c, newNode1)
                 nextNode.str = nextNode.str.drop(prefix.length)
@@ -62,7 +65,7 @@ class CompressedTrie<T> : AutocompletionIndexer<T> {
         lock.writeLock().unlock()
     }
 
-    override fun getCnt(str: String): Int {
+    fun getCnt(str: String): Int {
         lock.readLock().lock()
 
         val (node, strRest) = goDown(str) ?: return 0
