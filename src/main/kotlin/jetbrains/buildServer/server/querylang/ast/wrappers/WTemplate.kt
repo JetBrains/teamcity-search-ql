@@ -75,9 +75,9 @@ class WTemplate(
     override val ownVcsRootEntries: List<WVcsRootEntry>
         get() = vcsRootEntries
 
-    override val dependencies: List<WDependency>
-        get() = (stemplate.dependencies.map {it.wrap()} + stemplate.artifactDependencies.map {it.wrap()}).uniteEqual()
+    override val dependencies: List<SuperDependency>
+        get() = (stemplate.dependencies.map {it.wrap()} + stemplate.artifactDependencies.map {it.wrap()}).toSuperDependencies()
 
-    override val ownDependencies: List<WDependency>
+    override val ownDependencies: List<SuperDependency>
         get() = dependencies
 }

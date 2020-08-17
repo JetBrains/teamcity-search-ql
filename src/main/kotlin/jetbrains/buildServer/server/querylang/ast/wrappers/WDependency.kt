@@ -3,12 +3,14 @@ package jetbrains.buildServer.server.querylang.ast.wrappers
 import jetbrains.buildServer.serverSide.SBuildType
 import jetbrains.buildServer.serverSide.artifacts.SArtifactDependency
 import jetbrains.buildServer.serverSide.dependency.Dependency
-import kotlin.IllegalStateException
+import jetbrains.buildServer.util.Option
 
-class SuperDependency(val dep: WDependency): AbstractWBuildConf() {
+class SuperDependency(
+    val snapshotDep: WSnapshotDependency?,
+    val artifactDependencies: List<WArtifactDependency>,
     override val sbuildConf: SBuildType
-        get() = dep.dependsOn!!.sbuildConf
-}
+): AbstractWBuildConf()
+
 
 sealed class WDependency {
     abstract val dependsOn: WBuildConf?
@@ -16,46 +18,50 @@ sealed class WDependency {
 
 fun SArtifactDependency.wrap() = WArtifactDependency(this)
 
-class WArtifactDependency(override val adep: SArtifactDependency): WDependency(), OnlyArtifactDependency {
+class WArtifactDependency(val adep: SArtifactDependency): WDependency(), FRulesContainer {
     override val dependsOn: WBuildConf?
         get() = adep.sourceBuildType?.wrap()
+
+    override val rules: String
+        get() = adep.sourcePaths
 }
 
 fun Dependency.wrap() = WSnapshotDependency(this)
 
-class WSnapshotDependency(override val sdep: Dependency): WDependency(), OnlySnapshotDependency {
+class WSnapshotDependency(val sdep: Dependency): WDependency(), FOptionContainer{
     override val dependsOn: WBuildConf?
         get() = sdep.dependOn?.wrap()
+
+    override val options: Collection<Option<Any>>
+        get() = sdep.options
+
+    override val ownOptions: Collection<Option<Any>>
+        get() = sdep.ownOptions
+
+    override fun getOption(opt: Option<Any>): Any {
+        return sdep.getOption(opt)
+    }
 }
 
-class WCombinedDependency(override val sdep: Dependency, override val adep: SArtifactDependency): WDependency(), OnlySnapshotDependency, OnlyArtifactDependency {
-    override val dependsOn: WBuildConf?
-        get() =
-            if (adep.sourceBuildType?.externalId != sdep.dependOn?.externalId) null
-            else adep.sourceBuildType?.wrap()
-}
-
-fun List<WDependency>.uniteEqual(): List<WDependency> {
-    val idMap = this.groupBy { it.dependsOn?.id }
-
-    return idMap.map {(_, deps) ->
-        when {
-            deps.size == 1 -> deps.first()
-            deps.size == 2 -> {
-                val dep1 = deps[0]
-                val dep2 = deps[1]
-
-                when {
-                    (dep1 is WArtifactDependency && dep2 is WSnapshotDependency) -> {
-                        WCombinedDependency(dep2.sdep, dep1.adep)
+fun List<WDependency>.toSuperDependencies(): List<SuperDependency> {
+    return this.groupBy { it.dependsOn?.sbuildConf?.externalId }.mapNotNull { (key, value) ->
+        if (key == null) null
+        else {
+            var sdep: WSnapshotDependency? = null
+            val adep = mutableListOf<WArtifactDependency>()
+            value.forEach { dep ->
+                when (dep) {
+                    is WSnapshotDependency -> {
+                        if (sdep != null) throw IllegalStateException("Build configuration has two snapshot dependencies on the same configuration")
+                        sdep = dep
                     }
-                    (dep1 is WSnapshotDependency && dep2 is WArtifactDependency) -> {
-                        WCombinedDependency(dep1.sdep, dep2.adep)
+                    is WArtifactDependency -> {
+                        adep.add(dep)
                     }
-                    else -> throw IllegalStateException()
                 }
             }
-            else -> throw IllegalStateException()
+            val sbuildType = sdep?.dependsOn?.sbuildConf ?: adep.firstOrNull()?.adep?.sourceBuildType
+            sbuildType?.let {SuperDependency(sdep, adep, it)}
         }
     }
 }

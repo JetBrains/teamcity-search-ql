@@ -84,11 +84,11 @@ abstract class AbstractWBuildConf :
     override val ownVcsRootEntries: List<WVcsRootEntry>
         get() = sbuildConf.ownVcsRootEntries.map {it.wrap()}
 
-    override val dependencies: List<WDependency>
-        get() = (sbuildConf.dependencies.map {it.wrap()} + sbuildConf.artifactDependencies.map {it.wrap()}).uniteEqual()
+    override val dependencies: List<SuperDependency>
+        get() = (sbuildConf.dependencies.map {it.wrap()} + sbuildConf.artifactDependencies.map {it.wrap()}).toSuperDependencies()
 
-    override val ownDependencies: List<WDependency>
-        get() = (sbuildConf.ownDependencies.map {it.wrap()} + buildTypeEx.settings.ownArtifactDependencies.map {it.wrap()}).uniteEqual()
+    override val ownDependencies: List<SuperDependency>
+        get() = (sbuildConf.ownDependencies.map {it.wrap()} + buildTypeEx.settings.ownArtifactDependencies.map {it.wrap()}).toSuperDependencies()
 }
 
 class WBuildConf(

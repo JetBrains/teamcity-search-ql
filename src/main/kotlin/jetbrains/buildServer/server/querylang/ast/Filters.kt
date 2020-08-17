@@ -321,52 +321,42 @@ data class DependencyFilter(
         return RealObjectFilter {obj ->
             val dependencies = if (includeInhereted) obj.dependencies
                                else obj.ownDependencies
-            dependencies.any {filter.accepts(SuperDependency(it))}
+            dependencies.any {filter.accepts(it)}
         }
     }
 }
 
 data class ArtifactFilter(
-    override val condition: ConditionAST<OnlyArtifactDependency>
-) : ConditionFilter<SuperDependency, OnlyArtifactDependency>()
+    override val condition: ConditionAST<WArtifactDependency>
+) : ConditionFilter<SuperDependency, WArtifactDependency>()
 {
     companion object : Names("artifact")
     override val names = Companion.names
 
-    override fun buildFrom(filter: ObjectFilter<OnlyArtifactDependency>, context: Any?): ObjectFilter<SuperDependency> {
+    override fun buildFrom(filter: ObjectFilter<WArtifactDependency>, context: Any?): ObjectFilter<SuperDependency> {
         return RealObjectFilter {obj ->
-            val dep = obj.dep
-            when(dep) {
-                is WArtifactDependency -> filter.accepts(dep)
-                is WSnapshotDependency -> false
-                is WCombinedDependency -> filter.accepts(dep)
-            }
+            obj.artifactDependencies.any {filter.accepts(it)}
         }
     }
 }
 
 data class SnapshotFilter(
-    override val condition: ConditionAST<OnlySnapshotDependency>
-) : ConditionFilter<SuperDependency, OnlySnapshotDependency>()
+    override val condition: ConditionAST<WSnapshotDependency>
+) : ConditionFilter<SuperDependency, WSnapshotDependency>()
 {
     companion object : Names("snapshot")
     override val names = Companion.names
 
-    override fun buildFrom(filter: ObjectFilter<OnlySnapshotDependency>, context: Any?): ObjectFilter<SuperDependency> {
+    override fun buildFrom(filter: ObjectFilter<WSnapshotDependency>, context: Any?): ObjectFilter<SuperDependency> {
         return RealObjectFilter {obj ->
-            val dep = obj.dep
-            when(dep) {
-                is WArtifactDependency -> false
-                is WSnapshotDependency -> filter.accepts(dep)
-                is WCombinedDependency -> filter.accepts(dep)
-            }
+            filter.accepts(obj.snapshotDep)
         }
     }
 }
 
 data class CleanFilter(
     private val placeholder: String = ""
-) : Filter<OnlyArtifactDependency>
+) : Filter<WArtifactDependency>
 {
     companion object : Names("clean")
 
@@ -374,7 +364,7 @@ data class CleanFilter(
 
     override fun createStr(): String = names.first()
 
-    override fun build(context: Any?): ObjectFilter<OnlyArtifactDependency> {
+    override fun build(context: Any?): ObjectFilter<WArtifactDependency> {
         return RealObjectFilter {obj ->
             obj.adep.isCleanDestinationFolder
         }
@@ -383,13 +373,13 @@ data class CleanFilter(
 
 data class RevRuleFilter(
     override val condition: ConditionAST<String>
-) : ConditionFilter<OnlyArtifactDependency, String>()
+) : ConditionFilter<WArtifactDependency, String>()
 {
     companion object : Names("revRule")
 
     override val names = Companion.names
 
-    override fun buildFrom(filter: ObjectFilter<String>, context: Any?): ObjectFilter<OnlyArtifactDependency> {
+    override fun buildFrom(filter: ObjectFilter<String>, context: Any?): ObjectFilter<WArtifactDependency> {
         return RealObjectFilter {obj ->
             filter.accepts(obj.adep.revisionRule.name)
         }

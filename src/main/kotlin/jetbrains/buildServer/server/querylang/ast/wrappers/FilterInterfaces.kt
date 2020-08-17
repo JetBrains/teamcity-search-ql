@@ -63,29 +63,8 @@ interface FVcsRootEntryContainer {
 }
 
 interface FDependencyContainer {
-    val dependencies: List<WDependency>
-    val ownDependencies: List<WDependency>
-}
-
-interface OnlyArtifactDependency : FRulesContainer{
-    val adep: SArtifactDependency
-
-    override val rules: String
-        get() = adep.sourcePaths
-}
-
-interface OnlySnapshotDependency : FOptionContainer {
-    val sdep: Dependency
-
-    override val options: Collection<Option<Any>>
-        get() = sdep.options
-
-    override val ownOptions: Collection<Option<Any>>
-        get() = sdep.ownOptions
-
-    override fun getOption(opt: Option<Any>): Any {
-        return sdep.getOption(opt)
-    }
+    val dependencies: List<SuperDependency>
+    val ownDependencies: List<SuperDependency>
 }
 
 interface FOptionContainer {
