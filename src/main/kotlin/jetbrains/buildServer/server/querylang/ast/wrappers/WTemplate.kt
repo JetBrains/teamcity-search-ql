@@ -17,7 +17,8 @@ class WTemplate(
     FDependencyContainer,
     FOptionContainer,
     TopLevelObject,
-    FVcsRootEntryContainer
+    FVcsRootEntryContainer,
+    FValueContainer
 {
     override val id: String
         get() = stemplate.externalId
@@ -80,4 +81,11 @@ class WTemplate(
 
     override val ownDependencies: List<SuperDependency>
         get() = dependencies
+
+    override val values: List<String>
+        get() = ownParams.values +
+                ownOptions.map {getOption(it).toString()} +
+                ownTriggers.flatMap { it.values } +
+                ownSteps.flatMap { it.values } +
+                ownFeatures.flatMap { it.values }
 }

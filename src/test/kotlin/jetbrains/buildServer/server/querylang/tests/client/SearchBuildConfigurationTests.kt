@@ -23,7 +23,10 @@ class SearchBuildConfigurationTests : BaseQueryLangTest() {
                 TParam("path", "abccaba")
             ).bind("b1"),
             TBuildConf("test2",
-                TParam("path", "abacaba")
+                TParam("path", "abacaba"),
+                TTrigger("vcs", Pair("asdcacd", "kjkkkk")),
+                TStep("steptype11", Pair("asdfwqe", "dffd")),
+                TFeature("feature11", Pair("qweqfhsdf", "xzxc"))
             ).bind("b2")
         ).create()
     }
@@ -33,6 +36,18 @@ class SearchBuildConfigurationTests : BaseQueryLangTest() {
         .addBCCase(
             "find buildConfiguration with id test2",
             "b2"
+        )
+        .addBCCase(
+            "find buildConfiguration with val abccaba",
+            "b1"
+        )
+        .addBCCase(
+            "find configuration with val kjkkkk and val dffd and val xzxc",
+            "b2"
+        )
+        .addBCCase(
+            "find configuration with val bcd",
+            "b1"
         )
         .end()
 

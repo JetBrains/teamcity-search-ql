@@ -20,7 +20,8 @@ class WProject(
     FAncestorContainer,
     FParamContainer,
     TopLevelObject,
-    FVcsRootContainer
+    FVcsRootContainer,
+    FValueContainer
 {
     override val id: String
         get() = sproject.externalId
@@ -52,4 +53,7 @@ class WProject(
 
     override val vcsRoots: List<AbstractWVcsRoot>
         get() = sproject.vcsRoots.map {it.wrap()}
+
+    override val values: List<String>
+        get() = ownFeatures.flatMap { it.values } + ownParams.values
 }

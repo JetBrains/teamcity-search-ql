@@ -17,7 +17,8 @@ abstract class AbstractWBuildConf :
     FParamContainer,
     FDependencyContainer,
     FOptionContainer,
-    FVcsRootEntryContainer
+    FVcsRootEntryContainer,
+    FValueContainer
 {
     abstract val sbuildConf: SBuildType
 
@@ -89,6 +90,13 @@ abstract class AbstractWBuildConf :
 
     override val ownDependencies: List<SuperDependency>
         get() = (sbuildConf.ownDependencies.map {it.wrap()} + buildTypeEx.settings.ownArtifactDependencies.map {it.wrap()}).toSuperDependencies()
+
+    override val values: List<String>
+        get() = ownParams.values +
+                ownOptions.map {getOption(it).toString()} +
+                ownTriggers.flatMap { it.values } +
+                ownSteps.flatMap { it.values } +
+                ownFeatures.flatMap { it.values }
 }
 
 class WBuildConf(

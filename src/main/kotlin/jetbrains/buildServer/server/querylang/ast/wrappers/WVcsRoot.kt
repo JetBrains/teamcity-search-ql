@@ -11,7 +11,8 @@ abstract class AbstractWVcsRoot() :
     FProjectContainer,
     FParentContainer,
     FParamContainer,
-    FTypeContainer
+    FTypeContainer,
+    FValueContainer
 {
     abstract val svcsRoot: SVcsRoot
 
@@ -32,6 +33,9 @@ abstract class AbstractWVcsRoot() :
 
     override val type: String
         get() = svcsRoot.vcsName
+
+    override val values: List<String>
+        get() = ownParams.values.toList()
 }
 
 class WVcsRoot(override val svcsRoot: SVcsRoot) : AbstractWVcsRoot(), TopLevelObject

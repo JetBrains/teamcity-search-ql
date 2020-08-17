@@ -34,6 +34,10 @@ class SearchVcsRootTests : BaseQueryLangTest() {
             "find vcsRoot with param param1=abc",
             "v1"
         )
+        .addVcsCase(
+            "find vcsRoot with val *bc",
+            "v1"
+        )
         .end()
 
     @DataProvider(name = "compl")
@@ -70,7 +74,7 @@ class SearchVcsRootTests : BaseQueryLangTest() {
     fun parametrizedTest(query: String, expected: List<String>) {
         val actual = getIds(query)
 
-        BaseServerTestCase.assertEquals(expected.sorted(), actual)
+        assertEquals(expected.sorted(), actual)
     }
 
     @Test(dataProvider = "failed")

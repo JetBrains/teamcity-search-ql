@@ -19,6 +19,7 @@ class ProjectFilterClientTests: BaseQueryLangTest() {
             TVcsRoot("vcs2", "git").bind("vcs2"),
             TProject(
                 "Project1_Project2",
+                TParam("qwerty", "fhd%root-path%abacaba"),
                 TBuildConf("Project1_Project2_test1", TTempDependency("te1")).bind("p2b1"),
                 TBuildConf("Project1_Project2_test2").bind("p2b2")
             ),

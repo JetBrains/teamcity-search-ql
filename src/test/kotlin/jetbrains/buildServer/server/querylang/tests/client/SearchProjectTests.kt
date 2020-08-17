@@ -15,10 +15,12 @@ class SearchProjectTests : BaseQueryLangTest() {
 
         TProject("BaseProject",
             TProjectFeature("pfeat1", Pair("path", "abc")),
+            TParam("refpath1", "abacaba%root-path%dababa"),
 
             TProject("Project1",
                 TProjectFeature("qwerty", Pair("abc", "bcd")),
                 TParam("param1", "abc"),
+                TParam("refpath2", "abacaba%full-path%dababa"),
                 TProject("Project2",
                     TParam("param2", "def")
                 ).bind("p2")
@@ -54,6 +56,14 @@ class SearchProjectTests : BaseQueryLangTest() {
         .addProjectCase(
             "find project with param[all] param1=abc",
             "p1", "p2"
+        )
+        .addProjectCase(
+            """find project with val *"%full-path%"* """,
+            "p1"
+        )
+        .addProjectCase(
+            """find project with val *"path%"* """,
+            "p0", "p1"
         )
         .end()
 
