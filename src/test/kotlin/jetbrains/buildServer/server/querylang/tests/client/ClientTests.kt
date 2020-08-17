@@ -157,8 +157,8 @@ class ClientTests: BaseServerTestCase() {
     fun testLogicalExpression() {
         val query = """
             find buildConfiguration with
-                trigger(val "val2" or type schedulingTrigger)
-                and not (trigger val "val3" or parent id Project1)
+                trigger(param * = "val2" or type schedulingTrigger)
+                and not (trigger param * = "val3" or parent id Project1)
         """.trimIndent()
 
         val res = client.process(query)

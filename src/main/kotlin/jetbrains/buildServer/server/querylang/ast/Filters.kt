@@ -194,14 +194,14 @@ data class TemplateFilter(
 
 data class ValueFilter(
     override val condition: ConditionAST<String>
-) : ConditionFilter<FParamContainer, String>()
+) : ConditionFilter<FValueContainer, String>()
 {
     companion object : Names("val")
     override val names = Companion.names
 
-    override fun buildFrom(filter: ObjectFilter<String>, context: Any?): ObjectFilter<FParamContainer> {
+    override fun buildFrom(filter: ObjectFilter<String>, context: Any?): ObjectFilter<FValueContainer> {
         return RealObjectFilter {obj ->
-            obj.params.values.any {filter.accepts(it)}
+            obj.values.any {filter.accepts(it)}
         }
     }
 }

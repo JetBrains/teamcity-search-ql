@@ -81,3 +81,7 @@ interface FTypeContainer {
 interface FRulesContainer {
     val rules: String
 }
+
+interface FValueContainer {
+    val values: List<String>
+}
