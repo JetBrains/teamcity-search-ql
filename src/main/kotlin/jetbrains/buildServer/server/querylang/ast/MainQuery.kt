@@ -8,6 +8,12 @@ import jetbrains.buildServer.server.querylang.objects.Project
 import jetbrains.buildServer.server.querylang.objects.VcsRoot
 import jetbrains.buildServer.server.querylang.requests.QueryResult
 
+private fun checkInterruptionStatus() {
+    if (Thread.currentThread().isInterrupted) {
+        throw InterruptedException()
+    }
+}
+
 sealed class MainQuery
 
 data class FullQuery(val queries: List<TopLevelQuery<*>>): MainQuery(), Printable {
@@ -43,7 +49,10 @@ data class ProjectTopLevelQuery(override val condition: ConditionAST<WProject>):
 
         return EvalResult(NoneObjectFilter(),
             if (res.filter !is NoneObjectFilter)
-                myProjectManager.projects.filter {res.filter.accepts(it.wrap())}.map {it.wrap()}
+                myProjectManager.projects.filter {
+                    checkInterruptionStatus()
+                    res.filter.accepts(it.wrap())}.map {it.wrap()
+                }
             else
                 res.objects
         )
@@ -60,7 +69,10 @@ data class BuildConfTopLevelQuery(override val condition: ConditionAST<WBuildCon
 
         return EvalResult(NoneObjectFilter(),
             if (res.filter !is NoneObjectFilter)
-                myProjectManager.allBuildTypes.filter {res.filter.accepts(it.wrap())}.map {it.wrap()}
+                myProjectManager.allBuildTypes.filter {
+                    checkInterruptionStatus()
+                    res.filter.accepts(it.wrap())}.map {it.wrap()
+                }
             else
                 res.objects
         )
@@ -77,7 +89,10 @@ data class TemplateTopLevelQuery(override val condition: ConditionAST<WTemplate>
 
         return EvalResult(NoneObjectFilter(),
             if (res.filter !is NoneObjectFilter)
-                myProjectManager.allTemplates.filter {res.filter.accepts(it.wrap())}.map {it.wrap()}
+                myProjectManager.allTemplates.filter {
+                    checkInterruptionStatus()
+                    res.filter.accepts(it.wrap())}.map {it.wrap()
+                }
             else
                 res.objects
         )
@@ -94,7 +109,10 @@ data class VcsRootTopLevelQuery(override val condition: ConditionAST<WVcsRoot>) 
 
         return EvalResult(NoneObjectFilter(),
             if (res.filter !is NoneObjectFilter)
-                myProjectManager.allVcsRoots.filter {res.filter.accepts(it.wrap())}.map {it.wrap()}
+                myProjectManager.allVcsRoots.filter {
+                    checkInterruptionStatus()
+                    res.filter.accepts(it.wrap())}.map {it.wrap()
+                }
             else
                 res.objects
         )

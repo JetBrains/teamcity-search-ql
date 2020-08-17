@@ -17,10 +17,7 @@ import jetbrains.buildServer.web.openapi.PagePlaces
 import jetbrains.buildServer.web.openapi.PluginDescriptor
 import jetbrains.buildServer.web.util.CameFromSupport
 import java.lang.Exception
-import java.util.concurrent.ExecutionException
-import java.util.concurrent.Executors
-import java.util.concurrent.TimeUnit
-import java.util.concurrent.TimeoutException
+import java.util.concurrent.*
 import javax.servlet.http.HttpServletRequest
 
 class SearchAdminPage(
@@ -56,11 +53,14 @@ class SearchAdminPage(
         FormUtil.bindFromRequest(request, form)
 
         val bean = SearchAdminBean(form, projectManager)
+
+
+        var task: Future<QueryResult>? = null
         try {
             val result = bean.getQuery()?.let {
                 val queryTimelimit = TeamCityProperties.getIntervalMilliseconds(TIMELIMIT_PARAM_NAME, DEFAULT_TIMELIMIT)
-                val fut = executor.submit<QueryResult> { requestClient.process(it) }
-                fut.get(queryTimelimit, TimeUnit.MILLISECONDS)
+                task = executor.submit<QueryResult> { requestClient.process(it) }
+                task!!.get(queryTimelimit, TimeUnit.MILLISECONDS)
             }
             bean.buildResultList(result)
         } catch (e: TimeoutException) {
@@ -76,6 +76,15 @@ class SearchAdminPage(
         catch (e: Exception) {
             bean.setWrongQueryMessage("Java exception: ${e.message}")
         }
+        finally {
+            try {
+                task?.cancel(true)
+            }
+            catch (e: InterruptedException) {}
+            catch (e: Exception) {}
+        }
+
+
         model["searchForm"] = bean
         CameFromSupport.setupCameFromUrl(model, request)
     }
