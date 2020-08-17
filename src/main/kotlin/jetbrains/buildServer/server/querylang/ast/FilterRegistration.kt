@@ -4,14 +4,14 @@ import kotlin.reflect.KClass
 import kotlin.reflect.full.isSuperclassOf
 
 object FilterRegistration {
-    val anyConditionContainer = object : ConditionContainer<Any> {
+    val anyConditionContainer = object : ConditionContainer<Any>() {
         override val condition: ConditionAST<Any>
             get() = NoneConditionAST()
 
         override val names: List<String>
             get() = listOf()
 
-        override fun eval(): EvalResult<Any> {
+        override fun evalInner(): EvalResult<Any> {
             return EvalResult(NoneObjectFilter(), emptyList())
         }
     }

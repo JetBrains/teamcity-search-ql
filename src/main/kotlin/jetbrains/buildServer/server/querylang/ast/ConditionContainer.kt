@@ -2,12 +2,19 @@ package jetbrains.buildServer.server.querylang.ast
 
 data class EvalResult<NestedObject>(val filter: ObjectFilter<NestedObject>, val objects: List<NestedObject>)
 
-interface ConditionContainer<NestedObject> : Named {
-    val condition: ConditionAST<NestedObject>
+abstract class ConditionContainer<NestedObject> : Named {
+    abstract val condition: ConditionAST<NestedObject>
 
-    fun eval(): EvalResult<NestedObject>
+    fun eval(): EvalResult<NestedObject> {
+        if (Thread.currentThread().isInterrupted) {
+            throw InterruptedException()
+        }
+        return evalInner()
+    }
 
-    fun evalFilter(filter: Filter<NestedObject>): EvalResult<NestedObject> = EvalResult(filter.build(), listOf())
+    abstract fun evalInner(): EvalResult<NestedObject>
+
+    open fun evalFilter(filter: Filter<NestedObject>): EvalResult<NestedObject> = EvalResult(filter.build(), listOf())
 
     fun ConditionAST<NestedObject>.eval(): EvalResult<NestedObject> {
         return when (this) {
