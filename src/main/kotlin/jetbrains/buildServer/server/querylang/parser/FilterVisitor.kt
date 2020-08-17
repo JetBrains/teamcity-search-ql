@@ -130,6 +130,11 @@ class FilterVisitor<Obj>(val parentFilter: KClass<out ConditionContainer<Obj>>) 
         ))
         ).transform(ctx)
 
+    override fun visitNameFilter(ctx: QLangGrammarParser.NameFilterContext?) =
+        NameFilter(
+            ctx!!.stringFilterOrCondition().accept(getCondVisitor(NameFilter::class))
+        ).transform(ctx)
+
     override fun visitCleanFilter(ctx: QLangGrammarParser.CleanFilterContext?) = CleanFilter().transform(ctx!!)
 
     override fun visitRevRuleFilter(ctx: QLangGrammarParser.RevRuleFilterContext?) =

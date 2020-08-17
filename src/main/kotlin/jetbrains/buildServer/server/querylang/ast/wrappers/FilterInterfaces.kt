@@ -85,3 +85,7 @@ interface FRulesContainer {
 interface FValueContainer {
     val values: List<String>
 }
+
+interface FNameContainer {
+    val name: String
+}

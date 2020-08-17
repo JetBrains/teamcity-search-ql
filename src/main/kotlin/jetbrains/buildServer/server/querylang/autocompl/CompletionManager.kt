@@ -12,18 +12,22 @@ class CompletionManager(val projectManager: ProjectManager) {
     val map: MutableMap<String, StringFinder> = mutableMapOf()
     val projectIdFinder = SimpleStringFinder()
     val projectParamFinder = ParameterValueFinder()
+    val projectNameFinder = SimpleStringFinder()
 
     val buildConfIdFinder = SimpleStringFinder()
     val buildConfOptionFinder = ParameterValueFinder()
     val buildConfParamFinder = ParameterValueFinder()
+    val buildConfNameFinder = SimpleStringFinder()
 
     val templateIdFinder = SimpleStringFinder()
     val templateOptionFinder = ParameterValueFinder()
     val templateParamFinder = ParameterValueFinder()
+    val templateNameFinder = SimpleStringFinder()
 
     val vcsRootIdFinder = SimpleStringFinder()
     val vcsRootTypeFinder = SimpleStringFinder()
     val vcsParamFinder = ParameterValueFinder()
+    val vcsRootNameFinder = SimpleStringFinder()
 
     val triggerParamValueFinder = ParameterValueFinder()
     val triggerTypeFinder = SimpleStringFinder()
@@ -68,6 +72,10 @@ class CompletionManager(val projectManager: ProjectManager) {
         registerFinder(vcsRootIdFinder, VcsRootEntryFilter::class, IdFilter::class)
         registerFinder(vcsRootTypeFinder, VcsRootEntryFilter::class, TypeFilter::class)
         registerFinder(vcsParamFinder, VcsRootEntryFilter::class, ParameterFilter::class)
+        registerFinder(projectNameFinder, ProjectTopLevelQuery::class, NameFilter::class)
+        registerFinder(buildConfNameFinder, BuildConfTopLevelQuery::class, NameFilter::class)
+        registerFinder(templateNameFinder, TemplateTopLevelQuery::class, NameFilter::class)
+        registerFinder(vcsRootNameFinder, VcsRootTopLevelQuery::class, NameFilter::class)
 
         indexAll()
     }
@@ -104,6 +112,7 @@ class CompletionManager(val projectManager: ProjectManager) {
 
     fun updateProject(project: SProject) {
         projectIdFinder.addString(project.externalId)
+        projectNameFinder.addString(project.name)
 
         project.ownFeatures.forEach {feat ->
             featureTypeFinder.addString(feat.type)
@@ -119,6 +128,7 @@ class CompletionManager(val projectManager: ProjectManager) {
 
     fun updateBuildType(bt: SBuildType) {
         buildConfIdFinder.addString(bt.externalId)
+        buildConfNameFinder.addString(bt.name)
         bt.buildTriggersCollection.forEach { trig ->
             triggerTypeFinder.addString(trig.type)
             trig.parameters.forEach {name, value ->
@@ -158,6 +168,7 @@ class CompletionManager(val projectManager: ProjectManager) {
 
     fun updateTemplate(temp: BuildTypeTemplate) {
         templateIdFinder.addString(temp.externalId)
+        templateNameFinder.addString(temp.name)
         temp.buildTriggersCollection.forEach { trig ->
             triggerTypeFinder.addString(trig.type)
             trig.parameters.forEach {name, value ->
@@ -198,6 +209,7 @@ class CompletionManager(val projectManager: ProjectManager) {
     fun updateVcsRoot(vcs: SVcsRoot) {
         vcsRootIdFinder.addString(vcs.externalId)
         vcsRootTypeFinder.addString(vcs.vcsName)
+        vcsRootNameFinder.addString(vcs.name)
 
         vcs.properties.forEach {(name, value) ->
             vcsParamFinder.addParam(name, value)

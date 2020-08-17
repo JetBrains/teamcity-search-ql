@@ -63,6 +63,7 @@ filter : idFilter
        | cleanFilter
        | revRuleFilter
        | vcsRootEntryFilter
+       | nameFilter
        ;
 
 condition : filter                     #conditionFilter
@@ -102,6 +103,7 @@ snapshotFilter : SNAPSHOT modifierList? filterOrCondition?;
 optionFilter : OPTION modifierList? parameterName '=' parameterValue ;
 cleanFilter : CLEAN modifierList? ;
 revRuleFilter : REV_RULE modifierList? stringFilterOrCondition ;
+nameFilter : NAME modifierList? stringFilterOrCondition ;
 
 
 stringCondition : stringFilter                         #stringConditionFilter

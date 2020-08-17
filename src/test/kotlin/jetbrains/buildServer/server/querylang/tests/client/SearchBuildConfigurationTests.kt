@@ -27,7 +27,8 @@ class SearchBuildConfigurationTests : BaseQueryLangTest() {
                 TTrigger("vcs", Pair("asdcacd", "kjkkkk")),
                 TStep("steptype11", Pair("asdfwqe", "dffd")),
                 TFeature("feature11", Pair("qweqfhsdf", "xzxc"))
-            ).bind("b2")
+            ).bind("b2"),
+            TBuildConf("buildConfiguration1").bind("b3")
         ).create()
     }
 
@@ -48,6 +49,9 @@ class SearchBuildConfigurationTests : BaseQueryLangTest() {
         .addBCCase(
             "find configuration with val bcd",
             "b1"
+        )
+        .addBCCase("find configuration with name test1",
+        "b1"
         )
         .end()
 
@@ -95,6 +99,14 @@ class SearchBuildConfigurationTests : BaseQueryLangTest() {
         .addComplCase(
             "find configuration with vcs id BaseProject_",
             "BaseProject_Vcs1"
+        )
+        .addComplCase(
+            "find configuration with na",
+            "name"
+        )
+        .addComplCase(
+            "find configuration with name buil",
+            "buildConfiguration1"
         )
         .end()
 

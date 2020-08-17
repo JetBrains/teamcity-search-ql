@@ -120,6 +120,7 @@ public class QLangGrammarLexer extends Lexer {
 	        putToKeywords(CleanFilter.Companion.getNames(), QLangGrammarParser.CLEAN);
 	        putToKeywords(RevRuleFilter.Companion.getNames(), QLangGrammarParser.REV_RULE);
 	        putToKeywords(VcsRootEntryFilter.Companion.getNames(), QLangGrammarParser.VCS_ENTRY);
+	        putToKeywords(NameFilter.Companion.getNames(), QLangGrammarParser.NAME);
 	    }
 
 	    private void putToKeywords(List<String> filterNames, Integer tokenType) {

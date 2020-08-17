@@ -40,6 +40,7 @@ OPTION=39
 CLEAN=40
 REV_RULE=41
 VCS_ENTRY=42
+NAME=43
 'find'=1
 ','=2
 'in'=3

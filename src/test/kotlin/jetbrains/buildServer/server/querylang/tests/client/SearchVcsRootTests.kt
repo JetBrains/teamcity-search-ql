@@ -38,6 +38,10 @@ class SearchVcsRootTests : BaseQueryLangTest() {
             "find vcsRoot with val *bc",
             "v1"
         )
+        .addVcsCase(
+            "find vcsRoot with name vcs1",
+            "v1"
+        )
         .end()
 
     @DataProvider(name = "compl")
@@ -61,6 +65,14 @@ class SearchVcsRootTests : BaseQueryLangTest() {
         .addComplCase(
             "find vcsRoot with id BaseProject_",
             "BaseProject_Vcs1", "BaseProject_Vcs2"
+        )
+        .addComplCase(
+            "find vcsRoot with na",
+            "name"
+        )
+        .addComplCase(
+            "find vcsRoot with name vc",
+            "vcs1", "vcs2"
         )
         .end()
 

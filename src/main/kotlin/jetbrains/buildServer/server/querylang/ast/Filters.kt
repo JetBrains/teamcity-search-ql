@@ -403,8 +403,20 @@ data class OptionFilter(
             options.any {opt -> filter.accepts(WParam(opt.key, obj.getOption(opt).toString()))}
         }
     }
+}
 
+data class NameFilter(
+    override val condition: ConditionAST<String>
+) : ConditionFilter<FNameContainer, String>() {
 
+    companion object : Names("name")
+    override val names = Companion.names
+
+    override fun buildFrom(filter: ObjectFilter<String>, context: Any?): ObjectFilter<FNameContainer> {
+        return RealObjectFilter {obj ->
+            filter.accepts(obj.name)
+        }
+    }
 }
 
 

@@ -65,6 +65,10 @@ class SearchProjectTests : BaseQueryLangTest() {
             """find project with val *"path%"* """,
             "p0", "p1"
         )
+        .addProjectCase(
+            "find project with name BaseProject",
+            "p0"
+        )
         .end()
 
     @DataProvider(name = "compl")
@@ -108,6 +112,14 @@ class SearchProjectTests : BaseQueryLangTest() {
         .addComplCase(
             "find project with param param1=a",
             "param1=abc"
+        )
+        .addComplCase(
+            "find project with nam",
+            "name"
+        )
+        .addComplCase(
+            "find project with name BasePr",
+            "BaseProject"
         )
         .end()
 

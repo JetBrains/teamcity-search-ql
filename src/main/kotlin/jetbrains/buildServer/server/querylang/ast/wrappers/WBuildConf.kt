@@ -18,7 +18,8 @@ abstract class AbstractWBuildConf :
     FDependencyContainer,
     FOptionContainer,
     FVcsRootEntryContainer,
-    FValueContainer
+    FValueContainer,
+    FNameContainer
 {
     abstract val sbuildConf: SBuildType
 
@@ -97,6 +98,9 @@ abstract class AbstractWBuildConf :
                 ownTriggers.flatMap { it.values } +
                 ownSteps.flatMap { it.values } +
                 ownFeatures.flatMap { it.values }
+
+    override val name: String
+        get() = sbuildConf.name
 }
 
 class WBuildConf(

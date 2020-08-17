@@ -21,7 +21,8 @@ class WProject(
     FParamContainer,
     TopLevelObject,
     FVcsRootContainer,
-    FValueContainer
+    FValueContainer,
+    FNameContainer
 {
     override val id: String
         get() = sproject.externalId
@@ -56,4 +57,7 @@ class WProject(
 
     override val values: List<String>
         get() = ownFeatures.flatMap { it.values } + ownParams.values
+
+    override val name: String
+        get() = sproject.fullName
 }

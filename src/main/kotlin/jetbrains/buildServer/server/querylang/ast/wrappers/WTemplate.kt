@@ -18,7 +18,8 @@ class WTemplate(
     FOptionContainer,
     TopLevelObject,
     FVcsRootEntryContainer,
-    FValueContainer
+    FValueContainer,
+    FNameContainer
 {
     override val id: String
         get() = stemplate.externalId
@@ -88,4 +89,7 @@ class WTemplate(
                 ownTriggers.flatMap { it.values } +
                 ownSteps.flatMap { it.values } +
                 ownFeatures.flatMap { it.values }
+
+    override val name: String
+        get() = stemplate.name
 }

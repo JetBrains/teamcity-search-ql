@@ -58,6 +58,7 @@ object FilterRegistration {
         registerConditionFilter(RevRuleFilter::class)
         registerConditionFilter(OptionFilter::class)
         registerConditionFilter(TypeFilter::class)
+        registerConditionFilter(NameFilter::class)
     }
 
     fun getFilterGraph() = filterGraph.toMap()

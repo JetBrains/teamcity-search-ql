@@ -19,12 +19,17 @@ class SearchTemplateTests : BaseQueryLangTest() {
             ).bind("b1"),
             TTemplate("test2",
                 TParam("path", "abadaba")
-            ).bind("b2")
+            ).bind("b2"),
+            TTemplate("Template1").bind("b3")
         ).create()
     }
 
     @DataProvider(name = "data")
     fun dataProvider() = TestDataProvider()
+        .addTempCase(
+            "find template with name test1",
+            "b1"
+        )
         .end()
 
     @DataProvider(name = "compl")
@@ -44,6 +49,14 @@ class SearchTemplateTests : BaseQueryLangTest() {
         .addComplCase(
             "find template with param path=aba",
             "path=abacaba", "path=abadaba"
+        )
+        .addComplCase(
+            "find template with na",
+            "name"
+        )
+        .addComplCase(
+            "find template with name Templ",
+            "Template1"
         )
         .end()
 

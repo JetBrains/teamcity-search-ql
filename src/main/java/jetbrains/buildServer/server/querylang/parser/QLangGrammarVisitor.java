@@ -328,6 +328,12 @@ public interface QLangGrammarVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitRevRuleFilter(QLangGrammarParser.RevRuleFilterContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link QLangGrammarParser#nameFilter}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitNameFilter(QLangGrammarParser.NameFilterContext ctx);
+	/**
 	 * Visit a parse tree produced by the {@code stringConditionFilter}
 	 * labeled alternative in {@link QLangGrammarParser#stringCondition}.
 	 * @param ctx the parse tree
