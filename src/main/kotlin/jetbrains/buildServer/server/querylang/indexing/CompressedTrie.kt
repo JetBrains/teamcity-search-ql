@@ -5,7 +5,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock
 
 class CompressedTrie<T> : AutocompletionIndexer<T> {
 
-    class Node<T>(var str: String, var obj: T? = null, var terminalCnt: Int = 0) {
+    class Node<T>(var str: String, var obj: T? = null, var isTerminal: Boolean = false) {
         val nodes: MutableMap<Char, Node<T>> = mutableMapOf()
         fun getNode(c: Char): Node<T>? {
             return nodes[c]
@@ -16,12 +16,9 @@ class CompressedTrie<T> : AutocompletionIndexer<T> {
         fun addEdge(c: Char, n: Node<T>) {
             nodes[c] = n
         }
-        fun isTerminal(): Boolean {
-            return terminalCnt > 0
-        }
     }
 
-    val root = Node<T>("")
+    private val root = Node<T>("")
     val lock = ReentrantReadWriteLock()
 
     override fun addString(str: String, obj: T?) {
@@ -59,25 +56,10 @@ class CompressedTrie<T> : AutocompletionIndexer<T> {
             }
         }
 
-        node.terminalCnt += 1
+        node.isTerminal = true
         node.obj = obj
 
         lock.writeLock().unlock()
-    }
-
-    fun getCnt(str: String): Int {
-        lock.readLock().lock()
-
-        val (node, strRest) = goDown(str) ?: return 0
-        val res = if (node.isTerminal() && strRest == "") {
-            node.terminalCnt
-        } else {
-            0
-        }
-
-        lock.readLock().unlock()
-
-        return res
     }
 
     override fun complete(str: String, limit: Int): List<String> {
@@ -101,7 +83,7 @@ class CompressedTrie<T> : AutocompletionIndexer<T> {
         lock.readLock().lock()
 
         val (node, strRest) = goDown(str) ?: return false
-        val res = node.isTerminal() && strRest.isEmpty()
+        val res = node.isTerminal && strRest.isEmpty()
 
         lock.readLock().unlock()
 
@@ -159,7 +141,7 @@ class CompressedTrie<T> : AutocompletionIndexer<T> {
                 node.nodes.forEach { _, nextNode ->
                     queue.add(Triple(nextNode, str + nextNode.str, 1))
                 }
-                if (node.isTerminal()) {
+                if (node.isTerminal) {
                     res.add(str)
                 }
             }

@@ -10,8 +10,13 @@ class AutocompletionEventListener(
     val projectManager: ProjectManager,
     eventDispatcher: EventDispatcher<BuildServerListener>
 ) : BuildServerAdapter() {
+
     init {
         eventDispatcher.addListener(this)
+    }
+
+    override fun serverStartup() {
+        queue.init()
     }
 
     override fun serverShutdown() {

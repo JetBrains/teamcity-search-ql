@@ -76,8 +76,6 @@ class CompletionManager(val projectManager: ProjectManager) {
         registerFinder(buildConfNameFinder, BuildConfTopLevelQuery::class, NameFilter::class)
         registerFinder(templateNameFinder, TemplateTopLevelQuery::class, NameFilter::class)
         registerFinder(vcsRootNameFinder, VcsRootTopLevelQuery::class, NameFilter::class)
-
-        indexAll()
     }
 
     private fun registerFinder(sf: StringFinder, vararg nameContext: KClass<out Named>) {
@@ -99,7 +97,7 @@ class CompletionManager(val projectManager: ProjectManager) {
         }
     }
 
-    private fun indexAll() {
+    fun indexAll() {
         projectManager.projects.forEach { updateProject(it) }
         projectManager.allBuildTypes.forEach { updateBuildType(it) }
         projectManager.allTemplates.forEach { updateTemplate(it) }

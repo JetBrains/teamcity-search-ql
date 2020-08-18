@@ -12,21 +12,22 @@ import kotlin.collections.LinkedHashSet
 
 class TaskQueue(
     private val compl: CompletionManager,
-    private val updatePeriod: Long = 300,
-    private val initialDelay: Long = 30,
+    private val updatePeriod: Long = 30,
+    private val initialDelay: Long = 300,
     private val tu: TimeUnit = TimeUnit.SECONDS
 ) {
 
     private val queue: LinkedHashSet<ObjectUpdateTask> = LinkedHashSet()
     private val scheduledExecutor = Executors.newSingleThreadScheduledExecutor()
 
-    init {
+    fun init() {
         scheduledExecutor.scheduleAtFixedRate(
             { update() },
             initialDelay,
             updatePeriod,
             tu
         )
+        compl.indexAll()
     }
 
 

@@ -51,22 +51,10 @@ class Trie<T> : AutocompletionIndexer<T> {
             node = node.getNode(c)!!
         }
 
+        val res = node.isTerminal()
         lock.readLock().unlock()
 
-        return node.isTerminal()
-    }
-
-    fun getCnt(str: String): Int {
-        lock.readLock().lock()
-        var node = root
-        str.forEach { c ->
-            if (!node.exists(c)) {
-                return 0
-            }
-            node = node.getNode(c)!!
-        }
-        lock.readLock().unlock()
-        return node.terminalCnt
+        return res
     }
 
     override fun complete(str: String, limit: Int): List<String> {
@@ -78,8 +66,11 @@ class Trie<T> : AutocompletionIndexer<T> {
             }
             node = node.getNode(c)!!
         }
+
+        val res = getStringFromSubtree(node, limit).map {str + it}
         lock.readLock().unlock()
-        return getStringFromSubtree(node, limit).map {str + it}
+
+        return res
     }
 
     private fun getStringFromSubtree(fnode: Node<T>, limit: Int): List<String> {
