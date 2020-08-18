@@ -1,6 +1,7 @@
 package jetbrains.buildServer.server.querylang.ast
 
 import kotlin.reflect.KClass
+import kotlin.reflect.full.isSubclassOf
 import kotlin.reflect.full.isSuperclassOf
 
 object FilterRegistration {
@@ -19,9 +20,14 @@ object FilterRegistration {
     private val filterGraph: MutableMap< KClass<out ConditionContainer<*>> , MutableSet<KClass<out Filter<*>>> > = mutableMapOf()
     private val revFilterGraph: MutableMap < KClass<out Filter<*>>, MutableSet<KClass<out ConditionContainer<*>>> > = mutableMapOf()
 
+    private val modifierGraph: MutableMap < KClass<out Filter<*>>, MutableSet<KClass<out FilterModifier<*>> > > = mutableMapOf()
+    private val reversedModifierGraph: MutableMap< KClass<out FilterModifier<*>>, MutableSet< KClass< out Filter<*> > > > = mutableMapOf()
+
     private val conditionContainers: MutableMap< KClass<out ConditionContainer<*>>, KClass<*>> = mutableMapOf()
 
-    private val filters: MutableMap< KClass<out Filter<*>>, KClass<*> > = mutableMapOf()
+    private val filters: MutableMap < KClass<out Filter<*>>, KClass<*> > = mutableMapOf()
+
+    private val modifiers: MutableMap < KClass<out FilterModifier<*>>, KClass<*> > = mutableMapOf()
 
     init {
         registerConditionContainer(ProjectTopLevelQuery::class)
@@ -59,11 +65,19 @@ object FilterRegistration {
         registerConditionFilter(OptionFilter::class)
         registerConditionFilter(TypeFilter::class)
         registerConditionFilter(NameFilter::class)
+
+        //modifier registration should be peroformed only after filter registration
+        registerModifier(ResolvedFilterModifier::class)
+        registerModifier(WithInheritedFilterModifier::class)
     }
 
     fun getFilterGraph() = filterGraph.toMap()
 
+    fun getModifierGraph() = modifierGraph.toMap()
+
     fun getFilters() = filters.keys.toList()
+
+    fun getModifiers() = modifiers.keys.toList()
 
     fun getConditionContainers() = conditionContainers.keys.toList()
 
@@ -82,8 +96,16 @@ object FilterRegistration {
         return filterGraph[filter]?.contains(subf) ?: false
     }
 
+    fun canBeModifier(filter: KClass<out Filter<*>>, modifier: KClass<out FilterModifier<*>>): Boolean {
+        return modifierGraph[filter]?.contains(modifier) ?: false
+    }
+
     fun getPossibleConditionContainers(filterClass: KClass<out Filter<*>>): Set<KClass<out ConditionContainer<*>>> {
         return revFilterGraph[filterClass]?.toSet() ?: emptySet()
+    }
+
+    fun getPossibleFilters(modifier: KClass<out FilterModifier<*>>): Set<KClass<out Filter<*>>> {
+        return reversedModifierGraph[modifier]?.toSet() ?: emptySet()
     }
 
     private inline fun <reified Obj : Any,reified NestedObj : Any> registerConditionFilter(filter: KClass<out ConditionFilter<Obj, NestedObj>>) {
@@ -96,7 +118,7 @@ object FilterRegistration {
 
         conditionContainers.forEach {(filterClass, objTypes) ->
             if (Obj::class.isSuperclassOf(objTypes)) {
-                addEdge(filterClass, filter)
+                addFilterEdge(filterClass, filter)
             }
         }
     }
@@ -106,12 +128,22 @@ object FilterRegistration {
 
         filters.forEach {(filterClass, objType) ->
             if (objType.isSuperclassOf(NestedObj::class)) {
-                addEdge(conditionContainer, filterClass)
+                addFilterEdge(conditionContainer, filterClass)
             }
         }
     }
 
-    private fun addEdge(conditionContainer: KClass<out ConditionContainer<*>>, filter: KClass<out Filter<*>>) {
+    private inline fun<reified T> registerModifier(modifierClass: KClass<out FilterModifier<T>>) {
+        modifiers[modifierClass] = T::class
+        filters.forEach { (filterClass, _) ->
+            if (filterClass.isSubclassOf(T::class)) {
+                modifierGraph.getOrPut(filterClass, { mutableSetOf()}).add(modifierClass)
+                reversedModifierGraph.getOrPut(modifierClass, { mutableSetOf()}).add(filterClass)
+            }
+        }
+    }
+
+    private fun addFilterEdge(conditionContainer: KClass<out ConditionContainer<*>>, filter: KClass<out Filter<*>>) {
         filterGraph.getOrPut(conditionContainer, { mutableSetOf()}).add(filter)
         revFilterGraph.getOrPut(filter, { mutableSetOf()}).add(conditionContainer)
     }

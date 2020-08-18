@@ -100,12 +100,13 @@ data class ParentFilter(
 
 data class TriggerFilter(
     override val condition: ConditionAST<WTrigger>
-) : ConditionFilter<FTriggerContainer, WTrigger>()
+) : ConditionFilter<FTriggerContainer, WTrigger>(),
+    MWithInheritedContainer
 {
     companion object : Names("trigger")
     override val names = Companion.names
 
-    var includeInherited = false
+    override var includeInherited = false
 
     override fun build(context: Any?): ObjectFilter<FTriggerContainer> {
         return RealObjectFilter {obj ->
@@ -126,12 +127,13 @@ data class TriggerFilter(
 
 data class StepFilter(
     override val condition: ConditionAST<WStep>
-) : ConditionFilter<FStepContainer, WStep>()
+) : ConditionFilter<FStepContainer, WStep>(),
+    MWithInheritedContainer
 {
     companion object : Names("step")
     override val names = Companion.names
 
-    var includeInherited = false
+    override var includeInherited = false
 
     override fun build(context: Any?): ObjectFilter<FStepContainer> {
         return RealObjectFilter {obj ->
@@ -153,12 +155,13 @@ data class StepFilter(
 
 data class FeatureFilter(
     override val condition: ConditionAST<WFeature>
-) : ConditionFilter<FFeatureContainer, WFeature>()
+) : ConditionFilter<FFeatureContainer, WFeature>(),
+    MWithInheritedContainer
 {
     companion object : Names("feature")
     override val names = Companion.names
 
-    var includeInherited = false
+    override var includeInherited = false
 
     override fun build(context: Any?): ObjectFilter<FFeatureContainer> {
         return RealObjectFilter {obj ->
@@ -194,12 +197,13 @@ data class TemplateFilter(
 
 data class ValueFilter(
     override val condition: ConditionAST<String>
-) : ConditionFilter<FValueContainer, String>()
+) : ConditionFilter<FValueContainer, String>(),
+    MResolvedContainer
 {
     companion object : Names("val")
     override val names = Companion.names
 
-    var searchResolved = false
+    override var searchResolved = false
 
     override fun buildFrom(filter: ObjectFilter<String>, context: Any?): ObjectFilter<FValueContainer> {
         return RealObjectFilter {obj ->
@@ -243,13 +247,15 @@ data class EnabledFilter(private val placeholder: String = "") : Filter<FEnabled
 
 data class ParameterFilter(
     override val condition: ConditionAST<WParam>
-) : ConditionFilter<FParamContainer, WParam>()
+) : ConditionFilter<FParamContainer, WParam>(),
+    MWithInheritedContainer,
+    MResolvedContainer
 {
     companion object : Names("param")
     override val names = Companion.names
 
-    var includeInherited = false
-    var searchResolved = false
+    override var includeInherited = false
+    override var searchResolved = false
 
     override fun buildFrom(filter: ObjectFilter<WParam>, context: Any?): ObjectFilter<FParamContainer> {
         return RealObjectFilter {obj ->
@@ -288,9 +294,11 @@ data class AncestorFilter(
 
 data class VcsRootEntryFilter(
     override val condition: ConditionAST<WVcsRootEntry>
-) : ConditionFilter<FVcsRootEntryContainer, WVcsRootEntry>()
+) : ConditionFilter<FVcsRootEntryContainer, WVcsRootEntry>(),
+    MWithInheritedContainer
 {
-    var includeInherited: Boolean = false
+    override var includeInherited: Boolean = false
+
     companion object : Names("vcs")
     override val names = Companion.names
 
@@ -305,13 +313,14 @@ data class VcsRootEntryFilter(
 
 data class RulesFilter(
     override val condition: ConditionAST<String>
-) : ConditionFilter<FRulesContainer, String>()
+) : ConditionFilter<FRulesContainer, String>(),
+    MResolvedContainer
 {
     companion object : Names("rules")
 
     override val names: List<String> = Companion.names
 
-    var searchResolved = false
+    override var searchResolved = false
 
     override fun buildFrom(filter: ObjectFilter<String>, context: Any?): ObjectFilter<FRulesContainer> {
         return RealObjectFilter {obj ->
@@ -323,17 +332,18 @@ data class RulesFilter(
 
 data class DependencyFilter(
     override val condition: ConditionAST<SuperDependency>
-) : ConditionFilter<FDependencyContainer, SuperDependency>()
+) : ConditionFilter<FDependencyContainer, SuperDependency>(),
+    MWithInheritedContainer
 {
     companion object : Names("dependency")
 
     override val names = Companion.names
 
-    var includeInhereted = false
+    override var includeInherited = false
 
     override fun buildFrom(filter: ObjectFilter<SuperDependency>, context: Any?): ObjectFilter<FDependencyContainer> {
         return RealObjectFilter {obj ->
-            val dependencies = if (includeInhereted) obj.dependencies
+            val dependencies = if (includeInherited) obj.dependencies
                                else obj.ownDependencies
             dependencies.any {filter.accepts(it)}
         }
@@ -402,10 +412,12 @@ data class RevRuleFilter(
 
 data class OptionFilter(
     override val condition: ConditionAST<WParam>
-) : ConditionFilter<FOptionContainer, WParam>()
+) : ConditionFilter<FOptionContainer, WParam>(),
+    MWithInheritedContainer,
+    MResolvedContainer
 {
-    var includeInherited: Boolean = false
-    var searchResolved = false
+    override var includeInherited: Boolean = false
+    override var searchResolved = false
 
     companion object : Names("option")
 

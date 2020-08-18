@@ -1,30 +1,22 @@
 package jetbrains.buildServer.server.querylang.parser
 
-import jetbrains.buildServer.server.querylang.ast.WithInheritedFilterModifier
-import jetbrains.buildServer.server.querylang.ast.Filter
-import jetbrains.buildServer.server.querylang.ast.FilterModifier
-import jetbrains.buildServer.server.querylang.ast.ResolvedFilterModifier
+import jetbrains.buildServer.server.querylang.ast.*
 import org.antlr.v4.runtime.ParserRuleContext
 
-object ModifierVisitor : QLangGrammarBaseVisitor<FilterModifier>() {
-    fun FilterModifier.applyAndCheck(filter: Filter<*>): FilterModifier {
-        if (!this.apply(filter)) {
+class ModifierVisitor(val filter: Filter<*>) : QLangGrammarBaseVisitor<FilterModifier<*>>() {
+    inline fun <reified T> FilterModifier<T>.applyAndCheck(): FilterModifier<T> {
+        if (!FilterRegistration.canBeModifier(filter::class, this::class)) {
             throw ParsingException("${this.names.first()} is not a modifier of ${filter.names[0]}")
         }
-        else {
-            return this
-        }
+        this.apply((filter as T))
+        return this
     }
 
-    fun visitAndApply(ctx: ParserRuleContext, filter: Filter<*>): FilterModifier {
-        return ctx.accept(this).applyAndCheck(filter)
+    override fun visitWithInheritedModifier(ctx: QLangGrammarParser.WithInheritedModifierContext?): FilterModifier<*> {
+        return WithInheritedFilterModifier().applyAndCheck()
     }
 
-    override fun visitWithInheritedModifier(ctx: QLangGrammarParser.WithInheritedModifierContext?): FilterModifier {
-        return WithInheritedFilterModifier()
-    }
-
-    override fun visitResolvedModifier(ctx: QLangGrammarParser.ResolvedModifierContext?): FilterModifier {
-        return ResolvedFilterModifier()
+    override fun visitResolvedModifier(ctx: QLangGrammarParser.ResolvedModifierContext?): FilterModifier<*> {
+        return ResolvedFilterModifier().applyAndCheck()
     }
 }

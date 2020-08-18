@@ -1,27 +1,24 @@
 package jetbrains.buildServer.server.querylang.ast
 
-data class WithInheritedFilterModifier(private val placeholder: String = "") : FilterModifier {
-    companion object : FilterClasses(
-        listOf("withInherited"),
-        TriggerFilter::class.java.connect { it.includeInherited = true },
-        StepFilter::class.java.connect { it.includeInherited = true },
-        FeatureFilter::class.java.connect { it.includeInherited = true },
-        ParameterFilter::class.java.connect { it.includeInherited = true },
-        DependencyFilter::class.java.connect { it.includeInhereted = true },
-        OptionFilter::class.java.connect { it.includeInherited = true }
-    )
+import jetbrains.buildServer.server.querylang.ast.wrappers.MWithInheritedContainer
+import jetbrains.buildServer.server.querylang.ast.wrappers.MResolvedContainer
+
+data class WithInheritedFilterModifier(private val placeholder: String = "") : FilterModifier<MWithInheritedContainer> {
+    companion object : Names("withInherited")
 
     override val names = Companion.names
+
+    override fun apply(filter: MWithInheritedContainer) {
+        filter.includeInherited = true
+    }
 }
 
-data class ResolvedFilterModifier(private val placeholder: String = "") : FilterModifier {
-    companion object : FilterClasses(
-        listOf("resolved"),
-        ParameterFilter::class.java.connect { it.searchResolved = true },
-        OptionFilter::class.java.connect { it.searchResolved = true },
-        ValueFilter::class.java.connect { it.searchResolved = true },
-        RulesFilter::class.java.connect { it.searchResolved = true }
-    )
+data class ResolvedFilterModifier(private val placeholder: String = "") : FilterModifier<MResolvedContainer> {
+    companion object : Names("resolved")
 
     override val names = Companion.names
+
+    override fun apply(filter: MResolvedContainer) {
+        filter.searchResolved = true
+    }
 }

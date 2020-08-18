@@ -16,7 +16,7 @@ class FilterVisitor<Obj>(val parentFilter: KClass<out ConditionContainer<Obj>>) 
             return this
         }
         ctx.filterModifier().forEach { mod ->
-            ModifierVisitor.visitAndApply(mod, this)
+            mod.accept(ModifierVisitor(this))
         }
         return this
     }

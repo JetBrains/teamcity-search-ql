@@ -3,6 +3,7 @@ package jetbrains.buildServer.server.querylang.autocompl
 import jetbrains.buildServer.server.querylang.ast.*
 import org.reflections.Reflections
 import java.lang.IllegalStateException
+import kotlin.reflect.KClass
 import kotlin.reflect.full.companionObjectInstance
 import kotlin.reflect.full.isSubclassOf
 
@@ -169,14 +170,13 @@ class Completer(val completionManager: CompletionManager? = null) {
     }
 
     private fun loadPossibleModifiers() {
-        val modifiers = reflections.getSubTypesOf(FilterModifier::class.java)
-
+        val modifiers = FilterRegistration.getModifiers()
         modifiers.forEach {modClass ->
-            val companionObj = modClass.kotlin.companionObjectInstance as? FilterClasses
+            val companionObj = modClass.companionObjectInstance as? Names
                 ?: throw IllegalStateException("All modifiers should have companion object")
 
             val names = companionObj.names
-            companionObj.classes.map {it.filterClass}.forEach {filterClass ->
+            FilterRegistration.getPossibleFilters(modClass).forEach {filterClass ->
                 getNames(filterClass).forEach {
                     if (!possibleModifiers.contains(it)) {
                         possibleModifiers[it] = mutableSetOf()
@@ -187,8 +187,8 @@ class Completer(val completionManager: CompletionManager? = null) {
         }
     }
 
-    private fun getNames(clazz: Class<out Named>): List<String> {
-        val names = clazz.kotlin.companionObjectInstance as? Names ?: throw IllegalStateException("There is not Names companion object")
+    private fun getNames(clazz: KClass<out Named>): List<String> {
+        val names = clazz.companionObjectInstance as? Names ?: throw IllegalStateException("There is not Names companion object")
         return names.names
     }
 
