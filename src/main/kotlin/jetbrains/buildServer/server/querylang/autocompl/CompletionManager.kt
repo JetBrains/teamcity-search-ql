@@ -1,47 +1,52 @@
 package jetbrains.buildServer.server.querylang.autocompl
 
 import jetbrains.buildServer.server.querylang.ast.*
+import jetbrains.buildServer.server.querylang.indexing.CompressedTrie
 import jetbrains.buildServer.serverSide.BuildTypeTemplate
 import jetbrains.buildServer.serverSide.ProjectManager
 import jetbrains.buildServer.serverSide.SBuildType
 import jetbrains.buildServer.serverSide.SProject
+import jetbrains.buildServer.serverSide.auth.SecurityContext
 import jetbrains.buildServer.vcs.SVcsRoot
 import kotlin.reflect.KClass
 
-class CompletionManager(val projectManager: ProjectManager) {
-    val map: MutableMap<String, StringFinder> = mutableMapOf()
-    val projectIdFinder = SimpleStringFinder()
-    val projectParamFinder = ParameterValueFinder()
-    val projectNameFinder = SimpleStringFinder()
+class CompletionManager(
+    private val projectManager: ProjectManager,
+    val securityContext: SecurityContext
+) {
+    private val map: MutableMap<String, SecuredStringFinder> = mutableMapOf()
+    private val projectIdFinder = getSimpleFinder(false)
+    private val projectParamFinder = getParamFinder(true)
+    private val projectNameFinder = getSimpleFinder(false)
 
-    val buildConfIdFinder = SimpleStringFinder()
-    val buildConfOptionFinder = ParameterValueFinder()
-    val buildConfParamFinder = ParameterValueFinder()
-    val buildConfNameFinder = SimpleStringFinder()
+    private val buildConfIdFinder = getSimpleFinder(false)
+    private val buildConfOptionFinder = getParamFinder(false)
+    private val buildConfParamFinder = getParamFinder(true)
+    private val buildConfNameFinder = getSimpleFinder(false)
 
-    val templateIdFinder = SimpleStringFinder()
-    val templateOptionFinder = ParameterValueFinder()
-    val templateParamFinder = ParameterValueFinder()
-    val templateNameFinder = SimpleStringFinder()
+    private val templateIdFinder = getSimpleFinder(false)
+    private val templateOptionFinder = getParamFinder(false)
+    private val templateParamFinder = getParamFinder(true)
+    private val templateNameFinder = getSimpleFinder(false)
 
-    val vcsRootIdFinder = SimpleStringFinder()
-    val vcsRootTypeFinder = SimpleStringFinder()
-    val vcsParamFinder = ParameterValueFinder()
-    val vcsRootNameFinder = SimpleStringFinder()
+    private val vcsRootIdFinder = getSimpleFinder(false)
+    private val vcsRootTypeFinder = getSimpleFinder(false)
+    private val vcsParamFinder = getParamFinder(true)
+    private val vcsRootNameFinder = getSimpleFinder(false)
 
-    val triggerParamValueFinder = ParameterValueFinder()
-    val triggerTypeFinder = SimpleStringFinder()
+    private val triggerParamValueFinder = getParamFinder(false)
+    private val triggerTypeFinder = getSimpleFinder(false)
 
-    val stepParamValueFinder = ParameterValueFinder()
-    val stepTypeFinder = SimpleStringFinder()
+    private val stepParamValueFinder = getParamFinder(false)
+    private val stepTypeFinder = getSimpleFinder(false)
 
-    val featureParamValueFinder = ParameterValueFinder()
-    val featureTypeFinder = SimpleStringFinder()
+    private val featureParamValueFinder = getParamFinder(false)
+    private val featureTypeFinder = getSimpleFinder(false)
 
-    val snapshotOptionFinder = ParameterValueFinder()
+    private val snapshotOptionFinder = getParamFinder(false)
 
-    val artifactRulesFinder = SimpleStringFinder()
-    val artifactRevRuleFinder = SimpleStringFinder()
+    private val artifactRulesFinder = getSimpleFinder(false)
+    private val artifactRevRuleFinder = getSimpleFinder(false)
 
     init {
         registerFinder(projectIdFinder, ProjectFilter::class, IdFilter::class)
@@ -78,13 +83,13 @@ class CompletionManager(val projectManager: ProjectManager) {
         registerFinder(vcsRootNameFinder, VcsRootTopLevelQuery::class, NameFilter::class)
     }
 
-    private fun registerFinder(sf: StringFinder, vararg nameContext: KClass<out Named>) {
+    private fun registerFinder(sf: SecuredStringFinder, vararg nameContext: KClass<out Named>) {
         val vars = nameContext.map { it.getNames()!! }
 
         addToMapWithPrefix(sf, "", vars)
     }
 
-    private fun addToMapWithPrefix(sf: StringFinder, prefix: String, vars: List<List<String>>) {
+    private fun addToMapWithPrefix(sf: SecuredStringFinder, prefix: String, vars: List<List<String>>) {
         if (vars.isEmpty()) {
             map[prefix] = sf
             return
@@ -212,5 +217,13 @@ class CompletionManager(val projectManager: ProjectManager) {
         vcs.properties.forEach {(name, value) ->
             vcsParamFinder.addParam(name, value)
         }
+    }
+
+    fun getSimpleFinder(isSystemAdminOnly: Boolean): SimpleStringFinder {
+        return SimpleStringFinder(this, isSystemAdminOnly)
+    }
+
+    fun getParamFinder(isSystemAdminOnly: Boolean, isValueSystemAdminOnly: Boolean = false): ParameterValueFinder {
+        return ParameterValueFinder(this, isSystemAdminOnly, isValueSystemAdminOnly)
     }
 }

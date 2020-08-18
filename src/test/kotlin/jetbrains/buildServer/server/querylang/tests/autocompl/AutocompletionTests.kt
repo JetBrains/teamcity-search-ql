@@ -44,7 +44,8 @@ class AutocompletionTests : BaseServerTestCase() {
 
         p5_bt1.addBuildTrigger("project", mapOf(Pair("param", "vcsRoot")))
 
-        val complm = CompletionManager(myFixture.projectManager)
+        val complm = CompletionManager(myFixture.projectManager, myFixture.securityContext)
+        complm.indexAll()
         val compl = Completer(complm)
         autoCompl = AutoCompletion(myFixture.projectManager, compl)
     }

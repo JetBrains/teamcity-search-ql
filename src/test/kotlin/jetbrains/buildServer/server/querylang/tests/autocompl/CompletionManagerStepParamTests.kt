@@ -19,7 +19,9 @@ class CompletionManagerStepParamTests : BaseServerTestCase() {
         bc1.addBuildRunner("vcsTrigger", "a", mapOf(Pair("path", "abc"), Pair("abc", "bcd"), Pair("pathabc", "abc")))
         temp1.addBuildRunner("vcsTrigger", "a", mapOf(Pair("path", "abd"), Pair("abc", "bcd")))
 
-        compl = CompletionManager(myFixture.projectManager)
+        compl = CompletionManager(myFixture.projectManager, myFixture.securityContext)
+
+        compl.indexAll()
     }
 
     fun testParamNameCompletion() {

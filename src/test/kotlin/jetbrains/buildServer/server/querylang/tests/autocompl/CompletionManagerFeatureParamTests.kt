@@ -19,7 +19,8 @@ class CompletionManagerFeatureParamTests : BaseServerTestCase() {
         bc1.addBuildFeature("vcsTrigger", mapOf(Pair("path", "abc"), Pair("abc", "bcd"), Pair("pathabc", "abc")))
         temp1.addBuildFeature("vcsTrigger", mapOf(Pair("path", "abd"), Pair("abc", "bcd")))
 
-        compl = CompletionManager(myFixture.projectManager)
+        compl = CompletionManager(myFixture.projectManager, myFixture.securityContext)
+        compl.indexAll()
     }
 
     

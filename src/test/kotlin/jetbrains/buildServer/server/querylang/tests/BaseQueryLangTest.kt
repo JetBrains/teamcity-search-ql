@@ -14,6 +14,8 @@ import jetbrains.buildServer.server.querylang.requests.InternalApiQueryHandler
 import jetbrains.buildServer.server.querylang.requests.RequestClient
 import jetbrains.buildServer.server.querylang.tests.client.EmptyResultPrinter
 import jetbrains.buildServer.serverSide.*
+import jetbrains.buildServer.serverSide.auth.AuthUtil
+import jetbrains.buildServer.serverSide.auth.Permission
 import jetbrains.buildServer.serverSide.dependency.DependencySettings
 import jetbrains.buildServer.serverSide.impl.BaseServerTestCase
 import jetbrains.buildServer.serverSide.impl.ProjectEx
@@ -40,7 +42,7 @@ abstract class BaseQueryLangTest : BaseServerTestCase() {
             EmptyResultPrinter
         )
 
-        val complm = CompletionManager(myFixture.projectManager)
+        val complm = CompletionManager(myFixture.projectManager, myFixture.securityContext)
         val compl = Completer(complm)
         autoCompl = AutoCompletion(myFixture.projectManager, compl)
 
@@ -51,6 +53,9 @@ abstract class BaseQueryLangTest : BaseServerTestCase() {
         MyProjectManagerInit(projectManager)
 
         eventListener.serverStartup()
+
+        val authHolder = myFixture.securityContext.authorityHolder
+        println(AuthUtil.hasGlobalPermission(authHolder, Permission.CHANGE_SERVER_SETTINGS))
     }
 
 

@@ -19,10 +19,11 @@ class AutocompletionUpdateTests : BaseServerTestCase(){
     @BeforeMethod
     override fun setUp() {
         super.setUp()
-        compl = CompletionManager(myFixture.projectManager)
+        compl = CompletionManager(myFixture.projectManager, myFixture.securityContext)
         val taskQueue = TaskQueue(compl, updatePeriod, 0, TimeUnit.MILLISECONDS)
 
         eventListener = AutocompletionEventListener(taskQueue ,myFixture.projectManager,  myFixture.eventDispatcher)
+        eventListener.serverStartup()
     }
 
     fun testAddBuildConfiguration() {
@@ -31,7 +32,7 @@ class AutocompletionUpdateTests : BaseServerTestCase(){
 
         sleep(2 * updatePeriod)
 
-        val vars = compl.buildConfIdFinder.completeString("te", 10)
+        val vars = compl.completeString("te", "configuration_id", 10)
         val expected = listOf("test1")
 
         assertEquals(expected, vars)
@@ -43,7 +44,7 @@ class AutocompletionUpdateTests : BaseServerTestCase(){
 
         sleep(2 * updatePeriod)
 
-        val vars = compl.templateIdFinder.completeString("te", 10)
+        val vars = compl.completeString("te", "template_id", 10)
         val expected = listOf("temp1")
 
         assertEquals(expected, vars)
@@ -54,7 +55,7 @@ class AutocompletionUpdateTests : BaseServerTestCase(){
         persist(myFixture.buildType)
 
         sleep(2 * updatePeriod)
-        val vars = compl.triggerTypeFinder.completeString("vc", 10)
+        val vars = compl.completeString("vc", "trigger_type", 10)
         val expected = listOf("vcsTrigger")
 
         assertEquals(expected, vars)
@@ -64,7 +65,7 @@ class AutocompletionUpdateTests : BaseServerTestCase(){
         myFixture.createProject("Project1", "Project1")
 
         sleep(updatePeriod * 2)
-        val vars = compl.projectIdFinder.completeString("Pr", 10)
+        val vars = compl.completeString("Pr", "project_id", 10)
         val expected = listOf("Project1")
 
         assertEquals(expected, vars)
@@ -76,7 +77,7 @@ class AutocompletionUpdateTests : BaseServerTestCase(){
         persist(vcs)
 
         sleep(2 * updatePeriod)
-        val vars = compl.vcsRootIdFinder.completeString("aba", 10)
+        val vars = compl.completeString("aba", "vcsRoot_id", 10)
         val expected = listOf("abacaba")
 
         assertEquals(expected, vars)

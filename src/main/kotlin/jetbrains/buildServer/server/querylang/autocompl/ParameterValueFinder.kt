@@ -1,12 +1,17 @@
 package jetbrains.buildServer.server.querylang.autocompl
 
 import jetbrains.buildServer.server.querylang.indexing.CompressedTrie
+import jetbrains.buildServer.serverSide.impl.audit.finders.StringFinder
 
-class ParameterValueFinder: StringFinder {
+class ParameterValueFinder(
+    override val compl: CompletionManager,
+    override val systemAdminOnly: Boolean,
+    val defaultValueSysAdminOnly: Boolean
+): SecuredStringFinder() {
     val nameTrie = CompressedTrie<Any>()
-    val params: MutableMap<String, CompressedTrie<Any>> = mutableMapOf()
+    val params: MutableMap<String, SimpleStringFinder> = mutableMapOf()
 
-    override fun completeString(prefix: String, limit: Int): List<String> {
+    override fun completeStringUnsafe(prefix: String, limit: Int): List<String> {
         val wordRegex = """[\w.\-_]*?""".toRegex()
         val withQuoteRegex = """"[\s\S]*?""".toRegex()
         val paramOnlyRegex = """$wordRegex|$withQuoteRegex""".toRegex()
@@ -23,9 +28,9 @@ class ParameterValueFinder: StringFinder {
         }
     }
 
-    fun addParam(paramName: String, paramValue: String) {
+    fun addParam(paramName: String, paramValue: String, valSystemAdminOnly: Boolean = defaultValueSysAdminOnly) {
         if (!params.contains(paramName)) {
-            params[paramName] = CompressedTrie()
+            params[paramName] = SimpleStringFinder(compl, valSystemAdminOnly)
         }
         params[paramName]!!.addString(paramValue)
         nameTrie.addString(paramName)
@@ -36,7 +41,7 @@ class ParameterValueFinder: StringFinder {
     }
 
     private fun completeParamValue(paramName: String, valuePrefix: String, limit: Int): List<String> {
-        return params[paramName]?.complete(valuePrefix, limit) ?: emptyList()
+        return params[paramName]?.completeString(valuePrefix, limit) ?: emptyList()
     }
 
     private fun String.removeStartMarks(): String {
