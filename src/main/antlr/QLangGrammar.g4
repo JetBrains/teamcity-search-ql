@@ -127,11 +127,11 @@ stringSubstringFilter : SUBSTRINGS ;
 anyStringFilter : ANY_STRING ;
 
 
-filterModifier : allModifier
+filterModifier : withInheritedModifier
                | resolvedModifier
                ;
 modifierList : '[' filterModifier (',' filterModifier)*? ']' ;
 
 
-allModifier : ALL ;
+withInheritedModifier : WITH_INHERITED ;
 resolvedModifier : RESOLVED ;

@@ -1,6 +1,6 @@
 package jetbrains.buildServer.server.querylang.parser
 
-import jetbrains.buildServer.server.querylang.ast.AllFilterModifier
+import jetbrains.buildServer.server.querylang.ast.WithInheritedFilterModifier
 import jetbrains.buildServer.server.querylang.ast.Filter
 import jetbrains.buildServer.server.querylang.ast.FilterModifier
 import jetbrains.buildServer.server.querylang.ast.ResolvedFilterModifier
@@ -20,8 +20,8 @@ object ModifierVisitor : QLangGrammarBaseVisitor<FilterModifier>() {
         return ctx.accept(this).applyAndCheck(filter)
     }
 
-    override fun visitAllModifier(ctx: QLangGrammarParser.AllModifierContext?): FilterModifier {
-        return AllFilterModifier()
+    override fun visitWithInheritedModifier(ctx: QLangGrammarParser.WithInheritedModifierContext?): FilterModifier {
+        return WithInheritedFilterModifier()
     }
 
     override fun visitResolvedModifier(ctx: QLangGrammarParser.ResolvedModifierContext?): FilterModifier {

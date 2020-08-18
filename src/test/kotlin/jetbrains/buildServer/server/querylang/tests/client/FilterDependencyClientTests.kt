@@ -137,7 +137,7 @@ class FilterDependencyClientTests : BaseQueryLangTest() {
         )
         .addComplCase(
             "find configuration with dependency param pa",
-            "path"
+            "path", "param1"
         )
         .addComplCase(
             "find configuration with dependency param path=",

@@ -36,7 +36,7 @@ class FilterOptionClientTests : BaseQueryLangTest() {
             "b1"
         )
         .addBCCase(
-            "find buildConfiguration with option[all] path=abc",
+            "find buildConfiguration with option[withInherited] path=abc",
             "b1", "b2"
         )
         .addBCCase(

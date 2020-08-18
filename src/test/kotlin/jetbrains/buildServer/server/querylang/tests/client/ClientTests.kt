@@ -488,9 +488,9 @@ class ClientTests: BaseServerTestCase() {
         assertEquals(expected, res)
     }
 
-    fun testTriggerAllModifier() {
+    fun testTriggerWithInheritedModifier() {
         val query = """
-            find buildConfiguration with trigger[all] type vcsTrigger
+            find buildConfiguration with trigger[withInherited] type vcsTrigger
         """.trimIndent()
 
         val res = client.process(query).objects.map {it.externalId}.sorted()
@@ -501,7 +501,7 @@ class ClientTests: BaseServerTestCase() {
 
     fun testStepAllModifier() {
         val query = """
-            find buildConfiguration with step[all] type temp_runner1
+            find buildConfiguration with step[withInherited] type temp_runner1
         """.trimIndent()
 
         val res = client.process(query).objects.map {it.externalId}.sorted()
@@ -510,9 +510,9 @@ class ClientTests: BaseServerTestCase() {
         assertEquals(expected, res)
     }
 
-    fun testFeatureAllModifier() {
+    fun testFeatureWithInheritedModifier() {
         val query = """
-            find buildConfiguration with feature[all] type feature11
+            find buildConfiguration with feature[withInherited] type feature11
         """.trimIndent()
 
         val res = client.process(query).objects.map {it.externalId}.sorted()
@@ -523,7 +523,7 @@ class ClientTests: BaseServerTestCase() {
 
     fun testParamAllFilter() {
         val query = """
-            find buildConfiguration with param[all] qwerty=*cab*
+            find buildConfiguration with param[withInherited] qwerty=*cab*
         """.trimIndent()
 
         val res = client.process(query).objects.map {it.externalId}.sorted()
@@ -534,7 +534,7 @@ class ClientTests: BaseServerTestCase() {
 
     fun testDependencyFilter() {
         val query = """
-            find buildConfiguration with dependency[all] id *Project2*
+            find buildConfiguration with dependency[withInherited] id *Project2*
         """.trimIndent()
 
         val res = client.process(query).objects.map {it.externalId}.sorted()

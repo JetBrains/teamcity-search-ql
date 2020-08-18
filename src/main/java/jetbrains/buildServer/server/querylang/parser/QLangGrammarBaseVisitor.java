@@ -474,7 +474,7 @@ public class QLangGrammarBaseVisitor<T> extends AbstractParseTreeVisitor<T> impl
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitAllModifier(QLangGrammarParser.AllModifierContext ctx) { return visitChildren(ctx); }
+	@Override public T visitWithInheritedModifier(QLangGrammarParser.WithInheritedModifierContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *

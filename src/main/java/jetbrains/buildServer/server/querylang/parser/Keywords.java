@@ -24,10 +24,10 @@ public class Keywords extends Lexer {
 	public static final int
 		PROJECT=1, TEMPLATE=2, BUILD_CONFIGURATION=3, VCS_ROOT=4, ID=5, PARENT=6, 
 		TRIGGER=7, STEP=8, FEATURE=9, TYPE=10, PARAM=11, VAL=12, ENABLED=13, ANCESTOR=14, 
-		RULES=15, DEPENDENCY=16, ARTIFACT=17, SNAPSHOT=18, ALL=19, OPTION=20, 
-		CLEAN=21, REV_RULE=22, VCS_ENTRY=23, NAME=24, RESOLVED=25, OR=26, AND=27, 
-		NOT=28, STRING=29, IDENT=30, SUFFIXS=31, PREFIXS=32, SUBSTRINGS=33, ANY_STRING=34, 
-		WS=35;
+		RULES=15, DEPENDENCY=16, ARTIFACT=17, SNAPSHOT=18, WITH_INHERITED=19, 
+		OPTION=20, CLEAN=21, REV_RULE=22, VCS_ENTRY=23, NAME=24, RESOLVED=25, 
+		OR=26, AND=27, NOT=28, STRING=29, IDENT=30, SUFFIXS=31, PREFIXS=32, SUBSTRINGS=33, 
+		ANY_STRING=34, WS=35;
 	public static String[] channelNames = {
 		"DEFAULT_TOKEN_CHANNEL", "HIDDEN"
 	};
@@ -56,10 +56,10 @@ public class Keywords extends Lexer {
 		return new String[] {
 			null, "PROJECT", "TEMPLATE", "BUILD_CONFIGURATION", "VCS_ROOT", "ID", 
 			"PARENT", "TRIGGER", "STEP", "FEATURE", "TYPE", "PARAM", "VAL", "ENABLED", 
-			"ANCESTOR", "RULES", "DEPENDENCY", "ARTIFACT", "SNAPSHOT", "ALL", "OPTION", 
-			"CLEAN", "REV_RULE", "VCS_ENTRY", "NAME", "RESOLVED", "OR", "AND", "NOT", 
-			"STRING", "IDENT", "SUFFIXS", "PREFIXS", "SUBSTRINGS", "ANY_STRING", 
-			"WS"
+			"ANCESTOR", "RULES", "DEPENDENCY", "ARTIFACT", "SNAPSHOT", "WITH_INHERITED", 
+			"OPTION", "CLEAN", "REV_RULE", "VCS_ENTRY", "NAME", "RESOLVED", "OR", 
+			"AND", "NOT", "STRING", "IDENT", "SUFFIXS", "PREFIXS", "SUBSTRINGS", 
+			"ANY_STRING", "WS"
 		};
 	}
 	private static final String[] _SYMBOLIC_NAMES = makeSymbolicNames();
@@ -121,7 +121,7 @@ public class Keywords extends Lexer {
 	        putToKeywords(DependencyFilter.Companion.getNames(), QLangGrammarParser.DEPENDENCY);
 	        putToKeywords(ArtifactFilter.Companion.getNames(), QLangGrammarParser.ARTIFACT);
 	        putToKeywords(SnapshotFilter.Companion.getNames(), QLangGrammarParser.SNAPSHOT);
-	        putToKeywords(AllFilterModifier.Companion.getNames(), QLangGrammarParser.ALL);
+	        putToKeywords(WithInheritedFilterModifier.Companion.getNames(), QLangGrammarParser.WITH_INHERITED);
 	        putToKeywords(OptionFilter.Companion.getNames(), QLangGrammarParser.OPTION);
 	        putToKeywords(CleanFilter.Companion.getNames(), QLangGrammarParser.CLEAN);
 	        putToKeywords(RevRuleFilter.Companion.getNames(), QLangGrammarParser.REV_RULE);

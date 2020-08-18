@@ -43,7 +43,7 @@ class SearchProjectTests : BaseQueryLangTest() {
             "p0"
         )
         .addProjectCase(
-            "find project with feature[all] type pfeat1",
+            "find project with feature[withInherited] type pfeat1",
             "p0", "p1", "p2", "p3"
         )
         .addProjectCase(
@@ -55,7 +55,7 @@ class SearchProjectTests : BaseQueryLangTest() {
             "p1"
         )
         .addProjectCase(
-            "find project with param[all] param1=abc",
+            "find project with param[withInherited] param1=abc",
             "p1", "p2"
         )
         .addProjectCase(

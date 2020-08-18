@@ -57,15 +57,15 @@ class FilterParameterDescriptorTest : BaseQueryLangTest() {
             "b1"
         )
         .addBCCase(
-            "find buildConfiguration with trigger[all] type vcsTrigger",
+            "find buildConfiguration with trigger[withInherited] type vcsTrigger",
             "b1", "b2"
         )
         .addBCCase(
-            "find buildConfiguration with step[all] type step1",
+            "find buildConfiguration with step[withInherited] type step1",
             "b1", "b2"
         )
         .addBCCase(
-            "find buildConfiguration with feature[all] type feature1",
+            "find buildConfiguration with feature[withInherited] type feature1",
             "b1", "b2"
         )
         .addBCCase(

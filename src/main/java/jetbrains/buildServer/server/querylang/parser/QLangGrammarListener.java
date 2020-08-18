@@ -688,15 +688,15 @@ public interface QLangGrammarListener extends ParseTreeListener {
 	 */
 	void exitModifierList(QLangGrammarParser.ModifierListContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link QLangGrammarParser#allModifier}.
+	 * Enter a parse tree produced by {@link QLangGrammarParser#withInheritedModifier}.
 	 * @param ctx the parse tree
 	 */
-	void enterAllModifier(QLangGrammarParser.AllModifierContext ctx);
+	void enterWithInheritedModifier(QLangGrammarParser.WithInheritedModifierContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link QLangGrammarParser#allModifier}.
+	 * Exit a parse tree produced by {@link QLangGrammarParser#withInheritedModifier}.
 	 * @param ctx the parse tree
 	 */
-	void exitAllModifier(QLangGrammarParser.AllModifierContext ctx);
+	void exitWithInheritedModifier(QLangGrammarParser.WithInheritedModifierContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link QLangGrammarParser#resolvedModifier}.
 	 * @param ctx the parse tree

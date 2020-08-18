@@ -32,7 +32,7 @@ import java.util.*;
         putToKeywords(DependencyFilter.Companion.getNames(), QLangGrammarParser.DEPENDENCY);
         putToKeywords(ArtifactFilter.Companion.getNames(), QLangGrammarParser.ARTIFACT);
         putToKeywords(SnapshotFilter.Companion.getNames(), QLangGrammarParser.SNAPSHOT);
-        putToKeywords(AllFilterModifier.Companion.getNames(), QLangGrammarParser.ALL);
+        putToKeywords(WithInheritedFilterModifier.Companion.getNames(), QLangGrammarParser.WITH_INHERITED);
         putToKeywords(OptionFilter.Companion.getNames(), QLangGrammarParser.OPTION);
         putToKeywords(CleanFilter.Companion.getNames(), QLangGrammarParser.CLEAN);
         putToKeywords(RevRuleFilter.Companion.getNames(), QLangGrammarParser.REV_RULE);
@@ -52,7 +52,7 @@ tokens {
        PROJECT, TEMPLATE, BUILD_CONFIGURATION, VCS_ROOT,
        ID, PARENT, TRIGGER, STEP, FEATURE, TYPE, PARAM, VAL,
        ENABLED, ANCESTOR, RULES, DEPENDENCY, ARTIFACT, SNAPSHOT,
-       ALL, OPTION, CLEAN, REV_RULE, VCS_ENTRY, NAME, RESOLVED
+       WITH_INHERITED, OPTION, CLEAN, REV_RULE, VCS_ENTRY, NAME, RESOLVED
 }
 
 fragment DIGIT: [0-9] ;

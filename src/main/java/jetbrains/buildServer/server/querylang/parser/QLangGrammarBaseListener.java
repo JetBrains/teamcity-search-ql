@@ -798,13 +798,13 @@ public class QLangGrammarBaseListener implements QLangGrammarListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterAllModifier(QLangGrammarParser.AllModifierContext ctx) { }
+	@Override public void enterWithInheritedModifier(QLangGrammarParser.WithInheritedModifierContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitAllModifier(QLangGrammarParser.AllModifierContext ctx) { }
+	@Override public void exitWithInheritedModifier(QLangGrammarParser.WithInheritedModifierContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

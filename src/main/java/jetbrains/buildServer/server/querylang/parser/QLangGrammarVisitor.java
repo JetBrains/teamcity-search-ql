@@ -417,11 +417,11 @@ public interface QLangGrammarVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitModifierList(QLangGrammarParser.ModifierListContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link QLangGrammarParser#allModifier}.
+	 * Visit a parse tree produced by {@link QLangGrammarParser#withInheritedModifier}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitAllModifier(QLangGrammarParser.AllModifierContext ctx);
+	T visitWithInheritedModifier(QLangGrammarParser.WithInheritedModifierContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link QLangGrammarParser#resolvedModifier}.
 	 * @param ctx the parse tree
