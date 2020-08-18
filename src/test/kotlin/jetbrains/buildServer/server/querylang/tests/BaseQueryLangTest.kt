@@ -55,7 +55,6 @@ abstract class BaseQueryLangTest : BaseServerTestCase() {
         eventListener.serverStartup()
 
         val authHolder = myFixture.securityContext.authorityHolder
-        println(AuthUtil.hasGlobalPermission(authHolder, Permission.CHANGE_SERVER_SETTINGS))
     }
 
 

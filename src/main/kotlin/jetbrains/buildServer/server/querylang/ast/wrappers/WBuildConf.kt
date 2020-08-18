@@ -41,22 +41,22 @@ abstract class AbstractWBuildConf :
         get() = sbuildConf.project.wrap()
 
     override val ownTriggers: List<WTrigger>
-        get() = buildTypeEx.settings.ownBuildTriggers.map { it.wrap(resolver) }
+        get() = buildTypeEx.settings.ownBuildTriggers.map { it.wrap(sbuildConf) }
 
     override val triggers: List<WTrigger>
-        get() = sbuildConf.buildTriggersCollection.map { it.wrap(resolver) }
+        get() = sbuildConf.buildTriggersCollection.map { it.wrap(sbuildConf) }
 
     override val ownSteps: List<WStep>
-        get() = buildTypeEx.settings.ownBuildRunners.map {it.wrap(resolver)}
+        get() = buildTypeEx.settings.ownBuildRunners.map {it.wrap(sbuildConf)}
 
     override val steps: List<WStep>
-        get() = sbuildConf.buildRunners.map { it.wrap(resolver) }
+        get() = sbuildConf.buildRunners.map { it.wrap(sbuildConf) }
 
     override val features: List<WFeature>
-        get() = sbuildConf.buildFeatures.map {it.wrap(resolver)}
+        get() = sbuildConf.buildFeatures.map {it.wrap(sbuildConf)}
 
     override val ownFeatures: List<WFeature>
-        get() = buildTypeEx.settings.ownBuildFeatures.map {it.wrap(resolver)}
+        get() = buildTypeEx.settings.ownBuildFeatures.map {it.wrap(sbuildConf)}
 
     override val templates: List<WTemplate>
         get() = sbuildConf.templates.map {it.wrap()}

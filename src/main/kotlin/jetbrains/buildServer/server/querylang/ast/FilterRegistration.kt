@@ -69,6 +69,7 @@ object FilterRegistration {
         //modifier registration should be peroformed only after filter registration
         registerModifier(ResolvedFilterModifier::class)
         registerModifier(WithInheritedFilterModifier::class)
+        registerModifier(AllFilterModifier::class)
     }
 
     fun getFilterGraph() = filterGraph.toMap()

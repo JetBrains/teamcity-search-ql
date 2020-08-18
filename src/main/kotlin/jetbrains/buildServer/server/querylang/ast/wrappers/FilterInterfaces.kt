@@ -51,7 +51,9 @@ interface FParamContainer {
     val params: List<WResolvableParam>
 }
 
-interface FEnabledContainer
+interface FEnabledContainer {
+    val isEnabled: Boolean
+}
 
 interface FAncestorContainer {
     val firstAncestor: WProject?

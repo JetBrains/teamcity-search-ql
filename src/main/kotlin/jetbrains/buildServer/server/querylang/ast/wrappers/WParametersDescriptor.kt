@@ -2,10 +2,7 @@ package jetbrains.buildServer.server.querylang.ast.wrappers
 
 import jetbrains.buildServer.buildTriggers.BuildTriggerDescriptor
 import jetbrains.buildServer.parameters.ValueResolver
-import jetbrains.buildServer.serverSide.BuildRunnerDescriptor
-import jetbrains.buildServer.serverSide.ParametersDescriptor
-import jetbrains.buildServer.serverSide.SBuildFeatureDescriptor
-import jetbrains.buildServer.serverSide.SProjectFeatureDescriptor
+import jetbrains.buildServer.serverSide.*
 
 abstract class WParametersDescriptor(
     val obj: ParametersDescriptor
@@ -28,23 +25,43 @@ abstract class WParametersDescriptor(
         get() = params.map { it.toValue() }
 }
 
-fun BuildTriggerDescriptor.wrap(resolver: ValueResolver) = WTrigger(this, resolver)
+fun BuildTriggerDescriptor.wrap(bt: SBuildType) = WTrigger(this, bt.valueResolver, bt.isEnabled(this.id))
+fun BuildTriggerDescriptor.wrap(bt: BuildTypeTemplate) = WTrigger(this, bt.valueResolver, bt.isEnabled(this.id))
 
-class WTrigger(strigger: BuildTriggerDescriptor, override val resolver: ValueResolver) : WParametersDescriptor(strigger)
+class WTrigger(
+    strigger: BuildTriggerDescriptor,
+    override val resolver: ValueResolver,
+    override val isEnabled: Boolean
+) : WParametersDescriptor(strigger)
 
-fun BuildRunnerDescriptor.wrap(resolver: ValueResolver) = WStep(this, resolver)
+fun BuildRunnerDescriptor.wrap(bt: SBuildType) = WStep(this, bt.valueResolver, bt.isEnabled(this.id))
+fun BuildRunnerDescriptor.wrap(bt: BuildTypeTemplate) = WStep(this, bt.valueResolver, bt.isEnabled(this.id))
 
-class WStep(sstep: BuildRunnerDescriptor, override val resolver: ValueResolver) : WParametersDescriptor(sstep)
+class WStep(
+    sstep: BuildRunnerDescriptor,
+    override val resolver: ValueResolver,
+    override val isEnabled: Boolean
+) : WParametersDescriptor(sstep)
 
-fun SBuildFeatureDescriptor.wrap(resolver: ValueResolver) = WBuildTypeFeature(this, resolver)
+fun SBuildFeatureDescriptor.wrap(bt: SBuildType) = WBuildTypeFeature(this, bt.valueResolver, bt.isEnabled(this.id))
+fun SBuildFeatureDescriptor.wrap(bt: BuildTypeTemplate) = WBuildTypeFeature(this, bt.valueResolver, bt.isEnabled(this.id))
 
-fun SProjectFeatureDescriptor.wrap(resolver: ValueResolver) = WProjectFeature(this, resolver)
+fun SProjectFeatureDescriptor.wrap(bt: SProject) = WProjectFeature(this, bt.valueResolver, true)
 
 abstract class WFeature(
     paramDescriptor: ParametersDescriptor,
-    override val resolver: ValueResolver
+    override val resolver: ValueResolver,
+    override val isEnabled: Boolean
 ) : WParametersDescriptor(paramDescriptor)
 
-class WBuildTypeFeature(sfeature: SBuildFeatureDescriptor, resolver: ValueResolver) : WFeature(sfeature, resolver)
+class WBuildTypeFeature(
+    sfeature: SBuildFeatureDescriptor,
+    resolver: ValueResolver,
+    isEnabled: Boolean
+) : WFeature(sfeature, resolver, isEnabled)
 
-class WProjectFeature(sfeature: SProjectFeatureDescriptor, resolver: ValueResolver) : WFeature(sfeature, resolver)
+class WProjectFeature(
+    sfeature: SProjectFeatureDescriptor,
+    resolver: ValueResolver,
+    isEnabled: Boolean
+) : WFeature(sfeature, resolver, isEnabled)

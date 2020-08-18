@@ -56,13 +56,14 @@ class FilterDependencyClientTests : BaseQueryLangTest() {
                 TTempDependency("t1"),
                 TTempDependency("t2"),
                 TADependency("b3", "zxcvzxcvzc", true, RevisionRules.LAST_FINISHED_SAME_CHAIN_RULE),
-                TADependency("b3", "%param1%", false, RevisionRules.LAST_FINISHED_SAME_CHAIN_RULE),
                 TSDependency("b3")
             ).bind("b5"),
 
             TBuildConf("test6",
                 TADependency("b4", "irotiirtroi", false),
-                TADependency("b4", "TeamCity-1111.warTeamCity-222.warTeamCity.tar.gzTeamCity.war", false)
+                TADependency("b4", "TeamCity-1111.warTeamCity-222.warTeamCity.tar.gzTeamCity.war", false),
+                TParam("param100", "abacaba"),
+                TADependency("b3", "%param100%", false, RevisionRules.LAST_FINISHED_SAME_CHAIN_RULE)
             ).bind("b6")
         ).create(true)
         
@@ -70,10 +71,69 @@ class FilterDependencyClientTests : BaseQueryLangTest() {
 
     @DataProvider(name = "data")
     fun dataProvider() = TestDataProvider()
-
+        .addBCCase(
+            "find configuration with dependency (id *3 and snapshot)",
+            "b2", "b5"
+        )
+        .addBCCase(
+            "find configuration with dependency (dependency(id *3 and snapshot) and artifact)",
+            "b4"
+        )
+        .addTempCase(
+            "find template with dependency (id *4 and snapshot)",
+            "t1"
+        )
+        .addTempCase(
+            "find template with dependency (id *4 and artifact)",
+            "t2", "t4"
+        )
+        .addBCCase(
+            "find configuration with dependency (id *4 and (snapshot or artifact))",
+            "b6"
+        )
+        .addBCCase(
+            "find configuration with dependency[withInherited] (id *4 and (snapshot or artifact))",
+            "b5", "b6"
+        )
+        .addTempCase(
+            "find template with dependency (snapshot option opt1=abc)",
+            "t3"
+        )
+        .addBCCase(
+            "find configuration with dependency[withInherited] (snapshot option opt1=bcd)",
+            "b5"
+        )
+        .addTempCase(
+            "find template with dependency (artifact rules *bac*)",
+            "t2"
+        )
+        .addBCCase(
+            "find configuration with dependency (artifact (rules *tii*) and dependency (artifact rules *wer*))",
+            "b6"
+        )
+        .addBCCase(
+            "find configuration with dependency artifact(not clean)",
+            "b6", "b4"
+        )
+        .addBCCase(
+            "find configuration with dependency[withInherited] artifact(not clean)",
+            "b4", "b5", "b6"
+        )
+        .addBCCase(
+            "find configuration with dependency artifact revRule *Chain*",
+            "b5", "b6"
+        )
+        .addBCCase(
+            "find configuration with dependency(artifact rules *xcv* and snapshot)",
+            "b5"
+        )
+        .addBCCase(
+            "find configuration with dependency artifact rules \"TeamCity-1111.warTeamCity-222.warTeamCity.tar.gzTeamCity.war\"",
+            "b6"
+        )
         .addBCCase(
             "find configuration with dependency artifact rules[resolved] abacaba",
-            "b5"
+            "b6"
         )
         .end()
 
@@ -137,7 +197,7 @@ class FilterDependencyClientTests : BaseQueryLangTest() {
         )
         .addComplCase(
             "find configuration with dependency param pa",
-            "path", "param1"
+            "path", "param1", "param100"
         )
         .addComplCase(
             "find configuration with dependency param path=",
@@ -154,6 +214,14 @@ class FilterDependencyClientTests : BaseQueryLangTest() {
         .addComplCase(
             "find configuration with dependency id Build",
             "BuildConf1"
+        )
+        .addComplCase(
+            "find configuration with dependency artifact[a",
+            "all"
+        )
+        .addComplCase(
+            "find configuration with dependency[wi",
+            "withInherited"
         )
         .end()
 

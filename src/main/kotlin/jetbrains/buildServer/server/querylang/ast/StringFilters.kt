@@ -7,7 +7,7 @@ data class EqualsStringFilter(val str: String) : Filter<String> {
     override val names = emptyList<String>()
     override fun createStr() = str.toIdentOrString()
 
-    override fun build(context: Any?): ObjectFilter<String> {
+    override fun build(): ObjectFilter<String> {
         return RealObjectFilter {obj -> obj == str}
     }
 }
@@ -16,7 +16,7 @@ data class PrefixStringFilter(val str: String) : Filter<String> {
     override val names = emptyList<String>()
     override fun createStr() = str.toIdentOrString() + '*'
 
-    override fun build(context: Any?): ObjectFilter<String> {
+    override fun build(): ObjectFilter<String> {
         return RealObjectFilter {obj -> obj.startsWith(str)}
     }
 }
@@ -25,7 +25,7 @@ data class SuffixStringFilter(val str: String) : Filter<String> {
     override val names = emptyList<String>()
     override fun createStr() = '*' + str.toIdentOrString()
 
-    override fun build(context: Any?): ObjectFilter<String> {
+    override fun build(): ObjectFilter<String> {
         return RealObjectFilter {obj -> obj.endsWith(str)}
     }
 }
@@ -34,7 +34,7 @@ data class SubstringFilter(val str: String) : Filter<String> {
     override val names = emptyList<String>()
     override fun createStr() = '*' + str.toIdentOrString() + '*'
 
-    override fun build(context: Any?): ObjectFilter<String> {
+    override fun build(): ObjectFilter<String> {
         return RealObjectFilter {obj -> obj.contains(str)}
     }
 }
@@ -49,7 +49,7 @@ data class StringParamFilter(
     val nameFilter: ObjectFilter<String> by lazy { nameCondition.build() }
     val valueFilter: ObjectFilter<String> by lazy { valueCondition.build() }
 
-    override fun build(context: Any?): ObjectFilter<WParam> {
+    override fun build(): ObjectFilter<WParam> {
         return RealObjectFilter {obj ->
             nameFilter.accepts(obj.name) && valueFilter.accepts(obj.value)
         }
@@ -62,7 +62,7 @@ data class AnyStringFilter(
     override val names: List<String> = emptyList()
     override fun createStr() = "*"
 
-    override fun build(context: Any?): ObjectFilter<String> {
+    override fun build(): ObjectFilter<String> {
         return RealObjectFilter {true}
     }
 }

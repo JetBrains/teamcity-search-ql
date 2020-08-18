@@ -102,7 +102,6 @@ class ClientTests: BaseServerTestCase() {
         assertEquals(res.objects.size, 2)
         assertEquals(res.objects[0].externalId, "Project1_test1")
         assertEquals(res.objects[1].externalId, "Project3_test1")
-        println(res)
     }
 
     fun testSearchBuildConfigurationWithVcsAndSchedulingTrigger() {
@@ -119,7 +118,6 @@ class ClientTests: BaseServerTestCase() {
         assertEquals(res.objects.size, 2)
         assertEquals(res.objects[0].externalId, "Project1_test1")
         assertEquals(res.objects[1].externalId, "Project3_test1")
-        println(res)
     }
 
     fun testSearchBuildConfigurationWithVcsOrSchedulingTrigger() {
@@ -136,7 +134,6 @@ class ClientTests: BaseServerTestCase() {
         assertEquals(confs[0].externalId, "Project1_test1")
         assertEquals(confs[1].externalId, "Project2_test1")
         assertEquals(confs[2].externalId, "Project3_test1")
-        println(res)
     }
 
     fun testSearchProjectByExternalIdInSubprojects() {
@@ -151,7 +148,6 @@ class ClientTests: BaseServerTestCase() {
         assertEquals(res.objects.size, 1)
         assertTrue(res.objects[0] is Project)
         assertEquals(res.objects[0].externalId, "Project3")
-        println(res)
     }
 
     fun testLogicalExpression() {

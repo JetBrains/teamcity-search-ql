@@ -126,6 +126,10 @@ class SearchBuildConfigurationTests : BaseQueryLangTest() {
             "find configuration with name buil",
             "buildConfiguration1"
         )
+        .addComplCase(
+            "find configuration with trigger[all, wi",
+            "withInherited"
+        )
         .end()
 
     @DataProvider(name = "failed")

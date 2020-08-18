@@ -35,19 +35,19 @@ class WTemplate(
         get() = stemplate.project.wrap()
 
     override val ownTriggers: List<WTrigger>
-        get() = stemplate.buildTriggersCollection.map { it.wrap(resolver) }
+        get() = stemplate.buildTriggersCollection.map { it.wrap(stemplate) }
 
     override val triggers: List<WTrigger>
         get() = ownTriggers
 
     override val ownSteps: List<WStep>
-        get() = stemplate.buildRunners.map {it.wrap(resolver)}
+        get() = stemplate.buildRunners.map {it.wrap(stemplate)}
 
     override val steps: List<WStep>
         get() = ownSteps
 
     override val features: List<WFeature>
-        get() = stemplate.buildFeatures.map {it.wrap(resolver)}
+        get() = stemplate.buildFeatures.map {it.wrap(stemplate)}
 
     override val ownFeatures: List<WFeature>
         get() = features

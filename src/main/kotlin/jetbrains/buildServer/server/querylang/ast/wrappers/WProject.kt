@@ -35,10 +35,10 @@ class WProject(
         get() = sproject.parentProject?.wrap()
 
     override val ownFeatures: List<WFeature>
-        get() = sproject.ownFeatures.map {it.wrap(resolver)}
+        get() = sproject.ownFeatures.map {it.wrap(sproject)}
 
     override val features: List<WFeature>
-        get() = sproject.availableFeatures.map {it.wrap(resolver)}
+        get() = sproject.availableFeatures.map {it.wrap(sproject)}
 
     override fun isEnabled(obj: FEnabledContainer): Boolean {
         return true
