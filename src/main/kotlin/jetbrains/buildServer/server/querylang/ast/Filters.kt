@@ -32,14 +32,17 @@ data class BuildConfFilter(
 
 data class VcsRootFilter(
     override val condition: ConditionAST<AbstractWVcsRoot>
-) : ConditionFilter<FVcsRootContainer, AbstractWVcsRoot>()
+) : ConditionFilter<FVcsRootContainer, AbstractWVcsRoot>(),
+    MAllContainer
 {
     companion object : Names("vcsRoot")
     override val names = Companion.names
 
+    override var searchAll = false
+
     override fun buildFrom(filter: ObjectFilter<AbstractWVcsRoot>, context: Any?): ObjectFilter<FVcsRootContainer> {
         return RealObjectFilter {obj ->
-            obj.vcsRoots.any {filter.accepts(it)}
+            this.elementSelector().validate(obj.vcsRoots, filter)
         }
     }
 }
@@ -101,12 +104,14 @@ data class ParentFilter(
 data class TriggerFilter(
     override val condition: ConditionAST<WTrigger>
 ) : ConditionFilter<FTriggerContainer, WTrigger>(),
-    MWithInheritedContainer
+    MWithInheritedContainer,
+    MAllContainer
 {
     companion object : Names("trigger")
     override val names = Companion.names
 
     override var includeInherited = false
+    override var searchAll = false
 
     override fun build(context: Any?): ObjectFilter<FTriggerContainer> {
         return RealObjectFilter {obj ->
@@ -114,9 +119,8 @@ data class TriggerFilter(
             else obj.triggers
 
             val objectFilterWithContext = condition.build(obj)
-            settings.any {trig ->
-                objectFilterWithContext.accepts(trig)
-            }
+
+            elementSelector().validate(settings, objectFilterWithContext)
         }
     }
 
@@ -128,12 +132,14 @@ data class TriggerFilter(
 data class StepFilter(
     override val condition: ConditionAST<WStep>
 ) : ConditionFilter<FStepContainer, WStep>(),
-    MWithInheritedContainer
+    MWithInheritedContainer,
+    MAllContainer
 {
     companion object : Names("step")
     override val names = Companion.names
 
     override var includeInherited = false
+    override var searchAll = false
 
     override fun build(context: Any?): ObjectFilter<FStepContainer> {
         return RealObjectFilter {obj ->
@@ -142,9 +148,7 @@ data class StepFilter(
 
             val objectFilterWithContext = condition.build(obj)
 
-            settings.any {step ->
-                objectFilterWithContext.accepts(step)
-            }
+            elementSelector().validate(settings, objectFilterWithContext)
         }
     }
 
@@ -156,12 +160,14 @@ data class StepFilter(
 data class FeatureFilter(
     override val condition: ConditionAST<WFeature>
 ) : ConditionFilter<FFeatureContainer, WFeature>(),
-    MWithInheritedContainer
+    MWithInheritedContainer,
+    MAllContainer
 {
     companion object : Names("feature")
     override val names = Companion.names
 
     override var includeInherited = false
+    override var searchAll = false
 
     override fun build(context: Any?): ObjectFilter<FFeatureContainer> {
         return RealObjectFilter {obj ->
@@ -170,9 +176,7 @@ data class FeatureFilter(
 
             val objectFilterWithContext = condition.build(obj)
 
-            settings.any {step ->
-                objectFilterWithContext.accepts(step)
-            }
+            elementSelector().validate(settings, objectFilterWithContext)
         }
     }
 
@@ -183,14 +187,16 @@ data class FeatureFilter(
 
 data class TemplateFilter(
     override val condition: ConditionAST<WTemplate>
-) : ConditionFilter<FTemplateContainer, WTemplate>()
+) : ConditionFilter<FTemplateContainer, WTemplate>(),
+    MAllContainer
 {
     companion object : Names("template")
     override val names = Companion.names
+    override var searchAll = false
 
     override fun buildFrom(filter: ObjectFilter<WTemplate>, context: Any?): ObjectFilter<FTemplateContainer> {
         return RealObjectFilter {obj ->
-            obj.templates.any {filter.accepts(it)}
+            elementSelector().validate(obj.templates, filter)
         }
     }
 }
@@ -249,45 +255,62 @@ data class ParameterFilter(
     override val condition: ConditionAST<WParam>
 ) : ConditionFilter<FParamContainer, WParam>(),
     MWithInheritedContainer,
-    MResolvedContainer
+    MResolvedContainer,
+    MAllContainer
 {
     companion object : Names("param")
     override val names = Companion.names
 
     override var includeInherited = false
     override var searchResolved = false
+    override var searchAll = false
 
     override fun buildFrom(filter: ObjectFilter<WParam>, context: Any?): ObjectFilter<FParamContainer> {
         return RealObjectFilter {obj ->
-            val params = if (includeInherited) obj.params
-                         else obj.ownParams
-
-            if (!searchResolved) {
-                params.any { filter.accepts(it.toParam()) }
-            } else {
-                params.any { filter.accepts(it.resolve()) }
+            val params = (if (includeInherited) obj.params else obj.ownParams).map {
+                if (!searchResolved) {
+                    it.toParam()
+                } else {
+                    it.resolve()
+                }
             }
+
+            elementSelector().validate(params, filter)
         }
     }
 }
 
 data class AncestorFilter(
     override val condition: ConditionAST<WProject>
-) : ConditionFilter<FAncestorContainer, WProject>()
+) : ConditionFilter<FAncestorContainer, WProject>(),
+    MAllContainer
 {
     companion object : Names("ancestor")
     override val names = Companion.names
+    override var searchAll = false
 
     override fun buildFrom(filter: ObjectFilter<WProject>, context: Any?): ObjectFilter<FAncestorContainer> {
-        return RealObjectFilter fil@{obj ->
-            var proj: WProject? = obj.firstAncestor
-            while (proj != null) {
-                if (filter.accepts(proj)) {
-                    return@fil true
+        return when (elementSelector()) {
+            is AnyElementValidator -> RealObjectFilter fil@{obj ->
+                var proj: WProject? = obj.firstAncestor
+                while (proj != null) {
+                    if (filter.accepts(proj)) {
+                        return@fil true
+                    }
+                    proj = proj.parent
                 }
-                proj = proj.parent
+                false
             }
-            false
+            is AllElementValidator -> RealObjectFilter fil1@{obj ->
+                var proj: WProject? = obj.firstAncestor
+                while (proj != null) {
+                    if (!filter.accepts(proj)) {
+                        return@fil1 false
+                    }
+                    proj = proj!!.parent
+                }
+                true
+            }
         }
     }
 }
@@ -295,18 +318,20 @@ data class AncestorFilter(
 data class VcsRootEntryFilter(
     override val condition: ConditionAST<WVcsRootEntry>
 ) : ConditionFilter<FVcsRootEntryContainer, WVcsRootEntry>(),
-    MWithInheritedContainer
+    MWithInheritedContainer,
+    MAllContainer
 {
     override var includeInherited: Boolean = false
 
     companion object : Names("vcs")
     override val names = Companion.names
+    override var searchAll = false
 
     override fun buildFrom(filter: ObjectFilter<WVcsRootEntry>, context: Any?): ObjectFilter<FVcsRootEntryContainer> {
         return RealObjectFilter {obj ->
             val vcss = if (includeInherited) obj.vcsRootEntries
                        else obj.ownVcsRootEntries
-            vcss.any {filter.accepts(it)}
+            elementSelector().validate(vcss, filter)
         }
     }
 }
@@ -333,33 +358,38 @@ data class RulesFilter(
 data class DependencyFilter(
     override val condition: ConditionAST<SuperDependency>
 ) : ConditionFilter<FDependencyContainer, SuperDependency>(),
-    MWithInheritedContainer
+    MWithInheritedContainer,
+    MAllContainer
 {
     companion object : Names("dependency")
 
     override val names = Companion.names
 
     override var includeInherited = false
+    override var searchAll = false
 
     override fun buildFrom(filter: ObjectFilter<SuperDependency>, context: Any?): ObjectFilter<FDependencyContainer> {
         return RealObjectFilter {obj ->
             val dependencies = if (includeInherited) obj.dependencies
                                else obj.ownDependencies
-            dependencies.any {filter.accepts(it)}
+            elementSelector().validate(dependencies, filter)
         }
     }
 }
 
 data class ArtifactFilter(
     override val condition: ConditionAST<WArtifactDependency>
-) : ConditionFilter<SuperDependency, WArtifactDependency>()
+) : ConditionFilter<SuperDependency, WArtifactDependency>(),
+    MAllContainer
 {
     companion object : Names("artifact")
     override val names = Companion.names
 
+    override var searchAll = false
+
     override fun buildFrom(filter: ObjectFilter<WArtifactDependency>, context: Any?): ObjectFilter<SuperDependency> {
         return RealObjectFilter {obj ->
-            obj.artifactDependencies.any {filter.accepts(it)}
+            elementSelector().validate(obj.artifactDependencies, filter)
         }
     }
 }
@@ -414,10 +444,12 @@ data class OptionFilter(
     override val condition: ConditionAST<WParam>
 ) : ConditionFilter<FOptionContainer, WParam>(),
     MWithInheritedContainer,
-    MResolvedContainer
+    MResolvedContainer,
+    MAllContainer
 {
     override var includeInherited: Boolean = false
     override var searchResolved = false
+    override var searchAll = false
 
     companion object : Names("option")
 
@@ -425,14 +457,11 @@ data class OptionFilter(
 
     override fun buildFrom(filter: ObjectFilter<WParam>, context: Any?): ObjectFilter<FOptionContainer> {
         return RealObjectFilter {obj ->
-            val options = if (includeInherited) obj.options
-                          else obj.ownOptions
-
-            if (searchResolved) {
-                options.any { opt -> filter.accepts(opt.resolve()) }
-            } else {
-                options.any {opt -> filter.accepts(opt.toParam())}
+            val options = (if (includeInherited) obj.options else obj.ownOptions).map {
+                if (searchResolved) it.resolve() else it.toParam()
             }
+
+            elementSelector().validate(options, filter)
         }
     }
 }

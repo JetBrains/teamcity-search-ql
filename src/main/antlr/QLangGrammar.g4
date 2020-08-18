@@ -14,8 +14,8 @@ not: NOT ;
 filterKeyword : PROJECT | TEMPLATE | BUILD_CONFIGURATION | VCS_ROOT
                  | PARENT | TRIGGER | STEP | FEATURE | TYPE | PARAM | VAL
                  | ENABLED | ANCESTOR | RULES | DEPENDENCY
-                 | ARTIFACT | SNAPSHOT | ALL | VCS_ENTRY | REV_RULE | CLEAN
-                 | OPTION
+                 | ARTIFACT | SNAPSHOT | VCS_ENTRY | REV_RULE | CLEAN
+                 | OPTION | RESOLVED | ALL | WITH_INHERITED
                  ;
 identOrString : IDENT | STRING | filterKeyword;
 
@@ -129,9 +129,12 @@ anyStringFilter : ANY_STRING ;
 
 filterModifier : withInheritedModifier
                | resolvedModifier
+               | allModifier
                ;
+
 modifierList : '[' filterModifier (',' filterModifier)*? ']' ;
 
 
 withInheritedModifier : WITH_INHERITED ;
 resolvedModifier : RESOLVED ;
+allModifier : ALL ;

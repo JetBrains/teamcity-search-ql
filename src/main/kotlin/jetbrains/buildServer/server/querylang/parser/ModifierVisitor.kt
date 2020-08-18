@@ -19,4 +19,8 @@ class ModifierVisitor(val filter: Filter<*>) : QLangGrammarBaseVisitor<FilterMod
     override fun visitResolvedModifier(ctx: QLangGrammarParser.ResolvedModifierContext?): FilterModifier<*> {
         return ResolvedFilterModifier().applyAndCheck()
     }
+
+    override fun visitAllModifier(ctx: QLangGrammarParser.AllModifierContext?): FilterModifier<*> {
+        return AllFilterModifier().applyAndCheck()
+    }
 }

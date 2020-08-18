@@ -428,4 +428,10 @@ public interface QLangGrammarVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitResolvedModifier(QLangGrammarParser.ResolvedModifierContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link QLangGrammarParser#allModifier}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitAllModifier(QLangGrammarParser.AllModifierContext ctx);
 }

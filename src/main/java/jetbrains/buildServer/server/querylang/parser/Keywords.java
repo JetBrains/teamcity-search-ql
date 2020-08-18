@@ -26,8 +26,8 @@ public class Keywords extends Lexer {
 		TRIGGER=7, STEP=8, FEATURE=9, TYPE=10, PARAM=11, VAL=12, ENABLED=13, ANCESTOR=14, 
 		RULES=15, DEPENDENCY=16, ARTIFACT=17, SNAPSHOT=18, WITH_INHERITED=19, 
 		OPTION=20, CLEAN=21, REV_RULE=22, VCS_ENTRY=23, NAME=24, RESOLVED=25, 
-		OR=26, AND=27, NOT=28, STRING=29, IDENT=30, SUFFIXS=31, PREFIXS=32, SUBSTRINGS=33, 
-		ANY_STRING=34, WS=35;
+		ALL=26, OR=27, AND=28, NOT=29, STRING=30, IDENT=31, SUFFIXS=32, PREFIXS=33, 
+		SUBSTRINGS=34, ANY_STRING=35, WS=36;
 	public static String[] channelNames = {
 		"DEFAULT_TOKEN_CHANNEL", "HIDDEN"
 	};
@@ -48,7 +48,8 @@ public class Keywords extends Lexer {
 		return new String[] {
 			null, null, null, null, null, null, null, null, null, null, null, null, 
 			null, null, null, null, null, null, null, null, null, null, null, null, 
-			null, null, "'or'", "'and'", "'not'", null, null, null, null, null, "'*'"
+			null, null, null, "'or'", "'and'", "'not'", null, null, null, null, null, 
+			"'*'"
 		};
 	}
 	private static final String[] _LITERAL_NAMES = makeLiteralNames();
@@ -57,8 +58,8 @@ public class Keywords extends Lexer {
 			null, "PROJECT", "TEMPLATE", "BUILD_CONFIGURATION", "VCS_ROOT", "ID", 
 			"PARENT", "TRIGGER", "STEP", "FEATURE", "TYPE", "PARAM", "VAL", "ENABLED", 
 			"ANCESTOR", "RULES", "DEPENDENCY", "ARTIFACT", "SNAPSHOT", "WITH_INHERITED", 
-			"OPTION", "CLEAN", "REV_RULE", "VCS_ENTRY", "NAME", "RESOLVED", "OR", 
-			"AND", "NOT", "STRING", "IDENT", "SUFFIXS", "PREFIXS", "SUBSTRINGS", 
+			"OPTION", "CLEAN", "REV_RULE", "VCS_ENTRY", "NAME", "RESOLVED", "ALL", 
+			"OR", "AND", "NOT", "STRING", "IDENT", "SUFFIXS", "PREFIXS", "SUBSTRINGS", 
 			"ANY_STRING", "WS"
 		};
 	}
@@ -128,6 +129,7 @@ public class Keywords extends Lexer {
 	        putToKeywords(VcsRootEntryFilter.Companion.getNames(), QLangGrammarParser.VCS_ENTRY);
 	        putToKeywords(NameFilter.Companion.getNames(), QLangGrammarParser.NAME);
 	        putToKeywords(ResolvedFilterModifier.Companion.getNames(), QLangGrammarParser.RESOLVED);
+	        putToKeywords(AllFilterModifier.Companion.getNames(), QLangGrammarParser.ALL);
 	    }
 
 	    private void putToKeywords(List<String> filterNames, Integer tokenType) {
@@ -181,15 +183,15 @@ public class Keywords extends Lexer {
 	}
 
 	public static final String _serializedATN =
-		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\2%g\b\1\4\2\t\2\4\3"+
+		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\2&g\b\1\4\2\t\2\4\3"+
 		"\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4\t\t\t\4\n\t\n\4\13\t\13"+
 		"\4\f\t\f\4\r\t\r\4\16\t\16\4\17\t\17\4\20\t\20\3\2\3\2\3\3\3\3\3\4\3\4"+
 		"\3\5\3\5\5\5*\n\5\3\6\3\6\3\7\3\7\3\7\3\b\3\b\3\b\3\b\3\t\3\t\3\t\3\t"+
 		"\3\n\3\n\3\n\3\n\7\n=\n\n\f\n\16\n@\13\n\3\n\3\n\3\13\3\13\3\13\6\13G"+
 		"\n\13\r\13\16\13H\3\13\3\13\3\f\3\f\3\f\5\fP\n\f\3\r\3\r\5\rT\n\r\3\r"+
 		"\3\r\3\16\3\16\3\16\5\16[\n\16\3\16\3\16\3\17\3\17\3\20\6\20b\n\20\r\20"+
-		"\16\20c\3\20\3\20\2\2\21\3\2\5\2\7\2\t\2\13\2\r\34\17\35\21\36\23\37\25"+
-		" \27!\31\"\33#\35$\37%\3\2\b\3\2\62;\3\2c|\3\2C\\\5\2\13\f\17\17\"\"\5"+
+		"\16\20c\3\20\3\20\2\2\21\3\2\5\2\7\2\t\2\13\2\r\35\17\36\21\37\23 \25"+
+		"!\27\"\31#\33$\35%\37&\3\2\b\3\2\62;\3\2c|\3\2C\\\5\2\13\f\17\17\"\"\5"+
 		"\2\13\f\17\17$$\4\2/\60aa\2k\2\r\3\2\2\2\2\17\3\2\2\2\2\21\3\2\2\2\2\23"+
 		"\3\2\2\2\2\25\3\2\2\2\2\27\3\2\2\2\2\31\3\2\2\2\2\33\3\2\2\2\2\35\3\2"+
 		"\2\2\2\37\3\2\2\2\3!\3\2\2\2\5#\3\2\2\2\7%\3\2\2\2\t)\3\2\2\2\13+\3\2"+

@@ -817,6 +817,18 @@ public class QLangGrammarBaseListener implements QLangGrammarListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitResolvedModifier(QLangGrammarParser.ResolvedModifierContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterAllModifier(QLangGrammarParser.AllModifierContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitAllModifier(QLangGrammarParser.AllModifierContext ctx) { }
 
 	/**
 	 * {@inheritDoc}

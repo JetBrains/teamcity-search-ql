@@ -707,4 +707,14 @@ public interface QLangGrammarListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitResolvedModifier(QLangGrammarParser.ResolvedModifierContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link QLangGrammarParser#allModifier}.
+	 * @param ctx the parse tree
+	 */
+	void enterAllModifier(QLangGrammarParser.AllModifierContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link QLangGrammarParser#allModifier}.
+	 * @param ctx the parse tree
+	 */
+	void exitAllModifier(QLangGrammarParser.AllModifierContext ctx);
 }
