@@ -10,6 +10,7 @@ import jetbrains.buildServer.server.querylang.requests.QueryResult
 import jetbrains.buildServer.serverSide.ProjectManager
 import jetbrains.buildServer.serverSide.ServerListener
 import jetbrains.buildServer.serverSide.TeamCityProperties
+import jetbrains.buildServer.serverSide.executors.ExecutorServices
 import jetbrains.buildServer.util.EventDispatcher
 import jetbrains.buildServer.util.ThreadUtil
 import jetbrains.buildServer.web.openapi.Groupable
@@ -24,24 +25,22 @@ class SearchAdminPage(
     private val pluginDescriptor: PluginDescriptor,
     pagePlaces: PagePlaces,
     projectManager_: ProjectManager,
-    serverDispatcher: EventDispatcher<ServerListener>
+    private val executorServices: ExecutorServices
 ) : AdminPage(
         pagePlaces,
         "search",
         pluginDescriptor.getPluginResourcesPath("search.jsp"),
         "Search"
-    ),
-    ServerListener
+    )
 {
 
     private val TIMELIMIT_PARAM_NAME = "query.lang.timelimit.millis"
     private val DEFAULT_TIMELIMIT: Long = 2000
-    private val executor = Executors.newSingleThreadExecutor()
+
     private val projectManager: ProjectManager = projectManager_
     private val requestClient: RequestClient
     init {
         requestClient = RequestClient(InternalApiQueryHandler(projectManager))
-        serverDispatcher.addListener(this)
         register()
     }
 
@@ -53,6 +52,7 @@ class SearchAdminPage(
         FormUtil.bindFromRequest(request, form)
 
         val bean = SearchAdminBean(form, projectManager)
+        val executor = executorServices.normalExecutorService
 
 
         var task: Future<QueryResult>? = null
@@ -92,11 +92,5 @@ class SearchAdminPage(
     override fun getGroup(): String {
         return Groupable.PROJECT_RELATED_GROUP
     }
-
-    override fun serverShutdown() {
-        ThreadUtil.shutdownGracefully(executor, "Search admin page executor")
-    }
-
-    override fun serverStartup() {}
 
 }

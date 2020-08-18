@@ -59,7 +59,8 @@ class FilterDependencyClientTests : BaseQueryLangTest() {
             ).bind("b5"),
 
             TBuildConf("test6",
-                TADependency("b4", "irotiirtroi", false)
+                TADependency("b4", "irotiirtroi", false),
+                TADependency("b4", "TeamCity-1111.warTeamCity-222.warTeamCity.tar.gzTeamCity.war", false)
             ).bind("b6")
         ).create(true)
         
@@ -122,6 +123,10 @@ class FilterDependencyClientTests : BaseQueryLangTest() {
         .addBCCase(
             "find configuration with dependency(artifact rules *xcv* and snapshot)",
             "b5"
+        )
+        .addBCCase(
+            "find configuration with dependency artifact rules \"TeamCity-1111.warTeamCity-222.warTeamCity.tar.gzTeamCity.war\"",
+            "b6"
         )
         .end()
 
