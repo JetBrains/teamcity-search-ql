@@ -20,13 +20,15 @@ class SearchBuildConfigurationTests : BaseQueryLangTest() {
             ),
             TBuildConf("test1",
                 TOption("abc", "bcd"),
-                TParam("path", "abccaba")
+                TParam("path", "abccaba"),
+                TOption("op1", "%path%")
             ).bind("b1"),
             TBuildConf("test2",
                 TParam("path", "abacaba"),
                 TTrigger("vcs", Pair("asdcacd", "kjkkkk")),
                 TStep("steptype11", Pair("asdfwqe", "dffd")),
-                TFeature("feature11", Pair("qweqfhsdf", "xzxc"))
+                TFeature("feature11", Pair("qweqfhsdf", "xzxc")),
+                TTrigger("sch", Pair("resolvedParam1", "root/user/%path%"))
             ).bind("b2"),
             TBuildConf("buildConfiguration1").bind("b3")
         ).create()
@@ -52,6 +54,22 @@ class SearchBuildConfigurationTests : BaseQueryLangTest() {
         )
         .addBCCase("find configuration with name test1",
         "b1"
+        )
+        .addBCCase(
+            """find configuration with trigger param[resolved] * = *"/abacaba" """,
+            "b2"
+        )
+        .addBCCase(
+            """find configuration with trigger param * = *"%path%" """,
+            "b2"
+        )
+        .addBCCase(
+            "find configuration with option[resolved] * = abccaba",
+            "b1"
+        )
+        .addBCCase(
+            "find configuration with option * = \"%path%\" ",
+            "b1"
         )
         .end()
 

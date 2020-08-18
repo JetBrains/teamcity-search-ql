@@ -223,7 +223,7 @@ class CompletionManager(
         return SimpleStringFinder(this, isSystemAdminOnly)
     }
 
-    fun getParamFinder(isSystemAdminOnly: Boolean, isValueSystemAdminOnly: Boolean = false): ParameterValueFinder {
+    fun getParamFinder(isSystemAdminOnly: Boolean, isValueSystemAdminOnly: Boolean = true): ParameterValueFinder {
         return ParameterValueFinder(this, isSystemAdminOnly, isValueSystemAdminOnly)
     }
 }

@@ -47,8 +47,8 @@ interface FTemplateContainer {
 }
 
 interface FParamContainer {
-    val ownParams: Map<String, String>
-    val params: Map<String, String>
+    val ownParams: List<WResolvableParam>
+    val params: List<WResolvableParam>
 }
 
 interface FEnabledContainer
@@ -68,8 +68,8 @@ interface FDependencyContainer {
 }
 
 interface FOptionContainer {
-    val options: Collection<Option<Any>>
-    val ownOptions: Collection<Option<Any>>
+    val options: List<WResolvableParam>
+    val ownOptions: List<WResolvableParam>
 
     fun getOption(opt: Option<Any>) : Any
 }
@@ -79,11 +79,11 @@ interface FTypeContainer {
 }
 
 interface FRulesContainer {
-    val rules: String
+    val rules: ResolvableString
 }
 
 interface FValueContainer {
-    val values: List<String>
+    val values: List<ResolvableString>
 }
 
 interface FNameContainer {

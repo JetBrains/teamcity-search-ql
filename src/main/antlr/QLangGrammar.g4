@@ -127,8 +127,11 @@ stringSubstringFilter : SUBSTRINGS ;
 anyStringFilter : ANY_STRING ;
 
 
-filterModifier : allModifier ;
+filterModifier : allModifier
+               | resolvedModifier
+               ;
 modifierList : '[' filterModifier (',' filterModifier)*? ']' ;
 
 
 allModifier : ALL ;
+resolvedModifier : RESOLVED ;

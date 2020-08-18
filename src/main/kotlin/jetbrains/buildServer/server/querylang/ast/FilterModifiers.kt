@@ -13,3 +13,15 @@ data class AllFilterModifier(private val placeholder: String = "") : FilterModif
 
     override val names = Companion.names
 }
+
+data class ResolvedFilterModifier(private val placeholder: String = "") : FilterModifier {
+    companion object : FilterClasses(
+        listOf("resolved"),
+        ParameterFilter::class.java.connect { it.searchResolved = true },
+        OptionFilter::class.java.connect { it.searchResolved = true },
+        ValueFilter::class.java.connect { it.searchResolved = true },
+        RulesFilter::class.java.connect { it.searchResolved = true }
+    )
+
+    override val names = Companion.names
+}

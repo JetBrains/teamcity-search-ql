@@ -16,8 +16,10 @@ class SearchVcsRootTests : BaseQueryLangTest() {
 
         TProject(
             "BaseProject",
+            TParam("param11", "qwerty"),
             TVcsRoot("vcs1", "git",
-                TParam("param1", "abc")
+                TParam("param1", "abc"),
+                TParam("param2", "%param11%")
             ).bind("v1"),
 
             TVcsRoot("vcs2", "git",
@@ -42,6 +44,17 @@ class SearchVcsRootTests : BaseQueryLangTest() {
             "find vcsRoot with name vcs1",
             "v1"
         )
+        .addVcsCase(
+            "find vcsRoot with param[resolved] * = qwerty",
+            "v1"
+        )
+        .addVcsCase(
+            """find vcsRoot with param[resolved] * = "%param11%" """
+        )
+        .addVcsCase(
+            """find vcsRoot with param * = "%param11%" """,
+            "v1"
+        )
         .end()
 
     @DataProvider(name = "compl")
@@ -56,7 +69,7 @@ class SearchVcsRootTests : BaseQueryLangTest() {
         )
         .addComplCase(
             "find vcsRoot with param pa",
-            "param1"
+            "param1", "param2"
         )
         .addComplCase(
             "find vcsRoot with param param1=",

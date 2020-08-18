@@ -38,6 +38,7 @@ import java.util.*;
         putToKeywords(RevRuleFilter.Companion.getNames(), QLangGrammarParser.REV_RULE);
         putToKeywords(VcsRootEntryFilter.Companion.getNames(), QLangGrammarParser.VCS_ENTRY);
         putToKeywords(NameFilter.Companion.getNames(), QLangGrammarParser.NAME);
+        putToKeywords(ResolvedFilterModifier.Companion.getNames(), QLangGrammarParser.RESOLVED);
     }
 
     private void putToKeywords(List<String> filterNames, Integer tokenType) {
@@ -51,7 +52,7 @@ tokens {
        PROJECT, TEMPLATE, BUILD_CONFIGURATION, VCS_ROOT,
        ID, PARENT, TRIGGER, STEP, FEATURE, TYPE, PARAM, VAL,
        ENABLED, ANCESTOR, RULES, DEPENDENCY, ARTIFACT, SNAPSHOT,
-       ALL, OPTION, CLEAN, REV_RULE, VCS_ENTRY, NAME
+       ALL, OPTION, CLEAN, REV_RULE, VCS_ENTRY, NAME, RESOLVED
 }
 
 fragment DIGIT: [0-9] ;

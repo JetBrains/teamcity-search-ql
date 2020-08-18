@@ -1,6 +1,7 @@
 package jetbrains.buildServer.server.querylang.ast.wrappers
 
 import jetbrains.buildServer.buildTriggers.BuildTriggerDescriptor
+import jetbrains.buildServer.parameters.ValueResolver
 import jetbrains.buildServer.serverSide.BuildRunnerDescriptor
 import jetbrains.buildServer.serverSide.ParametersDescriptor
 import jetbrains.buildServer.serverSide.SBuildFeatureDescriptor
@@ -13,33 +14,37 @@ abstract class WParametersDescriptor(
     FTypeContainer,
     FValueContainer
 {
-    override val params: Map<String, String>
-        get() = obj.parameters
+    abstract val resolver: ValueResolver
+    override val params: List<WResolvableParam>
+        get() = obj.parameters.map { (a, b) -> WResolvableParam(a, b, resolver) }
 
-    override val ownParams: Map<String, String>
+    override val ownParams: List<WResolvableParam>
         get() = params
 
     override val type: String
         get() = obj.type
 
-    override val values: List<String>
-        get() = params.values.toList()
+    override val values: List<ResolvableString>
+        get() = params.map { it.toValue() }
 }
 
-fun BuildTriggerDescriptor.wrap() = WTrigger(this)
+fun BuildTriggerDescriptor.wrap(resolver: ValueResolver) = WTrigger(this, resolver)
 
-class WTrigger(strigger: BuildTriggerDescriptor) : WParametersDescriptor(strigger)
+class WTrigger(strigger: BuildTriggerDescriptor, override val resolver: ValueResolver) : WParametersDescriptor(strigger)
 
-fun BuildRunnerDescriptor.wrap() = WStep(this)
+fun BuildRunnerDescriptor.wrap(resolver: ValueResolver) = WStep(this, resolver)
 
-class WStep(sstep: BuildRunnerDescriptor) : WParametersDescriptor(sstep)
+class WStep(sstep: BuildRunnerDescriptor, override val resolver: ValueResolver) : WParametersDescriptor(sstep)
 
-fun SBuildFeatureDescriptor.wrap() = WBuildTypeFeature(this)
+fun SBuildFeatureDescriptor.wrap(resolver: ValueResolver) = WBuildTypeFeature(this, resolver)
 
-fun SProjectFeatureDescriptor.wrap() = WProjectFeature(this)
+fun SProjectFeatureDescriptor.wrap(resolver: ValueResolver) = WProjectFeature(this, resolver)
 
-abstract class WFeature(paramDescriptor: ParametersDescriptor) : WParametersDescriptor(paramDescriptor)
+abstract class WFeature(
+    paramDescriptor: ParametersDescriptor,
+    override val resolver: ValueResolver
+) : WParametersDescriptor(paramDescriptor)
 
-class WBuildTypeFeature(sfeature: SBuildFeatureDescriptor) : WFeature(sfeature)
+class WBuildTypeFeature(sfeature: SBuildFeatureDescriptor, resolver: ValueResolver) : WFeature(sfeature, resolver)
 
-class WProjectFeature(sfeature: SProjectFeatureDescriptor) : WFeature(sfeature)
+class WProjectFeature(sfeature: SProjectFeatureDescriptor, resolver: ValueResolver) : WFeature(sfeature, resolver)

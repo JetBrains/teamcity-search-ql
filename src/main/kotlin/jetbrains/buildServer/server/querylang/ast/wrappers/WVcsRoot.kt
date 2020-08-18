@@ -1,12 +1,13 @@
 package jetbrains.buildServer.server.querylang.ast.wrappers
 
+import jetbrains.buildServer.parameters.ValueResolver
 import jetbrains.buildServer.vcs.SVcsRoot
 import jetbrains.buildServer.vcs.VcsRootEntry
 import jetbrains.buildServer.vcs.VcsRootInstanceEntry
 
-fun SVcsRoot.wrap() = WVcsRoot(this)
+fun SVcsRoot.wrap(resolver: ValueResolver) = WVcsRoot(this, resolver)
 
-abstract class AbstractWVcsRoot() :
+abstract class AbstractWVcsRoot :
     FIdContainer,
     FProjectContainer,
     FParentContainer,
@@ -16,6 +17,7 @@ abstract class AbstractWVcsRoot() :
     FNameContainer
 {
     abstract val svcsRoot: SVcsRoot
+    abstract val resolver: ValueResolver
 
     override val id: String
         get() = svcsRoot.externalId
@@ -26,48 +28,54 @@ abstract class AbstractWVcsRoot() :
     override val parent: WProject?
         get() = svcsRoot.project.wrap()
 
-    override val ownParams: Map<String, String>
-        get() = svcsRoot.properties
+    override val ownParams: List<WResolvableParam>
+        get() = svcsRoot.properties.map {(a, b) -> WResolvableParam(a, b, resolver)}
 
-    override val params: Map<String, String>
+    override val params: List<WResolvableParam>
         get() = ownParams
 
     override val type: String
         get() = svcsRoot.vcsName
 
-    override val values: List<String>
-        get() = ownParams.values.toList()
+    override val values: List<ResolvableString>
+        get() = ownParams.map {ResolvableString(it.value, resolver)}
 
     override val name: String
         get() = svcsRoot.name
 }
 
-class WVcsRoot(override val svcsRoot: SVcsRoot) : AbstractWVcsRoot(), TopLevelObject
+class WVcsRoot(
+    override val svcsRoot: SVcsRoot,
+    override val resolver: ValueResolver
+) : AbstractWVcsRoot(), TopLevelObject
 
 abstract class WVcsRootEntry : AbstractWVcsRoot(), FRulesContainer {
-    abstract override val rules: String
+    abstract override val rules: ResolvableString
     abstract override val svcsRoot: SVcsRoot
 }
 
-fun VcsRootEntry.wrap() = MyVcsRootEntry(this)
+fun VcsRootEntry.wrap(resolver: ValueResolver) = MyVcsRootEntry(this, resolver)
 
-class MyVcsRootEntry(val svcsEntry: VcsRootEntry): WVcsRootEntry() {
+class MyVcsRootEntry(val svcsEntry: VcsRootEntry, override val resolver: ValueResolver): WVcsRootEntry() {
     val internalVcsRoot: SVcsRoot by lazy {
         svcsEntry.vcsRoot as? SVcsRoot ?: throw IllegalStateException("VcsRootEntry.vcsRoot should be SVcsRoot")
     }
 
-    override val rules: String
-        get() = svcsEntry.checkoutRules.asString
+    override val rules: ResolvableString
+        get() = ResolvableString(svcsEntry.checkoutRules.asString, resolver)
 
     override val svcsRoot: SVcsRoot
         get() = internalVcsRoot
 }
 
-fun VcsRootInstanceEntry.wrap() = MyVcsRootInstanceEntry(this)
+fun VcsRootInstanceEntry.wrap(resolver: ValueResolver) = MyVcsRootInstanceEntry(this, resolver)
 
-class MyVcsRootInstanceEntry(val svcsInstanceEntry: VcsRootInstanceEntry): WVcsRootEntry() {
-    override val rules: String
-        get() = svcsInstanceEntry.checkoutRules.asString
+class MyVcsRootInstanceEntry(
+    val svcsInstanceEntry: VcsRootInstanceEntry,
+    override val resolver: ValueResolver
+): WVcsRootEntry() {
+    override val rules: ResolvableString
+        get() = ResolvableString(svcsInstanceEntry.checkoutRules.asString, resolver)
 
     override val svcsRoot: SVcsRoot
         get() = svcsInstanceEntry.vcsRoot.parent

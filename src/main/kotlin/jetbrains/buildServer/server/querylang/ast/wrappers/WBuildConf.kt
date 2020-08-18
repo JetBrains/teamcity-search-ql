@@ -1,5 +1,6 @@
 package jetbrains.buildServer.server.querylang.ast.wrappers
 
+import jetbrains.buildServer.parameters.ValueResolver
 import jetbrains.buildServer.serverSide.BuildTypeEx
 import jetbrains.buildServer.serverSide.SBuildType
 import jetbrains.buildServer.util.Option
@@ -27,6 +28,9 @@ abstract class AbstractWBuildConf :
         sbuildConf as? BuildTypeEx ?: throw IllegalStateException("Should be BuildTypeEx")
     }
 
+    val resolver: ValueResolver
+        get() = sbuildConf.valueResolver
+
     override val id: String
         get() = sbuildConf.externalId
 
@@ -37,22 +41,22 @@ abstract class AbstractWBuildConf :
         get() = sbuildConf.project.wrap()
 
     override val ownTriggers: List<WTrigger>
-        get() = buildTypeEx.settings.ownBuildTriggers.map { it.wrap() }
+        get() = buildTypeEx.settings.ownBuildTriggers.map { it.wrap(resolver) }
 
     override val triggers: List<WTrigger>
-        get() = sbuildConf.buildTriggersCollection.map { it.wrap() }
+        get() = sbuildConf.buildTriggersCollection.map { it.wrap(resolver) }
 
     override val ownSteps: List<WStep>
-        get() = buildTypeEx.settings.ownBuildRunners.map {it.wrap()}
+        get() = buildTypeEx.settings.ownBuildRunners.map {it.wrap(resolver)}
 
     override val steps: List<WStep>
-        get() = sbuildConf.buildRunners.map { it.wrap() }
+        get() = sbuildConf.buildRunners.map { it.wrap(resolver) }
 
     override val features: List<WFeature>
-        get() = sbuildConf.buildFeatures.map {it.wrap()}
+        get() = sbuildConf.buildFeatures.map {it.wrap(resolver)}
 
     override val ownFeatures: List<WFeature>
-        get() = buildTypeEx.settings.ownBuildFeatures.map {it.wrap()}
+        get() = buildTypeEx.settings.ownBuildFeatures.map {it.wrap(resolver)}
 
     override val templates: List<WTemplate>
         get() = sbuildConf.templates.map {it.wrap()}
@@ -64,37 +68,49 @@ abstract class AbstractWBuildConf :
         return  sbuildConf.isEnabled(obj.obj.id)
     }
 
-    override val ownParams: Map<String, String>
-        get() = sbuildConf.ownParameters
+    override val ownParams: List<WResolvableParam>
+        get() = sbuildConf.ownParameters.map{(a, b) ->
+            WResolvableParam(a, b, sbuildConf.valueResolver)
+        }
 
-    override val params: Map<String, String>
-        get() = sbuildConf.parameters
+    override val params: List<WResolvableParam>
+        get() = sbuildConf.parameters.map {(a, b) ->
+            WResolvableParam(a, b, sbuildConf.valueResolver)
+        }
 
-    override val options: Collection<Option<Any>>
-        get() = sbuildConf.options
+    override val options: List<WResolvableParam>
+        get() = sbuildConf.options.map {WResolvableParam(it.key, getOption(it).toString(), resolver)}
 
-    override val ownOptions: Collection<Option<Any>>
-        get() = sbuildConf.ownOptions
+    override val ownOptions: List<WResolvableParam>
+        get() = sbuildConf.ownOptions.map {WResolvableParam(it.key, getOption(it).toString(), resolver)}
 
     override fun getOption(opt: Option<Any>): Any {
         return sbuildConf.getOption(opt)
     }
 
     override val vcsRootEntries: List<WVcsRootEntry>
-        get() = sbuildConf.vcsRootEntries.map {it.wrap()}
+        get() = sbuildConf.vcsRootEntries.map {it.wrap(resolver)}
 
     override val ownVcsRootEntries: List<WVcsRootEntry>
-        get() = sbuildConf.ownVcsRootEntries.map {it.wrap()}
+        get() = sbuildConf.ownVcsRootEntries.map {it.wrap(resolver)}
 
     override val dependencies: List<SuperDependency>
-        get() = (sbuildConf.dependencies.map {it.wrap()} + sbuildConf.artifactDependencies.map {it.wrap()}).toSuperDependencies()
+        get() = (
+                sbuildConf.dependencies.mapNotNull {dep -> dep.dependOn?.let{dep.wrap(it, resolver)}}
+                + sbuildConf.artifactDependencies.mapNotNull {dep -> dep.sourceBuildType?.let{dep.wrap(it, resolver)}}
+                ).toSuperDependencies()
 
     override val ownDependencies: List<SuperDependency>
-        get() = (sbuildConf.ownDependencies.map {it.wrap()} + buildTypeEx.settings.ownArtifactDependencies.map {it.wrap()}).toSuperDependencies()
+        get() = (
+                sbuildConf.ownDependencies.mapNotNull {dep -> dep.dependOn?.let{dep.wrap(it, resolver)}}
+                + buildTypeEx.settings.ownArtifactDependencies.mapNotNull {
+                        dep -> dep.sourceBuildType?.let{dep.wrap(it, resolver)
+                }}
+                ).toSuperDependencies()
 
-    override val values: List<String>
-        get() = ownParams.values +
-                ownOptions.map {getOption(it).toString()} +
+    override val values: List<ResolvableString>
+        get() = ownParams.map {it.toValue()} +
+                ownOptions.map {it.toValue()} +
                 ownTriggers.flatMap { it.values } +
                 ownSteps.flatMap { it.values } +
                 ownFeatures.flatMap { it.values }

@@ -1,5 +1,6 @@
 package jetbrains.buildServer.server.querylang.ast.wrappers
 
+import jetbrains.buildServer.parameters.ValueResolver
 import jetbrains.buildServer.serverSide.SBuildType
 import jetbrains.buildServer.serverSide.artifacts.SArtifactDependency
 import jetbrains.buildServer.serverSide.dependency.Dependency
@@ -16,27 +17,32 @@ sealed class WDependency {
     abstract val dependsOn: WBuildConf?
 }
 
-fun SArtifactDependency.wrap() = WArtifactDependency(this)
+fun SArtifactDependency.wrap(sbuildConf: SBuildType, resolver: ValueResolver) =
+    WArtifactDependency(this, sbuildConf, resolver)
 
-class WArtifactDependency(val adep: SArtifactDependency): WDependency(), FRulesContainer {
-    override val dependsOn: WBuildConf?
-        get() = adep.sourceBuildType?.wrap()
+class WArtifactDependency(
+    val adep: SArtifactDependency,
+    val sbuildConf: SBuildType,
+    val resolver: ValueResolver
+): WDependency(), FRulesContainer {
+    override val dependsOn: WBuildConf
+        get() = sbuildConf.wrap()
 
-    override val rules: String
-        get() = adep.sourcePaths
+    override val rules: ResolvableString
+        get() = ResolvableString(adep.sourcePaths, resolver)
 }
 
-fun Dependency.wrap() = WSnapshotDependency(this)
+fun Dependency.wrap(sbuildConf: SBuildType, resolver: ValueResolver) = WSnapshotDependency(this, sbuildConf, resolver)
 
-class WSnapshotDependency(val sdep: Dependency): WDependency(), FOptionContainer{
-    override val dependsOn: WBuildConf?
-        get() = sdep.dependOn?.wrap()
+class WSnapshotDependency(val sdep: Dependency, val sbuildConf: SBuildType, val resolver: ValueResolver): WDependency(), FOptionContainer{
+    override val dependsOn: WBuildConf
+        get() = sbuildConf.wrap()
 
-    override val options: Collection<Option<Any>>
-        get() = sdep.options
+    override val options: List<WResolvableParam>
+        get() = sdep.options.map { WResolvableParam(it.key, getOption(it).toString(), resolver) }
 
-    override val ownOptions: Collection<Option<Any>>
-        get() = sdep.ownOptions
+    override val ownOptions: List<WResolvableParam>
+        get() = sdep.ownOptions.map { WResolvableParam(it.key, getOption(it).toString(), resolver) }
 
     override fun getOption(opt: Option<Any>): Any {
         return sdep.getOption(opt)

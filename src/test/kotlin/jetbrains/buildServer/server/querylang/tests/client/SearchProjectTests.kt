@@ -22,7 +22,8 @@ class SearchProjectTests : BaseQueryLangTest() {
                 TParam("param1", "abc"),
                 TParam("refpath2", "abacaba%full-path%dababa"),
                 TProject("Project2",
-                    TParam("param2", "def")
+                    TParam("param2", "def"),
+                    TParam("param3", "%param1%")
                 ).bind("p2")
             ).bind("p1"),
 
@@ -69,6 +70,14 @@ class SearchProjectTests : BaseQueryLangTest() {
             "find project with name BaseProject",
             "p0"
         )
+        .addProjectCase(
+            "find project with param[resolved] * = abc",
+            "p1", "p2"
+        )
+        .addProjectCase(
+            "find project with param * = abc",
+            "p1"
+        )
         .end()
 
     @DataProvider(name = "compl")
@@ -107,7 +116,7 @@ class SearchProjectTests : BaseQueryLangTest() {
         )
         .addComplCase(
             "find project with param par",
-            "param1", "param2"
+            "param1", "param2", "param3"
         )
         .addComplCase(
             "find project with param param1=a",

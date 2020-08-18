@@ -25,8 +25,9 @@ public class Keywords extends Lexer {
 		PROJECT=1, TEMPLATE=2, BUILD_CONFIGURATION=3, VCS_ROOT=4, ID=5, PARENT=6, 
 		TRIGGER=7, STEP=8, FEATURE=9, TYPE=10, PARAM=11, VAL=12, ENABLED=13, ANCESTOR=14, 
 		RULES=15, DEPENDENCY=16, ARTIFACT=17, SNAPSHOT=18, ALL=19, OPTION=20, 
-		CLEAN=21, REV_RULE=22, VCS_ENTRY=23, NAME=24, OR=25, AND=26, NOT=27, STRING=28, 
-		IDENT=29, SUFFIXS=30, PREFIXS=31, SUBSTRINGS=32, ANY_STRING=33, WS=34;
+		CLEAN=21, REV_RULE=22, VCS_ENTRY=23, NAME=24, RESOLVED=25, OR=26, AND=27, 
+		NOT=28, STRING=29, IDENT=30, SUFFIXS=31, PREFIXS=32, SUBSTRINGS=33, ANY_STRING=34, 
+		WS=35;
 	public static String[] channelNames = {
 		"DEFAULT_TOKEN_CHANNEL", "HIDDEN"
 	};
@@ -47,7 +48,7 @@ public class Keywords extends Lexer {
 		return new String[] {
 			null, null, null, null, null, null, null, null, null, null, null, null, 
 			null, null, null, null, null, null, null, null, null, null, null, null, 
-			null, "'or'", "'and'", "'not'", null, null, null, null, null, "'*'"
+			null, null, "'or'", "'and'", "'not'", null, null, null, null, null, "'*'"
 		};
 	}
 	private static final String[] _LITERAL_NAMES = makeLiteralNames();
@@ -56,8 +57,9 @@ public class Keywords extends Lexer {
 			null, "PROJECT", "TEMPLATE", "BUILD_CONFIGURATION", "VCS_ROOT", "ID", 
 			"PARENT", "TRIGGER", "STEP", "FEATURE", "TYPE", "PARAM", "VAL", "ENABLED", 
 			"ANCESTOR", "RULES", "DEPENDENCY", "ARTIFACT", "SNAPSHOT", "ALL", "OPTION", 
-			"CLEAN", "REV_RULE", "VCS_ENTRY", "NAME", "OR", "AND", "NOT", "STRING", 
-			"IDENT", "SUFFIXS", "PREFIXS", "SUBSTRINGS", "ANY_STRING", "WS"
+			"CLEAN", "REV_RULE", "VCS_ENTRY", "NAME", "RESOLVED", "OR", "AND", "NOT", 
+			"STRING", "IDENT", "SUFFIXS", "PREFIXS", "SUBSTRINGS", "ANY_STRING", 
+			"WS"
 		};
 	}
 	private static final String[] _SYMBOLIC_NAMES = makeSymbolicNames();
@@ -125,6 +127,7 @@ public class Keywords extends Lexer {
 	        putToKeywords(RevRuleFilter.Companion.getNames(), QLangGrammarParser.REV_RULE);
 	        putToKeywords(VcsRootEntryFilter.Companion.getNames(), QLangGrammarParser.VCS_ENTRY);
 	        putToKeywords(NameFilter.Companion.getNames(), QLangGrammarParser.NAME);
+	        putToKeywords(ResolvedFilterModifier.Companion.getNames(), QLangGrammarParser.RESOLVED);
 	    }
 
 	    private void putToKeywords(List<String> filterNames, Integer tokenType) {
@@ -178,33 +181,33 @@ public class Keywords extends Lexer {
 	}
 
 	public static final String _serializedATN =
-		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\2$g\b\1\4\2\t\2\4\3"+
+		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\2%g\b\1\4\2\t\2\4\3"+
 		"\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4\t\t\t\4\n\t\n\4\13\t\13"+
 		"\4\f\t\f\4\r\t\r\4\16\t\16\4\17\t\17\4\20\t\20\3\2\3\2\3\3\3\3\3\4\3\4"+
 		"\3\5\3\5\5\5*\n\5\3\6\3\6\3\7\3\7\3\7\3\b\3\b\3\b\3\b\3\t\3\t\3\t\3\t"+
 		"\3\n\3\n\3\n\3\n\7\n=\n\n\f\n\16\n@\13\n\3\n\3\n\3\13\3\13\3\13\6\13G"+
 		"\n\13\r\13\16\13H\3\13\3\13\3\f\3\f\3\f\5\fP\n\f\3\r\3\r\5\rT\n\r\3\r"+
 		"\3\r\3\16\3\16\3\16\5\16[\n\16\3\16\3\16\3\17\3\17\3\20\6\20b\n\20\r\20"+
-		"\16\20c\3\20\3\20\2\2\21\3\2\5\2\7\2\t\2\13\2\r\33\17\34\21\35\23\36\25"+
-		"\37\27 \31!\33\"\35#\37$\3\2\b\3\2\62;\3\2c|\3\2C\\\5\2\13\f\17\17\"\""+
-		"\5\2\13\f\17\17$$\4\2/\60aa\2k\2\r\3\2\2\2\2\17\3\2\2\2\2\21\3\2\2\2\2"+
-		"\23\3\2\2\2\2\25\3\2\2\2\2\27\3\2\2\2\2\31\3\2\2\2\2\33\3\2\2\2\2\35\3"+
-		"\2\2\2\2\37\3\2\2\2\3!\3\2\2\2\5#\3\2\2\2\7%\3\2\2\2\t)\3\2\2\2\13+\3"+
-		"\2\2\2\r-\3\2\2\2\17\60\3\2\2\2\21\64\3\2\2\2\238\3\2\2\2\25F\3\2\2\2"+
-		"\27L\3\2\2\2\31S\3\2\2\2\33W\3\2\2\2\35^\3\2\2\2\37a\3\2\2\2!\"\t\2\2"+
-		"\2\"\4\3\2\2\2#$\t\3\2\2$\6\3\2\2\2%&\t\4\2\2&\b\3\2\2\2\'*\5\7\4\2(*"+
-		"\5\5\3\2)\'\3\2\2\2)(\3\2\2\2*\n\3\2\2\2+,\t\5\2\2,\f\3\2\2\2-.\7q\2\2"+
-		"./\7t\2\2/\16\3\2\2\2\60\61\7c\2\2\61\62\7p\2\2\62\63\7f\2\2\63\20\3\2"+
-		"\2\2\64\65\7p\2\2\65\66\7q\2\2\66\67\7v\2\2\67\22\3\2\2\28>\7$\2\29=\n"+
-		"\6\2\2:;\7$\2\2;=\7$\2\2<9\3\2\2\2<:\3\2\2\2=@\3\2\2\2><\3\2\2\2>?\3\2"+
-		"\2\2?A\3\2\2\2@>\3\2\2\2AB\7$\2\2B\24\3\2\2\2CG\5\t\5\2DG\5\3\2\2EG\t"+
-		"\7\2\2FC\3\2\2\2FD\3\2\2\2FE\3\2\2\2GH\3\2\2\2HF\3\2\2\2HI\3\2\2\2IJ\3"+
-		"\2\2\2JK\b\13\2\2K\26\3\2\2\2LO\7,\2\2MP\5\25\13\2NP\5\23\n\2OM\3\2\2"+
-		"\2ON\3\2\2\2P\30\3\2\2\2QT\5\25\13\2RT\5\23\n\2SQ\3\2\2\2SR\3\2\2\2TU"+
-		"\3\2\2\2UV\7,\2\2V\32\3\2\2\2WZ\7,\2\2X[\5\25\13\2Y[\5\23\n\2ZX\3\2\2"+
-		"\2ZY\3\2\2\2[\\\3\2\2\2\\]\7,\2\2]\34\3\2\2\2^_\7,\2\2_\36\3\2\2\2`b\t"+
-		"\5\2\2a`\3\2\2\2bc\3\2\2\2ca\3\2\2\2cd\3\2\2\2de\3\2\2\2ef\b\20\3\2f "+
-		"\3\2\2\2\f\2)<>FHOSZc\4\3\13\2\b\2\2";
+		"\16\20c\3\20\3\20\2\2\21\3\2\5\2\7\2\t\2\13\2\r\34\17\35\21\36\23\37\25"+
+		" \27!\31\"\33#\35$\37%\3\2\b\3\2\62;\3\2c|\3\2C\\\5\2\13\f\17\17\"\"\5"+
+		"\2\13\f\17\17$$\4\2/\60aa\2k\2\r\3\2\2\2\2\17\3\2\2\2\2\21\3\2\2\2\2\23"+
+		"\3\2\2\2\2\25\3\2\2\2\2\27\3\2\2\2\2\31\3\2\2\2\2\33\3\2\2\2\2\35\3\2"+
+		"\2\2\2\37\3\2\2\2\3!\3\2\2\2\5#\3\2\2\2\7%\3\2\2\2\t)\3\2\2\2\13+\3\2"+
+		"\2\2\r-\3\2\2\2\17\60\3\2\2\2\21\64\3\2\2\2\238\3\2\2\2\25F\3\2\2\2\27"+
+		"L\3\2\2\2\31S\3\2\2\2\33W\3\2\2\2\35^\3\2\2\2\37a\3\2\2\2!\"\t\2\2\2\""+
+		"\4\3\2\2\2#$\t\3\2\2$\6\3\2\2\2%&\t\4\2\2&\b\3\2\2\2\'*\5\7\4\2(*\5\5"+
+		"\3\2)\'\3\2\2\2)(\3\2\2\2*\n\3\2\2\2+,\t\5\2\2,\f\3\2\2\2-.\7q\2\2./\7"+
+		"t\2\2/\16\3\2\2\2\60\61\7c\2\2\61\62\7p\2\2\62\63\7f\2\2\63\20\3\2\2\2"+
+		"\64\65\7p\2\2\65\66\7q\2\2\66\67\7v\2\2\67\22\3\2\2\28>\7$\2\29=\n\6\2"+
+		"\2:;\7$\2\2;=\7$\2\2<9\3\2\2\2<:\3\2\2\2=@\3\2\2\2><\3\2\2\2>?\3\2\2\2"+
+		"?A\3\2\2\2@>\3\2\2\2AB\7$\2\2B\24\3\2\2\2CG\5\t\5\2DG\5\3\2\2EG\t\7\2"+
+		"\2FC\3\2\2\2FD\3\2\2\2FE\3\2\2\2GH\3\2\2\2HF\3\2\2\2HI\3\2\2\2IJ\3\2\2"+
+		"\2JK\b\13\2\2K\26\3\2\2\2LO\7,\2\2MP\5\25\13\2NP\5\23\n\2OM\3\2\2\2ON"+
+		"\3\2\2\2P\30\3\2\2\2QT\5\25\13\2RT\5\23\n\2SQ\3\2\2\2SR\3\2\2\2TU\3\2"+
+		"\2\2UV\7,\2\2V\32\3\2\2\2WZ\7,\2\2X[\5\25\13\2Y[\5\23\n\2ZX\3\2\2\2ZY"+
+		"\3\2\2\2[\\\3\2\2\2\\]\7,\2\2]\34\3\2\2\2^_\7,\2\2_\36\3\2\2\2`b\t\5\2"+
+		"\2a`\3\2\2\2bc\3\2\2\2ca\3\2\2\2cd\3\2\2\2de\3\2\2\2ef\b\20\3\2f \3\2"+
+		"\2\2\f\2)<>FHOSZc\4\3\13\2\b\2\2";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {

@@ -13,12 +13,14 @@ class SearchTemplateTests : BaseQueryLangTest() {
         super.setUp()
 
         TProject("BaseProject",
+            TParam("param1", "qwerty"),
             TTemplate("test1",
                 TOption("abc", "bcd"),
                 TParam("path", "abacaba")
             ).bind("b1"),
             TTemplate("test2",
-                TParam("path", "abadaba")
+                TParam("path", "abadaba"),
+                TParam("resolvedParam1", "%param1%")
             ).bind("b2"),
             TTemplate("Template1").bind("b3")
         ).create()
@@ -29,6 +31,18 @@ class SearchTemplateTests : BaseQueryLangTest() {
         .addTempCase(
             "find template with name test1",
             "b1"
+        )
+        .addTempCase(
+            "find template with param[resolved] * = qwerty",
+            "b2"
+        )
+        .addTempCase(
+            """ find template with param * = "%param1%" """,
+            "b2"
+        )
+        .addTempCase(
+            """ find template with val[resolved] qwerty""",
+            "b2"
         )
         .end()
 

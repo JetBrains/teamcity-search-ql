@@ -114,8 +114,8 @@ data class VcsRootTopLevelQuery(override val condition: ConditionAST<WVcsRoot>) 
             if (res.filter !is NoneObjectFilter)
                 myProjectManager.allVcsRoots.filter {
                     checkInterruptionStatus()
-                    res.filter.accepts(it.wrap())}.map {it.wrap()
-                }
+                    res.filter.accepts(it.wrap(it.project.valueResolver))
+                }.map {it.wrap(it.project.valueResolver) }
             else
                 res.objects
         )

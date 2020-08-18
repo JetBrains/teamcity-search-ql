@@ -199,9 +199,15 @@ data class ValueFilter(
     companion object : Names("val")
     override val names = Companion.names
 
+    var searchResolved = false
+
     override fun buildFrom(filter: ObjectFilter<String>, context: Any?): ObjectFilter<FValueContainer> {
         return RealObjectFilter {obj ->
-            obj.values.any {filter.accepts(it)}
+            if (!searchResolved) {
+                obj.values.any { filter.accepts(it.str) }
+            } else {
+                obj.values.any {filter.accepts(it.resolve())}
+            }
         }
     }
 }
@@ -243,13 +249,18 @@ data class ParameterFilter(
     override val names = Companion.names
 
     var includeInherited = false
+    var searchResolved = false
 
     override fun buildFrom(filter: ObjectFilter<WParam>, context: Any?): ObjectFilter<FParamContainer> {
         return RealObjectFilter {obj ->
             val params = if (includeInherited) obj.params
                          else obj.ownParams
 
-            params.any {(a, b) -> filter.accepts(WParam(a, b))}
+            if (!searchResolved) {
+                params.any { filter.accepts(it.toParam()) }
+            } else {
+                params.any { filter.accepts(it.resolve()) }
+            }
         }
     }
 }
@@ -300,9 +311,12 @@ data class RulesFilter(
 
     override val names: List<String> = Companion.names
 
+    var searchResolved = false
+
     override fun buildFrom(filter: ObjectFilter<String>, context: Any?): ObjectFilter<FRulesContainer> {
         return RealObjectFilter {obj ->
-            filter.accepts(obj.rules)
+            if (searchResolved) filter.accepts(obj.rules.resolve())
+            else filter.accepts(obj.rules.str)
         }
     }
 }
@@ -391,6 +405,7 @@ data class OptionFilter(
 ) : ConditionFilter<FOptionContainer, WParam>()
 {
     var includeInherited: Boolean = false
+    var searchResolved = false
 
     companion object : Names("option")
 
@@ -400,7 +415,12 @@ data class OptionFilter(
         return RealObjectFilter {obj ->
             val options = if (includeInherited) obj.options
                           else obj.ownOptions
-            options.any {opt -> filter.accepts(WParam(opt.key, obj.getOption(opt).toString()))}
+
+            if (searchResolved) {
+                options.any { opt -> filter.accepts(opt.resolve()) }
+            } else {
+                options.any {opt -> filter.accepts(opt.toParam())}
+            }
         }
     }
 }

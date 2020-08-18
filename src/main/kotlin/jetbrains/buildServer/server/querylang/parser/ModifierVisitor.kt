@@ -3,6 +3,7 @@ package jetbrains.buildServer.server.querylang.parser
 import jetbrains.buildServer.server.querylang.ast.AllFilterModifier
 import jetbrains.buildServer.server.querylang.ast.Filter
 import jetbrains.buildServer.server.querylang.ast.FilterModifier
+import jetbrains.buildServer.server.querylang.ast.ResolvedFilterModifier
 import org.antlr.v4.runtime.ParserRuleContext
 
 object ModifierVisitor : QLangGrammarBaseVisitor<FilterModifier>() {
@@ -21,5 +22,9 @@ object ModifierVisitor : QLangGrammarBaseVisitor<FilterModifier>() {
 
     override fun visitAllModifier(ctx: QLangGrammarParser.AllModifierContext?): FilterModifier {
         return AllFilterModifier()
+    }
+
+    override fun visitResolvedModifier(ctx: QLangGrammarParser.ResolvedModifierContext?): FilterModifier {
+        return ResolvedFilterModifier()
     }
 }

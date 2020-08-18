@@ -1,5 +1,6 @@
 package jetbrains.buildServer.server.querylang.ast.wrappers
 
+import jetbrains.buildServer.parameters.ValueResolver
 import jetbrains.buildServer.serverSide.*
 
 
@@ -24,6 +25,9 @@ class WProject(
     FValueContainer,
     FNameContainer
 {
+     val resolver: ValueResolver
+        get() = sproject.valueResolver
+
     override val id: String
         get() = sproject.externalId
 
@@ -31,10 +35,10 @@ class WProject(
         get() = sproject.parentProject?.wrap()
 
     override val ownFeatures: List<WFeature>
-        get() = sproject.ownFeatures.map {it.wrap()}
+        get() = sproject.ownFeatures.map {it.wrap(resolver)}
 
     override val features: List<WFeature>
-        get() = sproject.availableFeatures.map {it.wrap()}
+        get() = sproject.availableFeatures.map {it.wrap(resolver)}
 
     override fun isEnabled(obj: FEnabledContainer): Boolean {
         return true
@@ -46,17 +50,17 @@ class WProject(
     override val project: WProject
         get() = sproject.wrap()
 
-    override val ownParams: Map<String, String>
-        get() = sproject.ownParameters
+    override val ownParams: List<WResolvableParam>
+        get() = sproject.ownParameters.map { (a, b) -> WResolvableParam(a, b, sproject.valueResolver) }
 
-    override val params: Map<String, String>
-        get() = sproject.parameters
+    override val params: List<WResolvableParam>
+        get() = sproject.parameters.map { (a, b) -> WResolvableParam(a, b, sproject.valueResolver) }
 
     override val vcsRoots: List<AbstractWVcsRoot>
-        get() = sproject.vcsRoots.map {it.wrap()}
+        get() = sproject.vcsRoots.map {it.wrap(sproject.valueResolver)}
 
-    override val values: List<String>
-        get() = ownFeatures.flatMap { it.values } + ownParams.values
+    override val values: List<ResolvableString>
+        get() = ownFeatures.flatMap { it.values } + ownParams.map {it.toValue()}
 
     override val name: String
         get() = sproject.fullName
