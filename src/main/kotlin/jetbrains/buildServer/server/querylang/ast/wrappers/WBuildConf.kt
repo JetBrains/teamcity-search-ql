@@ -113,7 +113,9 @@ abstract class AbstractWBuildConf :
                 ownOptions.map {it.toValue()} +
                 ownTriggers.flatMap { it.values } +
                 ownSteps.flatMap { it.values } +
-                ownFeatures.flatMap { it.values }
+                ownFeatures.flatMap { it.values } +
+                ownDependencies.flatMap {it.artifactDependencies.map {it.rules}} +
+                ownVcsRootEntries.map { it.rules }
 
     override val name: String
         get() = sbuildConf.name
