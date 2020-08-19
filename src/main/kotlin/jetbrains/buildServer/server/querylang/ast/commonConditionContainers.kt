@@ -1,9 +1,6 @@
 package jetbrains.buildServer.server.querylang.ast
 
-import jetbrains.buildServer.server.querylang.ast.wrappers.FBuildConfContainer
-import jetbrains.buildServer.server.querylang.ast.wrappers.WBuildConf
-import jetbrains.buildServer.server.querylang.ast.wrappers.WProject
-import jetbrains.buildServer.server.querylang.ast.wrappers.wrap
+import jetbrains.buildServer.server.querylang.ast.wrappers.*
 import jetbrains.buildServer.server.querylang.myProjectManager
 import jetbrains.buildServer.serverSide.impl.ProjectEx
 
@@ -40,6 +37,48 @@ interface ProjectConditionContainer : ConditionContainer<WProject> {
             is ParentFilter -> {
                 val (remFilter, projects) = filter.transformedEval()
                 val objs = projects.flatMap { project -> project.projectEx.ownProjects }.mapNotNull { it?.wrap() }
+                return EvalResult(remFilter, objs)
+            }
+        }
+        return null
+    }
+}
+
+interface VcsRootConditionContainer : ConditionContainer<WVcsRoot> {
+    override fun evalFilterInner(filter: Filter<WVcsRoot>): EvalResult<WVcsRoot>? {
+        when(filter) {
+            is IdFilter -> {
+                val (restFilter, ids) = filter.transformedEval()
+                if (restFilter is NoneObjectFilter) {
+                    val vcsRoots = ids.mapNotNull { myProjectManager.findVcsRootByExternalId(it) }.map {it.wrap(it.project.valueResolver)}
+                    return EvalResult(NoneObjectFilter(), vcsRoots)
+                }
+            }
+            is ParentFilter -> {
+                val (remFilter, projects) = filter.transformedEval()
+                val objs = projects.flatMap { project -> project.projectEx.ownVcsRoots }.mapNotNull { it?.wrap(it.project.valueResolver) }
+                return EvalResult(remFilter, objs)
+            }
+        }
+        return null
+    }
+}
+
+interface TemplateConditionContainer : ConditionContainer<WTemplate> {
+    override fun evalFilterInner(filter: Filter<WTemplate>): EvalResult<WTemplate>? {
+        when (filter) {
+            is IdFilter -> {
+                val (restFilter, ids) = filter.transformedEval()
+                if (restFilter is NoneObjectFilter) {
+                    val vcsRoots =
+                        ids.mapNotNull { myProjectManager.findBuildTypeTemplateByExternalId(it) }.map { it.wrap() }
+                    return EvalResult(NoneObjectFilter(), vcsRoots)
+                }
+            }
+            is ParentFilter -> {
+                val (remFilter, projects) = filter.transformedEval()
+                val objs =
+                    projects.flatMap { project -> project.projectEx.ownBuildTypeTemplates }.mapNotNull { it?.wrap() }
                 return EvalResult(remFilter, objs)
             }
         }

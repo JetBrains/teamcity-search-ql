@@ -54,8 +54,8 @@ data class ProjectTopLevelQuery(override val condition: ConditionAST<WProject>):
             if (res.filter !is NoneObjectFilter)
                 myProjectManager.projects.filter {
                     checkInterruptionStatus()
-                    res.filter.accepts(it.wrap())}.map {it.wrap()
-                }
+                    res.filter.accepts(it.wrap())
+                }.map { it.wrap() }
             else
                 res.objects
         )
@@ -84,7 +84,11 @@ data class BuildConfTopLevelQuery(
     }
 }
 
-data class TemplateTopLevelQuery(override val condition: ConditionAST<WTemplate>) : TopLevelQuery<WTemplate>() {
+data class TemplateTopLevelQuery(
+    override val condition: ConditionAST<WTemplate>
+) : TopLevelQuery<WTemplate>(),
+    TemplateConditionContainer
+{
     companion object : Names(*(TemplateFilter.names.toTypedArray()))
 
     override val names = Companion.names
@@ -104,7 +108,11 @@ data class TemplateTopLevelQuery(override val condition: ConditionAST<WTemplate>
     }
 }
 
-data class VcsRootTopLevelQuery(override val condition: ConditionAST<WVcsRoot>) : TopLevelQuery<WVcsRoot>() {
+data class VcsRootTopLevelQuery(
+    override val condition: ConditionAST<WVcsRoot>
+) : TopLevelQuery<WVcsRoot>(),
+    VcsRootConditionContainer
+{
     companion object : Names(*(VcsRootFilter.names.toTypedArray()))
 
     override val names = Companion.names

@@ -10,7 +10,7 @@ data class IdFilter(
     companion object : Names("id")
     override val names = IdFilter.names
 
-    override fun buildFrom(filter:RealObjectFilter<String>) = RealObjectFilter<FIdContainer> { obj ->
+    override fun buildFrom(filter : RealObjectFilter<String>) = RealObjectFilter<FIdContainer> { obj ->
         filter.accepts(obj.id)
     }
 }
@@ -156,6 +156,7 @@ data class FeatureFilter(
 data class TemplateFilter(
     override val condition: ConditionAST<WTemplate>
 ) : ConditionFilter<FTemplateContainer, WTemplate>(),
+    TemplateConditionContainer,
     MAllContainer
 {
     companion object : Names("template")

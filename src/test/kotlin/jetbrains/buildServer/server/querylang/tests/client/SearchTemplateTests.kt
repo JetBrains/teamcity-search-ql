@@ -22,7 +22,11 @@ class SearchTemplateTests : BaseQueryLangTest() {
                 TParam("path", "abadaba"),
                 TParam("resolvedParam1", "%param1%")
             ).bind("b2"),
-            TTemplate("Template1").bind("b3")
+            TTemplate("Template1").bind("b3"),
+
+            TProject("Project1",
+                TTemplate("temp5").bind("b4")
+            )
         ).create()
     }
 
@@ -81,6 +85,14 @@ class SearchTemplateTests : BaseQueryLangTest() {
 
     @DataProvider(name = "eval")
     fun evalData() = TestDataProvider()
+        .addNoneEvalCase(
+            "find template with id temp5",
+            "temp5"
+        )
+        .addNoneEvalCase(
+            "find template with parent id Project1",
+            "temp5"
+        )
         .end()
 
 

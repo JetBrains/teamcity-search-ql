@@ -24,7 +24,12 @@ class SearchVcsRootTests : BaseQueryLangTest() {
 
             TVcsRoot("vcs2", "git",
                 TParam("param1", "def")
-            ).bind("v2")
+            ).bind("v2"),
+
+            TProject(
+                "Project1",
+                TVcsRoot("vcs3", "git").bind("v3")
+            )
 
         ).create()
 
@@ -54,6 +59,10 @@ class SearchVcsRootTests : BaseQueryLangTest() {
         .addVcsCase(
             """find vcsRoot with param * = "%param11%" """,
             "v1"
+        )
+        .addVcsCase(
+            "find vcsRoot with id Project1_Vcs3",
+            "v3"
         )
         .end()
 
@@ -94,6 +103,18 @@ class SearchVcsRootTests : BaseQueryLangTest() {
 
         .end()
 
+    @DataProvider(name = "eval")
+    fun evalData() = TestDataProvider()
+        .addNoneEvalCase(
+            "find vcsRoot with id Project1_Vcs3",
+            "Project1_Vcs3"
+        )
+        .addNoneEvalCase(
+            "find vcsRoot with parent id Project1",
+            "Project1_Vcs3"
+        )
+        .end()
+
 
     @Test(dataProvider = "data")
     fun parametrizedTest(query: String, expected: List<String>) {
@@ -111,5 +132,11 @@ class SearchVcsRootTests : BaseQueryLangTest() {
     fun parametrizedCompletionTests(query: String, expected: List<String>) {
         Thread.sleep(50)
         checkVars(query, expected)
+    }
+
+    @Test(dataProvider = "eval")
+    fun evalTest(query: String, expected: List<String>) {
+        Thread.sleep(50)
+        checkEval(query, expected)
     }
 }
