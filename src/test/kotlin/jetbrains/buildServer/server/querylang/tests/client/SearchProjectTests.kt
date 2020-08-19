@@ -140,10 +140,6 @@ class SearchProjectTests : BaseQueryLangTest() {
     @DataProvider(name = "eval")
     fun evalData() = TestDataProvider()
         .addNoneEvalCase(
-            "find project with id BaseProject",
-            "BaseProject"
-        )
-        .addNoneEvalCase(
             "find project with (id (BaseProject or Project2) or id Project3) and (not param param2=def)",
             "BaseProject", "Project3"
          )
