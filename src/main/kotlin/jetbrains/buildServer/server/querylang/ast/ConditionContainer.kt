@@ -2,8 +2,8 @@ package jetbrains.buildServer.server.querylang.ast
 
 data class EvalResult<NestedObject>(val filter: ObjectFilter<NestedObject>, val objects: List<NestedObject>)
 
-abstract class ConditionContainer<NestedObject> : Named {
-    abstract val condition: ConditionAST<NestedObject>
+interface ConditionContainer<NestedObject> : Named {
+    val condition: ConditionAST<NestedObject>
 
     fun eval(): EvalResult<NestedObject> {
         if (Thread.currentThread().isInterrupted) {
@@ -12,9 +12,19 @@ abstract class ConditionContainer<NestedObject> : Named {
         return evalInner()
     }
 
-    abstract fun evalInner(): EvalResult<NestedObject>
+    fun evalInner(): EvalResult<NestedObject>
 
-    open fun evalFilter(filter: Filter<NestedObject>): EvalResult<NestedObject> = EvalResult(filter.build(), listOf())
+    fun evalFilterInner(filter: Filter<NestedObject>): EvalResult<NestedObject>?  {
+        return if (filter is ObjectEvaluator) {
+            filter.eval()
+        } else {
+            EvalResult(filter.build(), listOf())
+        }
+    }
+
+    fun evalFilter(filter: Filter<NestedObject>): EvalResult<NestedObject> {
+        return evalFilterInner(filter) ?: EvalResult(filter.build(), listOf())
+    }
 
     fun ConditionAST<NestedObject>.eval(): EvalResult<NestedObject> {
         return when (this) {
@@ -56,4 +66,6 @@ abstract class ConditionContainer<NestedObject> : Named {
             }
         }
     }
+
+    fun evalCondition() = condition.eval()
 }

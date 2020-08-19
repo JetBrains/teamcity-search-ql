@@ -40,9 +40,9 @@ data class FullQuery(val queries: List<TopLevelQuery<*>>): MainQuery(), Printabl
 
 data class PartialQuery(val fullQueries: List<FullQuery>): MainQuery()
 
-sealed class TopLevelQuery<T> : ConditionContainer<T>(), Named
+sealed class TopLevelQuery<T> : ConditionContainer<T>, Named
 
-data class ProjectTopLevelQuery(override val condition: ConditionAST<WProject>): TopLevelQuery<WProject>() {
+data class ProjectTopLevelQuery(override val condition: ConditionAST<WProject>): TopLevelQuery<WProject>(), ProjectConditionContainer {
     companion object : Names(*(ProjectFilter.names.toTypedArray()))
 
     override val names = Companion.names
@@ -62,7 +62,9 @@ data class ProjectTopLevelQuery(override val condition: ConditionAST<WProject>):
     }
 }
 
-data class BuildConfTopLevelQuery(override val condition: ConditionAST<WBuildConf>) : TopLevelQuery<WBuildConf>() {
+data class BuildConfTopLevelQuery(
+    override val condition: ConditionAST<WBuildConf>
+) : TopLevelQuery<WBuildConf>(), BuildConfConditionContainer {
     companion object : Names(*(BuildConfFilter.names.toTypedArray()))
 
     override val names = Companion.names

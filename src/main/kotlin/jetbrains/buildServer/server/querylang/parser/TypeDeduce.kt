@@ -48,7 +48,7 @@ class TypeDeduce {
 
                 clazz.isSubclassOf(Filter::class) && level != 0 ->
                     createInstance<Filter<*>>(clazz, condition)?.let {
-                        res.addAll(deduceQueryType(it.toConditiion(), level - 1))
+                        res.addAll(deduceQueryType(it.toCondition(), level - 1))
                     }
             }
         }

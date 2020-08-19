@@ -2,6 +2,7 @@ package jetbrains.buildServer.server.querylang.ast.wrappers
 
 import jetbrains.buildServer.parameters.ValueResolver
 import jetbrains.buildServer.serverSide.*
+import jetbrains.buildServer.serverSide.impl.ProjectEx
 
 
 interface EnabledChecker {
@@ -25,6 +26,8 @@ class WProject(
     FValueContainer,
     FNameContainer
 {
+    val projectEx: ProjectEx by lazy { sproject as ProjectEx }
+
      val resolver: ValueResolver
         get() = sproject.valueResolver
 

@@ -2,7 +2,6 @@ package jetbrains.buildServer.server.querylang.ast
 
 import jetbrains.buildServer.server.querylang.ast.wrappers.*
 import jetbrains.buildServer.server.querylang.myProjectManager
-import java.lang.IllegalStateException
 
 data class IdFilter(
     override val condition: ConditionAST<String>
@@ -11,19 +10,20 @@ data class IdFilter(
     companion object : Names("id")
     override val names = IdFilter.names
 
-    override fun buildFrom(filter: ObjectFilter<String>) = RealObjectFilter<FIdContainer> { obj ->
+    override fun buildFrom(filter:RealObjectFilter<String>) = RealObjectFilter<FIdContainer> { obj ->
         filter.accepts(obj.id)
     }
 }
 
-data class BuildConfFilter(
+open class BuildConfFilter(
     override val condition: ConditionAST<WBuildConf>
-) : ConditionFilter<FBuildConfContainer, WBuildConf>()
+) : ConditionFilter<FBuildConfContainer, WBuildConf>(),
+    BuildConfConditionContainer
 {
     companion object : Names("configuration", "buildConfiguration")
     override val names = Companion.names
 
-    override fun buildFrom(filter: ObjectFilter<WBuildConf>): ObjectFilter<FBuildConfContainer> {
+    override fun buildFrom(filter:RealObjectFilter<WBuildConf>):RealObjectFilter<FBuildConfContainer> {
         return RealObjectFilter {obj ->
             obj.buildConfs.any {filter.accepts(it)}
         }
@@ -40,7 +40,7 @@ data class VcsRootFilter(
 
     override var searchAll = false
 
-    override fun buildFrom(filter: ObjectFilter<AbstractWVcsRoot>): ObjectFilter<FVcsRootContainer> {
+    override fun buildFrom(filter:RealObjectFilter<AbstractWVcsRoot>):RealObjectFilter<FVcsRootContainer> {
         return RealObjectFilter {obj ->
             this.elementSelector().validate(obj.vcsRoots, filter)
         }
@@ -49,12 +49,13 @@ data class VcsRootFilter(
 
 data class ProjectFilter(
     override val condition: ConditionAST<WProject>
-) : ConditionFilter<FProjectContainer, WProject>()
+) : ConditionFilter<FProjectContainer, WProject>(),
+    ProjectConditionContainer
 {
     companion object : Names("project")
     override val names = Companion.names
 
-    override fun buildFrom(filter: ObjectFilter<WProject>): ObjectFilter<FProjectContainer> {
+    override fun buildFrom(filter:RealObjectFilter<WProject>):RealObjectFilter<FProjectContainer> {
         return RealObjectFilter fil@{obj ->
             var project: WProject? = obj.project
 
@@ -68,33 +69,18 @@ data class ProjectFilter(
             false
         }
     }
-
-    override fun evalFilter(filter: Filter<WProject>): EvalResult<WProject> {
-        return when(filter) {
-            is IdFilter -> {
-                val (restFilter, ids) = filter.eval()
-                return if (restFilter is NoneObjectFilter) {
-                    val projects = ids.mapNotNull { myProjectManager.findProjectByExternalId(it)?.wrap() }
-                    EvalResult(NoneObjectFilter(), projects)
-                }
-                else {
-                    super.evalFilter(filter)
-                }
-            }
-            else -> super.evalFilter(filter)
-        }
-    }
 }
 
 
 data class ParentFilter(
     override val condition: ConditionAST<WProject>
-) : ConditionFilter<FParentContainer, WProject>()
+) : ConditionFilter<FParentContainer, WProject>(),
+    ProjectConditionContainer
 {
     companion object : Names("parent")
     override val names = Companion.names
 
-    override fun buildFrom(filter: ObjectFilter<WProject>): ObjectFilter<FParentContainer> {
+    override fun buildFrom(filter:RealObjectFilter<WProject>):RealObjectFilter<FParentContainer> {
         return RealObjectFilter {obj ->
             obj.parent.let{ filter.accepts(it) }
         }
@@ -113,7 +99,7 @@ data class TriggerFilter(
     override var includeInherited = false
     override var searchAll = false
 
-    override fun buildFrom(filter: ObjectFilter<WTrigger>): ObjectFilter<FTriggerContainer> {
+    override fun buildFrom(filter:RealObjectFilter<WTrigger>):RealObjectFilter<FTriggerContainer> {
         return RealObjectFilter {obj ->
             val settings = if (!this.includeInherited) obj.ownTriggers
             else obj.triggers
@@ -135,7 +121,7 @@ data class StepFilter(
     override var includeInherited = false
     override var searchAll = false
 
-    override fun buildFrom(filter: ObjectFilter<WStep>): ObjectFilter<FStepContainer> {
+    override fun buildFrom(filter:RealObjectFilter<WStep>):RealObjectFilter<FStepContainer> {
         return RealObjectFilter {obj ->
             val settings = if (!this.includeInherited) obj.ownSteps
             else obj.steps
@@ -157,7 +143,7 @@ data class FeatureFilter(
     override var includeInherited = false
     override var searchAll = false
 
-    override fun buildFrom(filter: ObjectFilter<WFeature>): ObjectFilter<FFeatureContainer> {
+    override fun buildFrom(filter:RealObjectFilter<WFeature>):RealObjectFilter<FFeatureContainer> {
         return RealObjectFilter {obj ->
             val settings = if (this.includeInherited) obj.features
             else obj.ownFeatures
@@ -176,7 +162,7 @@ data class TemplateFilter(
     override val names = Companion.names
     override var searchAll = false
 
-    override fun buildFrom(filter: ObjectFilter<WTemplate>): ObjectFilter<FTemplateContainer> {
+    override fun buildFrom(filter:RealObjectFilter<WTemplate>):RealObjectFilter<FTemplateContainer> {
         return RealObjectFilter {obj ->
             elementSelector().validate(obj.templates, filter)
         }
@@ -193,7 +179,7 @@ data class ValueFilter(
 
     override var searchResolved = false
 
-    override fun buildFrom(filter: ObjectFilter<String>): ObjectFilter<FValueContainer> {
+    override fun buildFrom(filter:RealObjectFilter<String>):RealObjectFilter<FValueContainer> {
         return RealObjectFilter {obj ->
             if (!searchResolved) {
                 obj.values.any { filter.accepts(it.str) }
@@ -211,7 +197,7 @@ data class TypeFilter(
     companion object : Names("type")
     override val names = Companion.names
 
-    override fun buildFrom(filter: ObjectFilter<String>): ObjectFilter<FTypeContainer> {
+    override fun buildFrom(filter:RealObjectFilter<String>):RealObjectFilter<FTypeContainer> {
         return RealObjectFilter {obj ->
             filter.accepts(obj.type)
         }
@@ -223,7 +209,7 @@ data class EnabledFilter(private val placeholder: String = "") : Filter<FEnabled
     companion object : Names("enabled")
     override val names = Companion.names
 
-    override fun build(): ObjectFilter<FEnabledContainer> {
+    override fun build():RealObjectFilter<FEnabledContainer> {
         return RealObjectFilter {obj ->
             obj.isEnabled
         }
@@ -246,7 +232,7 @@ data class ParameterFilter(
     override var searchResolved = false
     override var searchAll = false
 
-    override fun buildFrom(filter: ObjectFilter<WParam>): ObjectFilter<FParamContainer> {
+    override fun buildFrom(filter:RealObjectFilter<WParam>):RealObjectFilter<FParamContainer> {
         return RealObjectFilter {obj ->
             val params = (if (includeInherited) obj.params else obj.ownParams).map {
                 if (!searchResolved) {
@@ -270,7 +256,7 @@ data class AncestorFilter(
     override val names = Companion.names
     override var searchAll = false
 
-    override fun buildFrom(filter: ObjectFilter<WProject>): ObjectFilter<FAncestorContainer> {
+    override fun buildFrom(filter:RealObjectFilter<WProject>):RealObjectFilter<FAncestorContainer> {
         return when (elementSelector()) {
             is AnyElementValidator -> RealObjectFilter fil@{obj ->
                 var proj: WProject? = obj.firstAncestor
@@ -308,7 +294,7 @@ data class VcsRootEntryFilter(
     override val names = Companion.names
     override var searchAll = false
 
-    override fun buildFrom(filter: ObjectFilter<WVcsRootEntry>): ObjectFilter<FVcsRootEntryContainer> {
+    override fun buildFrom(filter:RealObjectFilter<WVcsRootEntry>):RealObjectFilter<FVcsRootEntryContainer> {
         return RealObjectFilter {obj ->
             val vcss = if (includeInherited) obj.vcsRootEntries
                        else obj.ownVcsRootEntries
@@ -330,7 +316,7 @@ data class RulesFilter(
     override var searchResolved = false
     override var searchAll = false
 
-    override fun buildFrom(filter: ObjectFilter<String>): ObjectFilter<FRulesContainer> {
+    override fun buildFrom(filter:RealObjectFilter<String>):RealObjectFilter<FRulesContainer> {
         return RealObjectFilter {obj ->
             val rules = if (searchResolved) obj.rules.map {it.resolve()}
                         else obj.rules.map {it.str}
@@ -353,7 +339,7 @@ data class DependencyFilter(
     override var includeInherited = false
     override var searchAll = false
 
-    override fun buildFrom(filter: ObjectFilter<SuperDependency>): ObjectFilter<FDependencyContainer> {
+    override fun buildFrom(filter:RealObjectFilter<SuperDependency>):RealObjectFilter<FDependencyContainer> {
         return RealObjectFilter {obj ->
             val dependencies = if (includeInherited) obj.dependencies
                                else obj.ownDependencies
@@ -372,7 +358,7 @@ data class ArtifactFilter(
 
     override var searchAll = false
 
-    override fun buildFrom(filter: ObjectFilter<WArtifactDependency>): ObjectFilter<SuperDependency> {
+    override fun buildFrom(filter:RealObjectFilter<WArtifactDependency>):RealObjectFilter<SuperDependency> {
         return RealObjectFilter {obj ->
             elementSelector().validate(obj.artifactDependencies, filter)
         }
@@ -386,7 +372,7 @@ data class SnapshotFilter(
     companion object : Names("snapshot")
     override val names = Companion.names
 
-    override fun buildFrom(filter: ObjectFilter<WSnapshotDependency>): ObjectFilter<SuperDependency> {
+    override fun buildFrom(filter:RealObjectFilter<WSnapshotDependency>):RealObjectFilter<SuperDependency> {
         return RealObjectFilter {obj ->
             filter.accepts(obj.snapshotDep)
         }
@@ -403,7 +389,7 @@ data class CleanFilter(
 
     override fun createStr(): String = names.first()
 
-    override fun build(): ObjectFilter<WArtifactDependency> {
+    override fun build():RealObjectFilter<WArtifactDependency> {
         return RealObjectFilter {obj ->
             obj.adep.isCleanDestinationFolder
         }
@@ -418,7 +404,7 @@ data class RevRuleFilter(
 
     override val names = Companion.names
 
-    override fun buildFrom(filter: ObjectFilter<String>): ObjectFilter<WArtifactDependency> {
+    override fun buildFrom(filter:RealObjectFilter<String>):RealObjectFilter<WArtifactDependency> {
         return RealObjectFilter {obj ->
             filter.accepts(obj.adep.revisionRule.name)
         }
@@ -440,7 +426,7 @@ data class OptionFilter(
 
     override val names = Companion.names
 
-    override fun buildFrom(filter: ObjectFilter<WParam>): ObjectFilter<FOptionContainer> {
+    override fun buildFrom(filter:RealObjectFilter<WParam>):RealObjectFilter<FOptionContainer> {
         return RealObjectFilter {obj ->
             val options = (if (includeInherited) obj.options else obj.ownOptions).map {
                 if (searchResolved) it.resolve() else it.toParam()
@@ -458,7 +444,7 @@ data class NameFilter(
     companion object : Names("name")
     override val names = Companion.names
 
-    override fun buildFrom(filter: ObjectFilter<String>): ObjectFilter<FNameContainer> {
+    override fun buildFrom(filter:RealObjectFilter<String>):RealObjectFilter<FNameContainer> {
         return RealObjectFilter {obj ->
             filter.accepts(obj.name)
         }

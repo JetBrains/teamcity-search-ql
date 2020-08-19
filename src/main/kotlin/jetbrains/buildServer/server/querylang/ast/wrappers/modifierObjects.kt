@@ -7,7 +7,7 @@ sealed class ElementValidator<T> {
 }
 
 class AllElementValidator<T> : ElementValidator<T>() {
-    override fun validate(elements: Collection<T>, filter: ObjectFilter<T>) = elements.all { filter.accepts(it)}
+    override fun validate(elements: Collection<T>, filter: ObjectFilter<T>) = elements.isNotEmpty() && elements.all { filter.accepts(it)}
 }
 
 class AnyElementValidator<T> : ElementValidator<T>() {

@@ -30,7 +30,16 @@ class SearchBuildConfigurationTests : BaseQueryLangTest() {
                 TFeature("feature11", Pair("qweqfhsdf", "xzxc")),
                 TTrigger("sch", Pair("resolvedParam1", "root/user/%path%"))
             ).bind("b2"),
-            TBuildConf("buildConfiguration1").bind("b3")
+            TBuildConf("buildConfiguration1").bind("b3"),
+
+            TProject("Project1",
+                TBuildConf("BC1",
+                    TTrigger("vcsTrigger")
+                ),
+                TBuildConf("BC2",
+                    TTrigger("schTrigger")
+                )
+            ).bind("p1")
         ).create()
     }
 
@@ -139,9 +148,13 @@ class SearchBuildConfigurationTests : BaseQueryLangTest() {
 
     @DataProvider(name = "eval")
     fun evalData() = TestDataProvider()
-        .addBCCase(
+        .addNoneEvalCase(
             "find buildConfiguration with id test1",
-            "b1"
+            "test1"
+        )
+        .addNoneEvalCase(
+            "find configuration with parent id Project1 and trigger type vcsTrigger",
+            "BC1"
         )
         .end()
 

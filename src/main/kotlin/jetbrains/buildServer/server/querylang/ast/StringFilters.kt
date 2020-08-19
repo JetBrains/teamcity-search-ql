@@ -3,12 +3,16 @@ package jetbrains.buildServer.server.querylang.ast
 import jetbrains.buildServer.server.querylang.ast.wrappers.WParam
 import jetbrains.buildServer.server.querylang.toIdentOrString
 
-data class EqualsStringFilter(val str: String) : Filter<String> {
+data class EqualsStringFilter(val str: String) : Filter<String>, ObjectEvaluator<String>() {
     override val names = emptyList<String>()
     override fun createStr() = str.toIdentOrString()
 
-    override fun build(): ObjectFilter<String> {
+    override fun build():RealObjectFilter<String> {
         return RealObjectFilter {obj -> obj == str}
+    }
+
+    override fun evalSimple(): List<String> {
+        return listOf(str)
     }
 }
 
@@ -16,7 +20,7 @@ data class PrefixStringFilter(val str: String) : Filter<String> {
     override val names = emptyList<String>()
     override fun createStr() = str.toIdentOrString() + '*'
 
-    override fun build(): ObjectFilter<String> {
+    override fun build():RealObjectFilter<String> {
         return RealObjectFilter {obj -> obj.startsWith(str)}
     }
 }
@@ -25,7 +29,7 @@ data class SuffixStringFilter(val str: String) : Filter<String> {
     override val names = emptyList<String>()
     override fun createStr() = '*' + str.toIdentOrString()
 
-    override fun build(): ObjectFilter<String> {
+    override fun build():RealObjectFilter<String> {
         return RealObjectFilter {obj -> obj.endsWith(str)}
     }
 }
@@ -34,7 +38,7 @@ data class SubstringFilter(val str: String) : Filter<String> {
     override val names = emptyList<String>()
     override fun createStr() = '*' + str.toIdentOrString() + '*'
 
-    override fun build(): ObjectFilter<String> {
+    override fun build():RealObjectFilter<String> {
         return RealObjectFilter {obj -> obj.contains(str)}
     }
 }
@@ -46,10 +50,10 @@ data class StringParamFilter(
     override val names: List<String> = emptyList()
     override fun createStr() = "${nameCondition.createStr()}=${valueCondition.createStr()}"
 
-    val nameFilter: ObjectFilter<String> by lazy { nameCondition.build() }
-    val valueFilter: ObjectFilter<String> by lazy { valueCondition.build() }
+    val nameFilter:RealObjectFilter<String> by lazy { nameCondition.build() }
+    val valueFilter:RealObjectFilter<String> by lazy { valueCondition.build() }
 
-    override fun build(): ObjectFilter<WParam> {
+    override fun build():RealObjectFilter<WParam> {
         return RealObjectFilter {obj ->
             nameFilter.accepts(obj.name) && valueFilter.accepts(obj.value)
         }
@@ -62,7 +66,7 @@ data class AnyStringFilter(
     override val names: List<String> = emptyList()
     override fun createStr() = "*"
 
-    override fun build(): ObjectFilter<String> {
+    override fun build():RealObjectFilter<String> {
         return RealObjectFilter {true}
     }
 }

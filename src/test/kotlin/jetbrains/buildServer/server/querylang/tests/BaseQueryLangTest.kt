@@ -93,7 +93,7 @@ abstract class BaseQueryLangTest : BaseServerTestCase() {
         }
         val parsed = (QueryParser.parse(query) as FullQuery).queries.first()
 
-        val res = parsed.eval()
+        val res = parsed.evalCondition()
 
         val ids = res.objects.map {(it as FIdContainer).id}
 
