@@ -119,6 +119,14 @@ abstract class AbstractWBuildConf :
 
     override val name: String
         get() = sbuildConf.name
+
+    override fun equals(other: Any?): Boolean {
+        return other is WBuildConf && other.id == this.id
+    }
+
+    override fun hashCode(): Int {
+        return this.id.hashCode()
+    }
 }
 
 class WBuildConf(

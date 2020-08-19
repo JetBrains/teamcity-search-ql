@@ -105,4 +105,12 @@ class WTemplate(
 
     override val name: String
         get() = stemplate.name
+
+    override fun equals(other: Any?): Boolean {
+        return other is WTemplate && other.id == this.id
+    }
+
+    override fun hashCode(): Int {
+        return this.id.hashCode()
+    }
 }

@@ -11,7 +11,7 @@ abstract class ConditionFilter<Object, NestedObject> : Filter<Object>, Condition
 
     override fun createStr(): String = """${names.first()} ${condition.createStr()}"""
 
-    fun transformedEval(): Pair<ObjectFilter<Object>, List<NestedObject>> {
+    fun transformedEval(): Pair<ObjectFilter<Object>, ObjectContainer<NestedObject>> {
         val (remFilter, objs) = eval()
         if (remFilter is RealObjectFilter) {
             return Pair(buildFrom(remFilter), objs)

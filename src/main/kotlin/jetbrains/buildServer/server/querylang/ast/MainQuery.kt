@@ -50,15 +50,17 @@ data class ProjectTopLevelQuery(override val condition: ConditionAST<WProject>):
     override fun evalInner(): EvalResult<WProject> {
         val res = condition.eval()
 
-        return EvalResult(NoneObjectFilter(),
-            if (res.filter !is NoneObjectFilter)
+        return if (res.filter !is NoneObjectFilter)
+            EvalResult(NoneObjectFilter(),
                 myProjectManager.projects.filter {
                     checkInterruptionStatus()
                     res.filter.accepts(it.wrap())
                 }.map { it.wrap() }
+            )
             else
-                res.objects
-        )
+                EvalResult(NoneObjectFilter(),
+                    res.objects
+                )
     }
 }
 
@@ -72,15 +74,15 @@ data class BuildConfTopLevelQuery(
     override fun evalInner(): EvalResult<WBuildConf> {
         val res = condition.eval()
 
-        return EvalResult(NoneObjectFilter(),
-            if (res.filter !is NoneObjectFilter)
-                myProjectManager.allBuildTypes.filter {
-                    checkInterruptionStatus()
-                    res.filter.accepts(it.wrap())}.map {it.wrap()
-                }
+        return if (res.filter !is NoneObjectFilter)
+                EvalResult(NoneObjectFilter(),
+                    myProjectManager.allBuildTypes.filter {
+                        checkInterruptionStatus()
+                        res.filter.accepts(it.wrap())
+                    }.map { it.wrap() }
+                )
             else
-                res.objects
-        )
+                EvalResult(NoneObjectFilter(),res.objects)
     }
 }
 
@@ -96,15 +98,15 @@ data class TemplateTopLevelQuery(
     override fun evalInner(): EvalResult<WTemplate> {
         val res = condition.eval()
 
-        return EvalResult(NoneObjectFilter(),
-            if (res.filter !is NoneObjectFilter)
-                myProjectManager.allTemplates.filter {
-                    checkInterruptionStatus()
-                    res.filter.accepts(it.wrap())}.map {it.wrap()
-                }
+        return if (res.filter !is NoneObjectFilter)
+                EvalResult(NoneObjectFilter(),
+                    myProjectManager.allTemplates.filter {
+                        checkInterruptionStatus()
+                        res.filter.accepts(it.wrap())
+                    }.map { it.wrap() }
+                )
             else
-                res.objects
-        )
+                EvalResult(NoneObjectFilter(), res.objects)
     }
 }
 
@@ -120,14 +122,14 @@ data class VcsRootTopLevelQuery(
     override fun evalInner(): EvalResult<WVcsRoot> {
         val res = condition.eval()
 
-        return EvalResult(NoneObjectFilter(),
-            if (res.filter !is NoneObjectFilter)
+        return if (res.filter !is NoneObjectFilter)
+            EvalResult(NoneObjectFilter(),
                 myProjectManager.allVcsRoots.filter {
                     checkInterruptionStatus()
                     res.filter.accepts(it.wrap(it.project.valueResolver))
                 }.map {it.wrap(it.project.valueResolver) }
+            )
             else
-                res.objects
-        )
+                EvalResult(NoneObjectFilter(),res.objects)
     }
 }

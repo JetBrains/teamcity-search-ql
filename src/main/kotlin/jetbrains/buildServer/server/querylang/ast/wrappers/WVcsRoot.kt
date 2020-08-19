@@ -61,7 +61,7 @@ class MyVcsRootEntry(val svcsEntry: VcsRootEntry, override val resolver: ValueRe
     }
 
     override val rules: List<ResolvableString>
-        get() = svcsEntry.checkoutRules.body.map {ResolvableString(it, resolver)}
+        get() = svcsEntry.checkoutRules.body.map { ResolvableString(it, resolver)}
 
     override val svcsRoot: SVcsRoot
         get() = internalVcsRoot
@@ -78,4 +78,12 @@ class MyVcsRootInstanceEntry(
 
     override val svcsRoot: SVcsRoot
         get() = svcsInstanceEntry.vcsRoot.parent
+
+    override fun equals(other: Any?): Boolean {
+        return other is WVcsRoot && other.id == this.id
+    }
+
+    override fun hashCode(): Int {
+        return this.id.hashCode()
+    }
 }

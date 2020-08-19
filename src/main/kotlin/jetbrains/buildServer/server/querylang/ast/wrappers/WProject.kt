@@ -67,4 +67,12 @@ class WProject(
 
     override val name: String
         get() = sproject.fullName
+
+    override fun equals(other: Any?): Boolean {
+        return other is WProject && other.id == this.id
+    }
+
+    override fun hashCode(): Int {
+        return this.id.hashCode()
+    }
 }

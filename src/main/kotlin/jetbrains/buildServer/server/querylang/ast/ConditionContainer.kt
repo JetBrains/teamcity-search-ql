@@ -1,6 +1,66 @@
 package jetbrains.buildServer.server.querylang.ast
 
-data class EvalResult<NestedObject>(val filter: ObjectFilter<NestedObject>, val objects: List<NestedObject>)
+import jetbrains.buildServer.server.querylang.ast.wrappers.FIdContainer
+
+interface ObjectContainer<T> : Iterable<T> {
+    fun unite(other: ObjectContainer<T>): ObjectContainer<T> {
+        return if (other.size < size) {
+            this.addAll(other.getObjects())
+            this
+        } else {
+            other.unite(this)
+        }
+    }
+    fun intersect(other: ObjectContainer<T>): ObjectContainer<T>
+    fun getObjects(): Set<T>
+    fun addAll(objs: Collection<T>)
+    val size: Int
+    fun toSimple(): SimpleObjectContainer<T> = SimpleObjectContainer(getObjects())
+
+}
+
+class SimpleObjectContainer<T>(objs: Collection<T>) : ObjectContainer<T> {
+    inner class SimpleContainerIterator(val iter: MutableIterator<T>): Iterator<T> by iter
+
+    private val internalSet: MutableSet<T> = objs.toMutableSet()
+
+    override fun intersect(other: ObjectContainer<T>): ObjectContainer<T> {
+        return SimpleObjectContainer(this.internalSet.intersect(other.getObjects()))
+    }
+
+    override fun iterator(): Iterator<T> {
+        return SimpleContainerIterator(internalSet.iterator())
+    }
+
+    override fun addAll(objs: Collection<T>) {
+        internalSet.addAll(objs)
+    }
+
+    override val size: Int
+        get() = internalSet.size
+
+    override fun getObjects(): Set<T> = internalSet
+}
+
+fun <T> Collection<T>.wrapInContainer() = SimpleObjectContainer(this)
+
+class EvalResult<NestedObject> {
+    val filter: ObjectFilter<NestedObject>
+    val objects: ObjectContainer<NestedObject>
+
+    constructor(filter_: ObjectFilter<NestedObject>, objects_: Collection<NestedObject>) {
+        filter = filter_
+        objects = objects_.wrapInContainer()
+    }
+
+    constructor(filter_: ObjectFilter<NestedObject>, objects_ : ObjectContainer<NestedObject>) {
+        filter = filter_
+        objects = objects_
+    }
+
+    operator fun component1() = filter
+    operator fun component2() = objects
+}
 
 interface ConditionContainer<NestedObject> : Named {
     val condition: ConditionAST<NestedObject>
