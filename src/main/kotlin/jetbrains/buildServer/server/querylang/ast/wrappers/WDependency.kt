@@ -28,8 +28,11 @@ class WArtifactDependency(
     override val dependsOn: WBuildConf
         get() = sbuildConf.wrap()
 
-    override val rules: ResolvableString
-        get() = ResolvableString(adep.sourcePaths, resolver)
+    override val rules: List<ResolvableString>
+        get() = adep.sourcePaths
+            .lines()
+            .filter {it.isNotBlank()}
+            .map { ResolvableString(it, resolver) }
 }
 
 fun Dependency.wrap(sbuildConf: SBuildType, resolver: ValueResolver) = WSnapshotDependency(this, sbuildConf, resolver)

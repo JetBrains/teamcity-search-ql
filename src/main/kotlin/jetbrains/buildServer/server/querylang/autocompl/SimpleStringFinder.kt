@@ -16,6 +16,9 @@ class SimpleStringFinder(
     }
 
     fun addString(s: String) {
+        if (s.contains("\n")) {
+            return
+        }
         return trie.addString(s)
     }
 }

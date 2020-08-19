@@ -61,7 +61,7 @@ class FilterDependencyClientTests : BaseQueryLangTest() {
 
             TBuildConf("test6",
                 TADependency("b4", "irotiirtroi", false),
-                TADependency("b4", "TeamCity-1111.warTeamCity-222.warTeamCity.tar.gzTeamCity.war", false),
+                TADependency("b4", "TeamCity-1111.war\nTeamCity-222.war\nTeamCity.tar.gz\nTeamCity.war", false),
                 TParam("param100", "abacaba"),
                 TADependency("b3", "%param100%", false, RevisionRules.LAST_FINISHED_SAME_CHAIN_RULE)
             ).bind("b6")
@@ -128,7 +128,7 @@ class FilterDependencyClientTests : BaseQueryLangTest() {
             "b5"
         )
         .addBCCase(
-            "find configuration with dependency artifact rules \"TeamCity-1111.warTeamCity-222.warTeamCity.tar.gzTeamCity.war\"",
+            "find configuration with dependency artifact rules[all] TeamCity*",
             "b6"
         )
         .addBCCase(

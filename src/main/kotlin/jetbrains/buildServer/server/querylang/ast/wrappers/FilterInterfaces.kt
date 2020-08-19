@@ -81,7 +81,7 @@ interface FTypeContainer {
 }
 
 interface FRulesContainer {
-    val rules: ResolvableString
+    val rules: List<ResolvableString>
 }
 
 interface FValueContainer {

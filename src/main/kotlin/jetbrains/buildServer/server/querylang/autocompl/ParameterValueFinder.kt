@@ -29,12 +29,18 @@ class ParameterValueFinder(
     }
 
     fun addParam(paramName: String, paramValue: String, valSystemAdminOnly: Boolean = defaultValueSysAdminOnly) {
+        if (paramName.contains("\n") || paramValue.contains("\n")) {
+            return
+        }
+
         if (!params.contains(paramName)) {
             params[paramName] = SimpleStringFinder(compl, valSystemAdminOnly)
         }
+
         if (!paramName.startsWith("secure:")) {
             params[paramName]!!.addString(paramValue)
         }
+
         nameTrie.addString(paramName)
     }
 

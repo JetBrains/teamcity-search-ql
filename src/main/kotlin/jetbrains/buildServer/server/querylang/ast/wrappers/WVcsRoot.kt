@@ -50,7 +50,6 @@ class WVcsRoot(
 ) : AbstractWVcsRoot(), TopLevelObject
 
 abstract class WVcsRootEntry : AbstractWVcsRoot(), FRulesContainer {
-    abstract override val rules: ResolvableString
     abstract override val svcsRoot: SVcsRoot
 }
 
@@ -61,8 +60,8 @@ class MyVcsRootEntry(val svcsEntry: VcsRootEntry, override val resolver: ValueRe
         svcsEntry.vcsRoot as? SVcsRoot ?: throw IllegalStateException("VcsRootEntry.vcsRoot should be SVcsRoot")
     }
 
-    override val rules: ResolvableString
-        get() = ResolvableString(svcsEntry.checkoutRules.asString, resolver)
+    override val rules: List<ResolvableString>
+        get() = svcsEntry.checkoutRules.body.map {ResolvableString(it, resolver)}
 
     override val svcsRoot: SVcsRoot
         get() = internalVcsRoot
@@ -74,8 +73,8 @@ class MyVcsRootInstanceEntry(
     val svcsInstanceEntry: VcsRootInstanceEntry,
     override val resolver: ValueResolver
 ): WVcsRootEntry() {
-    override val rules: ResolvableString
-        get() = ResolvableString(svcsInstanceEntry.checkoutRules.asString, resolver)
+    override val rules: List<ResolvableString>
+        get() = svcsInstanceEntry.checkoutRules.body.map {ResolvableString(it, resolver)}
 
     override val svcsRoot: SVcsRoot
         get() = svcsInstanceEntry.vcsRoot.parent

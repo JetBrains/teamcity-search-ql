@@ -320,18 +320,22 @@ data class VcsRootEntryFilter(
 data class RulesFilter(
     override val condition: ConditionAST<String>
 ) : ConditionFilter<FRulesContainer, String>(),
-    MResolvedContainer
+    MResolvedContainer,
+    MAllContainer
 {
     companion object : Names("rules")
 
     override val names: List<String> = Companion.names
 
     override var searchResolved = false
+    override var searchAll = false
 
     override fun buildFrom(filter: ObjectFilter<String>): ObjectFilter<FRulesContainer> {
         return RealObjectFilter {obj ->
-            if (searchResolved) filter.accepts(obj.rules.resolve())
-            else filter.accepts(obj.rules.str)
+            val rules = if (searchResolved) obj.rules.map {it.resolve()}
+                        else obj.rules.map {it.str}
+
+            elementSelector().validate(rules, filter)
         }
     }
 }
