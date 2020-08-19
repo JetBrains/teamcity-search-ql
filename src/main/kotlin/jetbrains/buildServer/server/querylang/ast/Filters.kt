@@ -31,8 +31,9 @@ open class BuildConfFilter(
 }
 
 data class VcsRootFilter(
-    override val condition: ConditionAST<AbstractWVcsRoot>
-) : ConditionFilter<FVcsRootContainer, AbstractWVcsRoot>(),
+    override val condition: ConditionAST<WVcsRoot>
+) : ConditionFilter<FVcsRootContainer, WVcsRoot>(),
+    VcsRootConditionContainer,
     MAllContainer
 {
     companion object : Names("vcsRoot")
@@ -40,7 +41,7 @@ data class VcsRootFilter(
 
     override var searchAll = false
 
-    override fun buildFrom(filter:RealObjectFilter<AbstractWVcsRoot>):RealObjectFilter<FVcsRootContainer> {
+    override fun buildFrom(filter:RealObjectFilter<WVcsRoot>):RealObjectFilter<FVcsRootContainer> {
         return RealObjectFilter {obj ->
             this.elementSelector().validate(obj.vcsRoots, filter)
         }
@@ -251,6 +252,7 @@ data class ParameterFilter(
 data class AncestorFilter(
     override val condition: ConditionAST<WProject>
 ) : ConditionFilter<FAncestorContainer, WProject>(),
+    ProjectConditionContainer,
     MAllContainer
 {
     companion object : Names("ancestor")

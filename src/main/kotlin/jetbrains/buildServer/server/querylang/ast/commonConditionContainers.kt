@@ -2,7 +2,7 @@ package jetbrains.buildServer.server.querylang.ast
 
 import jetbrains.buildServer.server.querylang.ast.wrappers.*
 import jetbrains.buildServer.server.querylang.myProjectManager
-import jetbrains.buildServer.serverSide.impl.ProjectEx
+
 
 interface BuildConfConditionContainer : ConditionContainer<WBuildConf> {
     override fun evalFilterInner(filter: Filter<WBuildConf>): EvalResult<WBuildConf>? {
@@ -17,6 +17,19 @@ interface BuildConfConditionContainer : ConditionContainer<WBuildConf> {
             is ParentFilter -> {
                 val (remFilter, projects) = filter.transformedEval()
                 val objs = projects.flatMap { project -> project.projectEx.ownBuildTypes }.mapNotNull {it?.wrap()}
+                return EvalResult(remFilter, objs)
+            }
+            is TemplateFilter -> {
+                val (remFilter, templates) = filter.transformedEval()
+                val objs = templates.flatMap { it.stemplate.usages}.mapNotNull { it?.wrap() }
+                return EvalResult(remFilter, objs)
+            }
+            is ProjectFilter -> {
+                val (remFilter, projects) = filter.transformedEval()
+                if (projects.size > 2) {
+                    return null
+                }
+                val objs = projects.flatMap { project -> project.projectEx.buildTypes }.mapNotNull {it?.wrap()}
                 return EvalResult(remFilter, objs)
             }
         }
@@ -39,6 +52,14 @@ interface ProjectConditionContainer : ConditionContainer<WProject> {
                 val objs = projects.flatMap { project -> project.projectEx.ownProjects }.mapNotNull { it?.wrap() }
                 return EvalResult(remFilter, objs)
             }
+            is ProjectFilter -> {
+                val (remFilter, projects) = filter.transformedEval()
+                if (projects.size > 2) {
+                    return null
+                }
+                val objs = projects.flatMap { project -> project.projectEx.projects + listOf(project.projectEx) }.mapNotNull {it?.wrap()}
+                return EvalResult(remFilter, objs)
+            }
         }
         return null
     }
@@ -57,6 +78,14 @@ interface VcsRootConditionContainer : ConditionContainer<WVcsRoot> {
             is ParentFilter -> {
                 val (remFilter, projects) = filter.transformedEval()
                 val objs = projects.flatMap { project -> project.projectEx.ownVcsRoots }.mapNotNull { it?.wrap(it.project.valueResolver) }
+                return EvalResult(remFilter, objs)
+            }
+            is ProjectFilter -> {
+                val (remFilter, projects) = filter.transformedEval()
+                if (projects.size > 2) {
+                    return null
+                }
+                val objs = projects.flatMap { project -> project.projectEx.vcsRoots }.mapNotNull {it?.wrap(it.project.valueResolver)}
                 return EvalResult(remFilter, objs)
             }
         }
@@ -79,6 +108,14 @@ interface TemplateConditionContainer : ConditionContainer<WTemplate> {
                 val (remFilter, projects) = filter.transformedEval()
                 val objs =
                     projects.flatMap { project -> project.projectEx.ownBuildTypeTemplates }.mapNotNull { it?.wrap() }
+                return EvalResult(remFilter, objs)
+            }
+            is ProjectFilter -> {
+                val (remFilter, projects) = filter.transformedEval()
+                if (projects.size > 2) {
+                    return null
+                }
+                val objs = projects.flatMap { project -> project.projectEx.buildTypeTemplates }.mapNotNull {it?.wrap()}
                 return EvalResult(remFilter, objs)
             }
         }

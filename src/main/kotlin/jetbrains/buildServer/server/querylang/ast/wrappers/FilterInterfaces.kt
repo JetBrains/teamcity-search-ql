@@ -20,7 +20,7 @@ interface FBuildConfContainer {
 }
 
 interface FVcsRootContainer {
-    val vcsRoots : List<AbstractWVcsRoot>
+    val vcsRoots : List<WVcsRoot>
 }
 
 interface FParentContainer {

@@ -42,8 +42,13 @@ interface ConditionContainer<NestedObject> : Named {
                 val lres = this.left.eval()
                 val rres = this.right.eval()
 
-                val objects = lres.objects.intersect(rres.objects) + lres.objects.filter { rres.filter.accepts(it) } +
-                        rres.objects.filter {lres.filter.accepts(it)}
+                val objects: MutableList<NestedObject> = lres.objects.intersect(rres.objects).toMutableList()
+                if (lres.filter !is NoneObjectFilter) {
+                    objects.addAll(rres.objects.filter {lres.filter.accepts(it)})
+                }
+                if (rres.filter !is NoneObjectFilter) {
+                    objects.addAll(lres.objects.filter { rres.filter.accepts(it) })
+                }
 
                 EvalResult(
                     lres.filter.and(rres.filter),

@@ -59,7 +59,7 @@ class WProject(
     override val params: List<WResolvableParam>
         get() = sproject.parameters.map { (a, b) -> WResolvableParam(a, b, sproject.valueResolver) }
 
-    override val vcsRoots: List<AbstractWVcsRoot>
+    override val vcsRoots: List<WVcsRoot>
         get() = sproject.vcsRoots.map {it.wrap(sproject.valueResolver)}
 
     override val values: List<ResolvableString>

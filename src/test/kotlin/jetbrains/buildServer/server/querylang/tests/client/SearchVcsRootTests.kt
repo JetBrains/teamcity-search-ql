@@ -94,7 +94,7 @@ class SearchVcsRootTests : BaseQueryLangTest() {
         )
         .addComplCase(
             "find vcsRoot with name vc",
-            "vcs1", "vcs2"
+            "vcs1", "vcs2", "vcs3"
         )
         .end()
 

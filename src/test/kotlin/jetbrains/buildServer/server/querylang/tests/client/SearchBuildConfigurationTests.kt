@@ -18,10 +18,12 @@ class SearchBuildConfigurationTests : BaseQueryLangTest() {
                 TParam("path", "abc"),
                 TOption("qwerty", "bcd")
             ),
+            TTemplate("temp1").bind("t1"),
             TBuildConf("test1",
                 TOption("abc", "bcd"),
                 TParam("path", "abccaba"),
-                TOption("op1", "%path%")
+                TOption("op1", "%path%"),
+                TTempDependency("t1")
             ).bind("b1"),
             TBuildConf("test2",
                 TParam("path", "abacaba"),
@@ -155,6 +157,10 @@ class SearchBuildConfigurationTests : BaseQueryLangTest() {
         .addNoneEvalCase(
             "find configuration with parent id Project1 and trigger type vcsTrigger",
             "BC1"
+        )
+        .addNoneEvalCase(
+            "find configuration with template parent id BaseProject",
+            "test1"
         )
         .end()
 
