@@ -6,6 +6,7 @@ import jetbrains.buildServer.server.querylang.autocompl.AutoCompletion
 import jetbrains.buildServer.serverSide.ProjectManager
 import jetbrains.buildServer.serverSide.auth.SecurityContext
 import jetbrains.buildServer.web.openapi.WebControllerManager
+import jetbrains.buildServer.web.util.WebUtil
 import javax.servlet.http.HttpServletRequest
 
 
@@ -21,6 +22,6 @@ class SearchFormAutocompletionController(
 
     override fun getCompletionData(request: HttpServletRequest): List<Completion?> {
         val term = request.getParameter("term")
-        return autoCompl.complete(term).map {Completion(it.result, it.show, "", true)}
+        return autoCompl.complete(term).map {Completion(it.result, WebUtil.escapeXml(it.show), "", true)}
     }
 }
