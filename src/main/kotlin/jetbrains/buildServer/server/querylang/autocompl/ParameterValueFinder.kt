@@ -32,7 +32,9 @@ class ParameterValueFinder(
         if (!params.contains(paramName)) {
             params[paramName] = SimpleStringFinder(compl, valSystemAdminOnly)
         }
-        params[paramName]!!.addString(paramValue)
+        if (!paramName.startsWith("secure:")) {
+            params[paramName]!!.addString(paramValue)
+        }
         nameTrie.addString(paramName)
     }
 
