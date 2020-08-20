@@ -15,24 +15,24 @@ class CompletionManager(
     val securityContext: SecurityContext
 ) {
     private val map: MutableMap<String, SecuredStringFinder> = mutableMapOf()
-    private val projectIdFinder = getSimpleFinder(false)
+    private val projectIdFinder = getSimpleFinder(true)
     private val projectParamFinder = getParamFinder(true)
-    private val projectNameFinder = getSimpleFinder(false)
+    private val projectNameFinder = getSimpleFinder(true)
 
-    private val buildConfIdFinder = getSimpleFinder(false)
+    private val buildConfIdFinder = getSimpleFinder(true)
     private val buildConfOptionFinder = getParamFinder(false)
     private val buildConfParamFinder = getParamFinder(true)
-    private val buildConfNameFinder = getSimpleFinder(false)
+    private val buildConfNameFinder = getSimpleFinder(true)
 
-    private val templateIdFinder = getSimpleFinder(false)
+    private val templateIdFinder = getSimpleFinder(true)
     private val templateOptionFinder = getParamFinder(false)
     private val templateParamFinder = getParamFinder(true)
-    private val templateNameFinder = getSimpleFinder(false)
+    private val templateNameFinder = getSimpleFinder(true)
 
-    private val vcsRootIdFinder = getSimpleFinder(false)
+    private val vcsRootIdFinder = getSimpleFinder(true)
     private val vcsRootTypeFinder = getSimpleFinder(false)
     private val vcsParamFinder = getParamFinder(true)
-    private val vcsRootNameFinder = getSimpleFinder(false)
+    private val vcsRootNameFinder = getSimpleFinder(true)
 
     private val triggerParamValueFinder = getParamFinder(false)
     private val triggerTypeFinder = getSimpleFinder(false)
