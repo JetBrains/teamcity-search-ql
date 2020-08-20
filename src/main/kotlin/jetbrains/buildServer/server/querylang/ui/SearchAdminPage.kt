@@ -8,6 +8,7 @@ import jetbrains.buildServer.server.querylang.requests.InternalApiQueryHandler
 import jetbrains.buildServer.server.querylang.requests.QueryResult
 
 import jetbrains.buildServer.serverSide.ProjectManager
+import jetbrains.buildServer.serverSide.SecurityContextEx
 import jetbrains.buildServer.serverSide.ServerListener
 import jetbrains.buildServer.serverSide.TeamCityProperties
 import jetbrains.buildServer.serverSide.executors.ExecutorServices
@@ -25,7 +26,8 @@ class SearchAdminPage(
     private val pluginDescriptor: PluginDescriptor,
     pagePlaces: PagePlaces,
     projectManager_: ProjectManager,
-    private val executorServices: ExecutorServices
+    private val executorServices: ExecutorServices,
+    private val securityContext: SecurityContextEx
 ) : AdminPage(
         pagePlaces,
         "search",
@@ -59,7 +61,11 @@ class SearchAdminPage(
         try {
             val result = bean.getQuery()?.let {
                 val queryTimelimit = TeamCityProperties.getIntervalMilliseconds(TIMELIMIT_PARAM_NAME, DEFAULT_TIMELIMIT)
-                task = executor.submit<QueryResult> { requestClient.process(it) }
+                val authHolder = securityContext.authorityHolder
+                task = executor.submit<QueryResult> {
+                    securityContext.authorityHolder = authHolder
+                    requestClient.process(it)
+                }
                 task!!.get(queryTimelimit, TimeUnit.MILLISECONDS)
             }
             bean.buildResultList(result)
@@ -70,7 +76,7 @@ class SearchAdminPage(
             if (innere is ParsingException) {
                 bean.setWrongQueryMessage("Wrong query: ${innere.message}")
             } else {
-                bean.setWrongQueryMessage("Java exception: ${"Java exception: ${innere?.message}"}")
+                bean.setWrongQueryMessage("Java ${e.javaClass.name} exception: ${innere?.message}")
             }
         }
         catch (e: Exception) {
