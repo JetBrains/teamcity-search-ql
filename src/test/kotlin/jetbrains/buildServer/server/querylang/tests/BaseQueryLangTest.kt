@@ -14,8 +14,6 @@ import jetbrains.buildServer.server.querylang.requests.InternalApiQueryHandler
 import jetbrains.buildServer.server.querylang.requests.RequestClient
 import jetbrains.buildServer.server.querylang.tests.client.EmptyResultPrinter
 import jetbrains.buildServer.serverSide.*
-import jetbrains.buildServer.serverSide.auth.AuthUtil
-import jetbrains.buildServer.serverSide.auth.Permission
 import jetbrains.buildServer.serverSide.dependency.DependencySettings
 import jetbrains.buildServer.serverSide.impl.BaseServerTestCase
 import jetbrains.buildServer.serverSide.impl.ProjectEx
@@ -223,6 +221,10 @@ abstract class BaseQueryLangTest : BaseServerTestCase() {
         fun create(persist: Boolean = true): ProjectEx {
             return create(myFixture.projectManager.rootProject, persist)
         }
+
+        fun addAndCopy(vararg nobjects: TestObject): TProject {
+            return TProject(id, *(objects.toMutableList() + nobjects.toMutableList()).toTypedArray())
+        }
     }
 
     inner class TBuildConf(val id: String, vararg val objects: TestObject) :
@@ -249,6 +251,10 @@ abstract class BaseQueryLangTest : BaseServerTestCase() {
 
             return bt
         }
+
+        fun addAndCopy(vararg nobjects: TestObject): TBuildConf {
+            return TBuildConf(id, *(objects.toMutableList() + nobjects.toMutableList()).toTypedArray())
+        }
     }
 
     inner class TTemplate(val id: String, vararg val objects: TestObject) :
@@ -272,6 +278,10 @@ abstract class BaseQueryLangTest : BaseServerTestCase() {
                 }
             }
             return temp
+        }
+
+        fun addAndCopy(vararg nobjects: TestObject): TTemplate {
+            return TTemplate(id, *(objects.toMutableList() + nobjects.toMutableList()).toTypedArray())
         }
     }
 
@@ -488,6 +498,19 @@ abstract class BaseQueryLangTest : BaseServerTestCase() {
             return tests.map {p ->
                 arrayOf(p.first, p.second)
             }.toMutableList().iterator()
+        }
+    }
+
+    inner class SingleDataProvider {
+        private val tests: MutableList<Any> = mutableListOf()
+
+        fun addCase(query: String): SingleDataProvider {
+            tests.add(query)
+            return this
+        }
+
+        fun end(): MutableIterator<Any> {
+            return tests.toMutableList().iterator()
         }
     }
 }
