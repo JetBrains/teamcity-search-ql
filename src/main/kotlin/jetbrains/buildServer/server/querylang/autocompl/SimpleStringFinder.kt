@@ -5,7 +5,8 @@ import jetbrains.buildServer.server.querylang.indexing.CompressedTrie
 
 class SimpleStringFinder(
     override val compl: CompletionManager,
-    override val systemAdminOnly: Boolean = true
+    override val systemAdminOnly: Boolean,
+    override val disabled: Boolean
 ) : SecuredStringFinder()
 {
 
@@ -21,6 +22,9 @@ class SimpleStringFinder(
     }
 
     fun addString(s: String) {
+        if (disabled) {
+            return
+        }
         if (s.contains("\n")) {
             return
         }

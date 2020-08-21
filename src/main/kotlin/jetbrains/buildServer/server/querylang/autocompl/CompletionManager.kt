@@ -2,10 +2,7 @@ package jetbrains.buildServer.server.querylang.autocompl
 
 import jetbrains.buildServer.server.querylang.ast.*
 import jetbrains.buildServer.server.querylang.indexing.CompressedTrie
-import jetbrains.buildServer.serverSide.BuildTypeTemplate
-import jetbrains.buildServer.serverSide.ProjectManager
-import jetbrains.buildServer.serverSide.SBuildType
-import jetbrains.buildServer.serverSide.SProject
+import jetbrains.buildServer.serverSide.*
 import jetbrains.buildServer.serverSide.auth.SecurityContext
 import jetbrains.buildServer.vcs.SVcsRoot
 import kotlin.reflect.KClass
@@ -14,39 +11,48 @@ class CompletionManager(
     private val projectManager: ProjectManager,
     val securityContext: SecurityContext
 ) {
+    private val DISABLE_VALUE_PARAM_NAME = "query.lang.disable.value.autocompletion"
+    private val DISABLE_IDS_PARAM_NAME = "query.lang.disable.ids.autocompletion"
+    private val DISABLE_AUTOCOMPLETION_NAME = "query.lang.disable.autocompletion"
+
+    val disableAll = TeamCityProperties.getBoolean(DISABLE_AUTOCOMPLETION_NAME)
+    val disabledValues = TeamCityProperties.getBoolean(DISABLE_VALUE_PARAM_NAME) || disableAll
+    val disableIds = TeamCityProperties.getBoolean(DISABLE_IDS_PARAM_NAME) || disableAll
+
+
     private val map: MutableMap<String, SecuredStringFinder> = mutableMapOf()
-    private val projectIdFinder = getSimpleFinder(true)
-    private val projectParamFinder = getParamFinder(true)
-    private val projectNameFinder = getSimpleFinder(true)
+    private val projectIdFinder = getSimpleFinder(true, disableIds)
+    private val projectParamFinder = getParamFinder(true, disableAll)
+    private val projectNameFinder = getSimpleFinder(true, disableIds)
 
-    private val buildConfIdFinder = getSimpleFinder(true)
-    private val buildConfOptionFinder = getParamFinder(false)
-    private val buildConfParamFinder = getParamFinder(true)
-    private val buildConfNameFinder = getSimpleFinder(true)
+    private val buildConfIdFinder = getSimpleFinder(true, disableIds)
+    private val buildConfOptionFinder = getParamFinder(false, disableAll)
+    private val buildConfParamFinder = getParamFinder(true, disableAll)
+    private val buildConfNameFinder = getSimpleFinder(true, disableIds)
 
-    private val templateIdFinder = getSimpleFinder(true)
-    private val templateOptionFinder = getParamFinder(false)
-    private val templateParamFinder = getParamFinder(true)
-    private val templateNameFinder = getSimpleFinder(true)
+    private val templateIdFinder = getSimpleFinder(true, disableIds)
+    private val templateOptionFinder = getParamFinder(false, disableAll)
+    private val templateParamFinder = getParamFinder(true, disableAll)
+    private val templateNameFinder = getSimpleFinder(true, disableIds)
 
-    private val vcsRootIdFinder = getSimpleFinder(true)
-    private val vcsRootTypeFinder = getSimpleFinder(false)
-    private val vcsParamFinder = getParamFinder(true)
-    private val vcsRootNameFinder = getSimpleFinder(true)
+    private val vcsRootIdFinder = getSimpleFinder(true, disableIds)
+    private val vcsRootTypeFinder = getSimpleFinder(false, disableAll)
+    private val vcsParamFinder = getParamFinder(true, disableAll)
+    private val vcsRootNameFinder = getSimpleFinder(true, disableIds)
 
-    private val triggerParamValueFinder = getParamFinder(false)
-    private val triggerTypeFinder = getSimpleFinder(false)
+    private val triggerParamValueFinder = getParamFinder(false, disableAll)
+    private val triggerTypeFinder = getSimpleFinder(false, disableAll)
 
-    private val stepParamValueFinder = getParamFinder(false)
-    private val stepTypeFinder = getSimpleFinder(false)
+    private val stepParamValueFinder = getParamFinder(false, disableAll)
+    private val stepTypeFinder = getSimpleFinder(false, disableAll)
 
-    private val featureParamValueFinder = getParamFinder(false)
-    private val featureTypeFinder = getSimpleFinder(false)
+    private val featureParamValueFinder = getParamFinder(false, disableAll)
+    private val featureTypeFinder = getSimpleFinder(false, disableAll)
 
-    private val snapshotOptionFinder = getParamFinder(false)
+    private val snapshotOptionFinder = getParamFinder(false, disableAll)
 
-    private val artifactRulesFinder = getSimpleFinder(false)
-    private val artifactRevRuleFinder = getSimpleFinder(false)
+    private val artifactRulesFinder = getSimpleFinder(false, disableAll)
+    private val artifactRevRuleFinder = getSimpleFinder(false, disableAll)
 
     init {
         registerFinder(projectIdFinder, ProjectFilter::class, IdFilter::class)
@@ -225,11 +231,15 @@ class CompletionManager(
         }
     }
 
-    fun getSimpleFinder(isSystemAdminOnly: Boolean): SimpleStringFinder {
-        return SimpleStringFinder(this, isSystemAdminOnly)
+    fun getSimpleFinder(isSystemAdminOnly: Boolean, disabled: Boolean): SimpleStringFinder {
+        return SimpleStringFinder(this, isSystemAdminOnly, disabled)
     }
 
-    fun getParamFinder(isSystemAdminOnly: Boolean, isValueSystemAdminOnly: Boolean = true): ParameterValueFinder {
-        return ParameterValueFinder(this, isSystemAdminOnly, isValueSystemAdminOnly)
+    fun getParamFinder(
+        isSystemAdminOnly: Boolean,
+        disabled: Boolean,
+        isValueSystemAdminOnly: Boolean = true
+    ): ParameterValueFinder {
+        return ParameterValueFinder(this, isSystemAdminOnly, isValueSystemAdminOnly, disabled, disabledValues)
     }
 }

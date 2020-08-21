@@ -3,7 +3,8 @@ package jetbrains.buildServer.server.querylang.autocompl
 class CombinedStringFinder(
     override val compl: CompletionManager,
     override val systemAdminOnly: Boolean,
-    vararg t: SecuredStringFinder
+    vararg t: SecuredStringFinder,
+    override val disabled: Boolean
 ) : SecuredStringFinder() {
     val stringFinders: List<SecuredStringFinder>
 

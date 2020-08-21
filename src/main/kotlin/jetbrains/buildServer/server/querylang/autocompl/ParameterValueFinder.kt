@@ -6,7 +6,9 @@ import jetbrains.buildServer.serverSide.impl.audit.finders.StringFinder
 class ParameterValueFinder(
     override val compl: CompletionManager,
     override val systemAdminOnly: Boolean,
-    val defaultValueSysAdminOnly: Boolean
+    val defaultValueSysAdminOnly: Boolean,
+    override val disabled: Boolean,
+    val disabledValue: Boolean
 ): SecuredStringFinder() {
     val nameTrie = CompressedTrie<Any>()
     val params: MutableMap<String, SimpleStringFinder> = mutableMapOf()
@@ -34,12 +36,15 @@ class ParameterValueFinder(
     }
 
     fun addParam(paramName: String, paramValue: String, valSystemAdminOnly: Boolean = defaultValueSysAdminOnly) {
+        if (disabled) {
+            return
+        }
         if (paramName.contains("\n") || paramValue.contains("\n")) {
             return
         }
 
         if (!params.contains(paramName)) {
-            params[paramName] = SimpleStringFinder(compl, valSystemAdminOnly)
+            params[paramName] = SimpleStringFinder(compl, valSystemAdminOnly, disabledValue)
         }
 
         if (!paramName.startsWith("secure:")) {
