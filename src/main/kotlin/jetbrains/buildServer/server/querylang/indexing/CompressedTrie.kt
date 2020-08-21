@@ -5,7 +5,14 @@ import java.util.concurrent.locks.ReentrantReadWriteLock
 
 class CompressedTrie<T> : AutocompletionIndexer<T> {
 
-    class Node<T>(var str: String, var obj: T? = null, var isTerminal: Boolean = false) {
+    var nodesTotal: Long = 0
+    var symbolsTotal: Long = 0
+
+    inner class Node<T>(var str: String, var obj: T? = null, var isTerminal: Boolean = false) {
+        init {
+            nodesTotal += 1
+            symbolsTotal += str.length
+        }
         val nodes: MutableMap<Char, Node<T>> = mutableMapOf()
         fun getNode(c: Char): Node<T>? {
             return nodes[c]

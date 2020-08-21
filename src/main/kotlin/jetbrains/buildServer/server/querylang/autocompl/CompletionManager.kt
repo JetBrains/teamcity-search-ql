@@ -83,6 +83,12 @@ class CompletionManager(
         registerFinder(vcsRootNameFinder, VcsRootTopLevelQuery::class, NameFilter::class)
     }
 
+    val nodesTotal: Long
+        get() = map.values.fold(0L) {acc, sf -> acc + sf.nodesTotal}
+
+    val symbolsTotal: Long
+        get() = map.values.fold(0L) {acc, sf -> acc + sf.symbolsTotal}
+
     private fun registerFinder(sf: SecuredStringFinder, vararg nameContext: KClass<out Named>) {
         val vars = nameContext.map { it.getNames()!! }
 

@@ -8,7 +8,12 @@ class SimpleStringFinder(
     override val systemAdminOnly: Boolean = true
 ) : SecuredStringFinder()
 {
-    val trie: AutocompletionIndexer<Any> = CompressedTrie()
+
+    val trie = CompressedTrie<Any>()
+    override val nodesTotal
+        get() = trie.nodesTotal
+    override val symbolsTotal
+        get() = trie.symbolsTotal
 
     override fun completeStringUnsafe(prefix: String, limit: Int): List<String> {
         val realPrefix = if (prefix.startsWith("\"")) prefix.drop(1) else prefix

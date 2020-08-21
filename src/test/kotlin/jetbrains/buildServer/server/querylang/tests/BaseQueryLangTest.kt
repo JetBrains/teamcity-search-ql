@@ -23,6 +23,8 @@ import jetbrains.buildServer.vcs.SVcsRoot
 import org.testng.annotations.AfterMethod
 import org.testng.annotations.BeforeMethod
 import java.util.concurrent.TimeUnit
+import kotlin.system.measureTimeMillis
+import kotlin.time.measureTime
 
 abstract class BaseQueryLangTest : BaseServerTestCase() {
     protected lateinit var client: RequestClient
@@ -30,6 +32,7 @@ abstract class BaseQueryLangTest : BaseServerTestCase() {
     protected lateinit var autoCompl: AutoCompletion
     protected lateinit var eventListener: AutocompletionEventListener
     protected lateinit var taskQueue: TaskQueue
+    protected lateinit var complm: CompletionManager
 
 
     @BeforeMethod(alwaysRun = true)
@@ -40,7 +43,7 @@ abstract class BaseQueryLangTest : BaseServerTestCase() {
             EmptyResultPrinter
         )
 
-        val complm = CompletionManager(myFixture.projectManager, myFixture.securityContext)
+        complm = CompletionManager(myFixture.projectManager, myFixture.securityContext)
         val compl = Completer(complm)
         autoCompl = AutoCompletion(myFixture.projectManager, compl)
 
@@ -51,8 +54,6 @@ abstract class BaseQueryLangTest : BaseServerTestCase() {
         MyProjectManagerInit(projectManager)
 
         eventListener.serverStartup()
-
-        val authHolder = myFixture.securityContext.authorityHolder
     }
 
 

@@ -11,10 +11,10 @@ import kotlin.system.measureTimeMillis
 
 class StressTest : BaseQueryLangTest() {
 
-    val projectCnt = 500
-    val children = 3       //the number of project children, affects depth
-    val buildConfCnt = 10  //per project
-    val templateCnt = 3
+    val projectCnt = 2000
+    val children = 3       //the number of project's children, affects depth
+    val buildConfCnt = 25  //per project
+    val templateCnt = 5
     val settinsCnt = 3
     val dependenciesOneBCCnt = 10
 
@@ -24,14 +24,21 @@ class StressTest : BaseQueryLangTest() {
     @BeforeClass
     override fun setUp() {
         super.setUp()
-        val project = TProject("BaseProject")
+        val project = TProject("BaseProject", TBuildConf("bc1", TTrigger("vcsTrigger")))
         val base = genProjectTree(project, projectCnt, children)
 
         usedMemoryBefore = runtime.totalMemory() - runtime.freeMemory()
 
-        base.create(true)
+        base.create(false)
 
         createDependencies()
+
+        val time = measureTimeMillis {
+            complm.indexAll()
+        }
+        println("Indexing finished in ${time} milliseconds")
+        println("Symbols total: ${complm.symbolsTotal}")
+        println("Nodes total: ${complm.nodesTotal}")
     }
 
     @AfterClass
@@ -51,7 +58,7 @@ class StressTest : BaseQueryLangTest() {
                     "find configuration with project id BaseProject"
             )
             .addCase(
-                    "find configuration with project id BaseProject and trigger type vcsTrigger"
+                    "find configuration with parent id BaseProject and trigger type vcsTrigger"
             )
             .addCase(
                     "find configuration with trigger type vcsTrigger"

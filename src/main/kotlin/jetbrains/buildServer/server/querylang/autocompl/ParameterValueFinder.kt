@@ -11,6 +11,11 @@ class ParameterValueFinder(
     val nameTrie = CompressedTrie<Any>()
     val params: MutableMap<String, SimpleStringFinder> = mutableMapOf()
 
+    override val symbolsTotal: Long
+        get() = params.values.fold(0L, {acc, sf -> acc + sf.symbolsTotal}) + nameTrie.symbolsTotal
+    override val nodesTotal: Long
+        get() = params.values.fold(0L, {acc, sf -> acc + sf.nodesTotal}) + nameTrie.nodesTotal
+
     override fun completeStringUnsafe(prefix: String, limit: Int): List<String> {
         val wordRegex = """[\w.\-_]*?""".toRegex()
         val withQuoteRegex = """"[\s\S]*?""".toRegex()
