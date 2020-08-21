@@ -22,4 +22,8 @@ class CombinedStringFinder(
         }
         return res.sortedWith(compareBy({it.length}, {it})).take(limit)
     }
+
+    override fun clear() {
+        stringFinders.forEach { it.clear() }
+    }
 }

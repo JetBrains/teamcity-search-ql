@@ -19,6 +19,8 @@ abstract class SecuredStringFinder {
 
     protected abstract fun completeStringUnsafe(prefix: String, limit: Int): List<String>
 
+    abstract fun clear()
+
     abstract val compl: CompletionManager
     abstract val systemAdminOnly: Boolean
     abstract var disabled: Boolean

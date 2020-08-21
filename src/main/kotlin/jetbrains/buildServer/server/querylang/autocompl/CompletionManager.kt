@@ -4,66 +4,144 @@ import jetbrains.buildServer.server.querylang.ast.*
 import jetbrains.buildServer.server.querylang.indexing.CompressedTrie
 import jetbrains.buildServer.serverSide.*
 import jetbrains.buildServer.serverSide.auth.SecurityContext
+import jetbrains.buildServer.util.EventDispatcher
+import jetbrains.buildServer.util.ThreadUtil
+import jetbrains.buildServer.util.executors.ExecutorsFactory
 import jetbrains.buildServer.vcs.SVcsRoot
+import java.util.concurrent.TimeUnit
+import java.util.concurrent.locks.ReentrantReadWriteLock
 import kotlin.reflect.KClass
 
 class CompletionManager(
     private val projectManager: ProjectManager,
-    val securityContext: SecurityContext
-) {
-    private val DISABLE_VALUE_PARAM_NAME = "query.lang.disable.value.autocompletion"
-    private val DISABLE_IDS_PARAM_NAME = "query.lang.disable.ids.autocompletion"
-    private val DISABLE_AUTOCOMPLETION_NAME = "query.lang.disable.autocompletion"
+    val securityContext: SecurityContext,
+    val serverDispatcher: EventDispatcher<ServerListener>
+): ServerListener {
+    private val DISABLE_VALUE_PARAM_NAME = "teamcity.internal.query.lang.disable.value.autocompletion"
+    private val DISABLE_IDS_PARAM_NAME = "teamcity.internal.query.lang.disable.ids.autocompletion"
+    private val DISABLE_AUTOCOMPLETION_NAME = "teamcity.internal.query.lang.disable.autocompletion"
 
-    private val VALUE_LENGTH_PARAM_NAME = "query.lang.value.length.limit"
+    private val VALUE_LENGTH_PARAM_NAME = "teamcity.internal.query.lang.value.length.limit"
     private val VALUE_LENGTH_DEFAULT = 10_000
 
-    private val VALUE_CNT_PARAM_NAME = "query.lang.value.cnt.limit"
+    private val VALUE_CNT_PARAM_NAME = "teamcity.internal.query.lang.value.cnt.limit"
     private val VALUE_CNT_DEFAULT = 100_000_000
 
-    val disableAll = TeamCityProperties.getBoolean(DISABLE_AUTOCOMPLETION_NAME)
-    val disabledValues = TeamCityProperties.getBoolean(DISABLE_VALUE_PARAM_NAME) || disableAll
-    val disableIds = TeamCityProperties.getBoolean(DISABLE_IDS_PARAM_NAME) || disableAll
+    private val UPDATE_PARAMETER_INTERVAL_SECONDS: Long = 60
 
-    val valueLengthLimit = TeamCityProperties.getInteger(VALUE_LENGTH_PARAM_NAME, VALUE_LENGTH_DEFAULT)
-    val valueCntLimit = TeamCityProperties.getInteger(VALUE_CNT_PARAM_NAME, VALUE_CNT_DEFAULT)
+    var disableAll = false
+    var disabledValues = false
+    var disableIds = false
+
+    var valueLengthLimit = VALUE_LENGTH_DEFAULT
+    var valueCntLimit = VALUE_CNT_DEFAULT
+
+    private val executor =
+        ExecutorsFactory.newFixedScheduledExecutor("QueryLanguageCompletionManager", 1)
+    private val lock = ReentrantReadWriteLock()
 
 
     private val map: MutableMap<String, SecuredStringFinder> = mutableMapOf()
-    private val projectIdFinder = getSimpleFinder(true, disableIds)
-    private val projectParamFinder = getParamFinder(true, disableAll)
-    private val projectNameFinder = getSimpleFinder(true, disableIds)
+    private lateinit var projectIdFinder: SimpleStringFinder
+    private lateinit var projectParamFinder: ParameterValueFinder
+    private lateinit var projectNameFinder: SimpleStringFinder
 
-    private val buildConfIdFinder = getSimpleFinder(true, disableIds)
-    private val buildConfOptionFinder = getParamFinder(false, disableAll)
-    private val buildConfParamFinder = getParamFinder(true, disableAll)
-    private val buildConfNameFinder = getSimpleFinder(true, disableIds)
+    private lateinit var buildConfIdFinder: SimpleStringFinder
+    private lateinit var buildConfOptionFinder: ParameterValueFinder
+    private lateinit var buildConfParamFinder: ParameterValueFinder
+    private lateinit var buildConfNameFinder: SimpleStringFinder
 
-    private val templateIdFinder = getSimpleFinder(true, disableIds)
-    private val templateOptionFinder = getParamFinder(false, disableAll)
-    private val templateParamFinder = getParamFinder(true, disableAll)
-    private val templateNameFinder = getSimpleFinder(true, disableIds)
+    private lateinit var templateIdFinder: SimpleStringFinder
+    private lateinit var templateOptionFinder: ParameterValueFinder
+    private lateinit var templateParamFinder: ParameterValueFinder
+    private lateinit var templateNameFinder: SimpleStringFinder
 
-    private val vcsRootIdFinder = getSimpleFinder(true, disableIds)
-    private val vcsRootTypeFinder = getSimpleFinder(false, disableAll)
-    private val vcsParamFinder = getParamFinder(true, disableAll)
-    private val vcsRootNameFinder = getSimpleFinder(true, disableIds)
+    private lateinit var vcsRootIdFinder: SimpleStringFinder
+    private lateinit var vcsRootTypeFinder: SimpleStringFinder
+    private lateinit var vcsParamFinder: ParameterValueFinder
+    private lateinit var vcsRootNameFinder: SimpleStringFinder
 
-    private val triggerParamValueFinder = getParamFinder(false, disableAll)
-    private val triggerTypeFinder = getSimpleFinder(false, disableAll)
+    private lateinit var triggerParamValueFinder: ParameterValueFinder
+    private lateinit var triggerTypeFinder: SimpleStringFinder
 
-    private val stepParamValueFinder = getParamFinder(false, disableAll)
-    private val stepTypeFinder = getSimpleFinder(false, disableAll)
+    private lateinit var stepParamValueFinder: ParameterValueFinder
+    private lateinit var stepTypeFinder: SimpleStringFinder
 
-    private val featureParamValueFinder = getParamFinder(false, disableAll)
-    private val featureTypeFinder = getSimpleFinder(false, disableAll)
+    private lateinit var featureParamValueFinder: ParameterValueFinder
+    private lateinit var featureTypeFinder: SimpleStringFinder
 
-    private val snapshotOptionFinder = getParamFinder(false, disableAll)
+    private lateinit var snapshotOptionFinder: ParameterValueFinder
 
-    private val artifactRulesFinder = getSimpleFinder(false, disableAll)
-    private val artifactRevRuleFinder = getSimpleFinder(false, disableAll)
+    private lateinit var artifactRulesFinder: SimpleStringFinder
+    private lateinit var artifactRevRuleFinder: SimpleStringFinder
 
     init {
+        serverDispatcher.addListener(this)
+
+        updateParams()
+        createNewIndexers()
+        registerFinders()
+
+        executor.scheduleAtFixedRate(
+            {
+                if (updateParams()) {
+                    createNewIndexers()
+                    registerFinders()
+                    indexAll()
+                }
+            },
+            UPDATE_PARAMETER_INTERVAL_SECONDS,
+            UPDATE_PARAMETER_INTERVAL_SECONDS,
+            TimeUnit.SECONDS
+        )
+    }
+
+    private fun createNewIndexers() {
+        lock.writeLock().lock()
+            map.clear()
+            projectIdFinder = getSimpleFinder(true, disableIds)
+            projectParamFinder = getParamFinder(true, disableAll)
+            projectNameFinder = getSimpleFinder(true, disableIds)
+
+            buildConfIdFinder = getSimpleFinder(true, disableIds)
+            buildConfOptionFinder = getParamFinder(false, disableAll)
+            buildConfParamFinder = getParamFinder(true, disableAll)
+            buildConfNameFinder = getSimpleFinder(true, disableIds)
+
+            templateIdFinder = getSimpleFinder(true, disableIds)
+            templateOptionFinder = getParamFinder(false, disableAll)
+            templateParamFinder = getParamFinder(true, disableAll)
+            templateNameFinder = getSimpleFinder(true, disableIds)
+
+            vcsRootIdFinder = getSimpleFinder(true, disableIds)
+            vcsRootTypeFinder = getSimpleFinder(false, disableAll)
+            vcsParamFinder = getParamFinder(true, disableAll)
+            vcsRootNameFinder = getSimpleFinder(true, disableIds)
+
+            triggerParamValueFinder = getParamFinder(false, disableAll)
+            triggerTypeFinder = getSimpleFinder(false, disableAll)
+
+            stepParamValueFinder = getParamFinder(false, disableAll)
+            stepTypeFinder = getSimpleFinder(false, disableAll)
+
+            featureParamValueFinder = getParamFinder(false, disableAll)
+            featureTypeFinder = getSimpleFinder(false, disableAll)
+
+            snapshotOptionFinder = getParamFinder(false, disableAll)
+
+            artifactRulesFinder = getSimpleFinder(false, disableAll)
+            artifactRevRuleFinder = getSimpleFinder(false, disableAll)
+        lock.writeLock().unlock()
+    }
+
+    private fun registerFinders() {
+        fun registerFinder(sf: SecuredStringFinder, vararg nameContext: KClass<out Named>) {
+            val vars = nameContext.map { it.getNames()!! }
+
+            addToMapWithPrefix(sf, "", vars)
+        }
+
+        lock.writeLock().lock()
         registerFinder(projectIdFinder, ProjectFilter::class, IdFilter::class)
         registerFinder(projectIdFinder, ParentFilter::class, IdFilter::class)
         registerFinder(projectIdFinder, AncestorFilter::class, IdFilter::class)
@@ -96,6 +174,40 @@ class CompletionManager(
         registerFinder(buildConfNameFinder, BuildConfTopLevelQuery::class, NameFilter::class)
         registerFinder(templateNameFinder, TemplateTopLevelQuery::class, NameFilter::class)
         registerFinder(vcsRootNameFinder, VcsRootTopLevelQuery::class, NameFilter::class)
+        lock.writeLock().unlock()
+    }
+
+    private fun updateParams(): Boolean {
+        var isUpdated = false
+
+        lock.writeLock().lock()
+            TeamCityProperties.getBoolean(DISABLE_AUTOCOMPLETION_NAME).let {
+                if (it != disableAll) isUpdated = true
+                disableAll = it
+            }
+
+            (TeamCityProperties.getBoolean(DISABLE_VALUE_PARAM_NAME) || disableAll).let {
+                if (it != disabledValues) isUpdated = true
+                disabledValues = it
+            }
+
+            (TeamCityProperties.getBoolean(DISABLE_IDS_PARAM_NAME) || disableAll).let {
+                if (it != disableIds) isUpdated = true
+                disableIds = it
+            }
+
+            TeamCityProperties.getInteger(VALUE_LENGTH_PARAM_NAME, VALUE_LENGTH_DEFAULT).let {
+                if (it != valueLengthLimit) isUpdated = true
+                valueLengthLimit = it
+            }
+
+            TeamCityProperties.getInteger(VALUE_CNT_PARAM_NAME, VALUE_CNT_DEFAULT).let {
+                if (it != valueCntLimit) isUpdated = true
+                valueCntLimit = it
+            }
+        lock.writeLock().unlock()
+
+        return isUpdated
     }
 
     val nodesTotal: Long
@@ -104,11 +216,6 @@ class CompletionManager(
     val symbolsTotal: Long
         get() = map.values.fold(0L) {acc, sf -> acc + sf.symbolsTotal}
 
-    private fun registerFinder(sf: SecuredStringFinder, vararg nameContext: KClass<out Named>) {
-        val vars = nameContext.map { it.getNames()!! }
-
-        addToMapWithPrefix(sf, "", vars)
-    }
 
     private fun addToMapWithPrefix(sf: SecuredStringFinder, prefix: String, vars: List<List<String>>) {
         if (vars.isEmpty()) {
@@ -131,10 +238,14 @@ class CompletionManager(
     }
 
     fun completeString(s: String, filterType: String, limit: Int): List<String> {
-        return map[filterType]?.completeString(s, limit) ?: listOf()
+        lock.readLock().lock()
+        val res = map[filterType]?.completeString(s, limit) ?: listOf()
+        lock.readLock().unlock()
+        return res
     }
 
     fun updateProject(project: SProject) {
+        lock.readLock().lock()
         projectIdFinder.addString(project.externalId)
         projectNameFinder.addString(project.name)
 
@@ -148,9 +259,11 @@ class CompletionManager(
         project.ownParameters.forEach {(name, value) ->
             projectParamFinder.addParam(name, value)
         }
+        lock.readLock().unlock()
     }
 
     fun updateBuildType(bt: SBuildType) {
+        lock.readLock().lock()
         buildConfIdFinder.addString(bt.externalId)
         buildConfNameFinder.addString(bt.name)
         bt.buildTriggersCollection.forEach { trig ->
@@ -188,9 +301,11 @@ class CompletionManager(
         }
 
         bt.ownParameters.forEach {(a, b) -> buildConfParamFinder.addParam(a, b)}
+        lock.readLock().unlock()
     }
 
     fun updateTemplate(temp: BuildTypeTemplate) {
+        lock.readLock().lock()
         templateIdFinder.addString(temp.externalId)
         templateNameFinder.addString(temp.name)
         temp.buildTriggersCollection.forEach { trig ->
@@ -228,9 +343,11 @@ class CompletionManager(
         }
 
         temp.ownParameters.forEach {(a, b) -> templateParamFinder.addParam(a, b)}
+        lock.readLock().unlock()
     }
 
     fun updateVcsRoot(vcs: SVcsRoot) {
+        lock.readLock().lock()
         vcsRootIdFinder.addString(vcs.externalId)
         vcsRootTypeFinder.addString(vcs.vcsName)
         vcsRootNameFinder.addString(vcs.name)
@@ -238,6 +355,7 @@ class CompletionManager(
         vcs.properties.forEach {(name, value) ->
             vcsParamFinder.addParam(name, value)
         }
+        lock.readLock().unlock()
     }
 
     fun getSimpleFinder(isSystemAdminOnly: Boolean, disabled: Boolean): SimpleStringFinder {
@@ -258,4 +376,10 @@ class CompletionManager(
             valueCntLimit
         )
     }
+
+    override fun serverShutdown() {
+        ThreadUtil.shutdownGracefully(executor, "QueryLangCompletionManager")
+    }
+
+    override fun serverStartup() {}
 }

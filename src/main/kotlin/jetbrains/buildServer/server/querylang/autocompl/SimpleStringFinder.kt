@@ -31,7 +31,7 @@ class SimpleStringFinder(
         return trie.addString(s)
     }
 
-    fun clear() {
+    override fun clear() {
         trie.clear()
     }
 }

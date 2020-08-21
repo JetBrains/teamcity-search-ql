@@ -61,6 +61,11 @@ class ParameterValueFinder(
         nameTrie.addString(paramName)
     }
 
+    override fun clear() {
+        nameTrie.clear()
+        params.clear()
+    }
+
     private fun completeParamName(paramPrefix: String, limit: Int): List<String> {
         return nameTrie.complete(paramPrefix, limit)
     }

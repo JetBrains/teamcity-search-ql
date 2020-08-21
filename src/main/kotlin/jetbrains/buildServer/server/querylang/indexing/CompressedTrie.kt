@@ -102,7 +102,13 @@ class CompressedTrie<T> : AutocompletionIndexer<T> {
     }
 
     fun clear() {
+        lock.writeLock().lock()
         root.nodes.clear()
+
+        stringsTotal = 0
+        nodesTotal = 1
+        symbolsTotal = 0
+        lock.writeLock().unlock()
     }
 
     private fun findLargestPrefix(str1: String, beg1: Int,  str2: String): String {
