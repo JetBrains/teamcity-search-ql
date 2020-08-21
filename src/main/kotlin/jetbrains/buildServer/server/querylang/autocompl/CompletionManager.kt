@@ -17,14 +17,12 @@ class CompletionManager(
     val securityContext: SecurityContext,
     val serverDispatcher: EventDispatcher<ServerListener>
 ): ServerListener {
-    private val DISABLE_VALUE_PARAM_NAME = "teamcity.internal.query.lang.disable.value.autocompletion"
-    private val DISABLE_IDS_PARAM_NAME = "teamcity.internal.query.lang.disable.ids.autocompletion"
-    private val DISABLE_AUTOCOMPLETION_NAME = "teamcity.internal.query.lang.disable.autocompletion"
+    private val DISABLE_AUTOCOMPLETION_NAME = "teamcity.internal.query.lang.autocompletion.disable"
 
-    private val VALUE_LENGTH_PARAM_NAME = "teamcity.internal.query.lang.value.length.limit"
+    private val VALUE_LENGTH_PARAM_NAME = "teamcity.internal.query.lang.autocompletion.value.limit.length"
     private val VALUE_LENGTH_DEFAULT = 10_000
 
-    private val VALUE_CNT_PARAM_NAME = "teamcity.internal.query.lang.value.cnt.limit"
+    private val VALUE_CNT_PARAM_NAME = "teamcity.internal.query.lang.autocompletion.value.limit.cnt"
     private val VALUE_CNT_DEFAULT = 100_000_000
 
     private val UPDATE_PARAMETER_INTERVAL_SECONDS: Long = 60
@@ -87,7 +85,9 @@ class CompletionManager(
                 if (updateParams()) {
                     createNewIndexers()
                     registerFinders()
-                    indexAll()
+                    if (!disableAll) {
+                        indexAll()
+                    }
                 }
             },
             UPDATE_PARAMETER_INTERVAL_SECONDS,
@@ -181,17 +181,18 @@ class CompletionManager(
         var isUpdated = false
 
         lock.writeLock().lock()
-            TeamCityProperties.getBoolean(DISABLE_AUTOCOMPLETION_NAME).let {
+            val disable = TeamCityProperties.getProperty(DISABLE_AUTOCOMPLETION_NAME).split(",").map {it.trim()}
+            disable.equals("true").let {
                 if (it != disableAll) isUpdated = true
                 disableAll = it
             }
 
-            (TeamCityProperties.getBoolean(DISABLE_VALUE_PARAM_NAME) || disableAll).let {
+            (disable.contains("value") || disableAll).let {
                 if (it != disabledValues) isUpdated = true
                 disabledValues = it
             }
 
-            (TeamCityProperties.getBoolean(DISABLE_IDS_PARAM_NAME) || disableAll).let {
+            (disable.contains("id") || disableAll).let {
                 if (it != disableIds) isUpdated = true
                 disableIds = it
             }
