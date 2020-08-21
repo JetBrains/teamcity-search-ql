@@ -4,7 +4,7 @@ class CombinedStringFinder(
     override val compl: CompletionManager,
     override val systemAdminOnly: Boolean,
     vararg t: SecuredStringFinder,
-    override val disabled: Boolean
+    override var disabled: Boolean
 ) : SecuredStringFinder() {
     val stringFinders: List<SecuredStringFinder>
 

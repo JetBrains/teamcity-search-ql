@@ -15,9 +15,18 @@ class CompletionManager(
     private val DISABLE_IDS_PARAM_NAME = "query.lang.disable.ids.autocompletion"
     private val DISABLE_AUTOCOMPLETION_NAME = "query.lang.disable.autocompletion"
 
+    private val VALUE_LENGTH_PARAM_NAME = "query.lang.value.length.limit"
+    private val VALUE_LENGTH_DEFAULT = 10_000
+
+    private val VALUE_CNT_PARAM_NAME = "query.lang.value.cnt.limit"
+    private val VALUE_CNT_DEFAULT = 100_000_000
+
     val disableAll = TeamCityProperties.getBoolean(DISABLE_AUTOCOMPLETION_NAME)
     val disabledValues = TeamCityProperties.getBoolean(DISABLE_VALUE_PARAM_NAME) || disableAll
     val disableIds = TeamCityProperties.getBoolean(DISABLE_IDS_PARAM_NAME) || disableAll
+
+    val valueLengthLimit = TeamCityProperties.getInteger(VALUE_LENGTH_PARAM_NAME, VALUE_LENGTH_DEFAULT)
+    val valueCntLimit = TeamCityProperties.getInteger(VALUE_CNT_PARAM_NAME, VALUE_CNT_DEFAULT)
 
 
     private val map: MutableMap<String, SecuredStringFinder> = mutableMapOf()
@@ -240,6 +249,13 @@ class CompletionManager(
         disabled: Boolean,
         isValueSystemAdminOnly: Boolean = true
     ): ParameterValueFinder {
-        return ParameterValueFinder(this, isSystemAdminOnly, isValueSystemAdminOnly, disabled, disabledValues)
+        return ParameterValueFinder(this,
+            isSystemAdminOnly,
+            isValueSystemAdminOnly,
+            disabled,
+            disabledValues,
+            valueLengthLimit,
+            valueCntLimit
+        )
     }
 }

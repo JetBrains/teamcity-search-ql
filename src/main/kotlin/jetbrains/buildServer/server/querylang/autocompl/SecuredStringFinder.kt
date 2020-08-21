@@ -21,7 +21,7 @@ abstract class SecuredStringFinder {
 
     abstract val compl: CompletionManager
     abstract val systemAdminOnly: Boolean
-    abstract val disabled: Boolean
+    abstract var disabled: Boolean
 
     open val nodesTotal: Long = 0
     open val symbolsTotal: Long = 0

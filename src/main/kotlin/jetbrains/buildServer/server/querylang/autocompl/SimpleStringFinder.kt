@@ -6,7 +6,7 @@ import jetbrains.buildServer.server.querylang.indexing.CompressedTrie
 class SimpleStringFinder(
     override val compl: CompletionManager,
     override val systemAdminOnly: Boolean,
-    override val disabled: Boolean
+    override var disabled: Boolean
 ) : SecuredStringFinder()
 {
 
@@ -29,5 +29,9 @@ class SimpleStringFinder(
             return
         }
         return trie.addString(s)
+    }
+
+    fun clear() {
+        trie.clear()
     }
 }

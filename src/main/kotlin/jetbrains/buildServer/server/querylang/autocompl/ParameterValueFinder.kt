@@ -7,8 +7,10 @@ class ParameterValueFinder(
     override val compl: CompletionManager,
     override val systemAdminOnly: Boolean,
     val defaultValueSysAdminOnly: Boolean,
-    override val disabled: Boolean,
-    val disabledValue: Boolean
+    override var disabled: Boolean,
+    val disabledValue: Boolean,
+    val lengthLimit: Int,
+    val cntLimit: Int
 ): SecuredStringFinder() {
     val nameTrie = CompressedTrie<Any>()
     val params: MutableMap<String, SimpleStringFinder> = mutableMapOf()
@@ -39,7 +41,7 @@ class ParameterValueFinder(
         if (disabled) {
             return
         }
-        if (paramName.contains("\n") || paramValue.contains("\n")) {
+        if (paramValue.length > lengthLimit || paramName.contains("\n") || paramValue.contains("\n")) {
             return
         }
 
@@ -48,7 +50,12 @@ class ParameterValueFinder(
         }
 
         if (!paramName.startsWith("secure:")) {
-            params[paramName]!!.addString(paramValue)
+            val ptrie = params[paramName]!!
+            ptrie.addString(paramValue)
+            if (ptrie.trie.stringsTotal > cntLimit) {
+                ptrie.clear()
+                ptrie.disabled = true
+            }
         }
 
         nameTrie.addString(paramName)

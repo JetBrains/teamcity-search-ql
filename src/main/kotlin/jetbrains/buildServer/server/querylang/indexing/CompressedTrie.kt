@@ -7,6 +7,7 @@ class CompressedTrie<T> : AutocompletionIndexer<T> {
 
     var nodesTotal: Long = 0
     var symbolsTotal: Long = 0
+    var stringsTotal: Long = 0
 
     inner class Node<T>(var str: String, var obj: T? = null, var isTerminal: Boolean = false) {
         init {
@@ -63,6 +64,9 @@ class CompressedTrie<T> : AutocompletionIndexer<T> {
             }
         }
 
+        if (!node.isTerminal) {
+            stringsTotal += 1
+        }
         node.isTerminal = true
         node.obj = obj
 
@@ -95,6 +99,10 @@ class CompressedTrie<T> : AutocompletionIndexer<T> {
         lock.readLock().unlock()
 
         return res
+    }
+
+    fun clear() {
+        root.nodes.clear()
     }
 
     private fun findLargestPrefix(str1: String, beg1: Int,  str2: String): String {
