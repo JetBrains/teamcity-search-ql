@@ -7,6 +7,7 @@ import jetbrains.buildServer.server.querylang.parser.QLangGrammarLexer
 import jetbrains.buildServer.server.querylang.parser.QLangGrammarParser
 import jetbrains.buildServer.server.querylang.parser.QueryParser
 import jetbrains.buildServer.serverSide.ProjectManager
+import jetbrains.buildServer.serverSide.TeamCityProperties
 import org.antlr.v4.runtime.CharStreams
 import org.antlr.v4.runtime.CommonTokenStream
 import org.antlr.v4.runtime.ParserRuleContext
@@ -19,7 +20,10 @@ class AutoCompletion(
     val projectManager: ProjectManager? = null,
     private val compl: Completer
 ) {
+    private val AUTOCOMPLETION_LIMIT_NAME = "teamcity.internal.searchQL.autocompletion.maxSuggested"
     private val parser = QueryParser
+
+    val limit = TeamCityProperties.getInteger(AUTOCOMPLETION_LIMIT_NAME, 100)
 
     fun complete(input: String): List<CompletionResult> {
         val stream = CharStreams.fromString(input)
@@ -38,7 +42,7 @@ class AutoCompletion(
         val treePartNode = start.partialQuery()
         if (treeFindNode != null) {
             val (word, objectTypes, trace, completeModifier) = getFilterTrace(treeFindNode, input) ?: return emptyList()
-            val vars = compl.suggest(input.dropLast(word.length), objectTypes, trace, word, completeModifier, 100)
+            val vars = compl.suggest(input.dropLast(word.length), objectTypes, trace, word, completeModifier, limit)
             return vars
         }
         if (treePartNode != null) {
