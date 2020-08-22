@@ -17,12 +17,12 @@ class CompletionManager(
     val securityContext: SecurityContext,
     val serverDispatcher: EventDispatcher<ServerListener>
 ): ServerListener {
-    private val DISABLE_AUTOCOMPLETION_NAME = "teamcity.internal.query.lang.autocompletion.disable"
+    private val DISABLE_AUTOCOMPLETION_NAME = "teamcity.internal.searchQL.autocompletion.disable"
 
-    private val VALUE_LENGTH_PARAM_NAME = "teamcity.internal.query.lang.autocompletion.value.limit.length"
+    private val VALUE_LENGTH_PARAM_NAME = "teamcity.internal.searchQL.autocompletion.value.lengthLimit"
     private val VALUE_LENGTH_DEFAULT = 10_000
 
-    private val VALUE_CNT_PARAM_NAME = "teamcity.internal.query.lang.autocompletion.value.limit.cnt"
+    private val VALUE_CNT_PARAM_NAME = "teamcity.internal.searchQL.autocompletion.value.maxCnt"
     private val VALUE_CNT_DEFAULT = 100_000_000
 
     private val UPDATE_PARAMETER_INTERVAL_SECONDS: Long = 60
@@ -182,7 +182,7 @@ class CompletionManager(
 
         lock.writeLock().lock()
             val disable = TeamCityProperties.getProperty(DISABLE_AUTOCOMPLETION_NAME).split(",").map {it.trim()}
-            disable.equals("true").let {
+            disable.equals("all").let {
                 if (it != disableAll) isUpdated = true
                 disableAll = it
             }
