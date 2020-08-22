@@ -8,7 +8,7 @@ data class EqualsStringFilter(val str: String) : Filter<String>, ObjectEvaluator
     override fun createStr() = str.toIdentOrString()
 
     override fun build():RealObjectFilter<String> {
-        return RealObjectFilter {obj -> obj == str}
+        return RealObjectFilter {obj -> obj.equals(str, true)}
     }
 
     override fun evalSimple(): List<String> {
@@ -21,7 +21,7 @@ data class PrefixStringFilter(val str: String) : Filter<String> {
     override fun createStr() = str.toIdentOrString() + '*'
 
     override fun build():RealObjectFilter<String> {
-        return RealObjectFilter {obj -> obj.startsWith(str)}
+        return RealObjectFilter {obj -> obj.startsWith(str, true)}
     }
 }
 
@@ -30,7 +30,7 @@ data class SuffixStringFilter(val str: String) : Filter<String> {
     override fun createStr() = '*' + str.toIdentOrString()
 
     override fun build():RealObjectFilter<String> {
-        return RealObjectFilter {obj -> obj.endsWith(str)}
+        return RealObjectFilter {obj -> obj.endsWith(str, true)}
     }
 }
 
@@ -39,7 +39,7 @@ data class SubstringFilter(val str: String) : Filter<String> {
     override fun createStr() = '*' + str.toIdentOrString() + '*'
 
     override fun build():RealObjectFilter<String> {
-        return RealObjectFilter {obj -> obj.contains(str)}
+        return RealObjectFilter {obj -> obj.contains(str, true)}
     }
 }
 
