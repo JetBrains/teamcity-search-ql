@@ -22,7 +22,10 @@ interface BuildConfConditionContainer : ConditionContainer<WBuildConf> {
             is TemplateFilter -> {
                 val (remFilter, templates) = filter.transformedEval()
                 val objs = templates.flatMap { it.stemplate.usages}.mapNotNull { it?.wrap() }
-                return EvalResult(remFilter, objs)
+                val fobjs = if (filter.searchAll) {
+                    objs.filter {remFilter.accepts(it)}
+                } else objs
+                return EvalResult(remFilter, fobjs)
             }
             is ProjectFilter -> {
                 val (remFilter, projects) = filter.transformedEval()

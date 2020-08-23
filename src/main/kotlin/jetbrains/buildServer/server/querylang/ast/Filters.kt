@@ -252,35 +252,21 @@ data class ParameterFilter(
 data class AncestorFilter(
     override val condition: ConditionAST<WProject>
 ) : ConditionFilter<FAncestorContainer, WProject>(),
-    ProjectConditionContainer,
-    MAllContainer
+    ProjectConditionContainer
 {
     companion object : Names("ancestor")
     override val names = Companion.names
-    override var searchAll = false
 
     override fun buildFrom(filter:RealObjectFilter<WProject>):RealObjectFilter<FAncestorContainer> {
-        return when (elementSelector()) {
-            is AnyElementValidator -> RealObjectFilter fil@{obj ->
-                var proj: WProject? = obj.firstAncestor
-                while (proj != null) {
-                    if (filter.accepts(proj)) {
-                        return@fil true
-                    }
-                    proj = proj.parent
+        return RealObjectFilter fil@{obj ->
+            var proj: WProject? = obj.firstAncestor
+            while (proj != null) {
+                if (filter.accepts(proj)) {
+                    return@fil true
                 }
-                false
+                proj = proj.parent
             }
-            is AllElementValidator -> RealObjectFilter fil1@{obj ->
-                var proj: WProject? = obj.firstAncestor
-                while (proj != null) {
-                    if (!filter.accepts(proj)) {
-                        return@fil1 false
-                    }
-                    proj = proj!!.parent
-                }
-                true
-            }
+            false
         }
     }
 }
