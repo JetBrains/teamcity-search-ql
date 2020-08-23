@@ -66,7 +66,7 @@ class WProject(
         get() = ownFeatures.flatMap { it.values } + ownParams.map {it.toValue()}
 
     override val name: String
-        get() = sproject.fullName
+        get() = sproject.name
 
     override fun equals(other: Any?): Boolean {
         return other is WProject && other.id == this.id
