@@ -55,7 +55,7 @@ data class ProjectTopLevelQuery(override val condition: ConditionAST<WProject>):
                 myProjectManager.projects.filter {
                     checkInterruptionStatus()
                     res.filter.accepts(it.wrap())
-                }.map { it.wrap() }
+                }.map { it.wrap() } + res.objects
             )
             else
                 EvalResult(NoneObjectFilter(),
@@ -79,7 +79,7 @@ data class BuildConfTopLevelQuery(
                     myProjectManager.allBuildTypes.filter {
                         checkInterruptionStatus()
                         res.filter.accepts(it.wrap())
-                    }.map { it.wrap() }
+                    }.map { it.wrap() } + res.objects
                 )
             else
                 EvalResult(NoneObjectFilter(),res.objects)
@@ -103,7 +103,7 @@ data class TemplateTopLevelQuery(
                     myProjectManager.allTemplates.filter {
                         checkInterruptionStatus()
                         res.filter.accepts(it.wrap())
-                    }.map { it.wrap() }
+                    }.map { it.wrap() } + res.objects
                 )
             else
                 EvalResult(NoneObjectFilter(), res.objects)
@@ -127,7 +127,7 @@ data class VcsRootTopLevelQuery(
                 myProjectManager.allVcsRoots.filter {
                     checkInterruptionStatus()
                     res.filter.accepts(it.wrap(it.project.valueResolver))
-                }.map {it.wrap(it.project.valueResolver) }
+                }.map {it.wrap(it.project.valueResolver) } + res.objects
             )
             else
                 EvalResult(NoneObjectFilter(),res.objects)

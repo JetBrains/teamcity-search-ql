@@ -17,6 +17,7 @@ import jetbrains.buildServer.serverSide.*
 import jetbrains.buildServer.serverSide.dependency.DependencySettings
 import jetbrains.buildServer.serverSide.impl.BaseServerTestCase
 import jetbrains.buildServer.serverSide.impl.ProjectEx
+import jetbrains.buildServer.util.EventDispatcher
 import jetbrains.buildServer.util.OptionSupport
 import jetbrains.buildServer.util.StringOption
 import jetbrains.buildServer.vcs.SVcsRoot
@@ -43,7 +44,7 @@ abstract class BaseQueryLangTest : BaseServerTestCase() {
             EmptyResultPrinter
         )
 
-        complm = CompletionManager(myFixture.projectManager, myFixture.securityContext)
+        complm = CompletionManager(myFixture.projectManager, myFixture.securityContext, myFixture.eventDispatcher as EventDispatcher<ServerListener>)
         val compl = Completer(complm)
         autoCompl = AutoCompletion(myFixture.projectManager, compl)
 
@@ -478,6 +479,12 @@ abstract class BaseQueryLangTest : BaseServerTestCase() {
 
         fun end(): MutableIterator<Array<Any>> {
             return tests.map {p ->
+                arrayOf(p.first, p.second)
+            }.toMutableList().iterator()
+        }
+
+        fun lastOnly(): MutableIterator<Array<Any>> {
+            return listOf(tests.last()).map {p ->
                 arrayOf(p.first, p.second)
             }.toMutableList().iterator()
         }

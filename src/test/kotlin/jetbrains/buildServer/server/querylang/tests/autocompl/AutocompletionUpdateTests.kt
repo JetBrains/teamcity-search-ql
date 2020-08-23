@@ -1,7 +1,9 @@
 package jetbrains.buildServer.server.querylang.tests.autocompl
 
 import jetbrains.buildServer.server.querylang.autocompl.*
+import jetbrains.buildServer.serverSide.ServerListener
 import jetbrains.buildServer.serverSide.impl.BaseServerTestCase
+import jetbrains.buildServer.util.EventDispatcher
 import jetbrains.buildServer.util.WaitFor
 import org.testng.annotations.BeforeClass
 import org.testng.annotations.BeforeMethod
@@ -19,7 +21,7 @@ class AutocompletionUpdateTests : BaseServerTestCase(){
     @BeforeMethod
     override fun setUp() {
         super.setUp()
-        compl = CompletionManager(myFixture.projectManager, myFixture.securityContext)
+        compl = CompletionManager(myFixture.projectManager, myFixture.securityContext, myFixture.eventDispatcher as EventDispatcher<ServerListener>)
         val taskQueue = TaskQueue(compl, updatePeriod, 0, TimeUnit.MILLISECONDS)
 
         eventListener = AutocompletionEventListener(taskQueue ,myFixture.projectManager,  myFixture.eventDispatcher)

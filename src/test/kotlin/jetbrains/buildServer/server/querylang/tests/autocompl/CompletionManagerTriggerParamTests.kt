@@ -1,7 +1,9 @@
 package jetbrains.buildServer.server.querylang.tests.autocompl
 
 import jetbrains.buildServer.server.querylang.autocompl.CompletionManager
+import jetbrains.buildServer.serverSide.ServerListener
 import jetbrains.buildServer.serverSide.impl.BaseServerTestCase
+import jetbrains.buildServer.util.EventDispatcher
 
 import org.testng.annotations.BeforeClass
 import org.testng.annotations.Test
@@ -21,7 +23,7 @@ class CompletionManagerTriggerParamTests : BaseServerTestCase() {
         bc1.addBuildTrigger("vcsTrigger", mapOf(Pair("path", "abc"), Pair("abc", "bcd"), Pair("pathabc", "abc")))
         temp1.addBuildTrigger("vcsTrigger", mapOf(Pair("path", "abd"), Pair("abc", "bcd")))
 
-        compl = CompletionManager(myFixture.projectManager, myFixture.securityContext)
+        compl = CompletionManager(myFixture.projectManager, myFixture.securityContext, myFixture.eventDispatcher as EventDispatcher<ServerListener>)
 
         compl.indexAll()
     }

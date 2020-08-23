@@ -30,9 +30,11 @@ interface ConditionContainer<NestedObject> : Named {
                 val lres = this.left.eval()
                 val rres = this.right.eval()
 
+                val res = lres.objects.unite(rres.objects)
+
                 EvalResult(
                     lres.filter.or(rres.filter),
-                    lres.objects.unite(rres.objects)
+                    res
                 )
             }
 

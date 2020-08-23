@@ -1,7 +1,9 @@
 package jetbrains.buildServer.server.querylang.tests.autocompl
 
 import jetbrains.buildServer.server.querylang.autocompl.CompletionManager
+import jetbrains.buildServer.serverSide.ServerListener
 import jetbrains.buildServer.serverSide.impl.BaseServerTestCase
+import jetbrains.buildServer.util.EventDispatcher
 import org.testng.annotations.BeforeClass
 import org.testng.annotations.Test
 
@@ -23,7 +25,7 @@ internal class CompletionManagerProjectIdTests : BaseServerTestCase() {
         val project6 = myFixture.createProject("Base_Project2_Project3_Project6", "Base_Project2_Project3_Project6", project3)
         val project7 = myFixture.createProject("Base_Project2_Project4_Project7", "Base_Project2_Project4_Project7", project4)
 
-        compl = CompletionManager(myFixture.projectManager, myFixture.securityContext)
+        compl = CompletionManager(myFixture.projectManager, myFixture.securityContext, myFixture.eventDispatcher as EventDispatcher<ServerListener>)
         compl.indexAll()
     }
 

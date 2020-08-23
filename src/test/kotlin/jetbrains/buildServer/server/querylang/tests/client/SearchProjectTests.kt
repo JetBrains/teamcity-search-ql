@@ -78,7 +78,11 @@ class SearchProjectTests : BaseQueryLangTest() {
             "find project with param * = abc",
             "p1"
         )
-        .end()
+        .addProjectCase(
+            "find project with id BaseProject or id Project1 or name asdfasdfasdfa",
+            "p0", "p1"
+        )
+        .lastOnly()
 
     @DataProvider(name = "compl")
     fun complData() = TestDataProvider()
