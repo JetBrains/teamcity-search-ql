@@ -6,6 +6,7 @@ import jetbrains.buildServer.server.querylang.objects.BuildConfiguration
 import jetbrains.buildServer.server.querylang.objects.BuildTemplate
 import jetbrains.buildServer.server.querylang.objects.Project
 import jetbrains.buildServer.server.querylang.objects.VcsRoot
+import jetbrains.buildServer.server.querylang.parser.QueryParser
 import jetbrains.buildServer.server.querylang.requests.QueryResult
 
 private fun checkInterruptionStatus() {
@@ -36,19 +37,37 @@ data class FullQuery(val queries: List<TopLevelQuery<*>>): MainQuery(), Printabl
             "find ${queries.joinToString(separator = ",") { it.names.first() }} with $conditionStr"
         }
     }
+
+    fun getPossibleStrings() = queries.flatMap { it.getPossibleStrings() }
 }
 
 data class PartialQuery(val fullQueries: List<FullQuery>): MainQuery()
 
-sealed class TopLevelQuery<T> : ConditionContainer<T>, Named
+sealed class TopLevelQuery<T> : ConditionContainer<T>, Named, ConditionSplitter<T> {
+    fun splitCondition() = condition.splitCondition()
+
+    fun getPossibleStrings(): List<String> {
+        val collector = StringCollector()
+        val collectorFilter = QueryParser.validateQuery(condition, true) ?: return emptyList()
+        collectorFilter.setCollector(collector)
+        val (remCondition, visitor) = condition.splitCondition()
+        val vars = evalFrom(remCondition).objects
+        vars.forEach {visitor.accepts(it)}
+        return collector.toList()
+    }
+
+    override fun evalInner(): EvalResult<T> = evalFrom(condition)
+
+    abstract fun evalFrom(condition: ConditionAST<T>): EvalResult<T>
+}
 
 data class ProjectTopLevelQuery(override val condition: ConditionAST<WProject>): TopLevelQuery<WProject>(), ProjectConditionContainer {
     companion object : Names(*(ProjectFilter.names.toTypedArray()))
 
     override val names = Companion.names
 
-    override fun evalInner(): EvalResult<WProject> {
-        val res = condition.eval()
+    override fun evalFrom(ncondition: ConditionAST<WProject>): EvalResult<WProject> {
+        val res = ncondition.eval()
 
         return if (res.filter !is NoneObjectFilter)
             EvalResult(NoneObjectFilter(),
@@ -71,8 +90,8 @@ data class BuildConfTopLevelQuery(
 
     override val names = Companion.names
 
-    override fun evalInner(): EvalResult<WBuildConf> {
-        val res = condition.eval()
+    override fun evalFrom(ncondition: ConditionAST<WBuildConf>): EvalResult<WBuildConf> {
+        val res = ncondition.eval()
 
         return if (res.filter !is NoneObjectFilter)
                 EvalResult(NoneObjectFilter(),
@@ -95,7 +114,7 @@ data class TemplateTopLevelQuery(
 
     override val names = Companion.names
 
-    override fun evalInner(): EvalResult<WTemplate> {
+    override fun evalFrom(condition: ConditionAST<WTemplate>): EvalResult<WTemplate> {
         val res = condition.eval()
 
         return if (res.filter !is NoneObjectFilter)
@@ -119,7 +138,7 @@ data class VcsRootTopLevelQuery(
 
     override val names = Companion.names
 
-    override fun evalInner(): EvalResult<WVcsRoot> {
+    override fun evalFrom(condition: ConditionAST<WVcsRoot>): EvalResult<WVcsRoot> {
         val res = condition.eval()
 
         return if (res.filter !is NoneObjectFilter)

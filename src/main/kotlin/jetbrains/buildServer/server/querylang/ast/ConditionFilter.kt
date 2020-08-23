@@ -1,6 +1,13 @@
 package jetbrains.buildServer.server.querylang.ast
 
-abstract class ConditionFilter<Object, NestedObject> : Filter<Object>, ConditionContainer<NestedObject> {
+import java.lang.IllegalStateException
+import kotlin.reflect.full.primaryConstructor
+
+abstract class ConditionFilter<Object, NestedObject>
+    : Filter<Object>,
+    ConditionContainer<NestedObject>,
+    ConditionSplitter<NestedObject>
+{
     abstract fun buildFrom(filter: RealObjectFilter<NestedObject>): RealObjectFilter<Object>
 
     private val conditionFilter: RealObjectFilter<NestedObject> by lazy { condition.build() }
@@ -18,6 +25,23 @@ abstract class ConditionFilter<Object, NestedObject> : Filter<Object>, Condition
         }
         else {
             return Pair(NoneObjectFilter(), objs)
+        }
+    }
+
+    fun createInstance(condition: ConditionAST<NestedObject>): ConditionFilter<Object, NestedObject> {
+        return this.javaClass.kotlin.primaryConstructor?.call(condition)
+            ?: throw IllegalStateException("Condition filter should have primary constructor with one parameter")
+    }
+
+    abstract fun buildVisitorFrom(subVisitor: RealObjectFilter<NestedObject>): RealObjectFilter<Object>
+
+    fun split(): Pair<ConditionFilter<Object, NestedObject>?, RealObjectFilter<Object>> {
+        val (remCondition, pathToCollector) = condition.splitCondition()
+        val nPathToCollector = buildVisitorFrom(pathToCollector)
+        if (remCondition is NoneConditionAST) {
+            return Pair(null, nPathToCollector)
+        } else {
+            return Pair(createInstance(remCondition), nPathToCollector)
         }
     }
 }

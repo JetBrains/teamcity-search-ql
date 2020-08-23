@@ -43,6 +43,8 @@ object FilterRegistration {
         registerFilter(CleanFilter::class)
         registerFilter(StringParamFilter::class)
         registerFilter(AnyStringFilter::class)
+        registerFilter(CollectorStringFilter::class)
+        registerFilter(CollectorStringParamFilter::class)
 
         registerConditionFilter(IdFilter::class)
         registerConditionFilter(BuildConfFilter::class)

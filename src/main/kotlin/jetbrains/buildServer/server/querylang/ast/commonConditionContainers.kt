@@ -22,7 +22,7 @@ interface BuildConfConditionContainer : ConditionContainer<WBuildConf> {
             is TemplateFilter -> {
                 val (remFilter, templates) = filter.transformedEval()
                 val objs = templates.flatMap { it.stemplate.usages}.mapNotNull { it?.wrap() }
-                val fobjs = if (filter.searchAll) {
+                val fobjs = if (filter.searchAll !is AnyElementValidator) {
                     objs.filter {remFilter.accepts(it)}
                 } else objs
                 return EvalResult(remFilter, fobjs)

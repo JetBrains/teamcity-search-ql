@@ -67,7 +67,7 @@ interface ConditionContainer<NestedObject> : Named {
             }
 
             is NoneConditionAST -> {
-                EvalResult(RealObjectFilter {false}, emptyList())
+                EvalResult(RealObjectFilter {true}, emptyList())
             }
         }
     }

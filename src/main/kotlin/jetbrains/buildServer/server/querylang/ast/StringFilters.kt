@@ -1,6 +1,7 @@
 package jetbrains.buildServer.server.querylang.ast
 
 import jetbrains.buildServer.server.querylang.ast.wrappers.WParam
+import jetbrains.buildServer.server.querylang.indexing.CompressedTrie
 import jetbrains.buildServer.server.querylang.toIdentOrString
 
 data class EqualsStringFilter(val str: String) : Filter<String>, ObjectEvaluator<String>() {
@@ -46,7 +47,9 @@ data class SubstringFilter(val str: String) : Filter<String> {
 data class StringParamFilter(
     val nameCondition: ConditionAST<String>,
     val valueCondition:  ConditionAST<String>
-) : Filter<WParam> {
+) : Filter<WParam>,
+    ConditionSplitter<String>
+{
     override val names: List<String> = emptyList()
     override fun createStr() = "${nameCondition.createStr()}=${valueCondition.createStr()}"
 
@@ -56,6 +59,28 @@ data class StringParamFilter(
     override fun build():RealObjectFilter<WParam> {
         return RealObjectFilter {obj ->
             nameFilter.accepts(obj.name) && valueFilter.accepts(obj.value)
+        }
+    }
+}
+
+interface CollectorFilter {
+    fun setCollector(collector_: StringCollector)
+}
+
+class CollectorStringParamFilter : Filter<WParam>, CollectorFilter {
+    override val names = emptyList<String>()
+    override fun createStr() = "?"
+
+    private lateinit var collector: StringCollector
+
+    override fun setCollector(collector_: StringCollector) {
+        collector = collector_
+    }
+
+    override fun build(): RealObjectFilter<WParam> {
+        return RealObjectFilter { obj ->
+            collector.addString(obj.name)
+            false
         }
     }
 }
@@ -70,6 +95,40 @@ data class AnyStringFilter(
         return RealObjectFilter {true}
     }
 }
+
+class StringCollector {
+    private val trie = CompressedTrie<Any>()
+
+    fun addString(str: String) {
+        trie.addString(str)
+    }
+
+    fun addAll(strList: List<String>) {
+        strList.forEach { addString(it) }
+    }
+
+    fun toList(): List<String> = trie.getAllStrings()
+}
+
+class CollectorStringFilter: Filter<String>, CollectorFilter {
+    override val names = emptyList<String>()
+
+    private lateinit var collector: StringCollector
+
+    override fun setCollector(collector_: StringCollector) {
+        collector = collector_
+    }
+
+    override fun build(): RealObjectFilter<String> {
+        return RealObjectFilter { obj ->
+            collector.addString(obj)
+            false
+        }
+    }
+
+    override fun createStr() = "?"
+}
+
 
 fun retrieveEquals(condition: ConditionAST<String>) : List<String>? {
     fun retrieveEqualsReq(condition: ConditionAST<String>) : Set<String>? {

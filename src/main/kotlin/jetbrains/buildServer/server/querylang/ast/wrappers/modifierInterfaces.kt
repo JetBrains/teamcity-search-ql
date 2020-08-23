@@ -11,12 +11,9 @@ interface MResolvedContainer {
 }
 
 interface MAllContainer {
-    var searchAll: Boolean
+    var searchAll: ElementValidator<*>
+
     fun <T> ConditionContainer<T>.elementSelector(): ElementValidator<T> {
-        return if (searchAll) {
-            AllElementValidator()
-        } else {
-            AnyElementValidator()
-        }
+        return searchAll as ElementValidator<T>
     }
 }

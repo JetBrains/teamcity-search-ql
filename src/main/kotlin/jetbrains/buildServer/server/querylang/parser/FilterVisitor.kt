@@ -2,6 +2,7 @@ package jetbrains.buildServer.server.querylang.parser
 
 import jetbrains.buildServer.server.querylang.ast.*
 import jetbrains.buildServer.server.querylang.ast.wrappers.FVcsRootContainer
+import jetbrains.buildServer.server.querylang.ast.wrappers.WParam
 import jetbrains.buildServer.server.querylang.fromIdentOrString
 import org.antlr.v4.runtime.ParserRuleContext
 import kotlin.reflect.KClass
@@ -69,11 +70,7 @@ class FilterVisitor<Obj>(val parentFilter: KClass<out ConditionContainer<Obj>>) 
         TypeFilter(ctx!!.objectType().stringFilterOrCondition().accept(getCondVisitor(TypeFilter::class))).transform(ctx)
 
     override fun visitParameterFilter(ctx: QLangGrammarParser.ParameterFilterContext?) =
-        ParameterFilter(FilterConditionNode(StringParamFilter(
-            ctx!!.parameterName().stringFilterOrCondition().accept(getCondVisitor(TypeFilter::class)),
-            ctx.parameterValue().stringFilterOrCondition().accept(getCondVisitor(TypeFilter::class))
-        ))
-        ).transform(ctx)
+        ParameterFilter(ctx!!.parameterFilterOrCondition().accept(getCondVisitor(ParameterFilter::class))).transform(ctx)
 
     override fun visitParValueFilter(ctx: QLangGrammarParser.ParValueFilterContext?) =
         ValueFilter(
@@ -124,11 +121,7 @@ class FilterVisitor<Obj>(val parentFilter: KClass<out ConditionContainer<Obj>>) 
         ).transform(ctx)
 
     override fun visitOptionFilter(ctx: QLangGrammarParser.OptionFilterContext?) =
-        OptionFilter(FilterConditionNode(StringParamFilter(
-            ctx!!.parameterName().stringFilterOrCondition().accept(getCondVisitor(TypeFilter::class)),
-            ctx.parameterValue().stringFilterOrCondition().accept(getCondVisitor(TypeFilter::class))
-        ))
-        ).transform(ctx)
+        OptionFilter(ctx!!.parameterFilterOrCondition().accept(getCondVisitor(OptionFilter::class))).transform(ctx)
 
     override fun visitNameFilter(ctx: QLangGrammarParser.NameFilterContext?) =
         NameFilter(
@@ -156,4 +149,18 @@ class FilterVisitor<Obj>(val parentFilter: KClass<out ConditionContainer<Obj>>) 
 
     override fun visitAnyStringFilter(ctx: QLangGrammarParser.AnyStringFilterContext?) =
         AnyStringFilter().transform(ctx!!)
+
+    override fun visitCollectorStringFilter(ctx: QLangGrammarParser.CollectorStringFilterContext?) =
+        CollectorStringFilter().transform(ctx!!)
+
+    override fun visitParamStringFilterCase(ctx: QLangGrammarParser.ParamStringFilterCaseContext?): Filter<Obj> {
+        return StringParamFilter(
+            ctx!!.parameterName().accept(getCondVisitor(TypeFilter::class)),
+            ctx.parameterValue().accept(getCondVisitor(TypeFilter::class))
+        ).transform(ctx)
+    }
+
+    override fun visitParamStringCollectorCase(ctx: QLangGrammarParser.ParamStringCollectorCaseContext?): Filter<Obj> {
+        return CollectorStringParamFilter().transform(ctx!!)
+    }
 }

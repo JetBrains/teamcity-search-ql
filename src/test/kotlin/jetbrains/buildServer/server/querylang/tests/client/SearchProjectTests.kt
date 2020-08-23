@@ -82,7 +82,7 @@ class SearchProjectTests : BaseQueryLangTest() {
             "find project with id BaseProject or id Project1 or name asdfasdfasdfa",
             "p0", "p1"
         )
-        .lastOnly()
+        .end()
 
     @DataProvider(name = "compl")
     fun complData() = TestDataProvider()

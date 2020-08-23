@@ -101,6 +101,8 @@ class CompressedTrie<T> : AutocompletionIndexer<T> {
         return res
     }
 
+    fun getAllStrings(): List<String> = getAllBfs(root, Int.MAX_VALUE)
+
     fun clear() {
         lock.writeLock().lock()
         root.nodes.clear()

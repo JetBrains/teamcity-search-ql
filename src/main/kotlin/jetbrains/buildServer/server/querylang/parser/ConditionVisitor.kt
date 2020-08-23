@@ -106,4 +106,42 @@ class ConditionVisitor<NestedObj>(
     override fun visitStringConditionFilter(ctx: QLangGrammarParser.StringConditionFilterContext?): RealConditionAST<NestedObj> {
         return FilterConditionNode(ctx!!.stringFilter().accept(filterVisitor))
     }
+
+    override fun visitParamConditionAnd(ctx: QLangGrammarParser.ParamConditionAndContext?): RealConditionAST<NestedObj> {
+        return AndConditionNode(
+            ctx!!.parameterCondition(0).accept(this),
+            ctx.parameterCondition(1).accept(this)
+        )
+    }
+
+    override fun visitParamConditionOr(ctx: QLangGrammarParser.ParamConditionOrContext?): RealConditionAST<NestedObj> {
+        return OrConditionNode(
+            ctx!!.parameterCondition(0).accept(this),
+            ctx.parameterCondition(1).accept(this)
+        )
+    }
+
+    override fun visitParamConditionBraces(ctx: QLangGrammarParser.ParamConditionBracesContext?): RealConditionAST<NestedObj> {
+        return ctx!!.parameterCondition().accept(this)
+    }
+
+    override fun visitParamConditionNot(ctx: QLangGrammarParser.ParamConditionNotContext?): RealConditionAST<NestedObj> {
+        return NotConditionNode(
+            ctx!!.parameterCondition().accept(this)
+        )
+    }
+
+    override fun visitParamConditionFilter(ctx: QLangGrammarParser.ParamConditionFilterContext?): RealConditionAST<NestedObj> {
+        return FilterConditionNode(
+            ctx!!.paramStringFilter().accept(filterVisitor)
+        )
+    }
+
+    override fun visitSingleParamFilter(ctx: QLangGrammarParser.SingleParamFilterContext?): RealConditionAST<NestedObj> {
+        return FilterConditionNode(ctx!!.paramStringFilter().accept(filterVisitor))
+    }
+
+    override fun visitMultipleParamFilter(ctx: QLangGrammarParser.MultipleParamFilterContext?): RealConditionAST<NestedObj> {
+        return ctx!!.parameterCondition().accept(this)
+    }
 }

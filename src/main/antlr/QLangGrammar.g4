@@ -81,6 +81,9 @@ stringFilterOrCondition : stringFilter             #singleStringFilter
                         | '(' stringCondition ')'  #multipleStringFilter
                         ;
 
+paramStringFilter : parameterName '=' parameterValue   #paramStringFilterCase
+                  | '?'                                #paramStringCollectorCase
+                  ;
 
 idFilter : ID objectId ;
 projectFilter : PROJECT modifierList? filterOrCondition ;
@@ -89,7 +92,7 @@ triggerFilter : TRIGGER modifierList? filterOrCondition ;
 stepFilter : STEP modifierList? filterOrCondition ;
 featureFilter : FEATURE modifierList? filterOrCondition ;
 typeFilter : TYPE modifierList? objectType ;
-parameterFilter : PARAM modifierList?  parameterName '=' parameterValue ;
+parameterFilter : PARAM modifierList?  parameterFilterOrCondition ;
 parValueFilter : VAL modifierList? parameterValue ;
 enabledFilter : ENABLED modifierList?;
 ancestorFilter : ANCESTOR modifierList? filterOrCondition ;
@@ -100,7 +103,7 @@ checkoutRulesFilter : RULES modifierList? checkoutRulesString ;
 dependencyFilter : DEPENDENCY modifierList? filterOrCondition ;
 artifactFilter : ARTIFACT modifierList? filterOrCondition?;
 snapshotFilter : SNAPSHOT modifierList? filterOrCondition?;
-optionFilter : OPTION modifierList? parameterName '=' parameterValue ;
+optionFilter : OPTION modifierList? parameterFilterOrCondition ;
 cleanFilter : CLEAN modifierList? ;
 revRuleFilter : REV_RULE modifierList? stringFilterOrCondition ;
 nameFilter : NAME modifierList? stringFilterOrCondition ;
@@ -118,13 +121,26 @@ stringFilter : stringEqualsFilter
              | stringSuffixFilter
              | stringSubstringFilter
              | anyStringFilter
+             | collectorStringFilter
              ;
+
+parameterCondition : paramStringFilter                          #paramConditionFilter
+                   | '(' parameterCondition ')'                 #paramConditionBraces
+                   | not parameterCondition                     #paramConditionNot
+                   | parameterCondition and parameterCondition  #paramConditionAnd
+                   | parameterCondition or parameterCondition   #paramConditionOr
+                   ;
+
+parameterFilterOrCondition : paramStringFilter                  #singleParamFilter
+                           | '(' parameterCondition ')' #multipleParamFilter
+                           ;
 
 stringEqualsFilter : identOrString ;
 stringPrefixFilter : PREFIXS ;
 stringSuffixFilter : SUFFIXS ;
 stringSubstringFilter : SUBSTRINGS ;
 anyStringFilter : ANY_STRING ;
+collectorStringFilter : '?' ;
 
 
 filterModifier : withInheritedModifier

@@ -141,6 +141,18 @@ class SearchBuildConfigurationTests : BaseQueryLangTest() {
             "find configuration with trigger[all, wi",
             "withInherited"
         )
+        .addComplCase(
+            "find configuration with parent id Project1 and id ?",
+            "BC1", "BC2"
+        )
+        .addComplCase(
+            "find configuration with id test2 and trigger type ?",
+            "vcs", "sch"
+        )
+        .addComplCase(
+            "find configuration with id test2 and param ?",
+            "path"
+        )
         .end()
 
     @DataProvider(name = "failed")

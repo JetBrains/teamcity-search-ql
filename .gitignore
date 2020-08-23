@@ -1,3 +1,4 @@
 .idea/
 .gradle/
 build/
+src/main/java/jetbrains/buildServer/server/querylang/parser

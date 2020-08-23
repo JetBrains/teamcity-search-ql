@@ -31,6 +31,6 @@ data class AllFilterModifier(private val placeholder: String = "") : FilterModif
     override val names: List<String> = Companion.names
 
     override fun apply(filter: MAllContainer) {
-        filter.searchAll = true
+        filter.searchAll = AllElementValidator<Any>()
     }
 }

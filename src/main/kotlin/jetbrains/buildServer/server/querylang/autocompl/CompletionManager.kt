@@ -8,6 +8,7 @@ import jetbrains.buildServer.util.EventDispatcher
 import jetbrains.buildServer.util.ThreadUtil
 import jetbrains.buildServer.util.executors.ExecutorsFactory
 import jetbrains.buildServer.vcs.SVcsRoot
+import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.locks.ReentrantReadWriteLock
 import kotlin.reflect.KClass
@@ -35,7 +36,7 @@ class CompletionManager(
     var valueCntLimit = VALUE_CNT_DEFAULT
 
     private val executor =
-        ExecutorsFactory.newFixedScheduledExecutor("QueryLanguageCompletionManager", 1)
+        Executors.newSingleThreadScheduledExecutor()
     private val lock = ReentrantReadWriteLock()
 
 

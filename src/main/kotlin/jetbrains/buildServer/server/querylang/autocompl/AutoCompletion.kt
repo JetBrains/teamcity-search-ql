@@ -40,11 +40,22 @@ class AutoCompletion(
 
         val treeFindNode = start.find()
         val treePartNode = start.partialQuery()
+
+        //autocompletion
         if (treeFindNode != null) {
+            if (input.last() == '?') {
+                val res = tryCompleteCollectorQuery(input)
+                if (res != null) {
+                    return res.map { CompletionResult(input.dropLast(1) + it, it) }.sortedWith(compareBy({ it.show.length }, {it.show})).take(limit)
+                }
+            }
+
             val (word, objectTypes, trace, completeModifier) = getFilterTrace(treeFindNode, input) ?: return emptyList()
             val vars = compl.suggest(input.dropLast(word.length), objectTypes, trace, word, completeModifier, limit)
             return vars
         }
+
+        //suggest full queries for partial query
         if (treePartNode != null) {
             try {
                 val multipleQueries = parser.parse(input) as? PartialQuery ?: return emptyList()
@@ -117,6 +128,10 @@ class AutoCompletion(
 
             //if the node has no children, than we reach the end of the input
             if (node.childCount == 0) {
+                break
+            }
+
+            if (node is QLangGrammarParser.ParamStringFilterCaseContext) {
                 break
             }
 
@@ -279,6 +294,11 @@ class AutoCompletion(
             return null
         }
         return child.text
+    }
+
+    private fun tryCompleteCollectorQuery(input: String): List<String>? {
+        val res = QueryParser.parseWithErrors(input, true) as? FullQuery
+        return res?.getPossibleStrings()
     }
 
     data class Trace(
