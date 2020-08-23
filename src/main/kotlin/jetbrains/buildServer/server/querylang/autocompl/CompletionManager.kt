@@ -182,7 +182,7 @@ class CompletionManager(
 
         lock.writeLock().lock()
             val disable = TeamCityProperties.getProperty(DISABLE_AUTOCOMPLETION_NAME).split(",").map {it.trim()}
-            disable.equals("all").let {
+            disable.contains("all").let {
                 if (it != disableAll) isUpdated = true
                 disableAll = it
             }
