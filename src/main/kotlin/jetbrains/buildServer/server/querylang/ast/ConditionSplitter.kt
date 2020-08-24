@@ -2,32 +2,36 @@ package jetbrains.buildServer.server.querylang.ast
 
 import jetbrains.buildServer.server.querylang.ast.wrappers.WParam
 
+data class VisitorStorage<L>(
+    val remCondition: ConditionAST<L>,
+    val contextFilter: RealObjectFilter<L>,
+    val straightFilter: RealObjectFilter<L> = contextFilter
+)
 
 interface ConditionSplitter<in T> {
-    fun <L: T> ConditionAST<L>.splitCondition(): Pair<ConditionAST<L>, RealObjectFilter<L>> {
+    fun <L: T> ConditionAST<L>.splitCondition(): VisitorStorage<L> {
         val condition = this
         return when (condition) {
             is NotConditionNode -> {
-                val (_, selectorVisitor) = condition.cond.splitCondition()
-                Pair(NoneConditionAST<T>(), selectorVisitor)
+                val (_, _, selectorStraightVisitor) = condition.cond.splitCondition()
+                VisitorStorage(NoneConditionAST<T>(), selectorStraightVisitor)
             }
             is AndConditionNode -> {
-                val (remCondition, pathToSelector) = condition.right.splitCondition()
-                return Pair(mergeAnd(condition.left, remCondition), condition.left.build().andR(pathToSelector))
+                val (remCondition, pathToSelector, straightVisitor) = condition.right.splitCondition()
+                return VisitorStorage(
+                    mergeAnd(condition.left, remCondition),
+                    condition.left.build().andR(pathToSelector),
+                    straightVisitor
+                )
             }
             is OrConditionNode -> condition.right.splitCondition()
             is FilterConditionNode -> {
                 val filter = condition.filter
                 if (filter is ConditionFilter<L, *>) {
-                    val (remFilter, pathFilter) = filter.split()
-
-                    return Pair<ConditionAST<L>, RealObjectFilter<L>>(
-                        remFilter?.let { FilterConditionNode(it) } ?: NoneConditionAST(),
-                        pathFilter
-                    )
+                    return filter.split()
                 }
                 if ((filter as? Filter<String>) is CollectorStringFilter) {
-                    return Pair(
+                    return VisitorStorage(
                         NoneConditionAST(),
                         filter.build()
                     )
@@ -35,7 +39,7 @@ interface ConditionSplitter<in T> {
                 if ((filter as? Filter<WParam>) is StringParamFilter) {
                     val sfilter = filter as StringParamFilter
                     val (remFilter, pathFilter) = sfilter.split(sfilter.valueCondition)
-                    return Pair(
+                    return VisitorStorage(
                         FilterConditionNode(
                             StringParamFilter(sfilter.nameCondition,
                                 if (remFilter is NoneConditionAST) {
@@ -45,11 +49,11 @@ interface ConditionSplitter<in T> {
                                 }
                             ) as Filter<L>
                         ),
-                        filter.nameFilter.andR(pathFilter) as RealObjectFilter<L>
+                        filter.buildFrom(filter.nameFilter, pathFilter) as RealObjectFilter<L>
                     )
                 }
                 if ((filter as? Filter<WParam>) is CollectorStringParamFilter) {
-                    return Pair(
+                    return VisitorStorage(
                         NoneConditionAST(),
                         filter.build()
                     )

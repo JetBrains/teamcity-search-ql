@@ -35,13 +35,14 @@ abstract class ConditionFilter<Object, NestedObject>
 
     abstract fun buildVisitorFrom(subVisitor: RealObjectFilter<NestedObject>): RealObjectFilter<Object>
 
-    fun split(): Pair<ConditionFilter<Object, NestedObject>?, RealObjectFilter<Object>> {
-        val (remCondition, pathToCollector) = condition.splitCondition()
+    fun split(): VisitorStorage<Object> {
+        val (remCondition, pathToCollector, straightPath) = condition.splitCondition()
         val nPathToCollector = buildVisitorFrom(pathToCollector)
+        val nStraightPath = buildVisitorFrom(straightPath)
         if (remCondition is NoneConditionAST) {
-            return Pair(null, nPathToCollector)
+            return VisitorStorage(NoneConditionAST(), nPathToCollector, nStraightPath)
         } else {
-            return Pair(createInstance(remCondition), nPathToCollector)
+            return VisitorStorage(FilterConditionNode(createInstance(remCondition)), nPathToCollector, nStraightPath)
         }
     }
 }

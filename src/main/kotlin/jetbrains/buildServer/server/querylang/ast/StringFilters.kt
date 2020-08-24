@@ -56,7 +56,11 @@ data class StringParamFilter(
     val nameFilter:RealObjectFilter<String> by lazy { nameCondition.build() }
     val valueFilter:RealObjectFilter<String> by lazy { valueCondition.build() }
 
-    override fun build():RealObjectFilter<WParam> {
+    override fun build():RealObjectFilter<WParam> = buildFrom(nameFilter, valueFilter)
+
+    fun buildFrom(
+        nameFilter: RealObjectFilter<String>, valueFilter: RealObjectFilter<String>
+    ): RealObjectFilter<WParam> {
         return RealObjectFilter {obj ->
             nameFilter.accepts(obj.name) && valueFilter.accepts(obj.value)
         }

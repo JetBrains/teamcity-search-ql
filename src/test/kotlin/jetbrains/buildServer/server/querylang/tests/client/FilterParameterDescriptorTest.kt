@@ -43,7 +43,11 @@ class FilterParameterDescriptorTest : BaseQueryLangTest() {
                 TStep("step22", Pair("abc-bcd", "qwe-rty")),
                 TParam("secure:password", "qwerty"),
                 TParam("path", "abacaba")
-            ).bind("b3")
+            ).bind("b3"),
+
+            TBuildConf("test4",
+                TSDependency("b3")
+            )
         ).create()
     }
 
@@ -116,10 +120,14 @@ class FilterParameterDescriptorTest : BaseQueryLangTest() {
             ""
         )
         .addComplCase(
-            "find configuration with trigger(type sch and param ?",
+            "find configuration with dependency(not id BaseProject or (snapshot and trigger(type sch and param ?",
             "otherTriggerPath"
         )
-        .lastOnly()
+        .addComplCase(
+            "find configuration with dependency(id test3 and not (snapshot and trigger(type sch and param ?",
+            "path", "triggerPath", "otherTriggerPath"
+        )
+        .end()
 
 
     @Test(dataProvider = "data")
