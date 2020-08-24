@@ -4,14 +4,25 @@ import jetbrains.buildServer.parameters.ValueResolver
 
 class WParam(
     val name: String,
-    val value: String
-)
+    value_: String
+) {
+    val value: String = if (name.startsWith("secure:", true)) {
+        ""
+    } else {
+        value_
+    }
+}
 
 class WResolvableParam(
     val name: String,
-    val value: String,
+    value_: String,
     val resolver: ValueResolver
 ) {
+    val value: String = if (name.startsWith("secure:", true)) {
+        ""
+    } else {
+        value_
+    }
     fun resolve(): WParam {
         return WParam(name, resolver.resolve(value).result)
     }

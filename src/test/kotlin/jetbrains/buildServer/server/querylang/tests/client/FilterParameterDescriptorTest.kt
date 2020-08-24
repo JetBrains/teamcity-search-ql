@@ -37,7 +37,9 @@ class FilterParameterDescriptorTest : BaseQueryLangTest() {
                 TStep("step", Pair("abc", "def")),
                 TFeature("feature", Pair("asd", "fgh")),
                 TFeature("feature2", Pair("abc", "")),
-                TStep("step22", Pair("abc-bcd", "qwe-rty"))
+                TStep("step22", Pair("abc-bcd", "qwe-rty")),
+                TParam("secure:password", "qwerty"),
+                TParam("path", "abacaba")
             ).bind("b3")
         ).create()
     }
@@ -101,6 +103,14 @@ class FilterParameterDescriptorTest : BaseQueryLangTest() {
         .addComplCase(
             "find configuration with step param abc-bcd=qwe-",
             "abc-bcd=qwe-rty"
+        )
+        .addComplCase(
+            "find configuration with id test3 and param ?",
+            "path", "secure:password"
+        )
+        .addComplCase(
+            "find configuration with id test3 and param \"secure:password\"=?",
+            ""
         )
         .end()
 

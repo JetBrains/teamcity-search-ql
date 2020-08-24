@@ -1,6 +1,8 @@
 package jetbrains.buildServer.server.querylang.ast
 
 import jetbrains.buildServer.server.querylang.ast.wrappers.WParam
+import jetbrains.buildServer.server.querylang.autocompl.SimpleStringFinder
+import jetbrains.buildServer.server.querylang.autocompl.StringStorage
 import jetbrains.buildServer.server.querylang.indexing.CompressedTrie
 import jetbrains.buildServer.server.querylang.toIdentOrString
 
@@ -97,17 +99,17 @@ data class AnyStringFilter(
 }
 
 class StringCollector {
-    private val trie = CompressedTrie<Any>()
+    private val storage = StringStorage()
 
     fun addString(str: String) {
-        trie.addString(str)
+        storage.addString(str)
     }
 
     fun addAll(strList: List<String>) {
         strList.forEach { addString(it) }
     }
 
-    fun toList(): List<String> = trie.getAllStrings()
+    fun toList(): List<String> = storage.getAllStrings()
 }
 
 class CollectorStringFilter: Filter<String>, CollectorFilter {

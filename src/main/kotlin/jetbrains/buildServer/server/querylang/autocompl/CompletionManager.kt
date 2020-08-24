@@ -21,10 +21,10 @@ class CompletionManager(
     private val DISABLE_AUTOCOMPLETION_NAME = "teamcity.internal.searchQL.autocompletion.disable"
 
     private val VALUE_LENGTH_PARAM_NAME = "teamcity.internal.searchQL.autocompletion.value.lengthLimit"
-    private val VALUE_LENGTH_DEFAULT = 10_000
+    private val VALUE_LENGTH_DEFAULT = 200
 
     private val VALUE_CNT_PARAM_NAME = "teamcity.internal.searchQL.autocompletion.value.maxCnt"
-    private val VALUE_CNT_DEFAULT = 100_000_000
+    private val VALUE_CNT_DEFAULT = 30
 
     private val UPDATE_PARAMETER_INTERVAL_SECONDS: Long = 60
 
