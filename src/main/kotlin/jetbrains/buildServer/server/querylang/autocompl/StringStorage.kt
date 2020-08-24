@@ -1,9 +1,9 @@
 package jetbrains.buildServer.server.querylang.autocompl
 
-import jetbrains.buildServer.server.querylang.indexing.CompressedTrie
+import jetbrains.buildServer.server.querylang.indexing.SynchronizedCompressedTrie
 
 class StringStorage {
-    private val trie = CompressedTrie<Any>()
+    private val trie = SynchronizedCompressedTrie<Any>()
 
     fun addString(str: String) {
         if (str.contains("\n")) {

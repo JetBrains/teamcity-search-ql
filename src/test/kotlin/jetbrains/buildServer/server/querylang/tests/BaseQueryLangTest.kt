@@ -35,6 +35,12 @@ abstract class BaseQueryLangTest : BaseServerTestCase() {
     protected lateinit var taskQueue: TaskQueue
     protected lateinit var complm: CompletionManager
 
+    private val indexingRateMillis = 20
+
+    fun waitForIndexing() {
+        Thread.sleep((indexingRateMillis * 4).toLong())
+    }
+
 
     @BeforeMethod(alwaysRun = true)
     override fun setUp() {

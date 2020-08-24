@@ -2,9 +2,8 @@ package jetbrains.buildServer.server.querylang.indexing
 
 import java.util.*
 import java.util.concurrent.atomic.AtomicLong
-import java.util.concurrent.locks.ReentrantReadWriteLock
 
-class CompressedTrie<T> : AutocompletionIndexer<T> {
+class SynchronizedCompressedTrie<T> : AutoSynchronizedIndexer<T>() {
 
     val nodesTotal = AtomicLong(0)
     val symbolsTotal= AtomicLong(0)
@@ -28,11 +27,8 @@ class CompressedTrie<T> : AutocompletionIndexer<T> {
     }
 
     private val root = Node<T>("")
-    val lock = ReentrantReadWriteLock()
 
-    override fun addString(str: String, obj: T?) {
-        lock.writeLock().lock()
-
+    override fun addStringUnsafe(str: String, obj: T?) {
         var node = root
         var i = 0
         while (i < str.length) {
@@ -70,13 +66,9 @@ class CompressedTrie<T> : AutocompletionIndexer<T> {
         }
         node.isTerminal = true
         node.obj = obj
-
-        lock.writeLock().unlock()
     }
 
-    override fun complete(str: String, limit: Int): List<String> {
-        lock.readLock().lock()
-
+    override fun completeUnsafe(str: String, limit: Int): List<String> {
         val (node, strRest) = goDown(str) ?: return emptyList()
 
         val firstNode = if (strRest.isEmpty()) node
@@ -84,34 +76,29 @@ class CompressedTrie<T> : AutocompletionIndexer<T> {
 
         val prefix = if (strRest.isEmpty()) ""
                      else firstNode.str.drop(strRest.length)
-        val res = getAllBfs(firstNode, limit).map {prefix + it}
-
-        lock.readLock().unlock()
-
-        return res.map {str + it}
+        return getAllBfs(firstNode, limit)
+            .map {prefix + it}
+            .map {str + it}
     }
 
-    override fun exists(str: String): Boolean {
-        lock.readLock().lock()
-
+    override fun existsUnsafe(str: String): Boolean {
         val (node, strRest) = goDown(str) ?: return false
-        val res = node.isTerminal && strRest.isEmpty()
+        return node.isTerminal && strRest.isEmpty()
+    }
 
-        lock.readLock().unlock()
-
+    fun getAllStrings(): List<String> {
+        lock.writeLock().lock()
+        val res = getAllBfs(root, Int.MAX_VALUE)
+        lock.writeLock().unlock()
         return res
     }
 
-    fun getAllStrings(): List<String> = getAllBfs(root, Int.MAX_VALUE)
-
-    fun clear() {
-        lock.writeLock().lock()
+    override fun clearUnsafe() {
         root.nodes.clear()
 
         stringsTotal.set(0)
         nodesTotal.set(1)
         symbolsTotal.set(0)
-        lock.writeLock().unlock()
     }
 
     private fun findLargestPrefix(str1: String, beg1: Int,  str2: String): String {

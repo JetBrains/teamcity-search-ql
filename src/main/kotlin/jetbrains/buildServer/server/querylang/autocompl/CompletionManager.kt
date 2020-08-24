@@ -1,12 +1,10 @@
 package jetbrains.buildServer.server.querylang.autocompl
 
 import jetbrains.buildServer.server.querylang.ast.*
-import jetbrains.buildServer.server.querylang.indexing.CompressedTrie
 import jetbrains.buildServer.serverSide.*
 import jetbrains.buildServer.serverSide.auth.SecurityContext
 import jetbrains.buildServer.util.EventDispatcher
 import jetbrains.buildServer.util.ThreadUtil
-import jetbrains.buildServer.util.executors.ExecutorsFactory
 import jetbrains.buildServer.vcs.SVcsRoot
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit

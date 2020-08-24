@@ -129,7 +129,7 @@ class FilterParameterDescriptorTest : BaseQueryLangTest() {
 
     @Test(dataProvider = "compl")
     fun parametrizedCompletionTests(query: String, expected: List<String>) {
-        Thread.sleep(50)
+        waitForIndexing()
         checkVars(query, expected)
     }
 }

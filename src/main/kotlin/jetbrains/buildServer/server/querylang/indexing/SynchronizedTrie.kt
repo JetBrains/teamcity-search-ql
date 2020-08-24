@@ -1,9 +1,8 @@
 package jetbrains.buildServer.server.querylang.indexing
 
 import java.util.*
-import java.util.concurrent.locks.ReentrantReadWriteLock
 
-class Trie<T> : AutocompletionIndexer<T> {
+class SynchronizedTrie<T> : AutoSynchronizedIndexer<T>() {
     private class Node<T>(var obj: T? = null, var terminalCnt: Int = 0) {
         val nodes: MutableMap<Char, Node<T>> = mutableMapOf()
         fun getNode(c: Char): Node<T>? {
@@ -21,11 +20,8 @@ class Trie<T> : AutocompletionIndexer<T> {
     }
 
     private val root = Node<T>()
-    private val lock = ReentrantReadWriteLock()
 
-    override fun addString(str: String, obj: T?) {
-        lock.writeLock().lock()
-
+    override fun addStringUnsafe(str: String, obj: T?) {
         var node = root
         str.forEach { c ->
             if (!node.exists(c)) {
@@ -36,13 +32,9 @@ class Trie<T> : AutocompletionIndexer<T> {
         }
         node.terminalCnt += 1
         node.obj = obj
-
-        lock.writeLock().unlock()
     }
 
-    override fun exists(str: String): Boolean {
-        lock.readLock().lock()
-
+    override fun existsUnsafe(str: String): Boolean {
         var node = root
         str.forEach { c ->
             if (!node.exists(c)) {
@@ -52,13 +44,11 @@ class Trie<T> : AutocompletionIndexer<T> {
         }
 
         val res = node.isTerminal()
-        lock.readLock().unlock()
 
         return res
     }
 
-    override fun complete(str: String, limit: Int): List<String> {
-        lock.readLock().lock()
+    override fun completeUnsafe(str: String, limit: Int): List<String> {
         var node = root
         str.forEach { c ->
             if (!node.exists(c)) {
@@ -68,9 +58,12 @@ class Trie<T> : AutocompletionIndexer<T> {
         }
 
         val res = getStringFromSubtree(node, limit).map {str + it}
-        lock.readLock().unlock()
 
         return res
+    }
+
+    override fun clearUnsafe() {
+        root.nodes.clear()
     }
 
     private fun getStringFromSubtree(fnode: Node<T>, limit: Int): List<String> {

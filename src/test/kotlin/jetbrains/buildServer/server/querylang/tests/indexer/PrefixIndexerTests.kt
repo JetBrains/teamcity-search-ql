@@ -1,9 +1,9 @@
 package jetbrains.buildServer.server.querylang.tests.indexer
 
-import jetbrains.buildServer.server.querylang.indexing.AutocompletionIndexer
-import jetbrains.buildServer.server.querylang.indexing.CompressedTrie
+import jetbrains.buildServer.server.querylang.indexing.SynchronizedIndexer
+import jetbrains.buildServer.server.querylang.indexing.SynchronizedCompressedTrie
 import jetbrains.buildServer.server.querylang.indexing.ExternalPrefixIndexer
-import jetbrains.buildServer.server.querylang.indexing.Trie
+import jetbrains.buildServer.server.querylang.indexing.SynchronizedTrie
 import org.testng.annotations.AfterMethod
 import org.testng.annotations.BeforeMethod
 import org.testng.annotations.Test
@@ -13,8 +13,8 @@ import kotlin.test.*
 class PrefixIndexerTests {
     private var patht = createTempDir().toPath()
 
-    private fun getTrie(): List<AutocompletionIndexer<String>> {
-        return listOf(CompressedTrie(), Trie(), ExternalPrefixIndexer(patht))
+    private fun getTrie(): List<SynchronizedIndexer<String>> {
+        return listOf(SynchronizedCompressedTrie(), SynchronizedTrie(), ExternalPrefixIndexer(patht))
     }
 
     @BeforeMethod

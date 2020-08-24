@@ -1,6 +1,6 @@
 package jetbrains.buildServer.server.querylang.autocompl
 
-import jetbrains.buildServer.server.querylang.indexing.CompressedTrie
+import jetbrains.buildServer.server.querylang.indexing.SynchronizedCompressedTrie
 import jetbrains.buildServer.serverSide.auth.SecurityContext
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.locks.ReentrantReadWriteLock
@@ -15,7 +15,7 @@ class ParameterValueFinder(
     val cntLimit: Int
 ): SecuredStringFinder() {
 
-    val nameTrie = CompressedTrie<Any>()
+    val nameTrie = SynchronizedCompressedTrie<Any>()
     val params: MutableMap<String, SimpleStringFinder> = mutableMapOf()
 
     private val paramNameLock = ReentrantReadWriteLock()

@@ -1,6 +1,6 @@
 package jetbrains.buildServer.server.querylang.autocompl
 
-import jetbrains.buildServer.server.querylang.indexing.CompressedTrie
+import jetbrains.buildServer.server.querylang.indexing.SynchronizedCompressedTrie
 import jetbrains.buildServer.serverSide.auth.SecurityContext
 import java.util.concurrent.atomic.AtomicBoolean
 
@@ -11,7 +11,7 @@ class SimpleStringFinder(
 ) : SecuredStringFinder()
 {
 
-    val trie = CompressedTrie<Any>()
+    val trie = SynchronizedCompressedTrie<Any>()
     override val nodesTotal
         get() = trie.nodesTotal.get()
     override val symbolsTotal

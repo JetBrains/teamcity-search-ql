@@ -1,9 +1,7 @@
 package jetbrains.buildServer.server.querylang.ast
 
 import jetbrains.buildServer.server.querylang.ast.wrappers.WParam
-import jetbrains.buildServer.server.querylang.autocompl.SimpleStringFinder
 import jetbrains.buildServer.server.querylang.autocompl.StringStorage
-import jetbrains.buildServer.server.querylang.indexing.CompressedTrie
 import jetbrains.buildServer.server.querylang.toIdentOrString
 
 data class EqualsStringFilter(val str: String) : Filter<String>, ObjectEvaluator<String>() {

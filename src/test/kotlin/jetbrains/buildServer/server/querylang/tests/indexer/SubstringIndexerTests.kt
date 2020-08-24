@@ -10,7 +10,7 @@ import kotlin.test.assertEquals
 class SubstringIndexerTests {
     private var patht = createTempDir().toPath()
 
-    private fun getIndexer(): List<AutocompletionIndexer<String>> {
+    private fun getIndexer(): List<SynchronizedIndexer<String>> {
         return listOf(RAMSubstringIndexer(), ExternalSubstringIndexer(patht))
     }
 

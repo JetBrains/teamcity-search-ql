@@ -164,13 +164,13 @@ class SearchProjectTests : BaseQueryLangTest() {
 
     @Test(dataProvider = "compl")
     fun parametrizedCompletionTests(query: String, expected: List<String>) {
-        Thread.sleep(50)
+        waitForIndexing()
         checkVars(query, expected)
     }
 
     @Test(dataProvider = "eval")
     fun evalTest(query: String, expected: List<String>) {
-        Thread.sleep(50)
+        waitForIndexing()
         checkEval(query, expected)
     }
 }

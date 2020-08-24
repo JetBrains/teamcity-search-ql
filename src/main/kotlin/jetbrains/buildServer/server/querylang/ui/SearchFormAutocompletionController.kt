@@ -25,7 +25,8 @@ class SearchFormAutocompletionController(
         val res = try {
             autoCompl.complete(term).map { Completion(it.result, WebUtil.escapeXml(it.show), "", true) }
         } catch (e: Exception) {
-            TODO("Add logging")
+            //TODO("Add logging")
+            emptyList<Completion>()
         }
         return res
     }

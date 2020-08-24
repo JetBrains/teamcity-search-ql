@@ -20,4 +20,8 @@ class ExternalPrefixIndexer(val path: Path) : LuceneIndexer() {
         val doc = searcher.search(query, limit)
         return doc.scoreDocs.map {searcher.doc(it.doc).get("str")}
     }
+
+    override fun clear() {
+        TODO()
+    }
 }

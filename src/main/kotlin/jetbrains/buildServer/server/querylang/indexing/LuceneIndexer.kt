@@ -9,10 +9,10 @@ import org.apache.lucene.search.IndexSearcher
 import org.apache.lucene.search.TermQuery
 import org.apache.lucene.store.Directory
 
-abstract class LuceneIndexer : AutocompletionIndexer<String> {
+abstract class LuceneIndexer : SynchronizedIndexer<String> {
     protected abstract val directory: Directory
     protected abstract val analyzer: Analyzer
-    protected val config : IndexWriterConfig by lazy {
+    private val config : IndexWriterConfig by lazy {
         IndexWriterConfig(analyzer)
     }
     protected val indexWriter: IndexWriter by lazy {

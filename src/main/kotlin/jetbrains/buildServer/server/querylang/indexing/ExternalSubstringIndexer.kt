@@ -5,4 +5,8 @@ import java.nio.file.Path
 
 class ExternalSubstringIndexer(path: Path) : LuceneSubstringIndexer() {
     override val directory = NIOFSDirectory(path)
+
+    override fun clear() {
+        TODO()
+    }
 }
