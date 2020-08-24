@@ -33,7 +33,10 @@ class FilterParameterDescriptorTest : BaseQueryLangTest() {
             ).bind("b2"),
 
             TBuildConf("test3",
-                TTrigger("trigger", Pair("path", "abc")),
+                TTrigger("trigger", Pair("path", "abc"),
+                    Pair("triggerPath", "abc")
+                ),
+                TTrigger("sch", Pair("otherTriggerPath", "bcd")),
                 TStep("step", Pair("abc", "def")),
                 TFeature("feature", Pair("asd", "fgh")),
                 TFeature("feature2", Pair("abc", "")),
@@ -112,7 +115,11 @@ class FilterParameterDescriptorTest : BaseQueryLangTest() {
             "find configuration with id test3 and param \"secure:password\"=?",
             ""
         )
-        .end()
+        .addComplCase(
+            "find configuration with trigger(type sch and param ?",
+            "otherTriggerPath"
+        )
+        .lastOnly()
 
 
     @Test(dataProvider = "data")

@@ -109,7 +109,7 @@ data class TriggerFilter(
     override var includeInherited = false
     override var searchAll: ElementValidator<*> = AnyElementValidator<Any>()
 
-    override fun buildFrom(filter:RealObjectFilter<WTrigger>):RealObjectFilter<FTriggerContainer> {
+    override fun buildFrom(filter: RealObjectFilter<WTrigger>):RealObjectFilter<FTriggerContainer> {
         return RealObjectFilter {obj ->
             val settings = if (!this.includeInherited) obj.ownTriggers
             else obj.triggers

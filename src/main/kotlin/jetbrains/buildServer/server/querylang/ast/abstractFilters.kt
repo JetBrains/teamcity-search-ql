@@ -10,7 +10,7 @@ abstract class MultipleObjectsConditionFilter<Obj, NestedObj> : MAllContainer, C
     override fun buildVisitorFrom(subVisitor: RealObjectFilter<NestedObj>): RealObjectFilter<Obj> {
         val copy = this.createInstance(condition) as MultipleObjectsConditionFilter
         copy.searchAll = AllElementsVisitor<NestedObj>()
-        return copy.build()
+        return copy.buildFrom(subVisitor)
     }
 }
 
