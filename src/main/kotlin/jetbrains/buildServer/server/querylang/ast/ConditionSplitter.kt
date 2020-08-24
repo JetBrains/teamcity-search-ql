@@ -13,7 +13,7 @@ interface ConditionSplitter<in T> {
             }
             is AndConditionNode -> {
                 val (remCondition, pathToSelector) = condition.right.splitCondition()
-                return Pair(mergeAnd(condition.left, remCondition), pathToSelector)
+                return Pair(mergeAnd(condition.left, remCondition), condition.left.build().andR(pathToSelector))
             }
             is OrConditionNode -> condition.right.splitCondition()
             is FilterConditionNode -> {
@@ -45,7 +45,7 @@ interface ConditionSplitter<in T> {
                                 }
                             ) as Filter<L>
                         ),
-                        pathFilter as RealObjectFilter<L>
+                        filter.nameFilter.andR(pathFilter) as RealObjectFilter<L>
                     )
                 }
                 if ((filter as? Filter<WParam>) is CollectorStringParamFilter) {
