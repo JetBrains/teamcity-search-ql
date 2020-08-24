@@ -10,13 +10,14 @@ import jetbrains.buildServer.util.executors.ExecutorsFactory
 import jetbrains.buildServer.vcs.SVcsRoot
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
+import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.locks.ReentrantReadWriteLock
 import kotlin.reflect.KClass
 
 class CompletionManager(
     private val projectManager: ProjectManager,
     val securityContext: SecurityContext,
-    val serverDispatcher: EventDispatcher<ServerListener>
+    serverDispatcher: EventDispatcher<ServerListener>
 ): ServerListener {
     private val DISABLE_AUTOCOMPLETION_NAME = "teamcity.internal.searchQL.autocompletion.disable"
 
@@ -28,12 +29,12 @@ class CompletionManager(
 
     private val UPDATE_PARAMETER_INTERVAL_SECONDS: Long = 60
 
-    var disableAll = false
-    var disabledValues = false
-    var disableIds = false
+    private var disableAll = false
+    private var disabledValues = false
+    private var disableIds = false
 
-    var valueLengthLimit = VALUE_LENGTH_DEFAULT
-    var valueCntLimit = VALUE_CNT_DEFAULT
+    private var valueLengthLimit = VALUE_LENGTH_DEFAULT
+    private var valueCntLimit = VALUE_CNT_DEFAULT
 
     private val executor =
         Executors.newSingleThreadScheduledExecutor()
@@ -213,10 +214,20 @@ class CompletionManager(
     }
 
     val nodesTotal: Long
-        get() = map.values.fold(0L) {acc, sf -> acc + sf.nodesTotal}
+        get() = run {
+            lock.readLock().lock()
+            val res = map.values.fold(0L) {acc, sf -> acc + sf.nodesTotal}
+            lock.readLock().unlock()
+            return res
+        }
 
     val symbolsTotal: Long
-        get() = map.values.fold(0L) {acc, sf -> acc + sf.symbolsTotal}
+        get() = run {
+            lock.readLock().lock()
+            val res = map.values.fold(0L) { acc, sf -> acc + sf.symbolsTotal }
+            lock.readLock().unlock()
+            return res
+        }
 
 
     private fun addToMapWithPrefix(sf: SecuredStringFinder, prefix: String, vars: List<List<String>>) {
@@ -361,7 +372,7 @@ class CompletionManager(
     }
 
     fun getSimpleFinder(isSystemAdminOnly: Boolean, disabled: Boolean): SimpleStringFinder {
-        return SimpleStringFinder(this, isSystemAdminOnly, disabled)
+        return SimpleStringFinder(this.securityContext, isSystemAdminOnly, AtomicBoolean(disabled))
     }
 
     fun getParamFinder(
@@ -369,10 +380,10 @@ class CompletionManager(
         disabled: Boolean,
         isValueSystemAdminOnly: Boolean = true
     ): ParameterValueFinder {
-        return ParameterValueFinder(this,
+        return ParameterValueFinder(this.securityContext,
             isSystemAdminOnly,
             isValueSystemAdminOnly,
-            disabled,
+            AtomicBoolean(disabled),
             disabledValues,
             valueLengthLimit,
             valueCntLimit

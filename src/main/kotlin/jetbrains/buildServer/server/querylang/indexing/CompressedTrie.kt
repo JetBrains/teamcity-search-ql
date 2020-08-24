@@ -1,18 +1,19 @@
 package jetbrains.buildServer.server.querylang.indexing
 
 import java.util.*
+import java.util.concurrent.atomic.AtomicLong
 import java.util.concurrent.locks.ReentrantReadWriteLock
 
 class CompressedTrie<T> : AutocompletionIndexer<T> {
 
-    var nodesTotal: Long = 0
-    var symbolsTotal: Long = 0
-    var stringsTotal: Long = 0
+    val nodesTotal = AtomicLong(0)
+    val symbolsTotal= AtomicLong(0)
+    val stringsTotal = AtomicLong(0)
 
     inner class Node<T>(var str: String, var obj: T? = null, var isTerminal: Boolean = false) {
         init {
-            nodesTotal += 1
-            symbolsTotal += str.length
+            nodesTotal.incrementAndGet()
+            symbolsTotal.addAndGet(str.length.toLong())
         }
         val nodes: MutableMap<Char, Node<T>> = mutableMapOf()
         fun getNode(c: Char): Node<T>? {
@@ -65,7 +66,7 @@ class CompressedTrie<T> : AutocompletionIndexer<T> {
         }
 
         if (!node.isTerminal) {
-            stringsTotal += 1
+            stringsTotal.incrementAndGet()
         }
         node.isTerminal = true
         node.obj = obj
@@ -107,9 +108,9 @@ class CompressedTrie<T> : AutocompletionIndexer<T> {
         lock.writeLock().lock()
         root.nodes.clear()
 
-        stringsTotal = 0
-        nodesTotal = 1
-        symbolsTotal = 0
+        stringsTotal.set(0)
+        nodesTotal.set(1)
+        symbolsTotal.set(0)
         lock.writeLock().unlock()
     }
 

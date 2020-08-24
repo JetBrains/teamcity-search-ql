@@ -1,24 +1,39 @@
 package jetbrains.buildServer.server.querylang.autocompl
 
 import jetbrains.buildServer.server.querylang.indexing.CompressedTrie
-import jetbrains.buildServer.serverSide.impl.audit.finders.StringFinder
+import jetbrains.buildServer.serverSide.auth.SecurityContext
+import java.util.concurrent.atomic.AtomicBoolean
+import java.util.concurrent.locks.ReentrantReadWriteLock
 
 class ParameterValueFinder(
-    override val compl: CompletionManager,
+    override val securityContext: SecurityContext,
     override val systemAdminOnly: Boolean,
     val defaultValueSysAdminOnly: Boolean,
-    override var disabled: Boolean,
+    override var disabled: AtomicBoolean,
     val disabledValue: Boolean,
     val lengthLimit: Int,
     val cntLimit: Int
 ): SecuredStringFinder() {
+
     val nameTrie = CompressedTrie<Any>()
     val params: MutableMap<String, SimpleStringFinder> = mutableMapOf()
 
+    private val paramNameLock = ReentrantReadWriteLock()
+
     override val symbolsTotal: Long
-        get() = params.values.fold(0L, {acc, sf -> acc + sf.symbolsTotal}) + nameTrie.symbolsTotal
+        get() {
+            paramNameLock.readLock().lock()
+            val res = params.values.fold(0L, {acc, sf -> acc + sf.symbolsTotal}) + nameTrie.symbolsTotal.get()
+            paramNameLock.readLock().unlock()
+            return res
+        }
     override val nodesTotal: Long
-        get() = params.values.fold(0L, {acc, sf -> acc + sf.nodesTotal}) + nameTrie.nodesTotal
+        get() {
+            paramNameLock.readLock().lock()
+            val res = params.values.fold(0L, {acc, sf -> acc + sf.nodesTotal}) + nameTrie.nodesTotal.get()
+            paramNameLock.readLock().unlock()
+            return res
+        }
 
     override fun completeStringUnsafe(prefix: String, limit: Int): List<String> {
         val wordRegex = """[\w.\-_]*?""".toRegex()
@@ -38,32 +53,39 @@ class ParameterValueFinder(
     }
 
     fun addParam(paramName: String, paramValue: String, valSystemAdminOnly: Boolean = defaultValueSysAdminOnly) {
-        if (disabled) {
+        if (disabled.get()) {
             return
         }
         if (paramValue.length > lengthLimit || paramName.contains("\n") || paramValue.contains("\n")) {
             return
         }
 
+        paramNameLock.writeLock().lock()
+
         if (!params.contains(paramName)) {
-            params[paramName] = SimpleStringFinder(compl, valSystemAdminOnly, disabledValue)
+            params[paramName] = SimpleStringFinder(securityContext, valSystemAdminOnly, AtomicBoolean(disabledValue))
         }
 
         if (!paramName.startsWith("secure:")) {
             val ptrie = params[paramName]!!
             ptrie.addString(paramValue)
-            if (ptrie.trie.stringsTotal > cntLimit) {
+            if (ptrie.trie.stringsTotal.get() > cntLimit) {
                 ptrie.clear()
-                ptrie.disabled = true
+                ptrie.disabled.set(true)
             }
         }
+
+        paramNameLock.writeLock().unlock()
 
         nameTrie.addString(paramName)
     }
 
     override fun clear() {
         nameTrie.clear()
+
+        paramNameLock.writeLock().lock()
         params.clear()
+        paramNameLock.writeLock().unlock()
     }
 
     private fun completeParamName(paramPrefix: String, limit: Int): List<String> {
@@ -71,7 +93,10 @@ class ParameterValueFinder(
     }
 
     private fun completeParamValue(paramName: String, valuePrefix: String, limit: Int): List<String> {
-        return params[paramName]?.completeString(valuePrefix, limit) ?: emptyList()
+        paramNameLock.readLock().lock()
+        val res = params[paramName]?.completeString(valuePrefix, limit) ?: emptyList()
+        paramNameLock.readLock().unlock()
+        return res
     }
 
     private fun String.removeStartMarks(): String {
