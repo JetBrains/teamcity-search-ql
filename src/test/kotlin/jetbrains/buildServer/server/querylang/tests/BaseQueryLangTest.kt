@@ -35,10 +35,10 @@ abstract class BaseQueryLangTest : BaseServerTestCase() {
     protected lateinit var taskQueue: TaskQueue
     protected lateinit var complm: CompletionManager
 
-    private val indexingRateMillis = 50
+    protected val indexingRateMillis: Long = 20
 
     fun waitForIndexing() {
-        Thread.sleep((indexingRateMillis * 2).toLong())
+        complm.indexAll()
     }
 
 
@@ -54,7 +54,7 @@ abstract class BaseQueryLangTest : BaseServerTestCase() {
         val compl = Completer(complm)
         autoCompl = AutoCompletion(myFixture.projectManager, compl)
 
-        taskQueue = TaskQueue(complm, 20, 0, TimeUnit.MILLISECONDS)
+        taskQueue = TaskQueue(complm, indexingRateMillis, 0, TimeUnit.MILLISECONDS)
 
         eventListener = AutocompletionEventListener(taskQueue, projectManager, myFixture.eventDispatcher)
 
@@ -444,12 +444,14 @@ abstract class BaseQueryLangTest : BaseServerTestCase() {
         }
     }
 
-    inner class TestDataProvider {
-
+    abstract inner class MyDataProvider {
         init {
             setUp()
             tearDown()
         }
+    }
+
+    inner class TestDataProvider: MyDataProvider() {
 
         private val tests: MutableList<Pair<String, List<String>>> = mutableListOf()
 
@@ -496,7 +498,7 @@ abstract class BaseQueryLangTest : BaseServerTestCase() {
         }
     }
 
-    inner class TestFailedDataProvdier {
+    inner class TestFailedDataProvdier: MyDataProvider() {
         private val tests: MutableList<Pair<Any, Any>> = mutableListOf()
 
         fun addCase(query: String, exc: Class<out Exception>): TestFailedDataProvdier {
@@ -515,7 +517,7 @@ abstract class BaseQueryLangTest : BaseServerTestCase() {
         }
     }
 
-    inner class SingleDataProvider {
+    inner class SingleDataProvider: MyDataProvider() {
         private val tests: MutableList<Any> = mutableListOf()
 
         fun addCase(query: String): SingleDataProvider {
