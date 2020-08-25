@@ -101,7 +101,7 @@ abstract class BaseQueryLangTest : BaseServerTestCase() {
 
         val res = parsed.evalCondition()
 
-        val ids = res.objects.map {(it as FIdContainer).id}
+        val ids = res.objects.map {(it as FIdContainer).id}.sorted()
 
         assertEquals(expect, ids)
 
