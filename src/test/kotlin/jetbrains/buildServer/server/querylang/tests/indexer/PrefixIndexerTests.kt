@@ -2,7 +2,6 @@ package jetbrains.buildServer.server.querylang.tests.indexer
 
 import jetbrains.buildServer.server.querylang.indexing.SynchronizedIndexer
 import jetbrains.buildServer.server.querylang.indexing.SynchronizedCompressedTrie
-import jetbrains.buildServer.server.querylang.indexing.ExternalPrefixIndexer
 import jetbrains.buildServer.server.querylang.indexing.SynchronizedTrie
 import org.testng.annotations.AfterMethod
 import org.testng.annotations.BeforeMethod
@@ -14,7 +13,7 @@ class PrefixIndexerTests {
     private var patht = createTempDir().toPath()
 
     private fun getTrie(): List<SynchronizedIndexer<String>> {
-        return listOf(SynchronizedCompressedTrie(), SynchronizedTrie(), ExternalPrefixIndexer(patht))
+        return listOf(SynchronizedCompressedTrie(), SynchronizedTrie())
     }
 
     @BeforeMethod
