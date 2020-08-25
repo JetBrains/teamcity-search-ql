@@ -4,12 +4,12 @@ import jetbrains.buildServer.server.querylang.ast.wrappers.WParam
 import jetbrains.buildServer.server.querylang.autocompl.StringStorage
 import jetbrains.buildServer.server.querylang.toIdentOrString
 
-data class EqualsStringFilter(val str: String) : Filter<String>, ObjectEvaluator<String>() {
+data class EqualsStringFilter(val str: String) : StringFilter(), ObjectEvaluator<String> {
     override val names = emptyList<String>()
     override fun createStr() = str.toIdentOrString()
 
     override fun build():RealObjectFilter<String> {
-        return RealObjectFilter {obj -> obj.equals(str, true)}
+        return RealObjectFilter {obj -> obj.equals(str, !isCaseSensitive)}
     }
 
     override fun evalSimple(): List<String> {
@@ -17,30 +17,30 @@ data class EqualsStringFilter(val str: String) : Filter<String>, ObjectEvaluator
     }
 }
 
-data class PrefixStringFilter(val str: String) : Filter<String> {
+data class PrefixStringFilter(val str: String) : StringFilter() {
     override val names = emptyList<String>()
     override fun createStr() = str.toIdentOrString() + '*'
 
     override fun build():RealObjectFilter<String> {
-        return RealObjectFilter {obj -> obj.startsWith(str, true)}
+        return RealObjectFilter {obj -> obj.startsWith(str, !isCaseSensitive)}
     }
 }
 
-data class SuffixStringFilter(val str: String) : Filter<String> {
+data class SuffixStringFilter(val str: String) : StringFilter() {
     override val names = emptyList<String>()
     override fun createStr() = '*' + str.toIdentOrString()
 
     override fun build():RealObjectFilter<String> {
-        return RealObjectFilter {obj -> obj.endsWith(str, true)}
+        return RealObjectFilter {obj -> obj.endsWith(str, !isCaseSensitive)}
     }
 }
 
-data class SubstringFilter(val str: String) : Filter<String> {
+data class SubstringFilter(val str: String) : StringFilter() {
     override val names = emptyList<String>()
     override fun createStr() = '*' + str.toIdentOrString() + '*'
 
     override fun build():RealObjectFilter<String> {
-        return RealObjectFilter {obj -> obj.contains(str, true)}
+        return RealObjectFilter {obj -> obj.contains(str, !isCaseSensitive)}
     }
 }
 
@@ -131,50 +131,4 @@ class CollectorStringFilter: Filter<String>, CollectorFilter {
     }
 
     override fun createStr() = "?"
-}
-
-
-fun retrieveEquals(condition: ConditionAST<String>) : List<String>? {
-    fun retrieveEqualsReq(condition: ConditionAST<String>) : Set<String>? {
-        when (condition) {
-            is FilterConditionNode -> {
-                val filter = condition.filter
-                if (filter is EqualsStringFilter) {
-                    return setOf(filter.str)
-                }
-                return null
-            }
-
-            is OrConditionNode -> {
-                val lefts = retrieveEqualsReq(condition.left)
-                val rights = retrieveEqualsReq(condition.right)
-
-                if (lefts == null || rights == null) {
-                    return null
-                }
-                return lefts.union(rights)
-            }
-            is AndConditionNode -> {
-                val lefts = retrieveEqualsReq(condition.left)
-                val rights = retrieveEqualsReq(condition.right)
-
-                if (lefts == null && rights == null) {
-                    return null
-                }
-
-                return lefts.orEmpty().intersect(rights.orEmpty())
-            }
-            is NotConditionNode -> {
-                return null
-            }
-            is NoneConditionAST -> {
-                return null
-            }
-        }
-    }
-    val vars = retrieveEqualsReq(condition) ?: return null
-
-    val filter = condition.build()
-
-    return vars.filter {filter.accepts(it)}
 }

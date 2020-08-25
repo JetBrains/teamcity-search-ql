@@ -163,4 +163,12 @@ class FilterVisitor<Obj>(val parentFilter: KClass<out ConditionContainer<Obj>>) 
     override fun visitParamStringCollectorCase(ctx: QLangGrammarParser.ParamStringCollectorCaseContext?): Filter<Obj> {
         return CollectorStringParamFilter().transform(ctx!!)
     }
+
+    override fun visitCaseSensitiveStringFilter(ctx: QLangGrammarParser.CaseSensitiveStringFilterContext?): Filter<Obj> {
+        val filter = ctx!!.stringFilter().accept(this) as? StringFilter
+            ?: throw ParsingException("Filter at position ${ctx.start.startIndex} can't have caseSensitive modifier('^')")
+
+        filter.isCaseSensitive = true
+        return filter.transform(ctx)
+    }
 }

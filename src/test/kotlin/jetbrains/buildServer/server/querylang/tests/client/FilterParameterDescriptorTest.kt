@@ -46,8 +46,9 @@ class FilterParameterDescriptorTest : BaseQueryLangTest() {
             ).bind("b3"),
 
             TBuildConf("test4",
-                TSDependency("b3")
-            )
+                TSDependency("b3"),
+                TParam("UPPER_CASE", "true")
+            ).bind("b4")
         ).create()
     }
 
@@ -89,6 +90,17 @@ class FilterParameterDescriptorTest : BaseQueryLangTest() {
             "find configuration with feature param asd=*",
             "b3"
          )
+        .addBCCase(
+            "find configuration with param upper_case=*",
+            "b4"
+        )
+        .addBCCase(
+            "find configuration with param ^upper_case=*"
+        )
+        .addBCCase(
+            "find configuration with param ^UPPER_CASE=*",
+            "b4"
+        )
         .end()
 
     @DataProvider(name = "failed")

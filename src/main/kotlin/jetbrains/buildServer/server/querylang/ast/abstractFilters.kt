@@ -17,3 +17,7 @@ abstract class MultipleObjectsConditionFilter<Obj, NestedObj> : MAllContainer, C
 abstract class SingleObjectConditionFilter<Obj, NestedObj> : ConditionFilter<Obj, NestedObj>() {
     override fun buildVisitorFrom(subVisitor: RealObjectFilter<NestedObj>) = buildFrom(subVisitor)
 }
+
+abstract class StringFilter: Filter<String> {
+    var isCaseSensitive = false
+}

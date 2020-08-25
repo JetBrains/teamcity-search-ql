@@ -109,6 +109,18 @@ revRuleFilter : REV_RULE modifierList? stringFilterOrCondition ;
 nameFilter : NAME modifierList? stringFilterOrCondition ;
 
 
+
+parameterCondition : paramStringFilter                          #paramConditionFilter
+                   | '(' parameterCondition ')'                 #paramConditionBraces
+                   | not parameterCondition                     #paramConditionNot
+                   | parameterCondition and parameterCondition  #paramConditionAnd
+                   | parameterCondition or parameterCondition   #paramConditionOr
+                   ;
+
+parameterFilterOrCondition : paramStringFilter                  #singleParamFilter
+                           | '(' parameterCondition ')' #multipleParamFilter
+                           ;
+
 stringCondition : stringFilter                         #stringConditionFilter
                 | '(' stringCondition ')'              #stringConditionBraces
                 | not stringCondition                  #stringConditionNot
@@ -122,24 +134,16 @@ stringFilter : stringEqualsFilter
              | stringSubstringFilter
              | anyStringFilter
              | collectorStringFilter
+             | caseSensitiveStringFilter
              ;
-
-parameterCondition : paramStringFilter                          #paramConditionFilter
-                   | '(' parameterCondition ')'                 #paramConditionBraces
-                   | not parameterCondition                     #paramConditionNot
-                   | parameterCondition and parameterCondition  #paramConditionAnd
-                   | parameterCondition or parameterCondition   #paramConditionOr
-                   ;
-
-parameterFilterOrCondition : paramStringFilter                  #singleParamFilter
-                           | '(' parameterCondition ')' #multipleParamFilter
-                           ;
 
 stringEqualsFilter : identOrString ;
 stringPrefixFilter : PREFIXS ;
 stringSuffixFilter : SUFFIXS ;
 stringSubstringFilter : SUBSTRINGS ;
 anyStringFilter : ANY_STRING ;
+caseSensitiveStringFilter : '^' stringFilter ;
+
 collectorStringFilter : '?' ;
 
 
