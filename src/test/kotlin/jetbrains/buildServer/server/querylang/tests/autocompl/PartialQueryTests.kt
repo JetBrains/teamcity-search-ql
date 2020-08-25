@@ -13,24 +13,6 @@ class PartialQueryTests {
     //initialization is necessary
     private val queryParser = QueryParser
 
-    fun completeIdQuery() {
-        val query = "id BaseProject"
-
-        val res = compl.complete(query).map { it.result }
-        val expected = listOf(
-            "find project,configuration,template,vcsRoot with id BaseProject",
-            "find configuration,template with dependency id BaseProject",
-            "find configuration,template with vcs id BaseProject",
-            "find project with ancestor id BaseProject",
-            "find configuration with template id BaseProject",
-            "find project,configuration,template,vcsRoot with parent id BaseProject",
-            "find project,configuration,template,vcsRoot with project id BaseProject",
-            "find project with vcsRoot id BaseProject"
-        )
-
-        assertEquals(expected, res)
-    }
-
     fun completeTypeQuery() {
         val query = "type vcsTrigger"
 

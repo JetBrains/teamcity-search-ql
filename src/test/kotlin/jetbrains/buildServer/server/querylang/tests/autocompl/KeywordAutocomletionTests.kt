@@ -83,17 +83,6 @@ internal class KeywordAutocomletionTests {
     }
 
     
-    fun testWrongNestedFilters() {
-        val query = """
-            find template with project (template (i
-        """.trimIndent()
-
-        val vars = autoCompl.complete(query)
-
-        assertEquals(listOf(), vars)
-    }
-
-    
     fun testEmptyAutocompletionQuery() {
         val query = """
             find project with (id 5555 or id """.trimIndent()
