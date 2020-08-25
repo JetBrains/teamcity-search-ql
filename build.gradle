@@ -37,7 +37,7 @@ dependencies {
     implementation "org.apache.lucene:lucene-core:8.6.1"
     implementation "org.apache.lucene:lucene-queryparser:8.6.1"
 
-    provided "org.jetbrains.teamcity:server-api:2020.1-SNAPSHOT"
+    provided "org.jetbrains.teamcity:server-api:$rootProject.ext.teamcityVersion"
     provided fileTree(dir: "$rootProject.ext.teamcityLibs", include: ['*.jar'])
     testImplementation fileTree(dir: "$rootProject.ext.teamcityTestLibs", include: ['*.jar'])
     testImplementation("org.testng:testng:6.8")
