@@ -18,7 +18,9 @@ class SearchBuildConfigurationTests : BaseQueryLangTest() {
                 TParam("path", "abc"),
                 TOption("qwerty", "bcd")
             ),
-            TTemplate("temp1").bind("t1"),
+            TTemplate("temp1",
+                TParam("path", "qwerty")
+            ).bind("t1"),
             TBuildConf("test1",
                 TOption("abc", "bcd"),
                 TParam("path", "abccaba"),
@@ -36,8 +38,9 @@ class SearchBuildConfigurationTests : BaseQueryLangTest() {
 
             TProject("Project1",
                 TBuildConf("BC1",
-                    TTrigger("vcsTrigger")
-                ),
+                    TTrigger("vcsTrigger"),
+                    TTempDependency("t1")
+                ).bind("b4"),
                 TBuildConf("BC2",
                     TTrigger("schTrigger")
                 )
@@ -81,6 +84,10 @@ class SearchBuildConfigurationTests : BaseQueryLangTest() {
         .addBCCase(
             "find configuration with option * = \"%path%\" ",
             "b1"
+        )
+        .addBCCase(
+            "find configuration with parent id Project1 and param[withInherited] path=*",
+            "b4"
         )
         .end()
 
@@ -153,6 +160,10 @@ class SearchBuildConfigurationTests : BaseQueryLangTest() {
             "find configuration with id test2 and param ?",
             "path"
         )
+        .addComplCase(
+            "find configuration with parent id Project1 and param[withInherited] ?",
+            "path"
+        )
         .end()
 
     @DataProvider(name = "failed")
@@ -172,7 +183,7 @@ class SearchBuildConfigurationTests : BaseQueryLangTest() {
         )
         .addNoneEvalCase(
             "find configuration with template parent id BaseProject",
-            "test1"
+            "test1", "BC1"
         )
         .end()
 
