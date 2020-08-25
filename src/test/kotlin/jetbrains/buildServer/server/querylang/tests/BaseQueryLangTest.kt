@@ -35,10 +35,10 @@ abstract class BaseQueryLangTest : BaseServerTestCase() {
     protected lateinit var taskQueue: TaskQueue
     protected lateinit var complm: CompletionManager
 
-    private val indexingRateMillis = 20
+    private val indexingRateMillis = 50
 
     fun waitForIndexing() {
-        Thread.sleep((indexingRateMillis * 4).toLong())
+        Thread.sleep((indexingRateMillis * 2).toLong())
     }
 
 
