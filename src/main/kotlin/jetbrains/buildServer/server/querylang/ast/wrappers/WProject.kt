@@ -24,7 +24,9 @@ class WProject(
     TopLevelObject,
     FVcsRootContainer,
     FValueContainer,
-    FNameContainer
+    FNameContainer,
+    FBuildConfContainer,
+    FTemplateContainer
 {
     val projectEx: ProjectEx by lazy { sproject as ProjectEx }
 
@@ -75,4 +77,10 @@ class WProject(
     override fun hashCode(): Int {
         return this.id.hashCode()
     }
+
+    override val buildConfs: List<WBuildConf>
+        get() = sproject.ownBuildTypes.map {it.wrap()}
+
+    override val templates: List<WTemplate>
+        get() = sproject.ownBuildTypeTemplates.map {it.wrap()}
 }

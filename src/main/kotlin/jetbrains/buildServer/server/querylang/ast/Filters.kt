@@ -14,7 +14,7 @@ data class IdFilter(
     }
 }
 
-open class BuildConfFilter(
+data class BuildConfFilter(
     override val condition: ConditionAST<WBuildConf>
 ) : MultipleObjectsConditionFilter<FBuildConfContainer, WBuildConf>(),
     BuildConfConditionContainer

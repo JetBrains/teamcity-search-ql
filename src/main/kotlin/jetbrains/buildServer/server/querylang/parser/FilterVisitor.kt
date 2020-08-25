@@ -135,6 +135,12 @@ class FilterVisitor<Obj>(val parentFilter: KClass<out ConditionContainer<Obj>>) 
             ctx!!.stringFilterOrCondition().accept(getCondVisitor(RevRuleFilter::class))
         ).transform(ctx)
 
+    override fun visitBuildConfFilter(ctx: QLangGrammarParser.BuildConfFilterContext?): Filter<Obj> {
+        return BuildConfFilter(
+            ctx!!.filterOrCondition().accept(getCondVisitor(BuildConfFilter::class))
+        ).transform(ctx)
+    }
+
     override fun visitStringEqualsFilter(ctx: QLangGrammarParser.StringEqualsFilterContext?) =
         EqualsStringFilter(ctx!!.text.fromIdentOrString()).transform(ctx)
 

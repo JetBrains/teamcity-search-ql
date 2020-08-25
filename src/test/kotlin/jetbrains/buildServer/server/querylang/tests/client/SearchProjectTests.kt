@@ -18,6 +18,7 @@ class SearchProjectTests : BaseQueryLangTest() {
             TParam("refpath1", "abacaba%root-path%dababa"),
 
             TProject("Project1",
+                TTemplate("Template1"),
                 TProjectFeature("qwerty", Pair("abc", "bcd")),
                 TParam("param1", "abc"),
                 TParam("refpath2", "abacaba%full-path%dababa"),
@@ -28,7 +29,8 @@ class SearchProjectTests : BaseQueryLangTest() {
             ).bind("p1"),
 
             TProject("Project3",
-                TProjectFeature("pfeat2")
+                TProjectFeature("pfeat2"),
+                TBuildConf("BuildConf1")
             ).bind("p3")
 
         ).bind("p0")
@@ -82,6 +84,14 @@ class SearchProjectTests : BaseQueryLangTest() {
             "find project with id BaseProject or id Project1 or name asdfasdfasdfa",
             "p0", "p1"
         )
+        .addProjectCase(
+            "find project with configuration id BuildConf1",
+            "p3"
+        )
+        .addProjectCase(
+            "find project with template id Template1",
+            "p1"
+        )
         .end()
 
     @DataProvider(name = "compl")
@@ -133,6 +143,14 @@ class SearchProjectTests : BaseQueryLangTest() {
         .addComplCase(
             "find project with name BasePr",
             "BaseProject"
+        )
+        .addComplCase(
+            "find project with confi",
+            "configuration"
+        )
+        .addComplCase(
+            "find project with temp",
+            "template"
         )
         .end()
 

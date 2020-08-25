@@ -64,6 +64,7 @@ filter : idFilter
        | revRuleFilter
        | vcsRootEntryFilter
        | nameFilter
+       | buildConfFilter
        ;
 
 condition : filter                     #conditionFilter
@@ -107,6 +108,7 @@ optionFilter : OPTION modifierList? parameterFilterOrCondition ;
 cleanFilter : CLEAN modifierList? ;
 revRuleFilter : REV_RULE modifierList? stringFilterOrCondition ;
 nameFilter : NAME modifierList? stringFilterOrCondition ;
+buildConfFilter : BUILD_CONFIGURATION modifierList? filterOrCondition? ;
 
 
 
