@@ -26,7 +26,8 @@ class WProject(
     FValueContainer,
     FNameContainer,
     FBuildConfContainer,
-    FTemplateContainer
+    FTemplateContainer,
+    FSubProjectContainer
 {
     val projectEx: ProjectEx by lazy { sproject as ProjectEx }
 
@@ -83,4 +84,7 @@ class WProject(
 
     override val templates: List<WTemplate>
         get() = sproject.ownBuildTypeTemplates.map {it.wrap()}
+
+    override val subProjects: List<WProject>
+        get() = sproject.ownProjects.map {it.wrap()}
 }

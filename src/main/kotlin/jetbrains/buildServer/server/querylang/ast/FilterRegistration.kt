@@ -67,6 +67,7 @@ object FilterRegistration {
         registerConditionFilter(OptionFilter::class)
         registerConditionFilter(TypeFilter::class)
         registerConditionFilter(NameFilter::class)
+        registerConditionFilter(SubProjectFilter::class)
 
         //modifier registration should be peroformed only after filter registration
         registerModifier(ResolvedFilterModifier::class)

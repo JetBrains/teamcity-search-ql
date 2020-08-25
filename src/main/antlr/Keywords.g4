@@ -40,6 +40,7 @@ import java.util.*;
         putToKeywords(NameFilter.Companion.getNames(), QLangGrammarParser.NAME);
         putToKeywords(ResolvedFilterModifier.Companion.getNames(), QLangGrammarParser.RESOLVED);
         putToKeywords(AllFilterModifier.Companion.getNames(), QLangGrammarParser.ALL);
+        putToKeywords(SubProjectFilter.Companion.getNames(), QLangGrammarParser.SUB_PROJECT);
     }
 
     private void putToKeywords(List<String> filterNames, Integer tokenType) {
@@ -54,7 +55,7 @@ tokens {
        ID, PARENT, TRIGGER, STEP, FEATURE, TYPE, PARAM, VAL,
        ENABLED, ANCESTOR, RULES, DEPENDENCY, ARTIFACT, SNAPSHOT,
        WITH_INHERITED, OPTION, CLEAN, REV_RULE, VCS_ENTRY, NAME,
-       RESOLVED, ALL
+       RESOLVED, ALL, SUB_PROJECT
 }
 
 fragment DIGIT: [0-9] ;

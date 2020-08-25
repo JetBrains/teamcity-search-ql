@@ -462,4 +462,18 @@ data class NameFilter(
     }
 }
 
+data class SubProjectFilter(
+    override val condition: ConditionAST<WProject>
+) : MultipleObjectsConditionFilter<FSubProjectContainer, WProject>() {
+
+    companion object : Names("subProject")
+    override val names = Companion.names
+
+    override fun buildFrom(filter: RealObjectFilter<WProject>): RealObjectFilter<FSubProjectContainer> {
+        return RealObjectFilter { obj ->
+            elementSelector().validate(obj.subProjects, filter)
+        }
+    }
+}
+
 

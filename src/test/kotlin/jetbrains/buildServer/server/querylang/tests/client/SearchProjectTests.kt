@@ -92,6 +92,10 @@ class SearchProjectTests : BaseQueryLangTest() {
             "find project with template id Template1",
             "p1"
         )
+        .addProjectCase(
+            "find project with subProject param param2=def",
+            "p1"
+        )
         .end()
 
     @DataProvider(name = "compl")
@@ -151,6 +155,10 @@ class SearchProjectTests : BaseQueryLangTest() {
         .addComplCase(
             "find project with temp",
             "template"
+        )
+        .addComplCase(
+            "find project with su",
+            "subProject"
         )
         .end()
 

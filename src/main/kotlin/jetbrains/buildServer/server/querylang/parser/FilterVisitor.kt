@@ -177,4 +177,9 @@ class FilterVisitor<Obj>(val parentFilter: KClass<out ConditionContainer<Obj>>) 
         filter.isCaseSensitive = true
         return filter.transform(ctx)
     }
+
+    override fun visitSubProjectFilter(ctx: QLangGrammarParser.SubProjectFilterContext?) =
+        SubProjectFilter(
+            ctx!!.accept(getCondVisitor(SubProjectFilter::class))
+        ).transform(ctx)
 }

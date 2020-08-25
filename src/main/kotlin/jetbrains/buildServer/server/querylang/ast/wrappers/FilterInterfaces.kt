@@ -91,3 +91,7 @@ interface FValueContainer {
 interface FNameContainer {
     val name: String
 }
+
+interface FSubProjectContainer {
+    val subProjects: List<WProject>
+}
