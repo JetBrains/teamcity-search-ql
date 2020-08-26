@@ -19,7 +19,7 @@ class SimpleStringFinder(
 
     override fun completeStringUnsafe(prefix: String, limit: Int): List<String> {
         val realPrefix = if (prefix.startsWith("\"")) prefix.drop(1) else prefix
-        return trie.complete(realPrefix, limit).map {it.escape()}
+        return trie.complete(realPrefix, limit).map {it.escape1()}
     }
 
     fun addString(s: String) {

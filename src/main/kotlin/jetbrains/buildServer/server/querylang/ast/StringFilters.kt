@@ -2,6 +2,7 @@ package jetbrains.buildServer.server.querylang.ast
 
 import jetbrains.buildServer.server.querylang.ast.wrappers.WParam
 import jetbrains.buildServer.server.querylang.autocompl.StringStorage
+import jetbrains.buildServer.server.querylang.autocompl.escape1
 import jetbrains.buildServer.server.querylang.toIdentOrString
 
 data class EqualsStringFilter(val str: String) : StringFilter(), ObjectEvaluator<String> {
@@ -111,7 +112,7 @@ class StringCollector {
         strList.forEach { addString(it) }
     }
 
-    fun toList(): List<String> = storage.getAllStrings()
+    fun toList(): List<String> = storage.getAllStrings().map {it.escape1()}
 }
 
 class CollectorStringFilter: Filter<String>, CollectorFilter {

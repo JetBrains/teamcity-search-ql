@@ -1,13 +1,10 @@
 package jetbrains.buildServer.server.querylang.autocompl
 
-internal fun String.escape(): String {
+internal fun String.escape1(): String {
     if (this == "") {
         return "\"\""
     }
-    if (this.startsWith("\"") && this.endsWith("\"")) {
-        return this
-    }
-    val str = if (this.startsWith("\"")) this.drop(1) else this
+    val str = this.replace("\"", "\"\"")
 
     /*
     if (FilterTypeRegistration.isKeyWord(str)) {

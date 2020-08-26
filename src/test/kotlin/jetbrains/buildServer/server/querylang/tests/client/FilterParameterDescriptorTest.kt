@@ -126,11 +126,11 @@ class FilterParameterDescriptorTest : BaseQueryLangTest() {
         )
         .addComplCase(
             "find configuration with id test3 and param ?",
-            "path", "secure:password", "my-password"
+            "path", "\"secure:password\"", "my-password"
         )
         .addComplCase(
             "find configuration with id test3 and param \"secure:password\"=?",
-            ""
+            "\"\""
         )
         .addComplCase(
             "find configuration with dependency(not id BaseProject or (snapshot and trigger(type sch and param ?",
@@ -145,7 +145,7 @@ class FilterParameterDescriptorTest : BaseQueryLangTest() {
         )
         .addComplCase(
             "find configuration with param \"my-password\"=?",
-            ""
+            "\"\""
         )
         .end()
 
