@@ -1,34 +1,26 @@
 package jetbrains.buildServer.server.querylang.tests.client
 
-import jetbrains.buildServer.artifacts.BuildTagRevisionRule
 import jetbrains.buildServer.artifacts.RevisionRules
 import jetbrains.buildServer.server.querylang.MyProjectManagerInit
 import jetbrains.buildServer.server.querylang.objects.BuildConfiguration
 import jetbrains.buildServer.server.querylang.objects.Project
 import jetbrains.buildServer.server.querylang.parser.QueryParser
 import jetbrains.buildServer.server.querylang.requests.*
-import jetbrains.buildServer.serverSide.Parameter
+import jetbrains.buildServer.server.querylang.tests.BaseQueryLangTest
 import jetbrains.buildServer.serverSide.ProjectManager
 import jetbrains.buildServer.serverSide.SimpleParameter
-import jetbrains.buildServer.serverSide.impl.BaseServerTestCase
-import jetbrains.buildServer.serverSide.impl.dependency.UnresolvedDependency
 import jetbrains.buildServer.vcs.CheckoutRules
-import org.testng.annotations.BeforeClass
 import org.testng.annotations.BeforeMethod
 import org.testng.annotations.Test
 
 @Test
-class ClientTests: BaseServerTestCase() {
-    private lateinit var pManager: ProjectManager
-    private lateinit var client: RequestClient
+class ClientTests: BaseQueryLangTest() {
     private val parser = QueryParser
 
     @BeforeMethod
     override fun setUp() {
         super.setUp()
-        pManager = myFixture.projectManager
         myFixture.registerVcsSupport("jetbrains.git")
-        client = RequestClient(InternalApiQueryHandler(pManager), EmptyResultPrinter)
 
         val baseProject = myFixture.createProject("BaseProject", "BaseProject")
         val project1 = myFixture.createProject("Project1", "Project1", baseProject)
@@ -86,7 +78,7 @@ class ClientTests: BaseServerTestCase() {
         p5bt1.addParameter(SimpleParameter("path", "dabacabadaba"))
         myFixture.addDependency(p5bt1, p4bt1, true)
 
-        MyProjectManagerInit(pManager)
+        MyProjectManagerInit(projectManager, parameterTypeManager)
     }
 
     fun testSearchBuildConfigurationWithVcsTrigger() {

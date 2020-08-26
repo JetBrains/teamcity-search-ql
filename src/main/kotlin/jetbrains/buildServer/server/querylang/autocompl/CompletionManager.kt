@@ -1,6 +1,7 @@
 package jetbrains.buildServer.server.querylang.autocompl
 
 import jetbrains.buildServer.server.querylang.ast.*
+import jetbrains.buildServer.server.querylang.ast.wrappers.WParam
 import jetbrains.buildServer.serverSide.*
 import jetbrains.buildServer.serverSide.auth.SecurityContext
 import jetbrains.buildServer.util.EventDispatcher
@@ -267,8 +268,11 @@ class CompletionManager(
             }
         }
 
-        project.ownParameters.forEach {(name, value) ->
-            projectParamFinder.addParam(name, value)
+        project.ownParametersCollection.forEach {
+            val par = WParam(it)
+            if (par.value != "") {
+                projectParamFinder.addParam(par.name, par.value)
+            }
         }
         lock.readLock().unlock()
     }
@@ -311,7 +315,12 @@ class CompletionManager(
             buildConfOptionFinder.addParam(opt.key, bt.getOption(opt).toString())
         }
 
-        bt.ownParameters.forEach {(a, b) -> buildConfParamFinder.addParam(a, b)}
+        bt.ownParametersCollection.forEach {
+            val par = WParam(it)
+            if (par.value != "") {
+                buildConfParamFinder.addParam(par.name, par.value)
+            }
+        }
         lock.readLock().unlock()
     }
 
@@ -353,7 +362,12 @@ class CompletionManager(
             templateOptionFinder.addParam(opt.key, temp.getOption(opt).toString())
         }
 
-        temp.ownParameters.forEach {(a, b) -> templateParamFinder.addParam(a, b)}
+        temp.ownParametersCollection.forEach {
+            val par = WParam(it)
+            if (par.value != "") {
+                templateParamFinder.addParam(par.name, par.value)
+            }
+        }
         lock.readLock().unlock()
     }
 

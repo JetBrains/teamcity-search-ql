@@ -1,6 +1,9 @@
 package jetbrains.buildServer.server.querylang.ast.wrappers
 
 import jetbrains.buildServer.parameters.ValueResolver
+import jetbrains.buildServer.server.querylang.myParameterManager
+import jetbrains.buildServer.serverSide.Parameter
+import jetbrains.buildServer.serverSide.parameters.types.ParameterTypeManager
 
 class WParam(
     val name: String,
@@ -11,6 +14,15 @@ class WParam(
     } else {
         value_
     }
+
+    constructor(par: Parameter) : this(par.name,
+        if (par.controlDescription != null &&
+            myParameterManager.findParameterType(par)?.isSecureParameter(par.controlDescription!!) == true) {
+            ""
+        } else {
+            par.value
+        }
+    )
 }
 
 class WResolvableParam(
@@ -23,6 +35,18 @@ class WResolvableParam(
     } else {
         value_
     }
+
+    constructor(par: Parameter, resolver: ValueResolver) : this(
+        par.name,
+        if (par.controlDescription != null &&
+            myParameterManager.findParameterType(par)?.isSecureParameter(par.controlDescription!!) == true) {
+            ""
+        } else {
+            par.value
+        },
+        resolver
+    )
+
     fun resolve(): WParam {
         return WParam(name, resolver.resolve(value).result)
     }

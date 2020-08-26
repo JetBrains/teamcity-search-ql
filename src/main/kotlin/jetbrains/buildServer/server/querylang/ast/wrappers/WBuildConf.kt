@@ -69,13 +69,13 @@ abstract class AbstractWBuildConf :
     }
 
     override val ownParams: List<WResolvableParam>
-        get() = sbuildConf.ownParameters.map{(a, b) ->
-            WResolvableParam(a, b, sbuildConf.valueResolver)
+        get() = sbuildConf.ownParametersCollection.map{
+            WResolvableParam(it, sbuildConf.valueResolver)
         }
 
     override val params: List<WResolvableParam>
-        get() = sbuildConf.parameters.map {(a, b) ->
-            WResolvableParam(a, b, sbuildConf.valueResolver)
+        get() = sbuildConf.parametersCollection.map {
+            WResolvableParam(it, sbuildConf.valueResolver)
         }
 
     override val options: List<WResolvableParam>

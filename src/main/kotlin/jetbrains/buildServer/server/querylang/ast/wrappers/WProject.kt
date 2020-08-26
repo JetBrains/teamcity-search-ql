@@ -57,10 +57,10 @@ class WProject(
         get() = sproject.wrap()
 
     override val ownParams: List<WResolvableParam>
-        get() = sproject.ownParameters.map { (a, b) -> WResolvableParam(a, b, sproject.valueResolver) }
+        get() = sproject.ownParametersCollection.map { WResolvableParam(it, sproject.valueResolver) }
 
     override val params: List<WResolvableParam>
-        get() = sproject.parameters.map { (a, b) -> WResolvableParam(a, b, sproject.valueResolver) }
+        get() = sproject.parametersCollection.map { WResolvableParam(it, sproject.valueResolver) }
 
     override val vcsRoots: List<WVcsRoot>
         get() = sproject.vcsRoots.map {it.wrap(sproject.valueResolver)}

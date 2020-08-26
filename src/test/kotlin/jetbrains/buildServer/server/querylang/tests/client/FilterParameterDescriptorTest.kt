@@ -42,7 +42,8 @@ class FilterParameterDescriptorTest : BaseQueryLangTest() {
                 TFeature("feature2", Pair("abc", "")),
                 TStep("step22", Pair("abc-bcd", "qwe-rty")),
                 TParam("secure:password", "qwerty"),
-                TParam("path", "abacaba")
+                TParam("path", "abacaba"),
+                TPasswordParam("my-password", "qwerty")
             ).bind("b3"),
 
             TBuildConf("test4",
@@ -125,7 +126,7 @@ class FilterParameterDescriptorTest : BaseQueryLangTest() {
         )
         .addComplCase(
             "find configuration with id test3 and param ?",
-            "path", "secure:password"
+            "path", "secure:password", "my-password"
         )
         .addComplCase(
             "find configuration with id test3 and param \"secure:password\"=?",
@@ -138,6 +139,13 @@ class FilterParameterDescriptorTest : BaseQueryLangTest() {
         .addComplCase(
             "find configuration with dependency(id test3 and not (snapshot and trigger(type sch and param ?",
             "path", "triggerPath", "otherTriggerPath"
+        )
+        .addComplCase(
+            "find configuration with param \"my-password\"="
+        )
+        .addComplCase(
+            "find configuration with param \"my-password\"=?",
+            ""
         )
         .end()
 

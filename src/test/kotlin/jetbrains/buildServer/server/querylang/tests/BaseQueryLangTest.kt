@@ -17,6 +17,7 @@ import jetbrains.buildServer.serverSide.*
 import jetbrains.buildServer.serverSide.dependency.DependencySettings
 import jetbrains.buildServer.serverSide.impl.BaseServerTestCase
 import jetbrains.buildServer.serverSide.impl.ProjectEx
+import jetbrains.buildServer.serverSide.parameters.types.*
 import jetbrains.buildServer.util.EventDispatcher
 import jetbrains.buildServer.util.OptionSupport
 import jetbrains.buildServer.util.StringOption
@@ -24,8 +25,6 @@ import jetbrains.buildServer.vcs.SVcsRoot
 import org.testng.annotations.AfterMethod
 import org.testng.annotations.BeforeMethod
 import java.util.concurrent.TimeUnit
-import kotlin.system.measureTimeMillis
-import kotlin.time.measureTime
 
 abstract class BaseQueryLangTest : BaseServerTestCase() {
     protected lateinit var client: RequestClient
@@ -34,6 +33,15 @@ abstract class BaseQueryLangTest : BaseServerTestCase() {
     protected lateinit var eventListener: AutocompletionEventListener
     protected lateinit var taskQueue: TaskQueue
     protected lateinit var complm: CompletionManager
+
+    val parameterTypeManager = ParameterTypeManager(
+        listOf(
+            PasswordType(),
+            MapParameter(),
+            TextParameter(),
+            BooleanParameter()
+        )
+    )
 
     protected val indexingRateMillis: Long = 20
 
@@ -58,7 +66,7 @@ abstract class BaseQueryLangTest : BaseServerTestCase() {
 
         eventListener = AutocompletionEventListener(taskQueue, projectManager, myFixture.eventDispatcher)
 
-        MyProjectManagerInit(projectManager)
+        MyProjectManagerInit(projectManager, parameterTypeManager)
 
         eventListener.serverStartup()
     }
@@ -219,6 +227,9 @@ abstract class BaseQueryLangTest : BaseServerTestCase() {
                     is TParam -> {
                         obj.create(project)
                     }
+                    is TPasswordParam -> {
+                        obj.create(project)
+                    }
                 }
             }
 
@@ -254,6 +265,7 @@ abstract class BaseQueryLangTest : BaseServerTestCase() {
                     is TParam -> obj.create(bt)
                     is TVcsInst -> obj.create(bt)
                     is TOption -> obj.create(bt)
+                    is TPasswordParam -> obj.create(bt)
                 }
             }
 
@@ -283,6 +295,7 @@ abstract class BaseQueryLangTest : BaseServerTestCase() {
                     is TParam -> obj.create(temp)
                     is TVcsInst -> obj.create(temp)
                     is TOption -> obj.create(temp)
+                    is TPasswordParam -> obj.create(temp)
                 }
             }
             return temp
@@ -429,6 +442,12 @@ abstract class BaseQueryLangTest : BaseServerTestCase() {
     inner class TParam(val name: String, val v: String) : TestObject {
         fun create(bt: UserParametersHolder) {
             bt.addParameter(SimpleParameter(name, v))
+        }
+    }
+
+    inner class TPasswordParam(val name: String, val v: String) : TestObject {
+        fun create(bt: UserParametersHolder) {
+            bt.addParameter(MockParameter(name, v, "password"))
         }
     }
 

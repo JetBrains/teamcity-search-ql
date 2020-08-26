@@ -60,10 +60,12 @@ class WTemplate(
     }
 
     override val ownParams: List<WResolvableParam>
-        get() = stemplate.ownParameters.map { (a, b) -> WResolvableParam(a, b, stemplate.valueResolver) }
+        get() = stemplate.ownParametersCollection.map { WResolvableParam(it, stemplate.valueResolver) }
 
     override val params: List<WResolvableParam>
-        get() = stemplate.parameters.map { (a, b) -> WResolvableParam(a, b, stemplate.valueResolver) }
+        get() = stemplate.parametersCollection.map { param ->
+            WResolvableParam(param, stemplate.valueResolver)
+        }
 
     override val options: List<WResolvableParam>
         get() = stemplate.options.map {WResolvableParam(it.key, getOption(it).toString(), resolver)}

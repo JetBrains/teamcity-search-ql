@@ -1,11 +1,13 @@
 package jetbrains.buildServer.server.querylang
 
+import jetbrains.buildServer.controllers.parameters.ParameterManager
 import jetbrains.buildServer.serverSide.BuildTypeTemplate
 import jetbrains.buildServer.serverSide.ProjectManager
 import jetbrains.buildServer.serverSide.SBuildType
 import jetbrains.buildServer.serverSide.SProject
 import jetbrains.buildServer.vcs.SVcsRoot
 import jetbrains.buildServer.serverSide.auth.AccessDeniedException
+import jetbrains.buildServer.serverSide.parameters.types.ParameterTypeManager
 
 class MyProjectManager(private val projectManager: ProjectManager): ProjectManager by projectManager {
 
@@ -43,10 +45,15 @@ class MyProjectManager(private val projectManager: ProjectManager): ProjectManag
 }
 
 lateinit var myProjectManager: MyProjectManager
+lateinit var myParameterManager: ParameterTypeManager
 
-class MyProjectManagerInit(val projectManager: ProjectManager) {
+class MyProjectManagerInit(
+    val projectManager: ProjectManager,
+    parameterManager: ParameterTypeManager
+) {
     init {
         myProjectManager = MyProjectManager(projectManager)
+        myParameterManager = parameterManager
     }
 }
 
