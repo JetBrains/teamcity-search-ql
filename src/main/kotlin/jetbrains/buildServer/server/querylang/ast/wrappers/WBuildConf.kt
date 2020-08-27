@@ -5,7 +5,10 @@ import jetbrains.buildServer.serverSide.BuildTypeEx
 import jetbrains.buildServer.serverSide.SBuildType
 import jetbrains.buildServer.util.Option
 
-fun SBuildType.wrap() = WBuildConf(this)
+fun SBuildType.wrap(): WBuildConf? {
+    if (!checkPermission(this.projectId)) return null
+    return WBuildConf(this)
+}
 
 abstract class AbstractWBuildConf :
     FIdContainer,
@@ -35,7 +38,7 @@ abstract class AbstractWBuildConf :
         get() = sbuildConf.externalId
 
     override val project: WProject
-        get() = sbuildConf.project.wrap()
+        get() = sbuildConf.project.wrap()!!
 
     override val parent: WProject?
         get() = sbuildConf.project.wrap()
@@ -59,7 +62,7 @@ abstract class AbstractWBuildConf :
         get() = buildTypeEx.settings.ownBuildFeatures.map {it.wrap(sbuildConf)}
 
     override val templates: List<WTemplate>
-        get() = sbuildConf.templates.map {it.wrap()}
+        get() = sbuildConf.templates.mapNotNull {it.wrap()}
 
     override fun isEnabled(obj: FEnabledContainer): Boolean {
         if (obj !is WParametersDescriptor) {
@@ -97,13 +100,13 @@ abstract class AbstractWBuildConf :
     override val dependencies: List<SuperDependency>
         get() = (
                 sbuildConf.dependencies.mapNotNull {dep -> dep.dependOn?.let{dep.wrap(it, resolver)}}
-                + sbuildConf.artifactDependencies.mapNotNull {dep -> dep.sourceBuildType?.let{dep.wrap(it, resolver)}}
+                        + sbuildConf.artifactDependencies.mapNotNull {dep -> dep.sourceBuildType?.let{dep.wrap(it, resolver)}}
                 ).toSuperDependencies()
 
     override val ownDependencies: List<SuperDependency>
         get() = (
                 sbuildConf.ownDependencies.mapNotNull {dep -> dep.dependOn?.let{dep.wrap(it, resolver)}}
-                + buildTypeEx.settings.ownArtifactDependencies.mapNotNull {
+                        + buildTypeEx.settings.ownArtifactDependencies.mapNotNull {
                         dep -> dep.sourceBuildType?.let{dep.wrap(it, resolver)
                 }}
                 ).toSuperDependencies()

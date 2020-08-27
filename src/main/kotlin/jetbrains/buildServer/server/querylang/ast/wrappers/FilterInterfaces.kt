@@ -1,9 +1,13 @@
 package jetbrains.buildServer.server.querylang.ast.wrappers
 
-import jetbrains.buildServer.serverSide.artifacts.SArtifactDependency
-import jetbrains.buildServer.serverSide.dependency.Dependency
+import jetbrains.buildServer.server.querylang.mySecurityContext
+import jetbrains.buildServer.serverSide.auth.Permission
 import jetbrains.buildServer.util.Option
 
+fun checkPermission(projectId: String): Boolean {
+    return mySecurityContext.authorityHolder.isPermissionGrantedForProject(projectId, Permission.EDIT_PROJECT) ||
+            mySecurityContext.authorityHolder.isPermissionGrantedForProject(projectId, Permission.VIEW_BUILD_CONFIGURATION_SETTINGS)
+}
 
 interface TopLevelObject
 

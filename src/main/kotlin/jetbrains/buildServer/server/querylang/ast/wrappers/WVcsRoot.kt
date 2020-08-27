@@ -5,7 +5,12 @@ import jetbrains.buildServer.vcs.SVcsRoot
 import jetbrains.buildServer.vcs.VcsRootEntry
 import jetbrains.buildServer.vcs.VcsRootInstanceEntry
 
-fun SVcsRoot.wrap(resolver: ValueResolver) = WVcsRoot(this, resolver)
+fun SVcsRoot.wrap(resolver: ValueResolver): WVcsRoot? {
+    if (!checkPermission(this.project.projectId)) {
+        return null
+    }
+    return WVcsRoot(this, resolver)
+}
 
 abstract class AbstractWVcsRoot :
     FIdContainer,
@@ -23,7 +28,7 @@ abstract class AbstractWVcsRoot :
         get() = svcsRoot.externalId
 
     override val project: WProject
-        get() = svcsRoot.project.wrap()
+        get() = svcsRoot.project.wrap()!!
 
     override val parent: WProject?
         get() = svcsRoot.project.wrap()

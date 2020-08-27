@@ -78,7 +78,7 @@ class ClientTests: BaseQueryLangTest() {
         p5bt1.addParameter(SimpleParameter("path", "dabacabadaba"))
         myFixture.addDependency(p5bt1, p4bt1, true)
 
-        MyProjectManagerInit(projectManager, parameterTypeManager)
+        MyProjectManagerInit(projectManager, parameterTypeManager, myFixture.securityContext)
     }
 
     fun testSearchBuildConfigurationWithVcsTrigger() {

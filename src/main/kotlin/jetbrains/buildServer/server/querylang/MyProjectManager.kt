@@ -7,6 +7,8 @@ import jetbrains.buildServer.serverSide.SBuildType
 import jetbrains.buildServer.serverSide.SProject
 import jetbrains.buildServer.vcs.SVcsRoot
 import jetbrains.buildServer.serverSide.auth.AccessDeniedException
+import jetbrains.buildServer.serverSide.auth.AuthorityHolder
+import jetbrains.buildServer.serverSide.auth.SecurityContext
 import jetbrains.buildServer.serverSide.parameters.types.ParameterTypeManager
 
 class MyProjectManager(private val projectManager: ProjectManager): ProjectManager by projectManager {
@@ -46,14 +48,17 @@ class MyProjectManager(private val projectManager: ProjectManager): ProjectManag
 
 lateinit var myProjectManager: MyProjectManager
 lateinit var myParameterManager: ParameterTypeManager
+lateinit var mySecurityContext: SecurityContext
 
 class MyProjectManagerInit(
     val projectManager: ProjectManager,
-    parameterManager: ParameterTypeManager
+    parameterManager: ParameterTypeManager,
+    securityContext: SecurityContext
 ) {
     init {
         myProjectManager = MyProjectManager(projectManager)
         myParameterManager = parameterManager
+        mySecurityContext = securityContext
     }
 }
 

@@ -4,7 +4,10 @@ import jetbrains.buildServer.parameters.ValueResolver
 import jetbrains.buildServer.serverSide.BuildTypeTemplate
 import jetbrains.buildServer.util.Option
 
-fun BuildTypeTemplate.wrap() = WTemplate(this)
+fun BuildTypeTemplate.wrap(): WTemplate? {
+    if (!checkPermission(this.projectId)) return null
+    return WTemplate(this)
+}
 
 class WTemplate(
     val stemplate: BuildTypeTemplate
@@ -29,7 +32,7 @@ class WTemplate(
         get() = stemplate.externalId
 
     override val project: WProject
-        get() = stemplate.project.wrap()
+        get() = stemplate.project.wrap()!!
 
     override val parent: WProject?
         get() = stemplate.project.wrap()

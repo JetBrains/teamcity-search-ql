@@ -66,7 +66,7 @@ abstract class BaseQueryLangTest : BaseServerTestCase() {
 
         eventListener = AutocompletionEventListener(taskQueue, projectManager, myFixture.eventDispatcher)
 
-        MyProjectManagerInit(projectManager, parameterTypeManager)
+        MyProjectManagerInit(projectManager, parameterTypeManager, myFixture.securityContext)
 
         eventListener.serverStartup()
     }

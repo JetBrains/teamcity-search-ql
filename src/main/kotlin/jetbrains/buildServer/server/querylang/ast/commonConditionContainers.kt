@@ -74,7 +74,7 @@ interface VcsRootConditionContainer : ConditionContainer<WVcsRoot> {
             is IdFilter -> {
                 val (restFilter, ids) = filter.transformedEval()
                 if (restFilter is NoneObjectFilter) {
-                    val vcsRoots = ids.mapNotNull { myProjectManager.findVcsRootByExternalId(it) }.map {it.wrap(it.project.valueResolver)}
+                    val vcsRoots = ids.mapNotNull { myProjectManager.findVcsRootByExternalId(it) }.mapNotNull {it.wrap(it.project.valueResolver)}
                     return EvalResult(NoneObjectFilter(), vcsRoots)
                 }
             }
@@ -103,7 +103,7 @@ interface TemplateConditionContainer : ConditionContainer<WTemplate> {
                 val (restFilter, ids) = filter.transformedEval()
                 if (restFilter is NoneObjectFilter) {
                     val vcsRoots =
-                        ids.mapNotNull { myProjectManager.findBuildTypeTemplateByExternalId(it) }.map { it.wrap() }
+                        ids.mapNotNull { myProjectManager.findBuildTypeTemplateByExternalId(it) }.mapNotNull { it.wrap() }
                     return EvalResult(NoneObjectFilter(), vcsRoots)
                 }
             }

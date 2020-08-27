@@ -9,7 +9,8 @@ interface EnabledChecker {
     fun isEnabled(obj: FEnabledContainer): Boolean
 }
 
-fun SProject.wrap(): WProject {
+fun SProject.wrap(): WProject? {
+    if (!checkPermission(this.projectId)) return null
     return WProject(this)
 }
 
@@ -54,7 +55,7 @@ class WProject(
         get() = sproject.parentProject?.wrap()
 
     override val project: WProject
-        get() = sproject.wrap()
+        get() = sproject.wrap()!!
 
     override val ownParams: List<WResolvableParam>
         get() = sproject.ownParametersCollection.map { WResolvableParam(it, sproject.valueResolver) }
@@ -63,7 +64,7 @@ class WProject(
         get() = sproject.parametersCollection.map { WResolvableParam(it, sproject.valueResolver) }
 
     override val vcsRoots: List<WVcsRoot>
-        get() = sproject.vcsRoots.map {it.wrap(sproject.valueResolver)}
+        get() = sproject.vcsRoots.mapNotNull {it.wrap(sproject.valueResolver)}
 
     override val values: List<ResolvableString>
         get() = ownFeatures.flatMap { it.values } + ownParams.map {it.toValue()}
@@ -80,11 +81,11 @@ class WProject(
     }
 
     override val buildConfs: List<WBuildConf>
-        get() = sproject.ownBuildTypes.map {it.wrap()}
+        get() = sproject.ownBuildTypes.mapNotNull {it.wrap()}
 
     override val templates: List<WTemplate>
-        get() = sproject.ownBuildTypeTemplates.map {it.wrap()}
+        get() = sproject.ownBuildTypeTemplates.mapNotNull {it.wrap()}
 
     override val subProjects: List<WProject>
-        get() = sproject.ownProjects.map {it.wrap()}
+        get() = sproject.ownProjects.mapNotNull {it.wrap()}
 }
