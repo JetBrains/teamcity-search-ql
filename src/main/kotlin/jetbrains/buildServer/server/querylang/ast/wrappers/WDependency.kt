@@ -46,19 +46,11 @@ fun Dependency.wrap(sbuildConf: SBuildType, resolver: ValueResolver): WSnapshotD
     return WSnapshotDependency(this, sbuildConf, resolver)
 }
 
-class WSnapshotDependency(val sdep: Dependency, val sbuildConf: SBuildType, val resolver: ValueResolver): WDependency(), FOptionContainer{
+class WSnapshotDependency(val sdep: Dependency, val sbuildConf: SBuildType, override val resolver: ValueResolver): WDependency(), FOptionContainer{
+    override val optionRetriever: DefaultOptions
+        get() = DefaultOptions(sdep)
     override val dependsOn: WBuildConf
         get() = sbuildConf.wrap()!!
-
-    override val options: List<WResolvableParam>
-        get() = sdep.options.map { WResolvableParam(it.key, getOption(it).toString(), resolver) }
-
-    override val ownOptions: List<WResolvableParam>
-        get() = sdep.ownOptions.map { WResolvableParam(it.key, getOption(it).toString(), resolver) }
-
-    override fun getOption(opt: Option<Any>): Any {
-        return sdep.getOption(opt)
-    }
 }
 
 fun List<WDependency>.toSuperDependencies(): List<SuperDependency> {

@@ -1,8 +1,8 @@
 package jetbrains.buildServer.server.querylang.ast.wrappers
 
+import jetbrains.buildServer.parameters.ValueResolver
 import jetbrains.buildServer.server.querylang.mySecurityContext
 import jetbrains.buildServer.serverSide.auth.Permission
-import jetbrains.buildServer.util.Option
 
 fun checkPermission(projectId: String): Boolean {
     return mySecurityContext.authorityHolder.isPermissionGrantedForProject(projectId, Permission.EDIT_PROJECT) ||
@@ -74,10 +74,10 @@ interface FDependencyContainer {
 }
 
 interface FOptionContainer {
+    val resolver: ValueResolver
+    val optionRetriever: DefaultOptions
     val options: List<WResolvableParam>
-    val ownOptions: List<WResolvableParam>
-
-    fun getOption(opt: Option<Any>) : Any
+        get() = optionRetriever.getOptions().map { WResolvableParam(it.first, it.second, resolver) }
 }
 
 interface FTypeContainer {

@@ -25,7 +25,7 @@ class WTemplate(
     FValueContainer,
     FNameContainer
 {
-    val resolver: ValueResolver
+    override val resolver: ValueResolver
         get() = stemplate.valueResolver
 
     override val id: String
@@ -70,15 +70,8 @@ class WTemplate(
             WResolvableParam(param, stemplate.valueResolver)
         }
 
-    override val options: List<WResolvableParam>
-        get() = stemplate.options.map {WResolvableParam(it.key, getOption(it).toString(), resolver)}
-
-    override val ownOptions: List<WResolvableParam>
-        get() = stemplate.ownOptions.map {WResolvableParam(it.key, getOption(it).toString(), resolver)}
-
-    override fun getOption(opt: Option<Any>): Any {
-        return stemplate.getOption(opt)
-    }
+    override val optionRetriever: DefaultOptions
+        get() = DefaultOptions(stemplate)
 
     override val vcsRootEntries: List<WVcsRootEntry>
         get() = stemplate.vcsRootEntries.map {it.wrap(resolver)}
@@ -101,7 +94,6 @@ class WTemplate(
 
     override val values: List<ResolvableString>
         get() = ownParams.map {it.toValue()} +
-                ownOptions.map {it.toValue()} +
                 ownTriggers.flatMap { it.values } +
                 ownSteps.flatMap { it.values } +
                 ownFeatures.flatMap { it.values } +

@@ -33,10 +33,10 @@ class FilterOptionClientTests : BaseQueryLangTest() {
     fun dataProvider() = TestDataProvider()
         .addBCCase(
             "find buildConfiguration with option (*at*)=(*bc)",
-            "b1"
+            "b1", "b2"
         )
         .addBCCase(
-            "find buildConfiguration with option[withInherited] path=abc",
+            "find buildConfiguration with option path=abc",
             "b1", "b2"
         )
         .addBCCase(
@@ -45,6 +45,10 @@ class FilterOptionClientTests : BaseQueryLangTest() {
         )
         .addTempCase(
             "find template with option path=abc",
+            "t1"
+        )
+        .addTempCase(
+            "find template with option cleanBuild=false",
             "t1"
         )
         .end()

@@ -426,10 +426,8 @@ data class RevRuleFilter(
 data class OptionFilter(
     override val condition: ConditionAST<WParam>
 ) : MultipleObjectsConditionFilter<FOptionContainer, WParam>(),
-    MWithInheritedContainer,
     MResolvedContainer
 {
-    override var includeInherited: Boolean = false
     override var searchResolved = false
     override var searchAll: ElementValidator<*> = AnyElementValidator<Any>()
 
@@ -439,7 +437,7 @@ data class OptionFilter(
 
     override fun buildFrom(filter:RealObjectFilter<WParam>):RealObjectFilter<FOptionContainer> {
         return RealObjectFilter {obj ->
-            val options = (if (includeInherited) obj.options else obj.ownOptions).map {
+            val options = obj.options.map {
                 if (searchResolved) it.resolve() else it.toParam()
             }
 

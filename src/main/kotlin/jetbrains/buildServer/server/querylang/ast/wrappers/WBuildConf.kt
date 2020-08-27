@@ -31,7 +31,7 @@ abstract class AbstractWBuildConf :
         sbuildConf as? BuildTypeEx ?: throw IllegalStateException("Should be BuildTypeEx")
     }
 
-    val resolver: ValueResolver
+    override val resolver: ValueResolver
         get() = sbuildConf.valueResolver
 
     override val id: String
@@ -81,15 +81,8 @@ abstract class AbstractWBuildConf :
             WResolvableParam(it, sbuildConf.valueResolver)
         }
 
-    override val options: List<WResolvableParam>
-        get() = sbuildConf.options.map {WResolvableParam(it.key, getOption(it).toString(), resolver)}
-
-    override val ownOptions: List<WResolvableParam>
-        get() = sbuildConf.ownOptions.map {WResolvableParam(it.key, getOption(it).toString(), resolver)}
-
-    override fun getOption(opt: Option<Any>): Any {
-        return sbuildConf.getOption(opt)
-    }
+    override val optionRetriever: DefaultOptions
+        get() = DefaultOptions(sbuildConf)
 
     override val vcsRootEntries: List<WVcsRootEntry>
         get() = sbuildConf.vcsRootEntries.map {it.wrap(resolver)}
@@ -113,7 +106,7 @@ abstract class AbstractWBuildConf :
 
     override val values: List<ResolvableString>
         get() = ownParams.map {it.toValue()} +
-                ownOptions.map {it.toValue()} +
+                options.map {it.toValue()} +
                 ownTriggers.flatMap { it.values } +
                 ownSteps.flatMap { it.values } +
                 ownFeatures.flatMap { it.values } +
