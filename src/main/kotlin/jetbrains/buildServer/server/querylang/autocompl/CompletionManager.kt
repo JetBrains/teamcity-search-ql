@@ -1,6 +1,7 @@
 package jetbrains.buildServer.server.querylang.autocompl
 
 import jetbrains.buildServer.server.querylang.ast.*
+import jetbrains.buildServer.server.querylang.ast.wrappers.DefaultOptions
 import jetbrains.buildServer.server.querylang.ast.wrappers.WParam
 import jetbrains.buildServer.serverSide.*
 import jetbrains.buildServer.serverSide.auth.SecurityContext
@@ -311,8 +312,8 @@ class CompletionManager(
             artifactRevRuleFinder.addString(art.revisionRule.name)
         }
 
-        bt.options.forEach {opt ->
-            buildConfOptionFinder.addParam(opt.key, bt.getOption(opt).toString())
+        DefaultOptions(bt).getOptions().forEach { opt ->
+            buildConfOptionFinder.addParam(opt.first, opt.second)
         }
 
         bt.ownParametersCollection.forEach {
@@ -348,8 +349,8 @@ class CompletionManager(
         }
 
         temp.dependencies.forEach { dep ->
-            dep.ownOptions.forEach {opt ->
-                snapshotOptionFinder.addParam(opt.key, dep.getOption(opt).toString())
+            DefaultOptions(dep).getOptions().forEach { opt ->
+                snapshotOptionFinder.addParam(opt.first, opt.second)
             }
         }
 
@@ -358,8 +359,8 @@ class CompletionManager(
             artifactRevRuleFinder.addString(art.revisionRule.name)
         }
 
-        temp.options.forEach {opt ->
-            templateOptionFinder.addParam(opt.key, temp.getOption(opt).toString())
+        DefaultOptions(temp).getOptions().forEach { opt ->
+            templateOptionFinder.addParam(opt.first, opt.second)
         }
 
         temp.ownParametersCollection.forEach {

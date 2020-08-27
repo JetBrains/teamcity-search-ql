@@ -18,6 +18,10 @@ class FilterOptionClientTests : BaseQueryLangTest() {
                 TOption("path", "abc")
             ).bind("t1"),
 
+            TTemplate("temp2",
+                TOption("cleanBuild", "true")
+            ).bind("t2"),
+
             TBuildConf("test1",
                 TOption("path", "abc")
             ).bind("b1"),
@@ -51,6 +55,26 @@ class FilterOptionClientTests : BaseQueryLangTest() {
             "find template with option cleanBuild=false",
             "t1"
         )
+        .addTempCase(
+            "find template with option cleanBuild=true",
+            "t2"
+        )
+        .end()
+
+    @DataProvider(name = "compl")
+    fun complData() = TestDataProvider()
+        .addComplCase(
+            "find template with option cleanB",
+            "cleanBuild"
+        )
+        .addComplCase(
+            "find template with op",
+            "option"
+        )
+        .addComplCase(
+            "find template with option cleanBuild=",
+            "cleanBuild=false", "cleanBuild=true"
+        )
         .end()
 
     @DataProvider(name = "failed")
@@ -70,5 +94,11 @@ class FilterOptionClientTests : BaseQueryLangTest() {
     @Test(dataProvider = "failed")
     fun parametrizedFailedParsingTest(query: String, exc: Class<out Exception>) {
         assertFailsWith(exc.kotlin) { QueryParser.parse(query)}
+    }
+
+    @Test(dataProvider = "compl")
+    fun parametrizedCompletionTests(query: String, expected: List<String>) {
+        waitForIndexing()
+        checkVars(query, expected)
     }
 }
