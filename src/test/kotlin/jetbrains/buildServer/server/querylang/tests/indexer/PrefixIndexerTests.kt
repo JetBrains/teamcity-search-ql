@@ -70,7 +70,7 @@ class PrefixIndexerTests {
             t.addString("abacDADD")
 
 
-            val l = t.complete("abac", 4).sorted()
+            val l = t.complete("abac", 4).map {it.first}.sorted()
             val expected = listOf(
                 "abac", "abacDA", "abacDD", "abacDDD"
             )
@@ -86,7 +86,7 @@ class PrefixIndexerTests {
             t.addString("?@&&&&")
 
 
-            val l = t.complete("?*@", 4).sorted()
+            val l = t.complete("?*@", 4).map {it.first}.sorted()
             val expected = listOf(
                 "?*@aba", "?*@caba", "?*@daba"
             )

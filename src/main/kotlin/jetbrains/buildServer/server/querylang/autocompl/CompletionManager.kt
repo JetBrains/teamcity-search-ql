@@ -41,39 +41,39 @@ class CompletionManager(
     private val lock = ReentrantReadWriteLock()
 
 
-    private val map: MutableMap<String, SecuredStringFinder> = mutableMapOf()
-    private lateinit var projectIdFinder: SimpleStringFinder
+    private val map: MutableMap<String, SecuredStringFinder<String>> = mutableMapOf()
+    private lateinit var projectIdFinder: SimpleStringFinder<String>
     private lateinit var projectParamFinder: ParameterValueFinder
-    private lateinit var projectNameFinder: SimpleStringFinder
+    private lateinit var projectNameFinder: SimpleStringFinder<String>
 
-    private lateinit var buildConfIdFinder: SimpleStringFinder
+    private lateinit var buildConfIdFinder: SimpleStringFinder<String>
     private lateinit var buildConfOptionFinder: ParameterValueFinder
     private lateinit var buildConfParamFinder: ParameterValueFinder
-    private lateinit var buildConfNameFinder: SimpleStringFinder
+    private lateinit var buildConfNameFinder: SimpleStringFinder<String>
 
-    private lateinit var templateIdFinder: SimpleStringFinder
+    private lateinit var templateIdFinder: SimpleStringFinder<String>
     private lateinit var templateOptionFinder: ParameterValueFinder
     private lateinit var templateParamFinder: ParameterValueFinder
-    private lateinit var templateNameFinder: SimpleStringFinder
+    private lateinit var templateNameFinder: SimpleStringFinder<String>
 
-    private lateinit var vcsRootIdFinder: SimpleStringFinder
-    private lateinit var vcsRootTypeFinder: SimpleStringFinder
+    private lateinit var vcsRootIdFinder: SimpleStringFinder<String>
+    private lateinit var vcsRootTypeFinder: SimpleStringFinder<String>
     private lateinit var vcsParamFinder: ParameterValueFinder
-    private lateinit var vcsRootNameFinder: SimpleStringFinder
+    private lateinit var vcsRootNameFinder: SimpleStringFinder<String>
 
     private lateinit var triggerParamValueFinder: ParameterValueFinder
-    private lateinit var triggerTypeFinder: SimpleStringFinder
+    private lateinit var triggerTypeFinder: SimpleStringFinder<String>
 
     private lateinit var stepParamValueFinder: ParameterValueFinder
-    private lateinit var stepTypeFinder: SimpleStringFinder
+    private lateinit var stepTypeFinder: SimpleStringFinder<String>
 
     private lateinit var featureParamValueFinder: ParameterValueFinder
-    private lateinit var featureTypeFinder: SimpleStringFinder
+    private lateinit var featureTypeFinder: SimpleStringFinder<String>
 
     private lateinit var snapshotOptionFinder: ParameterValueFinder
 
-    private lateinit var artifactRulesFinder: SimpleStringFinder
-    private lateinit var artifactRevRuleFinder: SimpleStringFinder
+    private lateinit var artifactRulesFinder: SimpleStringFinder<String>
+    private lateinit var artifactRevRuleFinder: SimpleStringFinder<String>
 
     init {
         serverDispatcher.addListener(this)
@@ -137,7 +137,7 @@ class CompletionManager(
     }
 
     private fun registerFinders() {
-        fun registerFinder(sf: SecuredStringFinder, vararg nameContext: KClass<out Named>) {
+        fun registerFinder(sf: SecuredStringFinder<String>, vararg nameContext: KClass<out Named>) {
             val vars = nameContext.map { it.getNames()!! }
 
             addToMapWithPrefix(sf, "", vars)
@@ -230,7 +230,7 @@ class CompletionManager(
         }
 
 
-    private fun addToMapWithPrefix(sf: SecuredStringFinder, prefix: String, vars: List<List<String>>) {
+    private fun addToMapWithPrefix(sf: SecuredStringFinder<String>, prefix: String, vars: List<List<String>>) {
         if (vars.isEmpty()) {
             map[prefix] = sf
             return
@@ -250,7 +250,7 @@ class CompletionManager(
         projectManager.allVcsRoots.forEach { updateVcsRoot(it) }
     }
 
-    fun completeString(s: String, filterType: String, limit: Int): List<String> {
+    fun completeString(s: String, filterType: String, limit: Int): List<Pair<String, String?>> {
         lock.readLock().lock()
         val res = map[filterType]?.completeString(s, limit) ?: listOf()
         lock.readLock().unlock()
@@ -283,19 +283,19 @@ class CompletionManager(
         buildConfIdFinder.addString(bt.externalId)
         buildConfNameFinder.addString(bt.name)
         bt.buildTriggersCollection.forEach { trig ->
-            triggerTypeFinder.addString(trig.type)
+            triggerTypeFinder.addString(trig.type, trig.buildTriggerService.displayName)
             trig.parameters.forEach {name, value ->
                 triggerParamValueFinder.addParam(name, value)
             }
         }
         bt.buildRunners.forEach {step ->
-            stepTypeFinder.addString(step.type)
+            stepTypeFinder.addString(step.type, step.runType.displayName)
             step.parameters.forEach {name, value ->
                 stepParamValueFinder.addParam(name, value)
             }
         }
         bt.buildFeatures.forEach { feat ->
-            featureTypeFinder.addString(feat.type)
+            featureTypeFinder.addString(feat.type, feat.buildFeature.displayName)
             feat.parameters.forEach {name, value ->
                 featureParamValueFinder.addParam(name, value)
             }
@@ -330,19 +330,19 @@ class CompletionManager(
         templateIdFinder.addString(temp.externalId)
         templateNameFinder.addString(temp.name)
         temp.buildTriggersCollection.forEach { trig ->
-            triggerTypeFinder.addString(trig.type)
+            triggerTypeFinder.addString(trig.type, trig.buildTriggerService.displayName)
             trig.parameters.forEach {name, value ->
                 triggerParamValueFinder.addParam(name, value)
             }
         }
         temp.buildRunners.forEach {step ->
-            stepTypeFinder.addString(step.type)
+            stepTypeFinder.addString(step.type, step.runType.displayName)
             step.parameters.forEach {name, value ->
                 stepParamValueFinder.addParam(name, value)
             }
         }
         temp.buildFeatures.forEach { feat ->
-            featureTypeFinder.addString(feat.type)
+            featureTypeFinder.addString(feat.type, feat.buildFeature.displayName)
             feat.parameters.forEach {name, value ->
                 featureParamValueFinder.addParam(name, value)
             }
@@ -384,7 +384,7 @@ class CompletionManager(
         lock.readLock().unlock()
     }
 
-    fun getSimpleFinder(isSystemAdminOnly: Boolean, disabled: Boolean): SimpleStringFinder {
+    fun getSimpleFinder(isSystemAdminOnly: Boolean, disabled: Boolean): SimpleStringFinder<String> {
         return SimpleStringFinder(this.securityContext, isSystemAdminOnly, AtomicBoolean(disabled))
     }
 

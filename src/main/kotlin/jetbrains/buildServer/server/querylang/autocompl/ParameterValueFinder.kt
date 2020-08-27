@@ -13,10 +13,10 @@ class ParameterValueFinder(
     val disabledValue: Boolean,
     val lengthLimit: Int,
     val cntLimit: Int
-): SecuredStringFinder() {
+): SecuredStringFinder<String>() {
 
-    val nameTrie = SynchronizedCompressedTrie<Any>()
-    val params: MutableMap<String, SimpleStringFinder> = mutableMapOf()
+    val nameTrie = SynchronizedCompressedTrie<String>()
+    val params: MutableMap<String, SimpleStringFinder<String>> = mutableMapOf()
 
     private val paramNameLock = ReentrantReadWriteLock()
 
@@ -35,7 +35,7 @@ class ParameterValueFinder(
             return res
         }
 
-    override fun completeStringUnsafe(prefix: String, limit: Int): List<String> {
+    override fun completeStringUnsafe(prefix: String, limit: Int): List<Pair<String, String?>> {
         val wordRegex = """[\w.\-_]*?""".toRegex()
         val withQuoteRegex = """"[\s\S]*?""".toRegex()
         val paramOnlyRegex = """$wordRegex|$withQuoteRegex""".toRegex()
@@ -45,9 +45,11 @@ class ParameterValueFinder(
                 val paramName = prefix.substringBefore("=").trim().removeQuotationMarks()
                 val paramValue = prefix.substringAfter("=").trimStart().removeStartMarks()
                 val vars = completeParamValue(paramName, paramValue, limit)
-                vars.map {paramName.escape1() + "=" + it}
+                vars.map {Pair(paramName.escape1() + "=" + it.first, it.second)}
             }
-            prefix.matches(paramOnlyRegex) || prefix.isEmpty() -> completeParamName(prefix.removeStartMarks(), limit).map {(it).escape1()}
+            prefix.matches(paramOnlyRegex) || prefix.isEmpty() ->
+                completeParamName(prefix.removeStartMarks(), limit)
+                    .map {Pair(it.first.escape1(), it.second)}
             else -> listOf()
         }
     }
@@ -88,11 +90,11 @@ class ParameterValueFinder(
         paramNameLock.writeLock().unlock()
     }
 
-    private fun completeParamName(paramPrefix: String, limit: Int): List<String> {
+    private fun completeParamName(paramPrefix: String, limit: Int): List<Pair<String, String?>> {
         return nameTrie.complete(paramPrefix, limit)
     }
 
-    private fun completeParamValue(paramName: String, valuePrefix: String, limit: Int): List<String> {
+    private fun completeParamValue(paramName: String, valuePrefix: String, limit: Int): List<Pair<String, String?>> {
         paramNameLock.readLock().lock()
         val res = params[paramName]?.completeString(valuePrefix, limit) ?: emptyList()
         paramNameLock.readLock().unlock()

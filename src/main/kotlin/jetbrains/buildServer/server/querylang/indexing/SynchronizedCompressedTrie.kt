@@ -68,7 +68,7 @@ class SynchronizedCompressedTrie<T> : AutoSynchronizedIndexer<T>() {
         node.obj = obj
     }
 
-    override fun completeUnsafe(str: String, limit: Int): List<String> {
+    override fun completeUnsafe(str: String, limit: Int): List<Pair<String, T?>> {
         val (node, strRest) = goDown(str) ?: return emptyList()
 
         val firstNode = if (strRest.isEmpty()) node
@@ -77,8 +77,7 @@ class SynchronizedCompressedTrie<T> : AutoSynchronizedIndexer<T>() {
         val prefix = if (strRest.isEmpty()) ""
                      else firstNode.str.drop(strRest.length)
         return getAllBfs(firstNode, limit)
-            .map {prefix + it}
-            .map {str + it}
+            .map {Pair(str + prefix + it.first, it.second)}
     }
 
     override fun existsUnsafe(str: String): Boolean {
@@ -86,7 +85,7 @@ class SynchronizedCompressedTrie<T> : AutoSynchronizedIndexer<T>() {
         return node.isTerminal && strRest.isEmpty()
     }
 
-    fun getAllStrings(): List<String> {
+    fun getAllStrings(): List<Pair<String, T?>> {
         lock.writeLock().lock()
         val res = getAllBfs(root, Int.MAX_VALUE)
         lock.writeLock().unlock()
@@ -141,10 +140,10 @@ class SynchronizedCompressedTrie<T> : AutoSynchronizedIndexer<T>() {
         return Pair(node, str.substring(i))
     }
 
-    private fun getAllBfs(startNode: Node<T>, limit: Int): List<String> {
+    private fun getAllBfs(startNode: Node<T>, limit: Int): List<Pair<String, T?>> {
         val queue = LinkedList<Triple<Node<T>, String, Int>>()
         queue.add(Triple(startNode, "", 0))
-        val res = mutableListOf<String>()
+        val res = mutableListOf<Pair<String, T?>>()
 
         while (res.size < limit && !queue.isEmpty()) {
             val (node, str, prefixLength) = queue.poll()
@@ -153,7 +152,7 @@ class SynchronizedCompressedTrie<T> : AutoSynchronizedIndexer<T>() {
                     queue.add(Triple(nextNode, str + nextNode.str, 1))
                 }
                 if (node.isTerminal) {
-                    res.add(str)
+                    res.add(Pair(str, node.obj))
                 }
             }
             else {

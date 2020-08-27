@@ -105,7 +105,7 @@ class SearchBuildConfigurationTests : BaseQueryLangTest() {
             "type"
         )
         .addComplCase(
-            "find configuration with option a",
+            "find configuration with option ab",
             "abc"
         )
         .addComplCase(

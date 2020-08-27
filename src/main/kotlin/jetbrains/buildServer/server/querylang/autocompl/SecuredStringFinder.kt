@@ -6,8 +6,8 @@ import jetbrains.buildServer.serverSide.auth.SecurityContext
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicLong
 
-abstract class SecuredStringFinder {
-    fun completeString(prefix: String, limit: Int): List<String> {
+abstract class SecuredStringFinder<T> {
+    fun completeString(prefix: String, limit: Int): List<Pair<String, T?>> {
         if (disabled.get()) {
             return emptyList()
         }
@@ -20,7 +20,7 @@ abstract class SecuredStringFinder {
         return completeStringUnsafe(prefix, limit)
     }
 
-    protected abstract fun completeStringUnsafe(prefix: String, limit: Int): List<String>
+    protected abstract fun completeStringUnsafe(prefix: String, limit: Int): List<Pair<String, T?>>
 
     abstract fun clear()
 

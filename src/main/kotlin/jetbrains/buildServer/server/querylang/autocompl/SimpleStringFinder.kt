@@ -4,32 +4,32 @@ import jetbrains.buildServer.server.querylang.indexing.SynchronizedCompressedTri
 import jetbrains.buildServer.serverSide.auth.SecurityContext
 import java.util.concurrent.atomic.AtomicBoolean
 
-class SimpleStringFinder(
+class SimpleStringFinder<T>(
     override val securityContext: SecurityContext,
     override val systemAdminOnly: Boolean,
     override var disabled: AtomicBoolean
-) : SecuredStringFinder()
+) : SecuredStringFinder<T>()
 {
 
-    val trie = SynchronizedCompressedTrie<Any>()
+    val trie = SynchronizedCompressedTrie<T>()
     override val nodesTotal
         get() = trie.nodesTotal.get()
     override val symbolsTotal
         get() = trie.symbolsTotal.get()
 
-    override fun completeStringUnsafe(prefix: String, limit: Int): List<String> {
+    override fun completeStringUnsafe(prefix: String, limit: Int): List<Pair<String, T?>> {
         val realPrefix = if (prefix.startsWith("\"")) prefix.drop(1) else prefix
-        return trie.complete(realPrefix, limit).map {it.escape1()}
+        return trie.complete(realPrefix, limit).map {Pair(it.first.escape1(), it.second)}
     }
 
-    fun addString(s: String) {
+    fun addString(s: String, context: T? = null) {
         if (disabled.get()) {
             return
         }
         if (s.contains("\n")) {
             return
         }
-        return trie.addString(s)
+        return trie.addString(s, context)
     }
 
     override fun clear() {

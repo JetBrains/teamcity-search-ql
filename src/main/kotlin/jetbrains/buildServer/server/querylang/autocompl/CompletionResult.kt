@@ -1,3 +1,3 @@
 package jetbrains.buildServer.server.querylang.autocompl
 
-data class CompletionResult(val result: String, val show: String)
+data class CompletionResult(val result: String, val show: String, val meta: String? = null)

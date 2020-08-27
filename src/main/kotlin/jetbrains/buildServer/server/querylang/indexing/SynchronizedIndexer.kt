@@ -5,7 +5,7 @@ interface SynchronizedIndexer<T> {
 
     fun exists(str: String): Boolean
 
-    fun complete(str: String, limit: Int): List<String>
+    fun complete(str: String, limit: Int): List<Pair<String, T?>>
 
     fun clear()
 }

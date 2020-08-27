@@ -53,7 +53,7 @@ class SearchTemplateTests : BaseQueryLangTest() {
     @DataProvider(name = "compl")
     fun complData() = TestDataProvider()
         .addComplCase(
-            "find template with option a",
+            "find template with option ab",
             "abc"
         )
         .addComplCase(

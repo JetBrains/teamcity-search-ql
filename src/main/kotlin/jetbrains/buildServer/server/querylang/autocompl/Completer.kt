@@ -38,6 +38,7 @@ class Completer(val completionManager: CompletionManager? = null) {
         if (objectTypes == null) {
             return graph["root"]!!.map {it.first()}
                 .filterBegins(word)
+                .map {Pair(it, null)}
                 .autocomplSort()
                 .toCompletionResult(input)
         }
@@ -108,7 +109,7 @@ class Completer(val completionManager: CompletionManager? = null) {
         word: String,
         limit: Int,
         completeModifier: Boolean
-    ): List<String> {
+    ): List<Pair<String, String?>> {
         var node = startNode
         for (filterName in trace) {
             if (graph[node] == null) {
@@ -123,7 +124,7 @@ class Completer(val completionManager: CompletionManager? = null) {
         }
 
         if (completeModifier) {
-            return possibleModifiers[node]?.filterBegins(word) ?:
+            return possibleModifiers[node]?.filterBegins(word)?.map {Pair(it, null)} ?:
                 throw IllegalStateException("Unknow filter name ${node}")
         }
 
@@ -136,7 +137,7 @@ class Completer(val completionManager: CompletionManager? = null) {
                 limit
             )
         } else {
-            graph[node]?.toStringList()?.filterBegins(word)
+            graph[node]?.toStringList()?.filterBegins(word)?.map {Pair(it, null)}
                 ?: throw IllegalStateException("Unknow filter name ${node}")
         }
     }
@@ -192,6 +193,15 @@ class Completer(val completionManager: CompletionManager? = null) {
         return names.names
     }
 
+    private fun List<Pair<String, String?>>.toCompletionResult(
+        input: String
+    ): List<CompletionResult> {
+        return this.map {
+            CompletionResult(input + it.first, it.first, it.second)
+        }
+    }
+
+    @JvmName("toCompletionResultListString")
     private fun List<String>.toCompletionResult(
         input: String
     ): List<CompletionResult> {
@@ -204,8 +214,8 @@ class Completer(val completionManager: CompletionManager? = null) {
         return this.filter {it.startsWith(word)}
     }
 
-    private fun List<String>.autocomplSort(): List<String> {
-        return this.sortedWith(compareBy({ it.length }, {it}))
+    private fun List<Pair<String, String?>>.autocomplSort(): List<Pair<String, String?>> {
+        return this.sortedWith(compareBy ({ it.first.length }, {it.first}))
     }
 
     private fun String.dropw(word: String): String {

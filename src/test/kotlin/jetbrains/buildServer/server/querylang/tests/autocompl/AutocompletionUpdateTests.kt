@@ -34,7 +34,7 @@ class AutocompletionUpdateTests : BaseServerTestCase(){
 
         sleep(2 * updatePeriod)
 
-        val vars = compl.completeString("te", "configuration_id", 10)
+        val vars = compl.completeString("te", "configuration_id", 10).map {it.first}
         val expected = listOf("test1")
 
         assertEquals(expected, vars)
@@ -46,7 +46,7 @@ class AutocompletionUpdateTests : BaseServerTestCase(){
 
         sleep(2 * updatePeriod)
 
-        val vars = compl.completeString("te", "template_id", 10)
+        val vars = compl.completeString("te", "template_id", 10).map {it.first}
         val expected = listOf("temp1")
 
         assertEquals(expected, vars)
@@ -57,7 +57,7 @@ class AutocompletionUpdateTests : BaseServerTestCase(){
         persist(myFixture.buildType)
 
         sleep(2 * updatePeriod)
-        val vars = compl.completeString("vc", "trigger_type", 10)
+        val vars = compl.completeString("vc", "trigger_type", 10).map {it.first}
         val expected = listOf("vcsTrigger")
 
         assertEquals(expected, vars)
@@ -67,7 +67,7 @@ class AutocompletionUpdateTests : BaseServerTestCase(){
         myFixture.createProject("Project1", "Project1")
 
         sleep(updatePeriod * 2)
-        val vars = compl.completeString("Pr", "project_id", 10)
+        val vars = compl.completeString("Pr", "project_id", 10).map {it.first}
         val expected = listOf("Project1")
 
         assertEquals(expected, vars)
@@ -79,7 +79,7 @@ class AutocompletionUpdateTests : BaseServerTestCase(){
         persist(vcs)
 
         sleep(2 * updatePeriod)
-        val vars = compl.completeString("aba", "vcsRoot_id", 10)
+        val vars = compl.completeString("aba", "vcsRoot_id", 10).map {it.first}
         val expected = listOf("abacaba")
 
         assertEquals(expected, vars)
