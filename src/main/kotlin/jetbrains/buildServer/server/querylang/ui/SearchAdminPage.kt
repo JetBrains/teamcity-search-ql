@@ -58,16 +58,17 @@ class SearchAdminPage(
         val executor = executorServices.normalExecutorService
 
 
-        var task: Future<QueryResult>? = null
+        var task: Future<QueryResult?>? = null
         try {
             val result = bean.getQuery()?.let {
                 val queryTimelimit = TeamCityProperties.getIntervalMilliseconds(TIMELIMIT_PARAM_NAME, DEFAULT_TIMELIMIT)
                 val authHolder = securityContext.authorityHolder
-                task = executor.submit<QueryResult> {
-                    val oldAuthorityHolder = securityContext.authorityHolder
-                    securityContext.authorityHolder = authHolder
-                    val res = requestClient.process(it)
-                    securityContext.authorityHolder = oldAuthorityHolder
+                task = executor.submit<QueryResult?> {
+                    val res = try {
+                        securityContext.runAs<QueryResult>(authHolder) { return@runAs requestClient.process(it) }
+                    } catch (e: InterruptedException) {
+                        null
+                    }
                     return@submit res
                 }
                 task!!.get(queryTimelimit, TimeUnit.MILLISECONDS)
@@ -90,7 +91,6 @@ class SearchAdminPage(
             try {
                 task?.cancel(true)
             }
-            catch (e: InterruptedException) {}
             catch (e: Exception) {}
         }
 
