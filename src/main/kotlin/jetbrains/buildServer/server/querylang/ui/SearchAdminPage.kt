@@ -18,6 +18,7 @@ import jetbrains.buildServer.web.openapi.Groupable
 import jetbrains.buildServer.web.openapi.PagePlaces
 import jetbrains.buildServer.web.openapi.PluginDescriptor
 import jetbrains.buildServer.web.util.CameFromSupport
+import org.springframework.security.core.context.SecurityContextHolder
 import java.lang.Exception
 import java.util.concurrent.*
 import javax.servlet.http.HttpServletRequest
@@ -63,8 +64,11 @@ class SearchAdminPage(
                 val queryTimelimit = TeamCityProperties.getIntervalMilliseconds(TIMELIMIT_PARAM_NAME, DEFAULT_TIMELIMIT)
                 val authHolder = securityContext.authorityHolder
                 task = executor.submit<QueryResult> {
+                    val oldAuthorityHolder = securityContext.authorityHolder
                     securityContext.authorityHolder = authHolder
-                    requestClient.process(it)
+                    val res = requestClient.process(it)
+                    securityContext.authorityHolder = oldAuthorityHolder
+                    return@submit res
                 }
                 task!!.get(queryTimelimit, TimeUnit.MILLISECONDS)
             }
