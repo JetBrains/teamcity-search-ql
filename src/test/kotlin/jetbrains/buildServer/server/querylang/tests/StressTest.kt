@@ -1,10 +1,7 @@
 package jetbrains.buildServer.server.querylang.tests
 
 import jetbrains.buildServer.serverSide.BuildTypeEx
-import org.testng.annotations.AfterClass
-import org.testng.annotations.BeforeClass
-import org.testng.annotations.DataProvider
-import org.testng.annotations.Test
+import org.testng.annotations.*
 import java.lang.Thread.sleep
 import kotlin.random.Random
 import kotlin.system.measureTimeMillis
@@ -21,7 +18,7 @@ class StressTest : BaseQueryLangTest() {
     val runtime = Runtime.getRuntime()
     var usedMemoryBefore: Long = 0
 
-    @BeforeClass
+    @BeforeMethod
     override fun setUp() {
         super.setUp()
         val project = TProject("BaseProject", TBuildConf("bc1", TTrigger("vcsTrigger")))
@@ -41,7 +38,7 @@ class StressTest : BaseQueryLangTest() {
         println("Nodes total: ${complm.nodesTotal}")
     }
 
-    @AfterClass
+    @AfterMethod
     override fun tearDown() {
         super.tearDown()
         sleep(1000)
@@ -71,13 +68,23 @@ class StressTest : BaseQueryLangTest() {
             )
             .end()
 
-    @Test(dataProvider = "time")
-    fun parametrizedTimeTest(query: String) {
-        var objCnt: Int = 0
-        val time = measureTimeMillis {
-            objCnt = client.process(query).objects.size
+    @Test
+    fun parametrizedTimeTest() {
+        val cases = listOf(
+                "find project with project id BaseProject",
+                "find configuration with project id BaseProject",
+                "find configuration with parent id BaseProject and trigger type vcsTrigger",
+                "find configuration with trigger type vcsTrigger",
+                "find configuration with dependency (trigger type schedulingTrigger and artifact)",
+                "find configuration with dependency dependency trigger type vcsTrigger"
+        )
+        cases.forEach { query ->
+            var objCnt: Int = 0
+            val time = measureTimeMillis {
+                objCnt = client.process(query).objects.size
+            }
+            println("\"$query\" -- finished in ${time} milliseconds\n found $objCnt")
         }
-        println("\"$query\" -- finished in ${time} milliseconds\n found $objCnt")
 
     }
 
