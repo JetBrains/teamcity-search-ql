@@ -9,7 +9,7 @@ sourceCompatibility = "1.8"
 targetCompatibility = "1.8"
 
 ext {
-    pluginVersion = project.hasProperty("PluginVersion") ? "$PluginVersion"
+    teamcityPluginVersion = project.hasProperty("PluginVersion") ? "$PluginVersion"
             : "SNAPSHOT"
     teamcityVersion = project.hasProperty("TeamCityVersion") ? "$TeamCityVersion"
             : "2020.1"
@@ -62,9 +62,10 @@ compileTestKotlin {
 }
 
 teamcity {
-    version = rootProject.ext.teamcityVersion
+    version = teamcityVersion
     server {
         descriptor = file("teamcity-plugin.xml")
+        tokens = [Version: teamcityPluginVersion]
         archiveName = "search-ql"
     }
 }
