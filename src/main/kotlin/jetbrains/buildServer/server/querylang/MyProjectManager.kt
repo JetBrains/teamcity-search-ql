@@ -1,6 +1,5 @@
 package jetbrains.buildServer.server.querylang
 
-import jetbrains.buildServer.controllers.parameters.ParameterManager
 import jetbrains.buildServer.serverSide.BuildTypeTemplate
 import jetbrains.buildServer.serverSide.ProjectManager
 import jetbrains.buildServer.serverSide.SBuildType
