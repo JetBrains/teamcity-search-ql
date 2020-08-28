@@ -9,13 +9,13 @@ sourceCompatibility = "1.8"
 targetCompatibility = "1.8"
 
 ext {
-    teamcityPluginVersion = project.hasProperty("PluginVersion") ? "$PluginVersion"
+    teamcityPluginVersion = project.hasProperty("PluginVersion") ? PluginVersion
             : "SNAPSHOT"
-    teamcityVersion = project.hasProperty("TeamCityVersion") ? "$TeamCityVersion"
+    teamcityVersion = project.hasProperty("TeamCityVersion") ? TeamCityVersion
             : "2020.1"
-    teamcityLibs = project.hasProperty("TeamCityLibs") ? "$TeamCityLibs"
+    teamcityLibs = project.hasProperty("TeamCityLibs") ? TeamCityLibs
             : "../../.idea_artifacts/web-deployment/WEB-INF/lib"
-    teamcityTestLibs = project.hasProperty("TeamCityTestLibs") ? "$TeamCityTestLibs"
+    teamcityTestLibs = project.hasProperty("TeamCityTestLibs") ? TeamCityTestLibs
             : "../../.idea_artifacts/dist_openapi_integration/tests"
 }
 
@@ -65,6 +65,7 @@ teamcity {
     version = teamcityVersion
     server {
         descriptor = file("teamcity-plugin.xml")
+        tokens = [Version: teamcityPluginVersion]
         archiveName = "search-ql"
     }
 }
