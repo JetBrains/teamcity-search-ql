@@ -21,6 +21,7 @@ class TaskQueue(
     private val scheduledExecutor = Executors.newSingleThreadScheduledExecutor()
 
     fun init() {
+        queue.clear()
         scheduledExecutor.scheduleAtFixedRate(
             { update() },
             initialDelay,

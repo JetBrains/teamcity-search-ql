@@ -65,7 +65,6 @@ teamcity {
     version = teamcityVersion
     server {
         descriptor = file("teamcity-plugin.xml")
-        tokens = [Version: teamcityPluginVersion]
         archiveName = "search-ql"
     }
 }
