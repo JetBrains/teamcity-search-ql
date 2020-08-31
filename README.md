@@ -85,3 +85,45 @@ And let CONDITION be the condition for the described filter. E.g. in the example
   *example:* `find project with configuration[all] trigger type vcsTrigger` - find projects that have at least one defined configuration and all configurations have trigger with type `vcsTrigger`
 * **project** - contains a condition on project. States that OBJECT should lie in the subtree of some project that satisfies the CONDITION  
   *example:* `find configuration with project id Project1` - find configurations that lies in the subtree of project with id `Project1`
+* **vcsRoot** - contains a condition on vcs root(for projects). States that there should be a vcs root defined in the OBJECT(only project is possible in this case) and that vcs root should satisfy the condition.
+  *example:* - `find project with vcsRoot id Project1_Vcs1`
+* **vcs** - contains a condition on vcs root settings(for build configurations and templates). So there could be filters on vcs root and checkout rules in the condition.
+  *example:* - `find configuration with vcs id Project1_Vcs1`
+* **template** - contains a condition on build configuration template. If OBJECT is a project, then states that tempalte that satisfies the condition should be definded in the OBJECT. If OBJECT is configuration, then states that OBJECT should inherit settings from such template
+  *example:* - `find configuration with template trigger[all] type vcsTrigger`
+* **parent** - contains a condition on project. States that the OBJECT should have a parent project that satisfies the CONDITION.
+  *example:* - `find configuration with parent id Project1`
+* **trigger** - contains a condition on build trigger. States that the OBJECT should have a build trigger that satisfies the CONDITION.
+  *example:* - `find configuration with trigger type vcsTrigger`
+* **step** - contains a condition on build step. States that the OBJECT should have a build step that satisfies the CONDITION
+  *example:* - `find configuration with step type JPS`
+* **feature** - contains a condition on build feature. States that the OBJECT should have a build feature that satisfies the CONDITION.
+  *example:* - `find template with feature type golang`
+* **value** - contains a condition on string. States that the OBJECT should have a string field(parameter value, option value, checkout rules, etc.) that satisfies the CONDITION.
+  *example:* - `find configuration with val *path*`
+* **type:** - contains a condition on string. States that the OBJECT should have type that satisfies the CONDITION
+  *example:* - `find configuration with trigger type vcsTrigger`
+* **enabled** - States that the OBJECT should be enabled
+  *example:* - `find configuration with trigger (type vcsTrigger and enabled)`
+* **param** - contains a condition on parameter(STRING_CONDITION = STRING_CONDITION). States that the OBJECT should have a parameter that satisfies the CONDITION.
+  *example:* - `find project with param path = abc`
+* **ancestor** - contains a condition on project. States that the OBJECT(project) should have an ancestor(not including itself) that satisfies the CONDITION.
+  *example:* - `find configuration with parent ancestor id Project1`
+* **rules** - contains a filter on string. Depends on context, could be about artifact rules or checkout rules.
+* **dependency** - `dependency` is an object that contains all artifact dependencies on a particular build configuration and snapshot dependency(if there is one) on the same configuration. So this filter can contain the same subfilters as `configuration` filter(id, trigger, template, etc.) and also can `artifact` or `snapshot` subfilters.
+  *example:* - `find configuration with dependency (trigger type vcsTrigger and snapshot and artifact)` - finds all configurations with dependency(snapshot and artifact at the same time) on configuration with trigger type vcsTrigger. In this case `snapshot` and `artifact` don't contain any condition and that means just that there should be dependencies of both types on a configuration.
+* **artifact** - can only be a subfilter of `dependency` filter. If it has no condition just states that there should be an artifact dependency. But can contain a condition on artifact dependency properties(artifact rules, revision rules)
+  *example:* - `find configuration with dependency artifact rules "=>"`
+* **snapshot** - can only be a subfilter of `dependency` filter. If it has no condition just states that there should be a snapshot dependency. But can contains a condition on snapshot dependency(option)
+  *example:* - `find template with dependency snapshot option sync-revisions=true`
+* **clean** - can only be a subfilter of `artifact` filter. States that the option "Clean destination paths before downloading artifacts" should be selected.
+  *example:* - `find configuration with dependency artifact clean`
+* **revRule** - can only be a subfilter of `artifact` filter. Contains a condition on string. States that artifact dependency should contain a revision rule(the build to choose from, `the latest build`, `last sucessful`, etc) that satisfies the CONDITION.
+  *example:* - `find configuration with dependency artifact revRule lastSuccessful`
+* **option** - contains a condition on parameter(STRING_CONDITION = STRING_CONDITION). States that the OBJECT should have an option that satisfies the CONDITION.
+  *example:* - `find configuration with option cleanBuild=true`
+* **name** - contains a condition on string. States that the OBJECT should have a name that satisfies the CONDITION.
+  *example:* - `find project with name (BaseProject_* or *Project1)`
+* **subProject** - contains a filter on project. Can only be a `project` subfilter. States that project should have a subproject that satisfies the CONDITION.
+  *example:* - `find project with subproject id *Project1`
+
