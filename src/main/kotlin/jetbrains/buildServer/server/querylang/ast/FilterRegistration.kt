@@ -1,10 +1,14 @@
 package jetbrains.buildServer.server.querylang.ast
 
+import java.io.File
 import kotlin.reflect.KClass
 import kotlin.reflect.full.isSubclassOf
 import kotlin.reflect.full.isSuperclassOf
 
 object FilterRegistration {
+    val pathToReadme = "README.md"
+    private val descriptions : MutableMap<String, FilterDescription> = mutableMapOf()
+
     val anyConditionContainer = object : ConditionContainer<Any> {
         override val condition: ConditionAST<Any>
             get() = NoneConditionAST()
@@ -73,6 +77,9 @@ object FilterRegistration {
         registerModifier(ResolvedFilterModifier::class)
         registerModifier(WithInheritedFilterModifier::class)
         registerModifier(AllFilterModifier::class)
+
+        loadDescription()
+        println(5555)
     }
 
     fun getFilterGraph() = filterGraph.toMap()
@@ -110,6 +117,14 @@ object FilterRegistration {
 
     fun getPossibleFilters(modifier: KClass<out FilterModifier<*>>): Set<KClass<out Filter<*>>> {
         return reversedModifierGraph[modifier]?.toSet() ?: emptySet()
+    }
+
+    fun getDescriptionByName(filterName: String): FilterDescription? {
+        return descriptions[filterName]
+    }
+
+    fun getDescription(filterClass: KClass<out Filter<*>>): FilterDescription? {
+        return filterClass.getName()?.let { descriptions[it] }
     }
 
     private inline fun <reified Obj : Any,reified NestedObj : Any> registerConditionFilter(filter: KClass<out ConditionFilter<Obj, NestedObj>>) {
@@ -151,6 +166,45 @@ object FilterRegistration {
         filterGraph.getOrPut(conditionContainer, { mutableSetOf()}).add(filter)
         revFilterGraph.getOrPut(filter, { mutableSetOf()}).add(conditionContainer)
     }
+
+    private fun loadDescription() {
+        val readmeText = File(pathToReadme).readText()
+        var lastIndex = readmeText.indexOf("Filters description")
+
+        val text = readmeText.substring(lastIndex, readmeText.indexOf("###", lastIndex))
+
+        lastIndex = 0
+
+        fun String.substringUntil(c: Char, startIndex: Int = 0): Pair<String, Int> {
+            var res = ""
+            var ind = this.length
+            run loop@{
+                (startIndex until this.length).forEach { i ->
+                    if (this[i] == c) {
+                        ind = i
+                        return@loop
+                    }
+                    res += this[i]
+                }
+            }
+            return Pair(res, ind)
+        }
+
+        while (lastIndex < text.length) {
+            lastIndex = text.indexOf("\n* ", lastIndex)
+            if (lastIndex == -1) {
+                break
+            }
+            lastIndex = text.indexOf("**", lastIndex)
+            val filterName = text.substring(lastIndex + 2, text.indexOf("**", lastIndex + 2))
+            lastIndex = text.indexOf("-", lastIndex)
+            val (descr, nlastIndex) = text.substringUntil('\n', lastIndex + 1)
+            lastIndex = text.indexOf("*example:*", nlastIndex)
+            val (examp, nlastIndex1) = text.substringUntil('\n', lastIndex + 12)
+            lastIndex = nlastIndex1
+            descriptions[filterName] = FilterDescription(descr, examp)
+        }
+    }
 }
 
 fun <NestedObj> Filter<*>.checkAndCast(filter: KClass<out ConditionContainer<NestedObj>>): Filter<NestedObj>? {
@@ -160,3 +214,5 @@ fun <NestedObj> Filter<*>.checkAndCast(filter: KClass<out ConditionContainer<Nes
     }
     return res
 }
+
+data class FilterDescription(val descr: String, val example: String)

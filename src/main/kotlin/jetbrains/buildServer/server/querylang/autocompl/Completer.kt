@@ -124,7 +124,7 @@ class Completer(val completionManager: CompletionManager? = null) {
         }
 
         if (completeModifier) {
-            return possibleModifiers[node]?.filterBegins(word)?.map {Pair(it, null)} ?:
+            return possibleModifiers[node]?.filterBegins(word)?.map {Pair(it, FilterRegistration.getDescriptionByName(it)?.descr)} ?:
                 throw IllegalStateException("Unknow filter name ${node}")
         }
 
