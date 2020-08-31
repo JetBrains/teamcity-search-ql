@@ -79,7 +79,6 @@ object FilterRegistration {
         registerModifier(AllFilterModifier::class)
 
         loadDescription()
-        println(5555)
     }
 
     fun getFilterGraph() = filterGraph.toMap()
@@ -168,6 +167,7 @@ object FilterRegistration {
     }
 
     private fun loadDescription() {
+        /*
         val readmeText = File(pathToReadme).readText()
         var lastIndex = readmeText.indexOf("Filters description")
 
@@ -204,6 +204,7 @@ object FilterRegistration {
             lastIndex = nlastIndex1
             descriptions[filterName] = FilterDescription(descr, examp)
         }
+        */
     }
 }
 
