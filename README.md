@@ -127,3 +127,19 @@ And let CONDITION be the condition for the described filter. E.g. in the example
 * **subProject** - contains a filter on project. Can only be a `project` subfilter. States that project should have a subproject that satisfies the CONDITION.  
   *example:* - `find project with subproject id *Project1`
 
+#### Autocompletion
+
+The plugin provides two types of the autcompltion: real time autocompletion and context autocompletion. Real time autcompletion is suggesting variants while you typing the query.
+The full real time autocompletion is available only for system administator. And for project admins autocompletion is disabled for all parameter values, ids, names and parameter names of configurations, projects and templates.  
+And the context autocompletion is available for everyone. To call this autocompletion put the `?` in the end of the query and it will suggest only variants that are possible in this context(but there are some exceptions).  
+Example: `find configuration with parent (id Project1 or id Project2) and trigger type ?`, for this query only trigger types, that are presented in configurations that belong to project with id Project1 or id Project2, will be suggested.  
+But if there is `not` operator or `all` modifier on the path to the `?` than suggested variants will depend only on the part of the context. In the case of `not` variants would depend on the context with branch that contains `not` removed.
+So for example for `find configuration with parent (id Project1 or id Project2) and not (trigger type vcsTrigger and step type ?` autocompletion will consider only `parent (id Project1 or id Project2)` context.  
+And in the `all` modifier case it is not guaranteed that all objects would contain suggested value, 
+so for example for the query `find configuration with trigger[all] type ?` not all triggers may be of the suggested type.
+
+#### Permissions
+
+You can search only objects(projects, configurations, templates vcs roots) to which you have an edit permission or view settings permission.
+So for example system admin will see the results for objects from the whole server and project admin of project PROJECT1 can only see objects from the subtree of this project.
+The same applies to the variants suggested in the context autocompletion.
