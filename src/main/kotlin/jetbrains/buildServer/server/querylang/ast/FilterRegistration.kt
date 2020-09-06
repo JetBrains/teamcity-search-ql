@@ -169,7 +169,7 @@ object FilterRegistration {
 
     private fun loadDescription() {
 
-        val readmeText = readFromResources("README.md")
+        val readmeText = this.readFromResources("README.md")
         var lastIndex = readmeText.indexOf("Filters description")
 
         val text = readmeText.substring(lastIndex, readmeText.indexOf("###", lastIndex))

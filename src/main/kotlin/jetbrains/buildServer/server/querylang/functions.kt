@@ -37,7 +37,7 @@ internal fun String.escapeQuotes(): String {
     return this.replace("\"", "\"\"")
 }
 
-internal fun readFromResources(filename: String): String {
-    return Thread.currentThread().contextClassLoader.getResourceAsStream(filename)?.reader()?.readText()
+internal fun Any.readFromResources(filename: String): String {
+    return this.javaClass.classLoader.getResourceAsStream(filename)?.reader()?.readText()
         ?: throw FileNotFoundException("Couldn't read file $filename from resources")
 }
