@@ -2,7 +2,7 @@ Search query language plugin
 ----------------------------
 
 This plugin is used to search for objects in teamcity project tree. 
-Plugin is only available for system administrator and project admins in the `Search` tab in the adminstration menu.
+Plugin is only available for system administrator and project admins in the `Search` tab in the administration menu.
 You can search 4 types of objects for now: projects, build configurations, build configuration templates and vcs roots.
 
 
@@ -28,8 +28,8 @@ Filter examples:
 `param (path or url) = (abc or def)` - same but with composite conditions on name and value
 
 Also a filter could have some modifiers, for example `find configuration with step[all, withInherited] type JPS`.
-`all` modifier states tha all sub-objects(in this case all build steps) should satisfy condition. And also there should be at least one step.
-And `withInherited` modifier states that sub-objects(again build steps) inherited from a template also should be taken in the consideration.
+`all` modifier states that all sub-objects(in this case all build steps) should satisfy condition. And also there should be at least one step.
+And `withInherited` modifier states that sub-objects(again build steps) inherited from a template also should be taken into the consideration.
 So this query will return build configurations, that have at least one steps, and all steps(including inherited) should have type `JPS`
  
 There are 4 types of string filters:
@@ -65,16 +65,16 @@ For example:
 
 `find configuration with dependency (template (trigger[all] type vcsTrigger and step type JPS) and snapshot option path=abc and artifact[all] rules "** =>")` -
 find configuration that have a dependency(if not specified, then any dependency. See `dependency` filter description) on another configuration, that inherits all settings from a template, that has all triggers with type vcsTrigger and has at least one step with type JPS.
-And `snapshot option path=abc` states that there should be a snapshot dependency on such configuration. And `artifact rules *"** =>"*` states that there should be at least one artifact dependency on such configuration and all artifact dependencies should contain `** =>` in theier artifact rules.
+And `snapshot option path=abc` states that there should be a snapshot dependency on such configuration. And `artifact rules *"** =>"*` states that there should be at least one artifact dependency on such configuration and all artifact dependencies should contain `** =>` in their artifact rules.
 
 #### Important default behaviour
 1) If filter on some OBJECT has `all` modifier, then by default if at least one sub-objects matches the condition, then the OBJECT is accepted.
 2) If filter on some OBJECT has `withInherited` modifier, then by default only sub-objects without inherited(from template or project) will be considered.
-3) All string comparisons are case insensitive by default. To make a string filter case sensetive, put a `^` before it(e.g. `^ Project1` or `^Project1` or `^ *Project*`)
+3) All string comparisons are case insensitive by default. To make a string filter case sensitive, put a `^` before it(e.g. `^ Project1` or `^Project1` or `^ *Project*`)
 
 #### Filters description
 
-Filters are occured in some condition, lets call an object that this condition filters an OBJECT. 
+Filters are occurred in some condition, lets call an object that this condition filters an OBJECT. 
 For example in query `find configuration with trigger (type vcsTrigger and param path=abc)` for filter `trigger` OBJECT will be a build configuration. 
 And for filter `type`(and for filter `param`) OBJECT will be a build trigger.
 And let CONDITION be the condition for the described filter. E.g. in the example above condition for filter `trigger` will be `type vcsTrigger and param path=abc`
@@ -89,7 +89,7 @@ And let CONDITION be the condition for the described filter. E.g. in the example
   *example:* `find project with vcsRoot id Project1_Vcs1`
 * **vcs** - contains a condition on vcs root settings(for build configurations and templates). So there could be filters on vcs root and checkout rules in the condition.  
   *example:* `find configuration with vcs id Project1_Vcs1`
-* **template** - contains a condition on build configuration template. If OBJECT is a project, then states that tempalte that satisfies the condition should be definded in the OBJECT. If OBJECT is configuration, then states that OBJECT should inherit settings from such template  
+* **template** - contains a condition on build configuration template. If OBJECT is a project, then states that tempalte that satisfies the condition should be defined in the OBJECT. If OBJECT is configuration, then states that OBJECT should inherit settings from such template  
   *example:* `find configuration with template trigger[all] type vcsTrigger`
 * **parent** - contains a condition on project. States that the OBJECT should have a parent project that satisfies the CONDITION.  
   *example:* `find configuration with parent id Project1`
@@ -118,7 +118,7 @@ And let CONDITION be the condition for the described filter. E.g. in the example
   *example:* `find template with dependency snapshot option sync-revisions=true`
 * **clean** - can only be a subfilter of `artifact` filter. States that the option "Clean destination paths before downloading artifacts" should be selected.  
   *example:* `find configuration with dependency artifact clean`
-* **revRule** - can only be a subfilter of `artifact` filter. Contains a condition on string. States that artifact dependency should contain a revision rule(the build to choose from, `the latest build`, `last sucessful`, etc) that satisfies the CONDITION.  
+* **revRule** - can only be a subfilter of `artifact` filter. Contains a condition on string. States that artifact dependency should contain a revision rule(the build to choose from, `the latest build`, `last successful`, etc) that satisfies the CONDITION.  
   *example:* `find configuration with dependency artifact revRule lastSuccessful`
 * **option** - contains a condition on parameter(STRING_CONDITION = STRING_CONDITION). States that the OBJECT should have an option that satisfies the CONDITION.  
   *example:* `find configuration with option cleanBuild=true`
@@ -129,8 +129,8 @@ And let CONDITION be the condition for the described filter. E.g. in the example
 
 #### Autocompletion
 
-The plugin provides two types of the autcompltion: real time autocompletion and context autocompletion. Real time autcompletion is suggesting variants while you typing the query.
-The full real time autocompletion is available only for system administator. And for project admins autocompletion is disabled for all parameter values, ids, names and parameter names of configurations, projects and templates.  
+The plugin provides two types of the autocompletion: real time autocompletion and context autocompletion. Real time autocompletion is suggesting variants while you typing the query.
+The full real time autocompletion is available only for system administrator. And for project admins autocompletion is disabled for all parameter values, ids, names and parameter names of configurations, projects and templates.  
 And the context autocompletion is available for everyone. To call this autocompletion put the `?` in the end of the query and it will suggest only variants that are possible in this context(but there are some exceptions).  
 Example: `find configuration with parent (id Project1 or id Project2) and trigger type ?`, for this query only trigger types, that are presented in configurations that belong to project with id Project1 or id Project2, will be suggested.  
 But if there is `not` operator or `all` modifier on the path to the `?` than suggested variants will depend only on the part of the context. In the case of `not` variants would depend on the context with branch that contains `not` removed.
