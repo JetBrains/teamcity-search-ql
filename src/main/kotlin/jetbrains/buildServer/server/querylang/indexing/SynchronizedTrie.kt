@@ -48,7 +48,7 @@ class SynchronizedTrie<T> : AutoSynchronizedIndexer<T>() {
         return res
     }
 
-    override fun completeUnsafe(str: String, limit: Int): List<Pair<String, T?>> {
+    override fun completeUnsafe(str: String, limit: Int): List<StringInfo<T>> {
         var node = root
         str.forEach { c ->
             if (!node.exists(c)) {
@@ -57,7 +57,7 @@ class SynchronizedTrie<T> : AutoSynchronizedIndexer<T>() {
             node = node.getNode(c)!!
         }
 
-        val res = getStringFromSubtree(node, limit).map {Pair(str + it.first, it.second)}
+        val res = getStringFromSubtree(node, limit).map {StringInfo(str + it.first, it.second)}
 
         return res
     }

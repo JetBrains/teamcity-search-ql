@@ -68,7 +68,7 @@ class SynchronizedCompressedTrie<T> : AutoSynchronizedIndexer<T>() {
         node.obj = obj
     }
 
-    override fun completeUnsafe(str: String, limit: Int): List<Pair<String, T?>> {
+    override fun completeUnsafe(str: String, limit: Int): List<StringInfo<T>> {
         val (node, strRest) = goDown(str) ?: return emptyList()
 
         val firstNode = if (strRest.isEmpty()) node
@@ -77,7 +77,7 @@ class SynchronizedCompressedTrie<T> : AutoSynchronizedIndexer<T>() {
         val prefix = if (strRest.isEmpty()) ""
                      else firstNode.str.drop(strRest.length)
         return getAllBfs(firstNode, limit)
-            .map {Pair(str + prefix + it.first, it.second)}
+            .map {StringInfo(str + prefix + it.first, it.second)}
     }
 
     override fun existsUnsafe(str: String): Boolean {

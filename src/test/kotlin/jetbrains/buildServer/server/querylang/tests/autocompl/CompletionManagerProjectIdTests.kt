@@ -31,7 +31,7 @@ internal class CompletionManagerProjectIdTests : BaseServerTestCase() {
 
     @Test
     fun test1() {
-        val vars = compl.completeString("Base_Project2_", "project_id", 4).map {it.first}
+        val vars = compl.completeString("Base_Project2_", "project_id", 4).map {it.str}
         val expected = listOf(
                 "Base_Project2_Project3",
                 "Base_Project2_Project4",

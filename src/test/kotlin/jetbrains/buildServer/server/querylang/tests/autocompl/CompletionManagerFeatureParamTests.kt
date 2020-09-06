@@ -27,7 +27,7 @@ class CompletionManagerFeatureParamTests : BaseServerTestCase() {
 
     
     fun testParamNameCompletion() {
-        val vars = compl.completeString("pat", "feature_param", 10).map {it.first}
+        val vars = compl.completeString("pat", "feature_param", 10).map {it.str}
         val expected = listOf("path", "pathabc")
 
         assertEquals(expected, vars)
@@ -35,7 +35,7 @@ class CompletionManagerFeatureParamTests : BaseServerTestCase() {
 
     
     fun testValueCompletion() {
-        val vars = compl.completeString("path =  \"a","feature_param",10).map {it.first}.toSet()
+        val vars = compl.completeString("path =  \"a","feature_param",10).map {it.str}.toSet()
         val expected = setOf("path=abc", "path=abd")
 
         assertEquals(expected, vars)
@@ -43,7 +43,7 @@ class CompletionManagerFeatureParamTests : BaseServerTestCase() {
 
     
     fun testValueCompletion2() {
-        val vars = compl.completeString("abc =  \"", "feature_param", 10).map {it.first}
+        val vars = compl.completeString("abc =  \"", "feature_param", 10).map {it.str}
         val expected = listOf("abc=bcd")
 
         assertEquals(expected, vars)
@@ -51,7 +51,7 @@ class CompletionManagerFeatureParamTests : BaseServerTestCase() {
 
     
     fun testWrongInput() {
-        val vars = compl.completeString("path = \"a ", "feature_param", 10).map {it.first}
+        val vars = compl.completeString("path = \"a ", "feature_param", 10).map {it.str}
 
         assertEquals(emptyList<String>(), vars)
     }

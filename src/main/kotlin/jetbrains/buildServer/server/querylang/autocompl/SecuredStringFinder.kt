@@ -1,5 +1,6 @@
 package jetbrains.buildServer.server.querylang.autocompl
 
+import jetbrains.buildServer.server.querylang.indexing.StringInfo
 import jetbrains.buildServer.serverSide.auth.AuthUtil
 import jetbrains.buildServer.serverSide.auth.Permission
 import jetbrains.buildServer.serverSide.auth.SecurityContext
@@ -7,7 +8,7 @@ import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicLong
 
 abstract class SecuredStringFinder<T> {
-    fun completeString(prefix: String, limit: Int): List<Pair<String, T?>> {
+    fun completeString(prefix: String, limit: Int): List<StringInfo<T>> {
         if (disabled.get()) {
             return emptyList()
         }
@@ -20,7 +21,7 @@ abstract class SecuredStringFinder<T> {
         return completeStringUnsafe(prefix, limit)
     }
 
-    protected abstract fun completeStringUnsafe(prefix: String, limit: Int): List<Pair<String, T?>>
+    protected abstract fun completeStringUnsafe(prefix: String, limit: Int): List<StringInfo<T>>
 
     abstract fun clear()
 

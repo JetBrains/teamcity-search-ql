@@ -3,6 +3,7 @@ package jetbrains.buildServer.server.querylang.autocompl
 import jetbrains.buildServer.server.querylang.ast.*
 import jetbrains.buildServer.server.querylang.ast.wrappers.DefaultOptions
 import jetbrains.buildServer.server.querylang.ast.wrappers.WParam
+import jetbrains.buildServer.server.querylang.indexing.StringInfo
 import jetbrains.buildServer.serverSide.*
 import jetbrains.buildServer.serverSide.auth.SecurityContext
 import jetbrains.buildServer.util.EventDispatcher
@@ -43,34 +44,34 @@ class CompletionManager(
 
     private val map: MutableMap<String, SecuredStringFinder<String>> = mutableMapOf()
     private lateinit var projectIdFinder: SimpleStringFinder<String>
-    private lateinit var projectParamFinder: ParameterValueFinder
+    private lateinit var projectParamFinder: ParameterValueFinder<String>
     private lateinit var projectNameFinder: SimpleStringFinder<String>
 
     private lateinit var buildConfIdFinder: SimpleStringFinder<String>
-    private lateinit var buildConfOptionFinder: ParameterValueFinder
-    private lateinit var buildConfParamFinder: ParameterValueFinder
+    private lateinit var buildConfOptionFinder: ParameterValueFinder<String>
+    private lateinit var buildConfParamFinder: ParameterValueFinder<String>
     private lateinit var buildConfNameFinder: SimpleStringFinder<String>
 
     private lateinit var templateIdFinder: SimpleStringFinder<String>
-    private lateinit var templateOptionFinder: ParameterValueFinder
-    private lateinit var templateParamFinder: ParameterValueFinder
+    private lateinit var templateOptionFinder: ParameterValueFinder<String>
+    private lateinit var templateParamFinder: ParameterValueFinder<String>
     private lateinit var templateNameFinder: SimpleStringFinder<String>
 
     private lateinit var vcsRootIdFinder: SimpleStringFinder<String>
     private lateinit var vcsRootTypeFinder: SimpleStringFinder<String>
-    private lateinit var vcsParamFinder: ParameterValueFinder
+    private lateinit var vcsParamFinder: ParameterValueFinder<String>
     private lateinit var vcsRootNameFinder: SimpleStringFinder<String>
 
-    private lateinit var triggerParamValueFinder: ParameterValueFinder
+    private lateinit var triggerParamValueFinder: ParameterValueFinder<String>
     private lateinit var triggerTypeFinder: SimpleStringFinder<String>
 
-    private lateinit var stepParamValueFinder: ParameterValueFinder
+    private lateinit var stepParamValueFinder: ParameterValueFinder<String>
     private lateinit var stepTypeFinder: SimpleStringFinder<String>
 
-    private lateinit var featureParamValueFinder: ParameterValueFinder
+    private lateinit var featureParamValueFinder: ParameterValueFinder<String>
     private lateinit var featureTypeFinder: SimpleStringFinder<String>
 
-    private lateinit var snapshotOptionFinder: ParameterValueFinder
+    private lateinit var snapshotOptionFinder: ParameterValueFinder<String>
 
     private lateinit var artifactRulesFinder: SimpleStringFinder<String>
     private lateinit var artifactRevRuleFinder: SimpleStringFinder<String>
@@ -250,7 +251,7 @@ class CompletionManager(
         projectManager.allVcsRoots.forEach { updateVcsRoot(it) }
     }
 
-    fun completeString(s: String, filterType: String, limit: Int): List<Pair<String, String?>> {
+    fun completeString(s: String, filterType: String, limit: Int): List<StringInfo<String>> {
         lock.readLock().lock()
         val res = map[filterType]?.completeString(s, limit) ?: listOf()
         lock.readLock().unlock()
@@ -392,7 +393,7 @@ class CompletionManager(
         isSystemAdminOnly: Boolean,
         disabled: Boolean,
         isValueSystemAdminOnly: Boolean = true
-    ): ParameterValueFinder {
+    ): ParameterValueFinder<String> {
         return ParameterValueFinder(this.securityContext,
             isSystemAdminOnly,
             isValueSystemAdminOnly,

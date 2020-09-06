@@ -1,6 +1,7 @@
 package jetbrains.buildServer.server.querylang.autocompl
 
 import jetbrains.buildServer.server.querylang.ast.*
+import jetbrains.buildServer.server.querylang.indexing.StringInfo
 import org.reflections.Reflections
 import java.lang.IllegalStateException
 import kotlin.reflect.KClass
@@ -38,7 +39,7 @@ class Completer(val completionManager: CompletionManager? = null) {
         if (objectTypes == null) {
             return graph["root"]!!.map {it.first()}
                 .filterBegins(word)
-                .map {Pair(it, null)}
+                .map {StringInfo<String>(it, null)}
                 .autocomplSort()
                 .toCompletionResult(input)
         }
@@ -109,7 +110,7 @@ class Completer(val completionManager: CompletionManager? = null) {
         word: String,
         limit: Int,
         completeModifier: Boolean
-    ): List<Pair<String, String?>> {
+    ): List<StringInfo<String>> {
         var node = startNode
         for (filterName in trace) {
             if (graph[node] == null) {
@@ -124,8 +125,12 @@ class Completer(val completionManager: CompletionManager? = null) {
         }
 
         if (completeModifier) {
-            return possibleModifiers[node]?.filterBegins(word)?.map {Pair(it, FilterRegistration.getDescriptionByName(it)?.descr)} ?:
-                throw IllegalStateException("Unknow filter name ${node}")
+            return possibleModifiers[node]
+                ?.filterBegins(word)
+                ?.map {
+                    StringInfo(it, FilterRegistration.getDescriptionByName(it)?.descr)
+                }
+                ?: throw IllegalStateException("Unknow filter name ${node}")
         }
 
         return if (graph[node]?.size == 0 && completionManager != null) {
@@ -137,7 +142,10 @@ class Completer(val completionManager: CompletionManager? = null) {
                 limit
             )
         } else {
-            graph[node]?.toStringList()?.filterBegins(word)?.map {Pair(it, null)}
+            graph[node]
+                ?.toStringList()
+                ?.filterBegins(word)
+                ?.map {StringInfo<String>(it, null)}
                 ?: throw IllegalStateException("Unknow filter name ${node}")
         }
     }
@@ -193,11 +201,11 @@ class Completer(val completionManager: CompletionManager? = null) {
         return names.names
     }
 
-    private fun List<Pair<String, String?>>.toCompletionResult(
+    private fun List<StringInfo<String>>.toCompletionResult(
         input: String
     ): List<CompletionResult> {
         return this.map {
-            CompletionResult(input + it.first, it.first, it.second)
+            CompletionResult(input + it.str, it.str, it.meta)
         }
     }
 
@@ -214,8 +222,8 @@ class Completer(val completionManager: CompletionManager? = null) {
         return this.filter {it.startsWith(word)}
     }
 
-    private fun List<Pair<String, String?>>.autocomplSort(): List<Pair<String, String?>> {
-        return this.sortedWith(compareBy ({ it.first.length }, {it.first}))
+    private fun List<StringInfo<String>>.autocomplSort(): List<StringInfo<String>> {
+        return this.sortedWith(compareBy ({ it.str.length }, {it.str}))
     }
 
     private fun String.dropw(word: String): String {

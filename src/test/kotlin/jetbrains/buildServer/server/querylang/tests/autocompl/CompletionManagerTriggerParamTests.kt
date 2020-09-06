@@ -30,7 +30,7 @@ class CompletionManagerTriggerParamTests : BaseServerTestCase() {
 
     
     fun testParamNameCompletion() {
-        val vars = compl.completeString("pat", "trigger_param", 10).map {it.first}
+        val vars = compl.completeString("pat", "trigger_param", 10).map {it.str}
         val expected = listOf("path", "pathabc")
 
         assertEquals(expected, vars)
@@ -38,7 +38,7 @@ class CompletionManagerTriggerParamTests : BaseServerTestCase() {
 
     
     fun testValueCompletion() {
-        val vars = compl.completeString("path =  \"a", "trigger_param",10).map {it.first}.toSet()
+        val vars = compl.completeString("path =  \"a", "trigger_param",10).map {it.str}.toSet()
         val expected = setOf("path=abc", "path=abd")
 
         assertEquals(expected, vars)
@@ -46,7 +46,7 @@ class CompletionManagerTriggerParamTests : BaseServerTestCase() {
 
     
     fun testValueCompletion2() {
-        val vars = compl.completeString("abc =  \"", "trigger_param", 10).map {it.first}
+        val vars = compl.completeString("abc =  \"", "trigger_param", 10).map {it.str}
         val expected = listOf("abc=bcd")
 
         assertEquals(expected, vars)
@@ -60,7 +60,7 @@ class CompletionManagerTriggerParamTests : BaseServerTestCase() {
     }
 
     fun testQuotes() {
-        val vars = compl.completeString("\"path\"=a", "trigger_param", 10).map {it.first}
+        val vars = compl.completeString("\"path\"=a", "trigger_param", 10).map {it.str}
         val expected = listOf("path=abc", "path=abd")
 
         assertEquals(expected, vars)

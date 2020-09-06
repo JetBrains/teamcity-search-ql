@@ -7,7 +7,7 @@ abstract class AutoSynchronizedIndexer<T>: SynchronizedIndexer<T> {
 
     protected abstract fun addStringUnsafe(str: String, obj: T?)
 
-    protected abstract fun completeUnsafe(str: String, limit: Int): List<Pair<String, T?>>
+    protected abstract fun completeUnsafe(str: String, limit: Int): List<StringInfo<T>>
 
     protected abstract fun existsUnsafe(str: String): Boolean
 
@@ -19,7 +19,7 @@ abstract class AutoSynchronizedIndexer<T>: SynchronizedIndexer<T> {
         lock.writeLock().unlock()
     }
 
-    final override fun complete(str: String, limit: Int): List<Pair<String, T?>> {
+    final override fun complete(str: String, limit: Int): List<StringInfo<T>> {
         lock.readLock().lock()
         val res = completeUnsafe(str, limit)
         lock.readLock().unlock()
