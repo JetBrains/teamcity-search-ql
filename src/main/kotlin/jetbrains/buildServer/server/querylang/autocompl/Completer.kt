@@ -54,10 +54,13 @@ class Completer(val completionManager: CompletionManager? = null) {
             if (objectTypes.isEmpty()) {
                 throw IllegalStateException("objectTypes shouldn't be empty")
             }
-            return objectTypes.map {graph[it]!!.map {it.first()}.toSet()}.
-            reduce{acc, s ->
+            return objectTypes.map {
+                graph[it]!!.map {it.first()}.toSet()
+            }.reduce{acc, s ->
                 acc.intersect(s)
-            }.toList().filterBegins(word).toCompletionResult(input)
+            }.toList()
+                .filterBegins(word)
+                .toCompletionResult(input, true)
         }
 
         //some of the types doesn't contain first filter
@@ -128,7 +131,7 @@ class Completer(val completionManager: CompletionManager? = null) {
             return possibleModifiers[node]
                 ?.filterBegins(word)
                 ?.map {
-                    StringInfo(it, FilterRegistration.getDescriptionByName(it)?.descr)
+                    StringInfo<String>(it, null)
                 }
                 ?: throw IllegalStateException("Unknow filter name ${node}")
         }
@@ -145,7 +148,7 @@ class Completer(val completionManager: CompletionManager? = null) {
             graph[node]
                 ?.toStringList()
                 ?.filterBegins(word)
-                ?.map {StringInfo<String>(it, null)}
+                ?.map {StringInfo(it, FilterRegistration.getDescriptionByName(it)?.descr)}
                 ?: throw IllegalStateException("Unknow filter name ${node}")
         }
     }
@@ -211,10 +214,15 @@ class Completer(val completionManager: CompletionManager? = null) {
 
     @JvmName("toCompletionResultListString")
     private fun List<String>.toCompletionResult(
-        input: String
+        input: String,
+        searchForMeta: Boolean = false
     ): List<CompletionResult> {
         return this.map {
-            CompletionResult(input + it, it)
+            CompletionResult(
+                input + it,
+                it,
+                if (searchForMeta) FilterRegistration.getDescriptionByName(it)?.descr else null
+            )
         }
     }
 

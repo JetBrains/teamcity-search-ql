@@ -1,5 +1,7 @@
 package jetbrains.buildServer.server.querylang
 
+import java.io.FileNotFoundException
+
 internal fun String.toIdentOrString(): String {
     //was ... && !FilterTypeRegistration.isKeyWord(this)
     if (this.all {it.isLetter() || it.isDigit() || it in "_.-"}) {
@@ -33,4 +35,9 @@ internal fun String.removeEscapeQuotes(): String {
 
 internal fun String.escapeQuotes(): String {
     return this.replace("\"", "\"\"")
+}
+
+internal fun readFromResources(filename: String): String {
+    return Thread.currentThread().contextClassLoader.getResourceAsStream(filename)?.reader()?.readText()
+        ?: throw FileNotFoundException("Couldn't read file $filename from resources")
 }

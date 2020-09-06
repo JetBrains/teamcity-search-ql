@@ -11,7 +11,7 @@ fun main() {
 
     while (true) {
         autoCompl.complete(readLine()!!).forEach {
-            println(it.result)
+            println("${it.result} -- ${it.meta}")
         }
     }
 

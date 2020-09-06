@@ -1,5 +1,6 @@
 package jetbrains.buildServer.server.querylang.ast
 
+import jetbrains.buildServer.server.querylang.readFromResources
 import java.io.File
 import kotlin.reflect.KClass
 import kotlin.reflect.full.isSubclassOf
@@ -167,8 +168,8 @@ object FilterRegistration {
     }
 
     private fun loadDescription() {
-        /*
-        val readmeText = File(pathToReadme).readText()
+
+        val readmeText = readFromResources("README.md")
         var lastIndex = readmeText.indexOf("Filters description")
 
         val text = readmeText.substring(lastIndex, readmeText.indexOf("###", lastIndex))
@@ -202,9 +203,8 @@ object FilterRegistration {
             lastIndex = text.indexOf("*example:*", nlastIndex)
             val (examp, nlastIndex1) = text.substringUntil('\n', lastIndex + 12)
             lastIndex = nlastIndex1
-            descriptions[filterName] = FilterDescription(descr, examp)
+            descriptions[filterName] = FilterDescription(descr.trim(), examp.trim())
         }
-        */
     }
 }
 
