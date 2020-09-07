@@ -33,6 +33,7 @@
                         <br />
                     </c:when>
                     <c:otherwise>
+                        <b>Displayed ${searchForm.resultsDisplayed} out of ${searchForm.resultsTotal}</b>
                         <c:if test="${searchForm.hasProjects()}">
                             <h3>Projects:</h3>
                             <ul style="list-style-type:none">

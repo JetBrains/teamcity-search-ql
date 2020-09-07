@@ -9,18 +9,16 @@ class RequestClient(
     private val queryHandler: QueryHandler,
     private val resultPrinter: ResultPrinter? = null
 ) {
-    val RESULTS_LIMIT_NAME = "teamcity.internal.searchQL.maxResults"
-
     val parser = QueryParser
 
-    fun process(squery: String): QueryResult {
+    fun process(squery: String, limit: Int = Int.MAX_VALUE): QueryResult {
         val parsed = parser.parse(squery)
         val query = when (parsed) {
             is FullQuery -> parsed
             is PartialQuery -> parsed.fullQueries.first()
         }
-        val limit = TeamCityProperties.getInteger(RESULTS_LIMIT_NAME, 100)
-        val res = QueryResult(queryHandler.makeRequest(query).objects.take(limit).toMutableList())
+        val objects = queryHandler.makeRequest(query).objects
+        val res = QueryResult(objects.take(limit).toMutableList(), objects.size)
         resultPrinter?.display(res)
         return res
     }

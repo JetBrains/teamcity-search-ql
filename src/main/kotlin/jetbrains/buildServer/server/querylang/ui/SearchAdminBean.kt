@@ -21,6 +21,8 @@ class SearchAdminBean(val searchAdminForm: SearchAdminForm, val projectManager: 
     }
 
     private lateinit var result: QueryResult
+    var resultsTotal: Int = 0
+    var resultsDisplayed: Int = 0
     private var wrongQueryMessage: String? = null
 
     val resultProjects = mutableListOf<ResultLine>()
@@ -42,6 +44,7 @@ class SearchAdminBean(val searchAdminForm: SearchAdminForm, val projectManager: 
             return
         }
         result = result_
+        setResultsCnt(result.objects.size, result.objectsTotal)
         for (elem in result.objects) {
             when (elem) {
                 is ProjectResult -> addProject(elem)
@@ -71,6 +74,11 @@ class SearchAdminBean(val searchAdminForm: SearchAdminForm, val projectManager: 
     fun hasBuildConfs() = resultBuildConfigurations.isNotEmpty()
     fun hasTemplates() = resultTemplates.isNotEmpty()
     fun hasVcsRoots() = resultVcsRoots.isNotEmpty()
+
+    private fun setResultsCnt(resultsDisplayed_: Int, resultsTotal_: Int) {
+        resultsTotal = resultsTotal_
+        resultsDisplayed = resultsDisplayed_
+    }
 
     private fun addProject(resObj: TeamCityObjectResult<WProject>) {
         resultProjects.add(getResLine(resObj, PROJECT_URL_PREFIX))

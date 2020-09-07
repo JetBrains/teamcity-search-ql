@@ -36,6 +36,8 @@ class SearchAdminPage(
         "Search"
     )
 {
+    val RESULTS_CNT_LIMIT_NAME = "teamcity.internal.searchQL.maxResults"
+    val RESULTS_CNT_DEFAULT = 100
 
     private val TIMELIMIT_PARAM_NAME = "query.lang.timelimit.millis"
     private val DEFAULT_TIMELIMIT: Long = 2000
@@ -65,7 +67,8 @@ class SearchAdminPage(
                 val authHolder = securityContext.authorityHolder
                 task = executor.submit<QueryResult?> {
                     val res = try {
-                        securityContext.runAs<QueryResult>(authHolder) { return@runAs requestClient.process(it) }
+                        val limit = TeamCityProperties.getInteger(RESULTS_CNT_LIMIT_NAME, RESULTS_CNT_DEFAULT)
+                        securityContext.runAs<QueryResult>(authHolder) { return@runAs requestClient.process(it, limit) }
                     } catch (e: InterruptedException) {
                         null
                     }
