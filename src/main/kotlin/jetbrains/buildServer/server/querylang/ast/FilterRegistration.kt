@@ -9,6 +9,7 @@ import kotlin.reflect.full.isSuperclassOf
 object FilterRegistration {
     val pathToReadme = "README.md"
     private val descriptions : MutableMap<String, FilterDescription> = mutableMapOf()
+    private val shortDescriptions: MutableMap<String, Descriptions> = mutableMapOf()
 
     val anyConditionContainer = object : ConditionContainer<Any> {
         override val condition: ConditionAST<Any>
@@ -119,6 +120,10 @@ object FilterRegistration {
         return reversedModifierGraph[modifier]?.toSet() ?: emptySet()
     }
 
+    fun getShortDescription(filterName: String, context: List<String>): String? {
+        return shortDescriptions[filterName]?.getDescription(context)
+    }
+
     fun getDescriptionByName(filterName: String): FilterDescription? {
         return descriptions[filterName]
     }
@@ -135,6 +140,8 @@ object FilterRegistration {
     private inline fun <reified Obj> registerFilter(filter: KClass<out Filter<Obj>>) {
         filters[filter] = Obj::class
 
+        saveShortDescription(filter)
+
         conditionContainers.forEach {(filterClass, objTypes) ->
             if (Obj::class.isSuperclassOf(objTypes)) {
                 addFilterEdge(filterClass, filter)
@@ -145,6 +152,8 @@ object FilterRegistration {
     private inline fun <reified NestedObj> registerConditionContainer(conditionContainer: KClass<out ConditionContainer<NestedObj>>) {
         conditionContainers[conditionContainer] = NestedObj::class
 
+        saveShortDescription(conditionContainer)
+
         filters.forEach {(filterClass, objType) ->
             if (objType.isSuperclassOf(NestedObj::class)) {
                 addFilterEdge(conditionContainer, filterClass)
@@ -154,6 +163,9 @@ object FilterRegistration {
 
     private inline fun<reified T> registerModifier(modifierClass: KClass<out FilterModifier<T>>) {
         modifiers[modifierClass] = T::class
+
+        saveShortDescription(modifierClass)
+
         filters.forEach { (filterClass, _) ->
             if (filterClass.isSubclassOf(T::class)) {
                 modifierGraph.getOrPut(filterClass, { mutableSetOf()}).add(modifierClass)
@@ -165,6 +177,14 @@ object FilterRegistration {
     private fun addFilterEdge(conditionContainer: KClass<out ConditionContainer<*>>, filter: KClass<out Filter<*>>) {
         filterGraph.getOrPut(conditionContainer, { mutableSetOf()}).add(filter)
         revFilterGraph.getOrPut(filter, { mutableSetOf()}).add(conditionContainer)
+    }
+
+    private fun saveShortDescription(obj: KClass<out Named>) {
+        obj.getDescriptions()?.let {descr ->
+            obj.getName()?.let { name ->
+                shortDescriptions[name] = shortDescriptions[name]?.add(descr) ?: descr
+            }
+        }
     }
 
     private fun loadDescription() {

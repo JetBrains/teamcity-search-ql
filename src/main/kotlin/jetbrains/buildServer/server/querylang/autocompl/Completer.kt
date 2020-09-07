@@ -34,12 +34,11 @@ class Completer(val completionManager: CompletionManager? = null) {
         completeModifier: Boolean,
         limit: Int
     ): List<CompletionResult> {
-
         //complete object type name
         if (objectTypes == null) {
             return graph["root"]!!.map {it.first()}
                 .filterBegins(word)
-                .map {StringInfo<String>(it, null)}
+                .map {StringInfo(it, it.getShortDescription(listOf(emptyList())))}
                 .autocomplSort()
                 .toCompletionResult(input)
         }
@@ -48,6 +47,9 @@ class Completer(val completionManager: CompletionManager? = null) {
             if (!graph.contains(it)) throw IllegalStateException("Unkwnow type name $it")
         }
 
+        val fullTrace = objectTypes.map {
+            listOf(it) + trace
+        }
 
         //complete first level filter name (e.g `find project with par`)
         if (trace.isEmpty()) {
@@ -60,7 +62,7 @@ class Completer(val completionManager: CompletionManager? = null) {
                 acc.intersect(s)
             }.toList()
                 .filterBegins(word)
-                .toCompletionResult(input, true)
+                .toCompletionResult(input, true, fullTrace)
         }
 
         //some of the types doesn't contain first filter
@@ -70,7 +72,7 @@ class Completer(val completionManager: CompletionManager? = null) {
 
         //unite all variants
         return objectTypes.flatMap { objType ->
-            getVariants(objType, trace, word, limit, completeModifier)
+            getVariants(objType, trace, word, limit, completeModifier, fullTrace)
         }.toSet()
             .toList()
             .take(limit)
@@ -112,7 +114,8 @@ class Completer(val completionManager: CompletionManager? = null) {
         trace: List<String>,
         word: String,
         limit: Int,
-        completeModifier: Boolean
+        completeModifier: Boolean,
+        fullTrace: List<List<String>>
     ): List<StringInfo<String>> {
         var node = startNode
         for (filterName in trace) {
@@ -131,7 +134,7 @@ class Completer(val completionManager: CompletionManager? = null) {
             return possibleModifiers[node]
                 ?.filterBegins(word)
                 ?.map {
-                    StringInfo<String>(it, null)
+                    StringInfo(it, it.getShortDescription(fullTrace))
                 }
                 ?: throw IllegalStateException("Unknow filter name ${node}")
         }
@@ -148,7 +151,7 @@ class Completer(val completionManager: CompletionManager? = null) {
             graph[node]
                 ?.toStringList()
                 ?.filterBegins(word)
-                ?.map {StringInfo(it, FilterRegistration.getDescriptionByName(it)?.descr)}
+                ?.map {StringInfo(it, it.getShortDescription(fullTrace))}
                 ?: throw IllegalStateException("Unknow filter name ${node}")
         }
     }
@@ -184,7 +187,7 @@ class Completer(val completionManager: CompletionManager? = null) {
     private fun loadPossibleModifiers() {
         val modifiers = FilterRegistration.getModifiers()
         modifiers.forEach {modClass ->
-            val companionObj = modClass.companionObjectInstance as? Names
+            val companionObj = modClass.companionObjectInstance as? ObjectDescription
                 ?: throw IllegalStateException("All modifiers should have companion object")
 
             val names = companionObj.names
@@ -200,7 +203,7 @@ class Completer(val completionManager: CompletionManager? = null) {
     }
 
     private fun getNames(clazz: KClass<out Named>): List<String> {
-        val names = clazz.companionObjectInstance as? Names ?: throw IllegalStateException("There is not Names companion object")
+        val names = clazz.companionObjectInstance as? ObjectDescription ?: throw IllegalStateException("There is no ObjectDescription companion object")
         return names.names
     }
 
@@ -215,13 +218,14 @@ class Completer(val completionManager: CompletionManager? = null) {
     @JvmName("toCompletionResultListString")
     private fun List<String>.toCompletionResult(
         input: String,
-        searchForMeta: Boolean = false
+        searchForMeta: Boolean = false,
+        context: List<List<String>> = listOf()
     ): List<CompletionResult> {
         return this.map {
             CompletionResult(
                 input + it,
                 it,
-                if (searchForMeta) FilterRegistration.getDescriptionByName(it)?.descr else null
+                if (searchForMeta) it.getShortDescription(context) else null
             )
         }
     }
@@ -239,4 +243,10 @@ class Completer(val completionManager: CompletionManager? = null) {
     }
 
     private fun String.fromInput() = if (this.startsWith("\"")) this.drop(1) else this
+
+    private fun String.getShortDescription(context: List<List<String>>): String? {
+        return context.mapNotNull {
+            FilterRegistration.getShortDescription(this, it)
+        }.toSet().joinToString(separator = " OR ")
+    }
 }

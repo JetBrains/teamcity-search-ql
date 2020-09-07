@@ -62,7 +62,12 @@ sealed class TopLevelQuery<T> : ConditionContainer<T>, Named, ConditionSplitter<
 }
 
 data class ProjectTopLevelQuery(override val condition: ConditionAST<WProject>): TopLevelQuery<WProject>(), ProjectConditionContainer {
-    companion object : Names(*(ProjectFilter.names.toTypedArray()))
+    companion object : ObjectDescription(
+        Names1(*(ProjectFilter.names.toTypedArray())),
+        Descriptions(
+            FixedContextDescription("search projects")
+        )
+    )
 
     override val names = Companion.names
 
@@ -86,7 +91,12 @@ data class ProjectTopLevelQuery(override val condition: ConditionAST<WProject>):
 data class BuildConfTopLevelQuery(
     override val condition: ConditionAST<WBuildConf>
 ) : TopLevelQuery<WBuildConf>(), BuildConfConditionContainer {
-    companion object : Names(*(BuildConfFilter.names.toTypedArray()))
+    companion object : ObjectDescription(
+        Names1(*(BuildConfFilter.names.toTypedArray())),
+        Descriptions(
+            FixedContextDescription("search build configurations")
+        )
+    )
 
     override val names = Companion.names
 
@@ -110,7 +120,12 @@ data class TemplateTopLevelQuery(
 ) : TopLevelQuery<WTemplate>(),
     TemplateConditionContainer
 {
-    companion object : Names(*(TemplateFilter.names.toTypedArray()))
+    companion object : ObjectDescription(
+        Names1(*(TemplateFilter.names.toTypedArray())),
+        Descriptions(
+            FixedContextDescription("search build configuration templates")
+        )
+    )
 
     override val names = Companion.names
 
@@ -134,7 +149,12 @@ data class VcsRootTopLevelQuery(
 ) : TopLevelQuery<WVcsRoot>(),
     VcsRootConditionContainer
 {
-    companion object : Names(*(VcsRootFilter.names.toTypedArray()))
+    companion object : ObjectDescription(
+        Names1(*(VcsRootFilter.names.toTypedArray())),
+        Descriptions(
+            FixedContextDescription("search vcs roots")
+        )
+    )
 
     override val names = Companion.names
 

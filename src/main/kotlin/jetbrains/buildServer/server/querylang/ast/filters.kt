@@ -6,7 +6,13 @@ data class IdFilter(
     override val condition: ConditionAST<String>
 ) : SingleObjectConditionFilter<FIdContainer, String>()
 {
-    companion object : Names("id")
+    companion object : ObjectDescription(
+        Names1("id"),
+        Descriptions(
+            TemplateDescription("_ external id")
+        )
+    )
+    
     override val names = IdFilter.names
 
     override fun buildFrom(filter : RealObjectFilter<String>) = RealObjectFilter<FIdContainer> { obj ->
@@ -19,7 +25,12 @@ data class BuildConfFilter(
 ) : MultipleObjectsConditionFilter<FBuildConfContainer, WBuildConf>(),
     BuildConfConditionContainer
 {
-    companion object : Names("configuration", "buildConfiguration")
+    companion object : ObjectDescription(
+        Names1("configuration", "buildConfiguration"),
+        Descriptions(
+            SimpleDescription("configuration defined in project", "project")
+        )
+    )
     override val names = Companion.names
 
     override fun buildFrom(filter:RealObjectFilter<WBuildConf>):RealObjectFilter<FBuildConfContainer> {
@@ -34,7 +45,12 @@ data class VcsRootFilter(
 ) : MultipleObjectsConditionFilter<FVcsRootContainer, WVcsRoot>(),
     VcsRootConditionContainer
 {
-    companion object : Names("vcsRoot")
+    companion object : ObjectDescription(
+        Names1("vcsRoot"),
+        Descriptions(
+            SimpleDescription("vcs root defined in project", "project")
+        )
+    )
     override val names = Companion.names
 
     override var searchAll: ElementValidator<*> = AnyElementValidator<Any>()
@@ -51,7 +67,13 @@ data class ProjectFilter(
 ) : ConditionFilter<FProjectContainer, WProject>(),
     ProjectConditionContainer
 {
-    companion object : Names("project")
+    companion object : ObjectDescription(
+        Names1("project"),
+        Descriptions(
+            SimpleDescription("this project or its ancestor", "project"),
+            TemplateDescription("project that contains this _ or its ancestor")
+        )
+    )
     override val names = Companion.names
 
     override fun buildFrom(filter:RealObjectFilter<WProject>):RealObjectFilter<FProjectContainer> {
@@ -88,7 +110,12 @@ data class ParentFilter(
 ) : SingleObjectConditionFilter<FParentContainer, WProject>(),
     ProjectConditionContainer
 {
-    companion object : Names("parent")
+    companion object : ObjectDescription(
+        Names1("parent"),
+        Descriptions(
+            TemplateDescription("parent project of this _")
+        )
+    )
     override val names = Companion.names
 
     override fun buildFrom(filter:RealObjectFilter<WProject>):RealObjectFilter<FParentContainer> {
@@ -103,7 +130,12 @@ data class TriggerFilter(
 ) : MultipleObjectsConditionFilter<FTriggerContainer, WTrigger>(),
     MWithInheritedContainer
 {
-    companion object : Names("trigger")
+    companion object : ObjectDescription(
+        Names1("trigger"),
+        Descriptions(
+            TemplateDescription("build trigger defined in this _")
+        )
+    )
     override val names = Companion.names
 
     override var includeInherited = false
@@ -124,7 +156,12 @@ data class StepFilter(
 ) : MultipleObjectsConditionFilter<FStepContainer, WStep>(),
     MWithInheritedContainer
 {
-    companion object : Names("step")
+    companion object : ObjectDescription(
+        Names1("step"),
+        Descriptions(
+            TemplateDescription("build step defined in this _")
+        )
+    )
     override val names = Companion.names
 
     override var includeInherited = false
@@ -145,7 +182,13 @@ data class FeatureFilter(
 ) : MultipleObjectsConditionFilter<FFeatureContainer, WFeature>(),
     MWithInheritedContainer
 {
-    companion object : Names("feature")
+    companion object : ObjectDescription(
+        Names1("feature"),
+        Descriptions(
+            SimpleDescription("project feature", "project"),
+            TemplateDescription("build feature defined in this _")
+        )
+    )
     override val names = Companion.names
 
     override var includeInherited = false
@@ -166,7 +209,14 @@ data class TemplateFilter(
 ) : MultipleObjectsConditionFilter<FTemplateContainer, WTemplate>(),
     TemplateConditionContainer
 {
-    companion object : Names("template")
+    companion object : ObjectDescription(
+        Names1("template"),
+        Descriptions(
+            SimpleDescription("template that was defined in this project", "project"),
+            SimpleDescription("template attached to this build configuration", "configuration"),
+            SimpleDescription("template attached to the build configuration that this configuration depends on", "dependency")
+        )
+    )
     override val names = Companion.names
     override var searchAll: ElementValidator<*> = AnyElementValidator<Any>()
 
@@ -182,7 +232,12 @@ data class ValueFilter(
 ) : ConditionFilter<FValueContainer, String>(),
     MResolvedContainer
 {
-    companion object : Names("val")
+    companion object : ObjectDescription(
+        Names1("val"),
+        Descriptions(
+            TemplateDescription("any string value of this _")
+        )
+    )
     override val names = Companion.names
 
     override var searchResolved = false
@@ -213,7 +268,12 @@ data class TypeFilter(
     override val condition: ConditionAST<String>
 ) : SingleObjectConditionFilter<FTypeContainer, String>()
 {
-    companion object : Names("type")
+    companion object : ObjectDescription(
+        Names1("type"),
+        Descriptions(
+            TemplateDescription("_ type")
+        )
+    )
     override val names = Companion.names
 
     override fun buildFrom(filter:RealObjectFilter<String>):RealObjectFilter<FTypeContainer> {
@@ -225,7 +285,12 @@ data class TypeFilter(
 
 data class EnabledFilter(private val placeholder: String = "") : Filter<FEnabledContainer> {
 
-    companion object : Names("enabled")
+    companion object : ObjectDescription(
+        Names1("enabled"),
+        Descriptions(
+            TemplateDescription("this _ is enabled")
+        )
+    )
     override val names = Companion.names
 
     override fun build():RealObjectFilter<FEnabledContainer> {
@@ -243,7 +308,14 @@ data class ParameterFilter(
     MWithInheritedContainer,
     MResolvedContainer
 {
-    companion object : Names("param")
+    companion object : ObjectDescription(
+        Names1("param"),
+        Descriptions(
+            TemplateDescription(
+                "parameter of this _"
+            )
+        )
+    )
     override val names = Companion.names
 
     override var includeInherited = false
@@ -270,7 +342,12 @@ data class AncestorFilter(
 ) : ConditionFilter<FAncestorContainer, WProject>(),
     ProjectConditionContainer
 {
-    companion object : Names("ancestor")
+    companion object : ObjectDescription(
+        Names1("ancestor"),
+        Descriptions(
+            SimpleDescription("ancestor of this project", "project")
+        )
+    )
     override val names = Companion.names
 
     override fun buildFrom(filter: RealObjectFilter<WProject>):RealObjectFilter<FAncestorContainer> {
@@ -305,7 +382,12 @@ data class VcsRootEntryFilter(
 {
     override var includeInherited: Boolean = false
 
-    companion object : Names("vcs")
+    companion object : ObjectDescription(
+        Names1("vcs"),
+        Descriptions(
+            TemplateDescription("vcs root attached to this _")
+        )
+    )
     override val names = Companion.names
     override var searchAll: ElementValidator<*> = AnyElementValidator<Any>()
 
@@ -323,7 +405,13 @@ data class RulesFilter(
 ) : MultipleObjectsConditionFilter<FRulesContainer, String>(),
     MResolvedContainer
 {
-    companion object : Names("rules")
+    companion object : ObjectDescription(
+        Names1("rules"),
+        Descriptions(
+            SimpleDescription("checkout rules of attached vcs root", "vcs"),
+            SimpleDescription("artifact rules of this dependency", "artifact")
+        )
+    )
 
     override val names: List<String> = Companion.names
 
@@ -345,7 +433,12 @@ data class DependencyFilter(
 ) : MultipleObjectsConditionFilter<FDependencyContainer, SuperDependency>(),
     MWithInheritedContainer
 {
-    companion object : Names("dependency")
+    companion object : ObjectDescription(
+        Names1("dependency"),
+        Descriptions(
+            SimpleDescription("all artifact dependencies and snapshot dependency on particular build configuration")
+        )
+    )
 
     override val names = Companion.names
 
@@ -365,7 +458,12 @@ data class ArtifactFilter(
     override val condition: ConditionAST<WArtifactDependency>
 ) : MultipleObjectsConditionFilter<SuperDependency, WArtifactDependency>()
 {
-    companion object : Names("artifact")
+    companion object : ObjectDescription(
+        Names1("artifact"),
+        Descriptions(
+            SimpleDescription("artifact dependency")
+        )
+    )
     override val names = Companion.names
 
     override var searchAll: ElementValidator<*> = AnyElementValidator<Any>()
@@ -381,7 +479,12 @@ data class SnapshotFilter(
     override val condition: ConditionAST<WSnapshotDependency>
 ) : SingleObjectConditionFilter<SuperDependency, WSnapshotDependency>()
 {
-    companion object : Names("snapshot")
+    companion object : ObjectDescription(
+        Names1("snapshot"),
+        Descriptions(
+            SimpleDescription("snapshot dependency")
+        )
+    )
     override val names = Companion.names
 
     override fun buildFrom(filter:RealObjectFilter<WSnapshotDependency>):RealObjectFilter<SuperDependency> {
@@ -395,7 +498,12 @@ data class CleanFilter(
     private val placeholder: String = ""
 ) : Filter<WArtifactDependency>
 {
-    companion object : Names("clean")
+    companion object : ObjectDescription(
+        Names1("clean"),
+        Descriptions(
+            SimpleDescription("clean destination paths flag")
+        )
+    )
 
     override val names = Companion.names
 
@@ -412,7 +520,12 @@ data class RevRuleFilter(
     override val condition: ConditionAST<String>
 ) : SingleObjectConditionFilter<WArtifactDependency, String>()
 {
-    companion object : Names("revRule")
+    companion object : ObjectDescription(
+        Names1("revRule"),
+        Descriptions(
+            SimpleDescription("where to get artifacts")
+        )
+    )
 
     override val names = Companion.names
 
@@ -431,7 +544,12 @@ data class OptionFilter(
     override var searchResolved = false
     override var searchAll: ElementValidator<*> = AnyElementValidator<Any>()
 
-    companion object : Names("option")
+    companion object : ObjectDescription(
+        Names1("option"),
+        Descriptions(
+            TemplateDescription("option of this _")
+        )
+    )
 
     override val names = Companion.names
 
@@ -450,7 +568,12 @@ data class NameFilter(
     override val condition: ConditionAST<String>
 ) : SingleObjectConditionFilter<FNameContainer, String>() {
 
-    companion object : Names("name")
+    companion object : ObjectDescription(
+        Names1("name"),
+        Descriptions(
+            TemplateDescription("short name of this _")
+        )
+    )
     override val names = Companion.names
 
     override fun buildFrom(filter:RealObjectFilter<String>):RealObjectFilter<FNameContainer> {
@@ -464,7 +587,12 @@ data class SubProjectFilter(
     override val condition: ConditionAST<WProject>
 ) : MultipleObjectsConditionFilter<FSubProjectContainer, WProject>() {
 
-    companion object : Names("subProject")
+    companion object : ObjectDescription(
+        Names1("subProject"),
+        Descriptions(
+            SimpleDescription("subproject of this project", "project")
+        )
+    )
     override val names = Companion.names
 
     override fun buildFrom(filter: RealObjectFilter<WProject>): RealObjectFilter<FSubProjectContainer> {
