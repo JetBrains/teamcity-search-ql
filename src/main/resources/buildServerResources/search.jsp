@@ -35,46 +35,46 @@
                     <c:otherwise>
                         <c:if test="${searchForm.hasProjects()}">
                             <h3>Projects:</h3>
-                            <ol>
+                            <ul style="list-style-type:none">
                                 <c:forEach items="${searchForm.resultProjects}" var="project">
                                     <li>
                                         <a href="${project.first}">${project.second}</a>
                                     </li>
                                 </c:forEach>
-                            </ol>
+                            </ul>
                         </c:if>
 
                         <c:if test="${searchForm.hasBuildConfs()}">
                             <h3>Build configurations:</h3>
-                            <ol>
+                            <ul style="list-style-type:none">
                                 <c:forEach items="${searchForm.resultBuildConfigurations}" var="buildConf">
                                     <li>
                                         <a href="${buildConf.first}">${buildConf.second}</a>
                                     </li>
                                 </c:forEach>
-                            </ol>
+                            </ul>
                         </c:if>
 
                         <c:if test="${searchForm.hasTemplates()}">
                             <h3>Build configuration templates:</h3>
-                            <ol>
+                            <ul style="list-style-type:none">
                                 <c:forEach items="${searchForm.resultTemplates}" var="temp">
                                     <li>
                                         <a href="${temp.first}">${temp.second}</a>
                                     </li>
                                 </c:forEach>
-                            </ol>
+                            </ul>
                         </c:if>
 
                         <c:if test="${searchForm.hasVcsRoots()}">
                             <h3>VCS roots:</h3>
-                            <ol>
+                            <ul style="list-style-type:none">
                                 <c:forEach items="${searchForm.resultVcsRoots}" var="vcs">
                                     <li>
                                         <a href="${vcs.first}">${vcs.second}</a>
                                     </li>
                                 </c:forEach>
-                            </ol>
+                            </ul>
                         </c:if>
                     </c:otherwise>
                 </c:choose>
