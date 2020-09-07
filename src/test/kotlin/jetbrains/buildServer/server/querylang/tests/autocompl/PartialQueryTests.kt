@@ -30,33 +30,33 @@ class PartialQueryTests {
     }
 
     fun testDoubleQuotes() {
-        val query = """param "path&1" = ("Base^"* and *"Project*" )"""
+        val query = """param "path&1" = ("Base^"* and *"ProjectResult*" )"""
 
         val res = compl.complete(query).map { it.result }
         val expected = listOf(
-            """find project,configuration,template,vcsRoot with param "path&1"=("Base^"* and *"Project*")"""
+            """find project,configuration,template,vcsRoot with param "path&1"=("Base^"* and *"ProjectResult*")"""
         )
 
         assertEquals(expected.first(), res.first())
     }
 
     fun testDoubleQuotesId() {
-        val query = """id "Base^Project" """
+        val query = """id "Base^ProjectResult" """
 
         val res = compl.complete(query).map { it.result }
         val expected = listOf(
-            """find project,configuration,template,vcsRoot with id "Base^Project""""
+            """find project,configuration,template,vcsRoot with id "Base^ProjectResult""""
         )
 
         assertEquals(expected.first(), res.first())
     }
 
     fun testEscapedDoubleQuotesTest() {
-        val query = """id "Base""Project" """
+        val query = """id "Base""ProjectResult" """
 
         val res = compl.complete(query).map { it.result }
         val expected = listOf(
-            """find project,configuration,template,vcsRoot with id "Base""Project""""
+            """find project,configuration,template,vcsRoot with id "Base""ProjectResult""""
         )
 
         assertEquals(expected.first(), res.first())

@@ -2,10 +2,10 @@ package jetbrains.buildServer.server.querylang.ast
 
 import jetbrains.buildServer.server.querylang.ast.wrappers.*
 import jetbrains.buildServer.server.querylang.myProjectManager
-import jetbrains.buildServer.server.querylang.objects.BuildConfiguration
-import jetbrains.buildServer.server.querylang.objects.BuildTemplate
-import jetbrains.buildServer.server.querylang.objects.Project
-import jetbrains.buildServer.server.querylang.objects.VcsRoot
+import jetbrains.buildServer.server.querylang.ui.objects.BuildConfigurationResult
+import jetbrains.buildServer.server.querylang.ui.objects.TemplateResult
+import jetbrains.buildServer.server.querylang.ui.objects.ProjectResult
+import jetbrains.buildServer.server.querylang.ui.objects.VcsRootResult
 import jetbrains.buildServer.server.querylang.parser.QueryParser
 import jetbrains.buildServer.server.querylang.requests.QueryResult
 
@@ -21,10 +21,10 @@ data class FullQuery(val queries: List<TopLevelQuery<*>>): MainQuery(), Printabl
     fun eval(): QueryResult {
         val res = queries.flatMap { query ->
             when (query) {
-                is ProjectTopLevelQuery -> query.eval().objects.map { Project(it.sproject) }
-                is BuildConfTopLevelQuery -> query.eval().objects.map { BuildConfiguration(it.sbuildConf)}
-                is TemplateTopLevelQuery -> query.eval().objects.map { BuildTemplate(it.stemplate) }
-                is VcsRootTopLevelQuery -> query.eval().objects.map { VcsRoot(it.svcsRoot) }
+                is ProjectTopLevelQuery -> query.eval().objects.map { ProjectResult(it) }
+                is BuildConfTopLevelQuery -> query.eval().objects.map { BuildConfigurationResult(it)}
+                is TemplateTopLevelQuery -> query.eval().objects.map { TemplateResult(it) }
+                is VcsRootTopLevelQuery -> query.eval().objects.map { VcsRootResult(it) }
             }
         }
         return QueryResult(res.toMutableList())

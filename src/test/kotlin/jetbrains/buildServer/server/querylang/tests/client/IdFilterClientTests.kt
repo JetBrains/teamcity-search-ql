@@ -70,7 +70,7 @@ class IdFilterClientTests : BaseQueryLangTest() {
         .addParseCase("find buildConf with id Base")
         .addParseCase("find buildConfiguration with trigger id Base")
         .addParseCase("find with id Base")
-        .addParseCase("find buildConfiguration, template with template id *Project*")
+        .addParseCase("find buildConfiguration, template with template id *ProjectResult*")
         .addParseCase("find buildConfiguration with id **abacaba*")
         .addParseCase("find buildConfiguration with id \"abacaba\"abadaba\"")
         .end()

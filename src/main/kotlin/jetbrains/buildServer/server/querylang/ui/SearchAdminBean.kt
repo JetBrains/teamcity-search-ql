@@ -1,20 +1,32 @@
 package jetbrains.buildServer.server.querylang.ui
 
-import jetbrains.buildServer.server.querylang.objects.BuildConfiguration
-import jetbrains.buildServer.server.querylang.objects.BuildTemplate
-import jetbrains.buildServer.server.querylang.objects.Project
-import jetbrains.buildServer.server.querylang.objects.VcsRoot
+import jetbrains.buildServer.server.querylang.ast.wrappers.WBuildConf
+import jetbrains.buildServer.server.querylang.ast.wrappers.WProject
+import jetbrains.buildServer.server.querylang.ast.wrappers.WTemplate
+import jetbrains.buildServer.server.querylang.ast.wrappers.WVcsRoot
 import jetbrains.buildServer.server.querylang.requests.*
+import jetbrains.buildServer.server.querylang.ui.objects.*
 import jetbrains.buildServer.serverSide.ProjectManager
+import jetbrains.buildServer.web.util.WebUtil
 
 class SearchAdminBean(val searchAdminForm: SearchAdminForm, val projectManager: ProjectManager){
+    class ResultLine(
+        val objUrl: String,
+        showObj_: String,
+        val parentProjectUrl: String?,
+        showParent_: String?
+    ) {
+        val showObj = WebUtil.escapeXml(showObj_)
+        val showParent = showParent_?.let {WebUtil.escapeXml(it)}
+    }
+
     private lateinit var result: QueryResult
     private var wrongQueryMessage: String? = null
 
-    val resultProjects = mutableListOf<Pair<String, String>>()
-    val resultBuildConfigurations = mutableListOf<Pair<String, String>>()
-    val resultTemplates = mutableListOf<Pair<String, String>>()
-    val resultVcsRoots = mutableListOf<Pair<String, String>>()
+    val resultProjects = mutableListOf<ResultLine>()
+    val resultBuildConfigurations = mutableListOf<ResultLine>()
+    val resultTemplates = mutableListOf<ResultLine>()
+    val resultVcsRoots = mutableListOf<ResultLine>()
 
     private val PROJECT_URL_PREFIX = "editProject.html?projectId="
     private val BUILD_CONF_URL_PREFIX = "editBuild.html?id=buildType:"
@@ -32,10 +44,10 @@ class SearchAdminBean(val searchAdminForm: SearchAdminForm, val projectManager: 
         result = result_
         for (elem in result.objects) {
             when (elem) {
-                is Project -> addProject(elem.externalId)
-                is BuildConfiguration -> addBuildConf(elem.externalId)
-                is BuildTemplate -> addTemplate(elem.externalId)
-                is VcsRoot -> addVcsRoot(elem.externalId)
+                is ProjectResult -> addProject(elem)
+                is BuildConfigurationResult -> addBuildConf(elem)
+                is TemplateResult -> addTemplate(elem)
+                is VcsRootResult -> addVcsRoot(elem)
             }
         }
     }
@@ -60,19 +72,30 @@ class SearchAdminBean(val searchAdminForm: SearchAdminForm, val projectManager: 
     fun hasTemplates() = resultTemplates.isNotEmpty()
     fun hasVcsRoots() = resultVcsRoots.isNotEmpty()
 
-    private fun addProject(id: String) {
-        resultProjects.add(Pair(PROJECT_URL_PREFIX + id, id))
+    private fun addProject(resObj: TeamCityObjectResult<WProject>) {
+        resultProjects.add(getResLine(resObj, PROJECT_URL_PREFIX))
     }
 
-    private fun addBuildConf(id: String) {
-        resultBuildConfigurations.add(Pair(BUILD_CONF_URL_PREFIX + id, id))
+    private fun addBuildConf(resObj: TeamCityObjectResult<WBuildConf>) {
+        resultBuildConfigurations.add(getResLine(resObj, BUILD_CONF_URL_PREFIX))
     }
 
-    private fun addTemplate(id: String) {
-        resultTemplates.add(Pair(BUILD_TEMPLATE_URL_PREFIX + id, id))
+    private fun addTemplate(resObj: TeamCityObjectResult<WTemplate>) {
+        resultTemplates.add(getResLine(resObj, BUILD_TEMPLATE_URL_PREFIX))
     }
 
-    private fun addVcsRoot(id: String) {
-        resultVcsRoots.add(Pair("$VCS_ROOT_URL_PREFIX$id&action=editVcsRoot", id))
+    private fun addVcsRoot(resObj: TeamCityObjectResult<WVcsRoot>) {
+        resultVcsRoots.add(getResLine(resObj, VCS_ROOT_URL_PREFIX, "&action=editVcsRoot"))
+    }
+
+    private fun getResLine(resObj: TeamCityObjectResult<*>, prefix: String, suffix: String = ""): ResultLine {
+
+        val res = ResultLine(
+            prefix + resObj.externalId + suffix,
+            resObj.name,
+            resObj.project?.id?.let {PROJECT_URL_PREFIX + it},
+            resObj.project?.sproject?.extendedFullName
+        )
+        return res
     }
 }

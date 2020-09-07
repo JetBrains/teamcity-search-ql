@@ -6,6 +6,7 @@ import jetbrains.buildServer.serverSide.impl.BaseServerTestCase
 import org.testng.annotations.BeforeMethod
 import org.testng.annotations.DataProvider
 import org.testng.annotations.Test
+import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
 class ParentFilterClientTests : BaseQueryLangTest() {

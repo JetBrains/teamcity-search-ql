@@ -2,12 +2,10 @@ package jetbrains.buildServer.server.querylang.tests.client
 
 import jetbrains.buildServer.artifacts.RevisionRules
 import jetbrains.buildServer.server.querylang.MyProjectManagerInit
-import jetbrains.buildServer.server.querylang.objects.BuildConfiguration
-import jetbrains.buildServer.server.querylang.objects.Project
+import jetbrains.buildServer.server.querylang.ui.objects.BuildConfigurationResult
+import jetbrains.buildServer.server.querylang.ui.objects.ProjectResult
 import jetbrains.buildServer.server.querylang.parser.QueryParser
-import jetbrains.buildServer.server.querylang.requests.*
 import jetbrains.buildServer.server.querylang.tests.BaseQueryLangTest
-import jetbrains.buildServer.serverSide.ProjectManager
 import jetbrains.buildServer.serverSide.SimpleParameter
 import jetbrains.buildServer.vcs.CheckoutRules
 import org.testng.annotations.BeforeMethod
@@ -138,7 +136,7 @@ class ClientTests: BaseQueryLangTest() {
         val res = client.process(query)
 
         assertEquals(res.objects.size, 1)
-        assertTrue(res.objects[0] is Project)
+        assertTrue(res.objects[0] is ProjectResult)
         assertEquals(res.objects[0].externalId, "Project3")
     }
 
@@ -153,7 +151,7 @@ class ClientTests: BaseQueryLangTest() {
 
         res.objects.sortBy { it.externalId }
         res.objects.forEach {
-            assertTrue(it is BuildConfiguration)
+            assertTrue(it is BuildConfigurationResult)
         }
         assertEquals(res.objects.size, 2)
         assertEquals(res.objects[0].externalId, "Project2_test1")
@@ -168,7 +166,7 @@ class ClientTests: BaseQueryLangTest() {
         val res = client.process(query)
 
         res.objects.forEach {
-            assertTrue(it is BuildConfiguration)
+            assertTrue(it is BuildConfigurationResult)
         }
         assertEquals(2, res.objects.size)
         assertEquals(res.objects[0].externalId, "Project4_test1")

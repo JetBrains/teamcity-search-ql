@@ -38,7 +38,11 @@
                             <ul style="list-style-type:none">
                                 <c:forEach items="${searchForm.resultProjects}" var="project">
                                     <li>
-                                        <a href="${project.first}">${project.second}</a>
+                                        <a href="${project.objUrl}">${project.showObj}</a>
+                                        <c:if test="${project.parentProjectUrl != null}">
+                                            in
+                                            <a href="${project.parentProjectUrl}">${project.showParent}</a>
+                                        </c:if>
                                     </li>
                                 </c:forEach>
                             </ul>
@@ -49,7 +53,11 @@
                             <ul style="list-style-type:none">
                                 <c:forEach items="${searchForm.resultBuildConfigurations}" var="buildConf">
                                     <li>
-                                        <a href="${buildConf.first}">${buildConf.second}</a>
+                                        <a href="${buildConf.objUrl}">${buildConf.showObj}</a>
+                                        <c:if test="${buildConf.parentProjectUrl != null}">
+                                            in
+                                            <a href="${buildConf.parentProjectUrl}">${buildConf.showParent}</a>
+                                        </c:if>
                                     </li>
                                 </c:forEach>
                             </ul>
@@ -60,7 +68,11 @@
                             <ul style="list-style-type:none">
                                 <c:forEach items="${searchForm.resultTemplates}" var="temp">
                                     <li>
-                                        <a href="${temp.first}">${temp.second}</a>
+                                        <a href="${temp.objUrl}">${temp.showObj}</a>
+                                        <c:if test="${temp.parentProjectUrl != null}">
+                                            in
+                                            <a href="${temp.parentProjectUrl}">${temp.showParent}</a>
+                                        </c:if>
                                     </li>
                                 </c:forEach>
                             </ul>
@@ -71,7 +83,11 @@
                             <ul style="list-style-type:none">
                                 <c:forEach items="${searchForm.resultVcsRoots}" var="vcs">
                                     <li>
-                                        <a href="${vcs.first}">${vcs.second}</a>
+                                        <a href="${vcs.objUrl}">${vcs.showObj}</a>
+                                        <c:if test="${vcs.parentProjectUrl != null}">
+                                            in
+                                            <a href="${vcs.parentProjectUrl}">${vcs.showParent}</a>
+                                        </c:if>
                                     </li>
                                 </c:forEach>
                             </ul>

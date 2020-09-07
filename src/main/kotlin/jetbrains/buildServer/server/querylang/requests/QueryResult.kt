@@ -1,6 +1,5 @@
 package jetbrains.buildServer.server.querylang.requests
 
-import jetbrains.buildServer.server.querylang.objects.BuildConfiguration
-import jetbrains.buildServer.server.querylang.objects.TeamCityObject
+import jetbrains.buildServer.server.querylang.ui.objects.TeamCityObjectResult
 
-class QueryResult(val objects: MutableList<TeamCityObject> = mutableListOf())
+class QueryResult(val objects: MutableList<TeamCityObjectResult<*>> = mutableListOf())
