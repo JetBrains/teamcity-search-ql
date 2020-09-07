@@ -73,6 +73,6 @@ class SearchAdminBean(val searchAdminForm: SearchAdminForm, val projectManager: 
     }
 
     private fun addVcsRoot(id: String) {
-        resultVcsRoots.add(Pair(VCS_ROOT_URL_PREFIX + id, id))
+        resultVcsRoots.add(Pair("$VCS_ROOT_URL_PREFIX$id&action=editVcsRoot", id))
     }
 }
