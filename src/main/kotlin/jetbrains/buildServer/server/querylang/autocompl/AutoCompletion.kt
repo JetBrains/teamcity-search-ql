@@ -23,7 +23,7 @@ class AutoCompletion(
     private val AUTOCOMPLETION_LIMIT_NAME = "teamcity.internal.searchQL.autocompletion.maxSuggested"
     private val parser = QueryParser
 
-    val limit = TeamCityProperties.getInteger(AUTOCOMPLETION_LIMIT_NAME, 100)
+    val limit = 100
 
     fun complete(input: String): List<CompletionResult> {
         val stream = CharStreams.fromString(input)
@@ -50,9 +50,16 @@ class AutoCompletion(
                 }
             }
 
-            val (word, objectTypes, trace, completeModifier) = getFilterTrace(treeFindNode, input) ?: return emptyList()
-            val vars = compl.suggest(input.dropLast(word.length), objectTypes, trace, word, completeModifier, limit)
-            return vars
+            val autocomplContext = getFilterTrace(treeFindNode, input) ?: return emptyList()
+            if (autocomplContext is Trace) {
+                val (word, objectTypes, trace, completeModifier) = autocomplContext
+                val vars = compl.suggest(input.dropLast(word.length), objectTypes, trace, word, completeModifier, limit)
+                return vars
+            }
+            if (autocomplContext is FinalCompletion) {
+                return autocomplContext.vars
+            }
+            return emptyList()
         }
 
         //suggest full queries for partial query
@@ -68,7 +75,7 @@ class AutoCompletion(
     }
 
 
-    private fun getFilterTrace(rootNode: ParserRuleContext, input: String): Trace? {
+    private fun getFilterTrace(rootNode: ParserRuleContext, input: String): AutocompletionContext? {
         var node: ParseTree = rootNode
 
         //the filters sequence before the word we want to complete
@@ -90,7 +97,7 @@ class AutoCompletion(
                     return null
                 }
 
-                //there is not `find` keyword
+                //there is no `find` keyword
                 if (node.children.size == 1) {
                     return null
                 }
@@ -100,7 +107,13 @@ class AutoCompletion(
                 //there is no `with` keyword
                 // complete object name
                 if (conditionInSubproject.childCount == 0) {
-                    val objectType = getLastObjectType(node.multipleObjects(), input) ?: return null
+                    val objectType = getLastObjectType(node.multipleObjects(), input)
+                    if (objectType == null) {
+                        if (input.trim().last() != ',' && input.last().isWhitespace()) {
+                            return FinalCompletion(listOf(CompletionResult(input + "with", "with")))
+                        }
+                        return null
+                    }
                     return Trace(objectType)
                 }
 
@@ -108,6 +121,12 @@ class AutoCompletion(
                 //or `with` keyword is the last word in input.
                 if (conditionInSubproject.childCount == 1
                     || (conditionInSubproject.getChild(0) as TerminalNode).symbol.stopIndex == input.lastIndex) {
+                    if (!input.last().isWhitespace()) {
+                        val pref = input.takeLastWhile { !it.isWhitespace() }
+                        if ("with".startsWith(pref)) {
+                            return FinalCompletion(listOf(CompletionResult(input + "with".takeLast(4 - pref.length), "with")))
+                        }
+                    }
                     return null
                 }
 
@@ -204,6 +223,9 @@ class AutoCompletion(
 
     private fun completePartialQuery(input: String, rootNode: QLangGrammarParser.PartialQueryContext): List<CompletionResult> {
         val trace = getFilterTrace(rootNode, input) ?: return listOf()
+        if (trace !is Trace) {
+            return emptyList()
+        }
         return if (trace.trace.isEmpty()) {
             val flFilters = getFirstLevelFilters(rootNode.condition())
             compl.suggestBasedOnOther(input.dropLast(trace.word.length), flFilters, trace.word)
@@ -301,10 +323,14 @@ class AutoCompletion(
         return res?.getPossibleStrings()
     }
 
+    interface AutocompletionContext
+
     data class Trace(
         val word: String,
         val objectTypes: List<String>? = null,
         val trace: List<String> = emptyList(),
         val completeModifier: Boolean = false
-    )
+    ) : AutocompletionContext
+
+    data class FinalCompletion(val vars: List<CompletionResult>): AutocompletionContext
 }
