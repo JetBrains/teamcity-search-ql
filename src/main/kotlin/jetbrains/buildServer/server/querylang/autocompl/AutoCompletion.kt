@@ -23,7 +23,7 @@ class AutoCompletion(
     private val AUTOCOMPLETION_LIMIT_NAME = "teamcity.internal.searchQL.autocompletion.maxSuggested"
     private val parser = QueryParser
 
-    val limit = 100
+    val limit = TeamCityProperties.getInteger(AUTOCOMPLETION_LIMIT_NAME, 100)
 
     fun complete(input: String): List<CompletionResult> {
         val stream = CharStreams.fromString(input)
