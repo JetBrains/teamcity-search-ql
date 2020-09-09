@@ -98,7 +98,7 @@
             </c:otherwise>
         </c:choose>
     </div>
-    <input type="hidden" name="item" value="search">
+    <input type="hidden" name="item" value="search-ql">
 </form>
 
 <script language="JavaScript">

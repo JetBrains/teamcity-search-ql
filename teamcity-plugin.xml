@@ -4,8 +4,7 @@
     <name>search-ql</name>
     <display-name>SearchQL</display-name>
     <version>@Version@</version>
-    <description>Search query language</description>
-    <download-url>Plugin download URL</download-url>
+    <description>TeamCity search query language</description>
     <email>ilya.voronin@jetbrains.com</email>
     <vendor>
       <name>JetBrains</name>

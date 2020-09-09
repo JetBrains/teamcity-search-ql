@@ -31,9 +31,9 @@ class SearchAdminPage(
     private val securityContext: SecurityContextEx
 ) : AdminPage(
         pagePlaces,
-        "search",
+        "search-ql",
         pluginDescriptor.getPluginResourcesPath("search.jsp"),
-        "Search"
+        "Search QL"
     )
 {
     val RESULTS_CNT_LIMIT_NAME = "teamcity.internal.searchQL.maxResults"
