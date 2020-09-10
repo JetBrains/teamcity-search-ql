@@ -7,7 +7,6 @@ import kotlin.reflect.full.isSubclassOf
 import kotlin.reflect.full.isSuperclassOf
 
 object FilterRegistration {
-    val pathToReadme = "README.md"
     private val descriptions : MutableMap<String, FilterDescription> = mutableMapOf()
     private val shortDescriptions: MutableMap<String, Descriptions> = mutableMapOf()
 
@@ -189,7 +188,7 @@ object FilterRegistration {
 
     private fun loadDescription() {
 
-        val readmeText = this.readFromResources("README.md")
+        val readmeText = this.readFromResources("FOR_USERS.md")
         var lastIndex = readmeText.indexOf("Filters description")
 
         val text = readmeText.substring(lastIndex, readmeText.indexOf("###", lastIndex))
