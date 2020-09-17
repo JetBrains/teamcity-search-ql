@@ -29,4 +29,6 @@ Source code: https://github.com/JetBrains/teamcity-search-ql
 
 Download link: https://plugins.jetbrains.com/plugin/15051-searchql
 
-Please refer to FOR_USERS.md for a draft of the user documentation and to FOR_DEVS.md if you are thinking of contributing to the plugin.
+Please refer to [FOR_USERS.md](https://github.com/JetBrains/teamcity-search-ql/blob/master/FOR_USERS.md) for a draft 
+of the user documentation and to [FOR_DEVS.md](https://github.com/JetBrains/teamcity-search-ql/blob/master/FOR_DEVS.md) 
+if you are thinking of contributing to the plugin.
