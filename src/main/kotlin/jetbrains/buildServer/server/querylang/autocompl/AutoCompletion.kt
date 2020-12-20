@@ -43,6 +43,8 @@ class AutoCompletion(
 
         //autocompletion
         if (treeFindNode != null) {
+
+            //context autocompletion
             if (input.last() == '?') {
                 val res = tryCompleteCollectorQuery(input)
                 if (res != null) {
@@ -53,9 +55,10 @@ class AutoCompletion(
             val autocomplContext = getFilterTrace(treeFindNode, input) ?: return emptyList()
             if (autocomplContext is Trace) {
                 val (word, objectTypes, trace, completeModifier) = autocomplContext
-                val vars = compl.suggest(input.dropLast(word.length), objectTypes, trace, word, completeModifier, limit)
-                return vars
+                return compl.suggest(input.dropLast(word.length), objectTypes, trace, word, completeModifier, limit)
             }
+
+            //partial query autocompletion
             if (autocomplContext is FinalCompletion) {
                 return autocomplContext.vars
             }

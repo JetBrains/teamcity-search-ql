@@ -18,7 +18,7 @@
             />
         </span>
           <forms:filterButton/>
-          <div class="smallNote" style="margin-left: 6em; line-height: 1.5">Search projects, build configurations, templates, vcsRoots, etc.</div>
+        <div class="smallNote" style="margin-left: 6em; line-height: 1.5">Search projects, build configurations, templates, vcsRoots. You can find docs <a href="https://github.com/JetBrains/teamcity-search-ql">here</a> </div>
           <div class="clearfix"></div>
     </div>
     <div>

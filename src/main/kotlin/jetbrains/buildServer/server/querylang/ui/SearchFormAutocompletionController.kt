@@ -23,7 +23,18 @@ class SearchFormAutocompletionController(
     override fun getCompletionData(request: HttpServletRequest): List<Completion?> {
         val term = request.getParameter("term")
         val res = try {
-            autoCompl.complete(term).map { Completion(it.result, WebUtil.escapeXml(it.show), it.meta ?: "", true) }
+            autoCompl.complete(term).map {
+                Completion(
+                        it.result,
+                        if (it.show == "?" && it.meta == "Context based completion") {
+                            "<b>?</b>"
+                        } else {
+                            WebUtil.escapeXml(it.show)
+                        },
+                        it.meta ?: "",
+                        true
+                )
+            }
         } catch (e: Exception) {
             //TODO("Add logging")
             emptyList<Completion>()

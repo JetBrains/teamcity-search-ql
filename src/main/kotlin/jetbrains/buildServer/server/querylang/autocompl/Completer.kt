@@ -142,11 +142,18 @@ class Completer(val completionManager: CompletionManager? = null) {
         return if (graph[node]?.size == 0 && completionManager != null) {
             val last2Filters = if (trace.size > 1) "${trace[trace.lastIndex - 1]}_${trace.last()}"
                                else "${startNode}_${trace.last()}"
-            completionManager.completeString(
+            val res = completionManager.completeString(
                 word,
                 last2Filters,
                 limit
             )
+
+            //add suggestion of context autocompletion
+            return if (word == "") {
+                listOf(StringInfo("?", "Context based completion")) + res
+            } else {
+                res
+            }
         } else {
             graph[node]
                 ?.toStringList()
