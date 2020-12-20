@@ -26,76 +26,81 @@
         <c:when test="${searchForm.isWrongQuery()}">
             <h3 style="color:red">${searchForm.getWrongQueryMessage()}</h3>
         </c:when>
-            <c:otherwise>
-                <c:choose>
-                    <c:when test="${searchForm.isNothingFound()}">
-                        Nothing found.
-                        <br />
-                    </c:when>
-                    <c:otherwise>
-                        <b>Displayed ${searchForm.resultsDisplayed} out of ${searchForm.resultsTotal}</b>
-                        <c:if test="${searchForm.hasProjects()}">
-                            <h3>Projects:</h3>
-                            <ul style="list-style-type:none">
-                                <c:forEach items="${searchForm.resultProjects}" var="project">
-                                    <li>
-                                        <a href="${project.objUrl}">${project.showObj}</a>
-                                        <c:if test="${project.parentProjectUrl != null}">
-                                            in
-                                            <a href="${project.parentProjectUrl}">${project.showParent}</a>
-                                        </c:if>
-                                    </li>
-                                </c:forEach>
-                            </ul>
-                        </c:if>
+        <c:otherwise>
+            <c:choose>
+                <c:when test="${searchForm.isNothingFound()}">
+                    Nothing found.
+                    <br />
+                </c:when>
+                <c:otherwise>
+                    <b>Displayed ${searchForm.resultsDisplayed} out of ${searchForm.resultsTotal}</b>
+                    <c:if test="${searchForm.hasProjects()}">
+                        <h3>Projects:</h3>
+                        <ul style="list-style-type:none">
+                            <c:forEach items="${searchForm.resultProjects}" var="project">
+                                <li>
+                                    <a href="${project.objUrl}">${project.showObj}</a>
+                                    <c:if test="${project.parentProjectUrl != null}">
+                                        in
+                                        <a href="${project.parentProjectUrl}">${project.showParent}</a>
+                                    </c:if>
+                                </li>
+                            </c:forEach>
+                        </ul>
+                    </c:if>
 
-                        <c:if test="${searchForm.hasBuildConfs()}">
-                            <h3>Build configurations:</h3>
-                            <ul style="list-style-type:none">
-                                <c:forEach items="${searchForm.resultBuildConfigurations}" var="buildConf">
-                                    <li>
-                                        <a href="${buildConf.objUrl}">${buildConf.showObj}</a>
-                                        <c:if test="${buildConf.parentProjectUrl != null}">
-                                            in
-                                            <a href="${buildConf.parentProjectUrl}">${buildConf.showParent}</a>
-                                        </c:if>
-                                    </li>
-                                </c:forEach>
-                            </ul>
-                        </c:if>
+                    <c:if test="${searchForm.hasBuildConfs()}">
+                        <h3>Build configurations:</h3>
+                        <ul style="list-style-type:none">
+                            <c:forEach items="${searchForm.resultBuildConfigurations}" var="buildConf">
+                                <li>
+                                    <a href="${buildConf.objUrl}">${buildConf.showObj}</a>
+                                    <c:if test="${buildConf.parentProjectUrl != null}">
+                                        in
+                                        <a href="${buildConf.parentProjectUrl}">${buildConf.showParent}</a>
+                                    </c:if>
+                                </li>
+                            </c:forEach>
+                        </ul>
+                    </c:if>
 
-                        <c:if test="${searchForm.hasTemplates()}">
-                            <h3>Build configuration templates:</h3>
-                            <ul style="list-style-type:none">
-                                <c:forEach items="${searchForm.resultTemplates}" var="temp">
-                                    <li>
-                                        <a href="${temp.objUrl}">${temp.showObj}</a>
-                                        <c:if test="${temp.parentProjectUrl != null}">
-                                            in
-                                            <a href="${temp.parentProjectUrl}">${temp.showParent}</a>
-                                        </c:if>
-                                    </li>
-                                </c:forEach>
-                            </ul>
-                        </c:if>
+                    <c:if test="${searchForm.hasTemplates()}">
+                        <h3>Build configuration templates:</h3>
+                        <ul style="list-style-type:none">
+                            <c:forEach items="${searchForm.resultTemplates}" var="temp">
+                                <li>
+                                    <a href="${temp.objUrl}">${temp.showObj}</a>
+                                    <c:if test="${temp.parentProjectUrl != null}">
+                                        in
+                                        <a href="${temp.parentProjectUrl}">${temp.showParent}</a>
+                                    </c:if>
+                                </li>
+                            </c:forEach>
+                        </ul>
+                    </c:if>
 
-                        <c:if test="${searchForm.hasVcsRoots()}">
-                            <h3>VCS roots:</h3>
-                            <ul style="list-style-type:none">
-                                <c:forEach items="${searchForm.resultVcsRoots}" var="vcs">
-                                    <li>
-                                        <a href="${vcs.objUrl}">${vcs.showObj}</a>
-                                        <c:if test="${vcs.parentProjectUrl != null}">
-                                            in
-                                            <a href="${vcs.parentProjectUrl}">${vcs.showParent}</a>
-                                        </c:if>
-                                    </li>
-                                </c:forEach>
-                            </ul>
-                        </c:if>
-                    </c:otherwise>
-                </c:choose>
-            </c:otherwise>
+                    <c:if test="${searchForm.hasVcsRoots()}">
+                        <h3>VCS roots:</h3>
+                        <ul style="list-style-type:none">
+                            <c:forEach items="${searchForm.resultVcsRoots}" var="vcs">
+                                <li>
+                                    <a href="${vcs.objUrl}">${vcs.showObj}</a>
+                                    <c:if test="${vcs.parentProjectUrl != null}">
+                                        in
+                                        <a href="${vcs.parentProjectUrl}">${vcs.showParent}</a>
+                                    </c:if>
+                                </li>
+                            </c:forEach>
+                        </ul>
+                    </c:if>
+                </c:otherwise>
+            </c:choose>
+            <c:if test="${searchForm.resultsDisplayed != searchForm.resultsTotal}">
+                <a class="btn btn_mini btn_icon"
+                   href="${requestScope['javax.servlet.forward.request_uri']}?query=${pageContext.request.getParameter("query")}&submitFilter=Filter&item=search-ql&limit=${searchForm.resultsDisplayed * 5}"
+                   title="Shore more">Show more <span>&#9662;</span></a>
+            </c:if>
+        </c:otherwise>
         </c:choose>
     </div>
     <input type="hidden" name="item" value="search-ql">

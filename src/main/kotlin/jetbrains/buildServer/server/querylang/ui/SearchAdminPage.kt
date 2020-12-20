@@ -40,7 +40,7 @@ class SearchAdminPage(
     val RESULTS_CNT_DEFAULT = 100
 
     private val TIMELIMIT_PARAM_NAME = "query.lang.timelimit.millis"
-    private val DEFAULT_TIMELIMIT: Long = 2000
+    private val DEFAULT_TIMELIMIT: Long = 10000
 
     private val projectManager: ProjectManager = projectManager_
     private val requestClient: RequestClient
@@ -56,9 +56,13 @@ class SearchAdminPage(
         ) { SearchAdminForm() }!!
         FormUtil.bindFromRequest(request, form)
 
+        var limit = TeamCityProperties.getInteger(RESULTS_CNT_LIMIT_NAME, RESULTS_CNT_DEFAULT)
+        request.getParameter("limit")?.let {
+            limit = it.toIntOrNull() ?: limit
+        }
+
         val bean = SearchAdminBean(form, projectManager)
         val executor = executorServices.normalExecutorService
-
 
         var task: Future<QueryResult?>? = null
         try {
@@ -67,7 +71,6 @@ class SearchAdminPage(
                 val authHolder = securityContext.authorityHolder
                 task = executor.submit<QueryResult?> {
                     val res = try {
-                        val limit = TeamCityProperties.getInteger(RESULTS_CNT_LIMIT_NAME, RESULTS_CNT_DEFAULT)
                         securityContext.runAs<QueryResult>(authHolder) { return@runAs requestClient.process(it, limit) }
                     } catch (e: InterruptedException) {
                         null

@@ -75,6 +75,8 @@ class SearchAdminBean(val searchAdminForm: SearchAdminForm, val projectManager: 
     fun hasTemplates() = resultTemplates.isNotEmpty()
     fun hasVcsRoots() = resultVcsRoots.isNotEmpty()
 
+    fun notAllResultsLoaded() = resultsDisplayed != resultsTotal
+
     private fun setResultsCnt(resultsDisplayed_: Int, resultsTotal_: Int) {
         resultsTotal = resultsTotal_
         resultsDisplayed = resultsDisplayed_
