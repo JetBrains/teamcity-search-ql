@@ -3,6 +3,50 @@
         taglib prefix="util" uri="/WEB-INF/functions/util" %>
 
 <form action="<c:url value='/admin/admin.html'/>" method="get">
+    <details>
+        <summary>Short documentation</summary>
+        <p>This plugin implements a search for objects in TeamCity project model.
+            The functionality is only available for system administrator and project admins via the <code>Search</code> tab in the administration menu.
+            Currently it supports searching 4 types of entities: projects, build configurations, build configuration templates and VCS roots.</p>
+        <h3 id="query-structure">Query structure</h3>
+        <p><code>find &lt;entity type(s)&gt; [in &lt;project ID&gt;] with &lt;condition&gt;</code></p>
+        <h3 id="examples-of-queries">Examples of queries</h3>
+        <ul>
+            <li><p><code>find vcsRoot with type jetbrains.git</code> </p>
+                <blockquote>
+                    <p>find VCS roots with type <code>jetbrains.git</code>;</p>
+                </blockquote>
+            </li>
+            <li><p><code>find configuration, template in Project1 with trigger type vcsTrigger</code></p>
+                <blockquote>
+                    <p>find build configurations and templates that lie in the subtree of a project with an id Project1 and has at least one trigger with the type vcsTrigger;</p>
+                </blockquote>
+            </li>
+            <li><p><code>find project with configuration (feature type pullRequests or vcs param branchSpec = *pull*)</code></p>
+                <blockquote>
+                    <p>find projects that contain build configurations with either Pull Requests build feature configured</p>
+                    <pre><code><span class="hljs-keyword">or</span> <span class="hljs-keyword">a</span> VCS root <span class="hljs-keyword">with</span> <span class="hljs-keyword">a</span> branch specification matching certain pattern attached.
+                    </code></pre></blockquote>
+            </li>
+            <li><p><code>find project with configuration trigger[all] type (vcsTrigger or schedulingTrigger)</code></p>
+                <blockquote>
+                    <p>find projects that contain build configurations which have at least one trigger and all triggers are of vcsTrigger or schedulingTrigger type.</p>
+                </blockquote>
+            </li>
+        </ul>
+        <h3 id="autocompletion">Autocompletion</h3>
+        <p>Autocompletion for most text values is available only for the system administrator.
+            But you can use context autocompletion. Type ? in the place of the string value.
+            Only variants from the projects where you have `edit` permission or `view settings` permission will be shown
+            and all previously typed conditions will be taken in the account.</p>
+        <h3 id="more-information">More information</h3>
+        <p>Source code: <a href="https://github.com/JetBrains/teamcity-search-ql">https://github.com/JetBrains/teamcity-search-ql</a></p>
+        <p>Download link: <a href="https://plugins.jetbrains.com/plugin/15051-searchql">https://plugins.jetbrains.com/plugin/15051-searchql</a></p>
+        <p>Please refer to <a href="https://github.com/JetBrains/teamcity-search-ql/blob/master/FOR_USERS.md">FOR_USERS.md</a> for a draft
+            of the user documentation and to <a href="https://github.com/JetBrains/teamcity-search-ql/blob/master/FOR_DEVS.md">FOR_DEVS.md</a>
+            if you are thinking of contributing to the plugin.</p>
+
+    </details>
     <div class="actionBar">
         <span class="nowrap">
             <label class="firstLabel" for="query">Query: </label>
@@ -18,7 +62,7 @@
             />
         </span>
           <forms:filterButton/>
-        <div class="smallNote" style="margin-left: 6em; line-height: 1.5">Search projects, build configurations, templates, vcsRoots. You can find docs <a href="https://github.com/JetBrains/teamcity-search-ql">here</a> </div>
+        <div class="smallNote" style="margin-left: 6em; line-height: 1.5">Search projects, build configurations, templates, vcsRoots. You can find full docs <a href="https://github.com/JetBrains/teamcity-search-ql/blob/master/FOR_USERS.md">here</a> </div>
           <div class="clearfix"></div>
     </div>
     <div>

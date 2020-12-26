@@ -26,11 +26,7 @@ class SearchFormAutocompletionController(
             autoCompl.complete(term).map {
                 Completion(
                         it.result,
-                        if (it.show == "?" && it.meta == "Context based completion") {
-                            "<b>?</b>"
-                        } else {
-                            WebUtil.escapeXml(it.show)
-                        },
+                        WebUtil.escapeXml(it.show),
                         it.meta ?: "",
                         true
                 )

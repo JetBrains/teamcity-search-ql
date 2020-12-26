@@ -148,12 +148,7 @@ class Completer(val completionManager: CompletionManager? = null) {
                 limit
             )
 
-            //add suggestion of context autocompletion
-            return if (word == "") {
-                listOf(StringInfo("?", "Context based completion")) + res
-            } else {
-                res
-            }
+            return res
         } else {
             graph[node]
                 ?.toStringList()
