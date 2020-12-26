@@ -1,5 +1,7 @@
 #### Creating filters
 
+**Please note that this is an early draft of the documentation.**
+
 TLDR  
 1) Create filter class in `fitlers.kt`(create `Names` companion object, override `buildFrom` method)
 2) Add new token in `Keywords.g4`(see `@lexer::members` and `tokens` there)

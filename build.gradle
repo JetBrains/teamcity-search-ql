@@ -77,7 +77,7 @@ generateGrammarSource {
 }
 
 task initializer(type: Copy) {
-    from "README.md"
+    from "FOR_USERS.md"
     into "src/main/resources/"
 }
 
