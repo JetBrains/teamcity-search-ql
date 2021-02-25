@@ -38,7 +38,11 @@ data class FullQuery(val queries: List<TopLevelQuery<*>>): MainQuery(), Printabl
         }
     }
 
-    fun getPossibleStrings() = queries.flatMap { it.getPossibleStrings() }
+    fun getPossibleStrings(): List<String> {
+        val collector = StringCollector()
+        queries.forEach { it.getPossibleStrings(collector) }
+        return collector.toList()
+    }
 }
 
 data class PartialQuery(val fullQueries: List<FullQuery>): MainQuery()
@@ -46,8 +50,7 @@ data class PartialQuery(val fullQueries: List<FullQuery>): MainQuery()
 sealed class TopLevelQuery<T> : ConditionContainer<T>, Named, ConditionSplitter<T> {
     fun splitCondition() = condition.splitCondition()
 
-    fun getPossibleStrings(): List<String> {
-        val collector = StringCollector()
+    fun getPossibleStrings(collector: StringCollector): List<String> {
         val collectorFilter = QueryParser.validateQuery(condition, true) ?: return emptyList()
         collectorFilter.setCollector(collector)
         val (remCondition, visitor) = condition.splitCondition()

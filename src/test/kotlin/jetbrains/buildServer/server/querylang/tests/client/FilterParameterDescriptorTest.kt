@@ -16,12 +16,14 @@ class FilterParameterDescriptorTest : BaseQueryLangTest() {
             TTemplate("temp1",
                 TTrigger("vcsTrigger"),
                 TStep("step1"),
+                TStep("simpleRunner"),
                 TFeature("feature1")
             ).bind("t1"),
 
             TBuildConf("test1",
                 TTrigger("vcsTrigger"),
                 TStep("step1"),
+                TStep("simpleRunner"),
                 TFeature("feature1")
             ).bind("b1"),
 
@@ -146,6 +148,10 @@ class FilterParameterDescriptorTest : BaseQueryLangTest() {
         .addComplCase(
             "find configuration with param \"my-password\"=?",
             "\"\""
+        )
+        .addComplCase(
+            "find configuration, template with parent id BaseProject and step type ?",
+            "step", "step1", "step2", "step22", "simpleRunner"
         )
         .end()
 

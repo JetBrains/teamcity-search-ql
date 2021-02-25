@@ -16,10 +16,10 @@ class CompletionManagerStepParamTests : BaseServerTestCase() {
         super.setUp()
         val project1 = myFixture.createProject("Base1111", "Base1111")
         val bc1 = project1.createBuildType("bt1", "bt1")
-        val temp1 = project1.createBuildType("temp1", "temp1")
+        val temp1 = project1.createBuildTypeTemplate("temp1", "temp1")
 
-        bc1.addBuildRunner("vcsTrigger", "a", mapOf(Pair("path", "abc"), Pair("abc", "bcd"), Pair("pathabc", "abc")))
-        temp1.addBuildRunner("vcsTrigger", "a", mapOf(Pair("path", "abd"), Pair("abc", "bcd")))
+        bc1.addBuildRunner("simpleRunner", "a", mapOf(Pair("path", "abc"), Pair("abc", "bcd"), Pair("pathabc", "abc")))
+        temp1.addBuildRunner("simpleRunner", "a", mapOf(Pair("path", "abd"), Pair("abc", "bcd")))
 
         compl = CompletionManager(myFixture.projectManager, myFixture.securityContext, myFixture.eventDispatcher as EventDispatcher<ServerListener>)
 
