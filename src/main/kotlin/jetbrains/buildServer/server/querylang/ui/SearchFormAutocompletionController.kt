@@ -5,6 +5,7 @@ import jetbrains.buildServer.controllers.Completion
 import jetbrains.buildServer.server.querylang.autocompl.AutoCompletion
 import jetbrains.buildServer.serverSide.ProjectManager
 import jetbrains.buildServer.serverSide.auth.SecurityContext
+import jetbrains.buildServer.web.openapi.PluginDescriptor
 import jetbrains.buildServer.web.openapi.WebControllerManager
 import jetbrains.buildServer.web.util.WebUtil
 import javax.servlet.http.HttpServletRequest
@@ -13,11 +14,15 @@ import javax.servlet.http.HttpServletRequest
 class SearchFormAutocompletionController(
     securityContext: SecurityContext,
     webControllerManager: WebControllerManager,
+    pluginDescriptor: PluginDescriptor,
     private val autoCompl: AutoCompletion
 ) : BaseAutocompletionController(securityContext) {
 
     init {
-        webControllerManager.registerController("/adminQueryAutocompletion.html", this)
+        webControllerManager.registerController(
+            pluginDescriptor.getPluginResourcesPath("adminQueryAutocompletion.html"),
+            this
+        )
     }
 
     override fun getCompletionData(request: HttpServletRequest): List<Completion?> {
