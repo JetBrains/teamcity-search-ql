@@ -50,7 +50,7 @@
     <div class="actionBar">
         <span class="nowrap">
             <label class="firstLabel" for="query">Query: </label>
-            <c:url var="autocompletionUrl" value="/adminQueryAutocompletion.html"/>
+            <c:url var="autocompletionUrl" value="${searchForm.getPluginDescriptor().getPluginResourcesPath(\"adminQueryAutocompletion.html\")}"/>
             <forms:autocompletionTextField name="query" value="${searchForm.query}"
                                            style="width: 1000px; height: 30px; font-size: 15px"
                                            maxlength="256"

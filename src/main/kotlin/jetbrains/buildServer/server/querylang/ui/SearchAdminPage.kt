@@ -61,7 +61,7 @@ class SearchAdminPage(
             limit = it.toIntOrNull() ?: limit
         }
 
-        val bean = SearchAdminBean(form, projectManager)
+        val bean = SearchAdminBean(form, projectManager, pluginDescriptor)
         val executor = executorServices.normalExecutorService
 
         var task: Future<QueryResult?>? = null

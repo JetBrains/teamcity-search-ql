@@ -7,9 +7,14 @@ import jetbrains.buildServer.server.querylang.ast.wrappers.WVcsRoot
 import jetbrains.buildServer.server.querylang.requests.*
 import jetbrains.buildServer.server.querylang.ui.objects.*
 import jetbrains.buildServer.serverSide.ProjectManager
+import jetbrains.buildServer.web.openapi.PluginDescriptor
 import jetbrains.buildServer.web.util.WebUtil
 
-class SearchAdminBean(val searchAdminForm: SearchAdminForm, val projectManager: ProjectManager){
+class SearchAdminBean(
+    val searchAdminForm: SearchAdminForm,
+    val projectManager: ProjectManager,
+    val pluginDescriptor: PluginDescriptor
+){
     class ResultLine(
         val objUrl: String,
         showObj_: String,
