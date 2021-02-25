@@ -81,7 +81,9 @@ task initializer(type: Copy) {
     from "FOR_USERS.md"
     into "src/main/resources/"
 }
-*/
+
 tasks.matching { it.name != 'initializer' }.all { Task task ->
     task.dependsOn initializer
 }
+
+ */
