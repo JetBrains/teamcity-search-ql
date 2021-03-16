@@ -10,7 +10,7 @@ Currently it supports searching 4 types of objects: projects, build configuratio
 #### Query
 
 A **query** has the following structure:  
-`find <Object to search> with <condition on object>`
+`find <Object to search> [in <Project Id>] with <condition on object>`
 
 An **object** is one of the following entities: `project`, `configuration`, `template` or `vcsRoot`
 

@@ -141,8 +141,8 @@
             </c:choose>
             <c:if test="${searchForm.resultsDisplayed != searchForm.resultsTotal}">
                 <a class="btn btn_mini btn_icon"
-                   href="${requestScope['javax.servlet.forward.request_uri']}?query=${pageContext.request.getParameter("query")}&submitFilter=Filter&item=search-ql&limit=${searchForm.resultsDisplayed * 2}"
-                   title="Shore more">Show more <span>&#9662;</span></a>
+                   href="${requestScope['javax.servlet.forward.request_uri']}?query=${searchForm.urlEncodeStr(pageContext.request.getParameter("query"))}&submitFilter=Filter&item=search-ql&limit=${searchForm.resultsDisplayed * 2}"
+                   title="Show more">Show more <span>&#9662;</span></a>
             </c:if>
         </c:otherwise>
         </c:choose>

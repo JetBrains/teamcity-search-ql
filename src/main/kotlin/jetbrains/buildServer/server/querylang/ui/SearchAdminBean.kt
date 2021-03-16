@@ -9,6 +9,8 @@ import jetbrains.buildServer.server.querylang.ui.objects.*
 import jetbrains.buildServer.serverSide.ProjectManager
 import jetbrains.buildServer.web.openapi.PluginDescriptor
 import jetbrains.buildServer.web.util.WebUtil
+import java.net.URLEncoder
+import java.nio.charset.Charset
 
 class SearchAdminBean(
     val searchAdminForm: SearchAdminForm,
@@ -81,6 +83,10 @@ class SearchAdminBean(
     fun hasVcsRoots() = resultVcsRoots.isNotEmpty()
 
     fun notAllResultsLoaded() = resultsDisplayed != resultsTotal
+
+    fun urlEncodeStr(str: String): String {
+        return URLEncoder.encode(str, "utf-8")
+    }
 
     private fun setResultsCnt(resultsDisplayed_: Int, resultsTotal_: Int) {
         resultsTotal = resultsTotal_
