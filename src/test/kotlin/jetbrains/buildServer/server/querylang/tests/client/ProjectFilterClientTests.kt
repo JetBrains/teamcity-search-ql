@@ -1,5 +1,6 @@
 package jetbrains.buildServer.server.querylang.tests.client
 
+import jetbrains.buildServer.server.querylang.myParameterManager
 import jetbrains.buildServer.server.querylang.parser.QueryParser
 import jetbrains.buildServer.server.querylang.tests.BaseQueryLangTest
 import org.testng.annotations.BeforeMethod
@@ -32,7 +33,7 @@ class ProjectFilterClientTests: BaseQueryLangTest() {
                     TTempDependency("te2"),
                     TVcsInst("vcs1")
                 ).bind("p3b1")
-            )
+            ).modify { it.setArchived(true, null); it }
         ).create()
     }
 
@@ -57,6 +58,14 @@ class ProjectFilterClientTests: BaseQueryLangTest() {
         .addCase(
             "find project, template, buildConfiguration, vcsRoot with project id *Project3",
             "Project1_Project3_temp1", "Project1_Project3_test1", "Project1_Project3_Vcs31", "Project1_Project3"
+        )
+        .addBCCase(
+            "find buildConfiguration with id *_test* and project archived",
+            "p3b1"
+        )
+        .addBCCase(
+            "find buildConfiguration with id *_test* and project (not archived)",
+            "p2b1", "p2b2", "p3b1" // because p3b1 has ancestor which is not archived
         )
         .end()
 

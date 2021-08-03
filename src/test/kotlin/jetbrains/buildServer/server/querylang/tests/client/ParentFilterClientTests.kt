@@ -25,8 +25,8 @@ class ParentFilterClientTests : BaseQueryLangTest() {
                 TVcsRoot("vcs2", "git").bind("v2"),
                 TBuildConf("BuildConf3",
                     TTempDependency("t1")
-                ).bind("b3")
-            ).bind("p2"),
+                ).modify({it}).bind("b3")
+            ).modify{it.setArchived(true, null); it}.bind("p2"),
             TBuildConf("BuildConf1").bind("b1")
         ).create()
 
@@ -66,6 +66,26 @@ class ParentFilterClientTests : BaseQueryLangTest() {
             "find buildConfiguration, template, project, vcsRoot with parent id BaseProject",
             "BuildConf1", "BaseProject_Vcs1", "temp2", "Project1", "Project2"
         )
+        .addBCCase(
+            "find buildConfiguration with id *Conf* and parent archived",
+            "b3"
+        )
+        .addBCCase(
+            "find buildConfiguration with id *Conf* and parent (not archived)",
+            "b1", "b2"
+        )
+        .end()
+
+    @DataProvider(name = "compl")
+    fun complData() = TestDataProvider()
+        .addComplCase(
+            "find buildConfiguration with id *Conf* and parent arc",
+            "archived"
+        )
+        .addComplCase(
+            "find buildConfiguration with id *Conf* and parent (not arc",
+            "archived"
+        )
         .end()
 
     @DataProvider(name = "failed")
@@ -86,5 +106,11 @@ class ParentFilterClientTests : BaseQueryLangTest() {
     @Test(dataProvider = "failed")
     fun parametrizedFailedParsingTest(query: String, exc: Class<out Exception>) {
         assertFailsWith(exc.kotlin) { QueryParser.parse(query)}
+    }
+
+    @Test(dataProvider = "compl")
+    fun parametrizedCompletionTests(query: String, expected: List<String>) {
+        waitForIndexing()
+        checkVars(query, expected)
     }
 }

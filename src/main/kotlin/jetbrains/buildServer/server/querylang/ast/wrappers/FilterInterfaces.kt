@@ -99,3 +99,7 @@ interface FNameContainer {
 interface FSubProjectContainer {
     val subProjects: List<WProject>
 }
+
+interface FArchivedContainer {
+    val isArchived: Boolean
+}

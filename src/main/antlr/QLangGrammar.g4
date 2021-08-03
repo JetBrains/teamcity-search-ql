@@ -16,7 +16,7 @@ filterKeyword : PROJECT | TEMPLATE | BUILD_CONFIGURATION | VCS_ROOT
                  | ENABLED | ANCESTOR | RULES | DEPENDENCY
                  | ARTIFACT | SNAPSHOT | VCS_ENTRY | REV_RULE | CLEAN
                  | OPTION | RESOLVED | ALL | WITH_INHERITED | SUB_PROJECT
-                 | NAME
+                 | NAME | ARCHIVED
                  ;
 identOrString : IDENT | STRING | filterKeyword;
 
@@ -67,6 +67,7 @@ filter : idFilter
        | nameFilter
        | buildConfFilter
        | subProjectFilter
+       | archivedFilter
        ;
 
 condition : filter                     #conditionFilter
@@ -112,6 +113,7 @@ revRuleFilter : REV_RULE modifierList? stringFilterOrCondition ;
 nameFilter : NAME modifierList? stringFilterOrCondition ;
 buildConfFilter : BUILD_CONFIGURATION modifierList? filterOrCondition? ;
 subProjectFilter: SUB_PROJECT modifierList? filterOrCondition? ;
+archivedFilter: ARCHIVED modifierList? ;
 
 
 

@@ -41,6 +41,9 @@ class FilterVisitor<Obj>(val parentFilter: KClass<out ConditionContainer<Obj>>) 
             ctx!!.objectId().stringFilterOrCondition().accept(getCondVisitor(IdFilter::class))
         ).transform(ctx)
 
+    override fun visitArchivedFilter(ctx: QLangGrammarParser.ArchivedFilterContext?)  =
+        ArchivedFilter().transform(ctx!!)
+
     override fun visitProjectFilter(ctx: QLangGrammarParser.ProjectFilterContext?) =
         ProjectFilter(
             ctx!!.filterOrCondition().accept(getCondVisitor(ProjectFilter::class))

@@ -28,7 +28,8 @@ class WProject(
     FNameContainer,
     FBuildConfContainer,
     FTemplateContainer,
-    FSubProjectContainer
+    FSubProjectContainer,
+    FArchivedContainer
 {
     val projectEx: ProjectEx by lazy { sproject as ProjectEx }
 
@@ -71,6 +72,9 @@ class WProject(
 
     override val name: String
         get() = sproject.name
+
+    override val isArchived: Boolean
+        get() = sproject.isArchived
 
     override fun equals(other: Any?): Boolean {
         return other is WProject && other.id == this.id

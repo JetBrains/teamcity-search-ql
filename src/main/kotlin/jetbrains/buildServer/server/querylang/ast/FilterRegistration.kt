@@ -50,6 +50,7 @@ object FilterRegistration {
         registerFilter(AnyStringFilter::class)
         registerFilter(CollectorStringFilter::class)
         registerFilter(CollectorStringParamFilter::class)
+        registerFilter(ArchivedFilter::class)
 
         registerConditionFilter(IdFilter::class)
         registerConditionFilter(BuildConfFilter::class)

@@ -163,17 +163,28 @@ abstract class BaseQueryLangTest : BaseServerTestCase() {
         protected abstract fun createInner(context: L, persist: Boolean): T
         protected abstract val storage: MutableMap<String, T>?
 
+        private val myModifiers = mutableListOf<(T) -> T>()
+
         fun bind(key_: String): TestStorableObject<T, L> {
             key = key_
             return this
         }
 
-        fun create(context: L, persist: Boolean): T {
-            val obj = createInner(context, persist)
-            if (key != "" && storage != null) {
-                storage!![key] = obj
+        fun modify(f: (T) -> T): TestStorableObject<T, L> {
+            myModifiers.add(f)
+            return this
+        }
+
+        fun create(context: L, shouldPersist: Boolean): T {
+            var obj1: T = createInner(context, shouldPersist)
+            myModifiers.forEach {mod ->
+                obj1 = mod(obj1)
             }
-            if (persist && obj is SPersistentEntity) {
+            if (key != "" && storage != null) {
+                storage!![key] = obj1
+            }
+            val obj = obj1;
+            if (shouldPersist && obj is SPersistentEntity) {
                 persist(obj)
             }
             return obj

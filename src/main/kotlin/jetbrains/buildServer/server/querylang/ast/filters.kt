@@ -20,6 +20,25 @@ data class IdFilter(
     }
 }
 
+data class ArchivedFilter(private val placeholder: String = "") : Filter<FArchivedContainer> {
+
+    companion object : ObjectDescription(
+        Names1("archived"),
+        Descriptions(
+            TemplateDescription("_ is archived")
+        )
+    )
+    override val names = Companion.names
+
+    override fun build():RealObjectFilter<FArchivedContainer> {
+        return RealObjectFilter {obj ->
+            obj.isArchived
+        }
+    }
+
+    override fun createStr() = names.first()
+}
+
 data class BuildConfFilter(
     override val condition: ConditionAST<WBuildConf>
 ) : MultipleObjectsConditionFilter<FBuildConfContainer, WBuildConf>(),
