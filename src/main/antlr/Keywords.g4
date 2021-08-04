@@ -15,6 +15,7 @@ import java.util.*;
         putToKeywords(BuildConfTopLevelQuery.Companion.getNames(), QLangGrammarParser.BUILD_CONFIGURATION);
         putToKeywords(TemplateTopLevelQuery.Companion.getNames(), QLangGrammarParser.TEMPLATE);
         putToKeywords(VcsRootTopLevelQuery.Companion.getNames(), QLangGrammarParser.VCS_ROOT);
+        putToKeywords(MetaRunnerTopLevelQuery.Companion.getNames(), QLangGrammarParser.META_RUNNER);
 
         putToKeywords(IdFilter.Companion.getNames() , QLangGrammarParser.ID);
         putToKeywords(ArchivedFilter.Companion.getNames(), QLangGrammarParser.ARCHIVED);
@@ -52,7 +53,7 @@ import java.util.*;
 }
 
 tokens {
-       PROJECT, TEMPLATE, BUILD_CONFIGURATION, VCS_ROOT,
+       PROJECT, TEMPLATE, BUILD_CONFIGURATION, VCS_ROOT, META_RUNNER,
        ID, PARENT, TRIGGER, STEP, FEATURE, TYPE, PARAM, VAL,
        ENABLED, ANCESTOR, RULES, DEPENDENCY, ARTIFACT, SNAPSHOT,
        WITH_INHERITED, OPTION, CLEAN, REV_RULE, VCS_ENTRY, NAME,

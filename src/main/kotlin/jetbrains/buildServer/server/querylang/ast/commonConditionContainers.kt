@@ -96,6 +96,12 @@ interface VcsRootConditionContainer : ConditionContainer<WVcsRoot> {
     }
 }
 
+interface MetaRunnerConditionContainer : ConditionContainer<WMetaRunner> {
+    override fun evalFilterInner(filter: Filter<WMetaRunner>): EvalResult<WMetaRunner>? {
+        return null
+    }
+}
+
 interface TemplateConditionContainer : ConditionContainer<WTemplate> {
     override fun evalFilterInner(filter: Filter<WTemplate>): EvalResult<WTemplate>? {
         when (filter) {

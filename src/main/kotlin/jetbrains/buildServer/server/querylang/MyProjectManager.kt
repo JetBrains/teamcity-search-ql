@@ -1,5 +1,6 @@
 package jetbrains.buildServer.server.querylang
 
+import jetbrains.buildServer.runners.metaRunner.config.MetaRunners
 import jetbrains.buildServer.serverSide.BuildTypeTemplate
 import jetbrains.buildServer.serverSide.ProjectManager
 import jetbrains.buildServer.serverSide.SBuildType
@@ -48,16 +49,19 @@ class MyProjectManager(private val projectManager: ProjectManager): ProjectManag
 lateinit var myProjectManager: MyProjectManager
 lateinit var myParameterManager: ParameterTypeManager
 lateinit var mySecurityContext: SecurityContext
+lateinit var myMetaRunnersManager: MetaRunners
 
 class MyProjectManagerInit(
     val projectManager: ProjectManager,
     parameterManager: ParameterTypeManager,
-    securityContext: SecurityContext
+    securityContext: SecurityContext,
+    metaRunners: MetaRunners
 ) {
     init {
         myProjectManager = MyProjectManager(projectManager)
         myParameterManager = parameterManager
         mySecurityContext = securityContext
+        myMetaRunnersManager = metaRunners
     }
 }
 

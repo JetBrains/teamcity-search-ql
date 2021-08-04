@@ -3,6 +3,9 @@ package jetbrains.buildServer.server.querylang.tests
 import jetbrains.buildServer.artifacts.RevisionRule
 import jetbrains.buildServer.artifacts.RevisionRules
 import jetbrains.buildServer.buildTriggers.BuildTriggerDescriptor
+import jetbrains.buildServer.runners.metaRunner.config.MetaRunners
+import jetbrains.buildServer.runners.metaRunner.config.MetaSpec
+import jetbrains.buildServer.runners.metaRunner.config.impl.MetaRunnersImpl
 import jetbrains.buildServer.server.querylang.MyProjectManagerInit
 import jetbrains.buildServer.server.querylang.ast.FullQuery
 import jetbrains.buildServer.server.querylang.ast.NoneObjectFilter
@@ -66,7 +69,7 @@ abstract class BaseQueryLangTest : BaseServerTestCase() {
 
         eventListener = AutocompletionEventListener(taskQueue, projectManager, myFixture.eventDispatcher)
 
-        MyProjectManagerInit(projectManager, parameterTypeManager, myFixture.securityContext)
+        MyProjectManagerInit(projectManager, parameterTypeManager, myFixture.securityContext, MetaRunnersEmpty())
 
         eventListener.serverStartup()
     }
@@ -91,8 +94,8 @@ abstract class BaseQueryLangTest : BaseServerTestCase() {
         return autoCompl.complete(query)
     }
 
-    protected fun checkVars(query: String, expected: List<String>) {
-        val expect = expected.complSorted()
+    protected fun checkVars(query: String, expected: List<String>, complSort: Boolean = true) {
+        val expect = if (complSort) expected.complSorted() else expected
         val vars = getVars(query)
         assertEquals(expect, vars.map {it.show})
     }
@@ -558,5 +561,24 @@ abstract class BaseQueryLangTest : BaseServerTestCase() {
         fun end(): MutableIterator<Any> {
             return tests.toMutableList().iterator()
         }
+    }
+
+    class MetaRunnersEmpty : MetaRunners {
+        override fun getMetaSpecs(): MutableCollection<MetaSpec> {
+            return mutableListOf()
+        }
+
+        override fun getDeclaredSpecs(p0: SProject): MutableCollection<MetaSpec> {
+            return mutableListOf()
+        }
+
+        override fun findSpecByRunType(p0: String?): MetaSpec? {
+            return null
+        }
+
+        override fun getParameters(p0: String): MutableCollection<String> {
+            return mutableListOf()
+        }
+
     }
 }

@@ -1,13 +1,12 @@
 package jetbrains.buildServer.server.querylang.ast
 
 import jetbrains.buildServer.server.querylang.ast.wrappers.*
+import jetbrains.buildServer.server.querylang.myMetaRunnersManager
 import jetbrains.buildServer.server.querylang.myProjectManager
-import jetbrains.buildServer.server.querylang.ui.objects.BuildConfigurationResult
-import jetbrains.buildServer.server.querylang.ui.objects.TemplateResult
-import jetbrains.buildServer.server.querylang.ui.objects.ProjectResult
-import jetbrains.buildServer.server.querylang.ui.objects.VcsRootResult
 import jetbrains.buildServer.server.querylang.parser.QueryParser
 import jetbrains.buildServer.server.querylang.requests.QueryResult
+import jetbrains.buildServer.server.querylang.ui.objects.*
+import jetbrains.buildServer.serverSide.impl.ProjectEx
 
 private fun checkInterruptionStatus() {
     if (Thread.currentThread().isInterrupted) {
@@ -25,6 +24,7 @@ data class FullQuery(val queries: List<TopLevelQuery<*>>): MainQuery(), Printabl
                 is BuildConfTopLevelQuery -> query.eval().objects.map { BuildConfigurationResult(it)}
                 is TemplateTopLevelQuery -> query.eval().objects.map { TemplateResult(it) }
                 is VcsRootTopLevelQuery -> query.eval().objects.map { VcsRootResult(it) }
+                is MetaRunnerTopLevelQuery -> query.eval().objects.map { MetaRunnerResult(it) }
             }
         }
         return QueryResult(res.toMutableList())
@@ -173,5 +173,34 @@ data class VcsRootTopLevelQuery(
             )
             else
                 EvalResult(NoneObjectFilter(),res.objects)
+    }
+}
+
+data class MetaRunnerTopLevelQuery(
+    override val condition: ConditionAST<WMetaRunner>
+) : TopLevelQuery<WMetaRunner>(),
+    MetaRunnerConditionContainer
+{
+    companion object : ObjectDescription(
+        Names1("metaRunner"),
+        Descriptions(
+            FixedContextDescription("search meta runners")
+        )
+    )
+
+    override val names = Companion.names
+
+    override fun evalFrom(condition: ConditionAST<WMetaRunner>): EvalResult<WMetaRunner> {
+        val res = condition.eval()
+
+        return if (res.filter !is NoneObjectFilter)
+            EvalResult(NoneObjectFilter(),
+                myMetaRunnersManager.metaSpecs.filter {meta ->
+                    checkInterruptionStatus()
+                    meta.configLocation.project?.valueResolver?.let { vr -> res.filter.accepts(meta.wrap(vr)) } ?: false
+                }.mapNotNull { it.wrap(it.configLocation.project!!.valueResolver) } + res.objects
+            )
+        else
+            EvalResult(NoneObjectFilter(),res.objects)
     }
 }

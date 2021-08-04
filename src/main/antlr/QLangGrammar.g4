@@ -30,6 +30,7 @@ vcsRootKeyword : VCS_ROOT;
 buildConfKeword : BUILD_CONFIGURATION ;
 projectKeword : PROJECT ;
 templateKeyword : TEMPLATE;
+metaRunnerKeyword : META_RUNNER;
 
 partialQuery : condition ;
 
@@ -39,6 +40,7 @@ objectKeyword : projectKeword
               | templateKeyword
               | buildConfKeword
               | vcsRootKeyword
+              | metaRunnerKeyword
               ;
 
 conditionInSubproject : (('in' objectId)? 'with' condition | 'in' objectId) ;

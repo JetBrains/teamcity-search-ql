@@ -1,6 +1,7 @@
 package jetbrains.buildServer.server.querylang.tests.client
 
 import jetbrains.buildServer.artifacts.RevisionRules
+import jetbrains.buildServer.runners.metaRunner.config.impl.MetaRunnersImpl
 import jetbrains.buildServer.server.querylang.MyProjectManagerInit
 import jetbrains.buildServer.server.querylang.ui.objects.BuildConfigurationResult
 import jetbrains.buildServer.server.querylang.ui.objects.ProjectResult
@@ -76,7 +77,7 @@ class ClientTests: BaseQueryLangTest() {
         p5bt1.addParameter(SimpleParameter("path", "dabacabadaba"))
         myFixture.addDependency(p5bt1, p4bt1, true)
 
-        MyProjectManagerInit(projectManager, parameterTypeManager, myFixture.securityContext)
+        MyProjectManagerInit(projectManager, parameterTypeManager, myFixture.securityContext, MetaRunnersEmpty())
     }
 
     fun testSearchBuildConfigurationWithVcsTrigger() {

@@ -62,6 +62,7 @@ class Completer(val completionManager: CompletionManager? = null) {
                 acc.intersect(s)
             }.toList()
                 .filterBegins(word)
+                .autocomplSort()
                 .toCompletionResult(input, true, fullTrace)
         }
 
@@ -238,6 +239,11 @@ class Completer(val completionManager: CompletionManager? = null) {
 
     private fun List<StringInfo<String>>.autocomplSort(): List<StringInfo<String>> {
         return this.sortedWith(compareBy ({ it.str.length }, {it.str}))
+    }
+
+    @JvmName("autocomplSortString")
+    private fun List<String>.autocomplSort(): List<String> {
+        return this.sortedWith(compareBy ({ it.length }, {it}))
     }
 
     private fun String.dropw(word: String): String {

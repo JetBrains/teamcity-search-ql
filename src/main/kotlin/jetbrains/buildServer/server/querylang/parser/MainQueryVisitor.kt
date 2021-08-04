@@ -26,6 +26,9 @@ object MainQueryVisitor : QLangGrammarBaseVisitor<MainQuery>() {
                 is QLangGrammarParser.VcsRootKeywordContext -> {
                     VcsRootTopLevelQuery(ctx.conditionInSubproject().accept(ConditionVisitor(VcsRootTopLevelQuery::class)))
                 }
+                is QLangGrammarParser.MetaRunnerKeywordContext -> {
+                    MetaRunnerTopLevelQuery(ctx.conditionInSubproject().accept(ConditionVisitor(MetaRunnerTopLevelQuery::class)))
+                }
                 else -> throw IllegalStateException("Unknown keyword in search query")
             }
         }

@@ -36,6 +36,7 @@ class WTrigger(
 
 fun BuildRunnerDescriptor.wrap(bt: SBuildType) = WStep(this, bt.valueResolver, bt.isEnabled(this.id))
 fun BuildRunnerDescriptor.wrap(bt: BuildTypeTemplate) = WStep(this, bt.valueResolver, bt.isEnabled(this.id))
+fun BuildRunnerDescriptor.wrap(resolver: ValueResolver) = WStep(this, resolver, true)
 
 class WStep(
     sstep: BuildRunnerDescriptor,

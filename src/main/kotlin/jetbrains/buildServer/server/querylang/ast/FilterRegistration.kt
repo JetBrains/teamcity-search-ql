@@ -39,6 +39,7 @@ object FilterRegistration {
         registerConditionContainer(BuildConfTopLevelQuery::class)
         registerConditionContainer(TemplateTopLevelQuery::class)
         registerConditionContainer(VcsRootTopLevelQuery::class)
+        registerConditionContainer(MetaRunnerTopLevelQuery::class)
 
         registerFilter(EqualsStringFilter::class)
         registerFilter(PrefixStringFilter::class)
