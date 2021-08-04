@@ -13,11 +13,12 @@ ext {
             : "SNAPSHOT"
     teamcityVersion = project.hasProperty("TeamCityVersion") ? TeamCityVersion
             : "2020.1"
-    teamcityLibs = project.hasProperty("TeamCityLibs") ? TeamCityLibs
-            : "../../.idea_artifacts/web-deployment/WEB-INF/lib"
+    teamcityWebInf = project.hasProperty("TeamCityLibs") ? "$TeamCityLibs/../"
+            : "../../.idea_artifacts/web-deployment/WEB-INF"
+    teamcityLibs = "$teamcityWebInf/lib"
     teamcityTestLibs = project.hasProperty("TeamCityTestLibs") ? TeamCityTestLibs
             : "../../.idea_artifacts/dist_openapi_integration/tests"
-    metaRunnerLibs = "../../.idea_artifacts/server_plugin_meta_runner/meta-runner/server"
+    teamcityPluginLibs = "$teamcityWebInf/plugins/meta-runner/server"
 }
 
 group 'org.example'
@@ -39,7 +40,7 @@ dependencies {
 
     provided "org.jetbrains.teamcity:server-api:$rootProject.ext.teamcityVersion"
     provided fileTree(dir: "$rootProject.ext.teamcityLibs", include: ['*.jar'])
-    provided fileTree(dir: "$rootProject.ext.metaRunnerLibs", include: ['*.jar'])
+    provided fileTree(dir: "$rootProject.ext.teamcityPluginLibs", include: ['*.jar'])
     testImplementation fileTree(dir: "$rootProject.ext.teamcityTestLibs", include: ['*.jar'])
     testImplementation("org.testng:testng:6.8")
 }

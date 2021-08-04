@@ -137,6 +137,21 @@
                             </c:forEach>
                         </ul>
                     </c:if>
+
+                    <c:if test="${searchForm.hasMetaRunners()}">
+                        <h3>Meta-Runners:</h3>
+                        <ul style="list-style-type:none">
+                            <c:forEach items="${searchForm.resultMetaRunners}" var="metaRunner">
+                                <li>
+                                    <a href="${metaRunner.objUrl}">${metaRunner.showObj}</a>
+                                    <c:if test="${metaRunner.parentProjectUrl != null}">
+                                        in
+                                        <a href="${metaRunner.parentProjectUrl}">${metaRunner.showParent}</a>
+                                    </c:if>
+                                </li>
+                            </c:forEach>
+                        </ul>
+                    </c:if>
                 </c:otherwise>
             </c:choose>
             <c:if test="${searchForm.resultsDisplayed != searchForm.resultsTotal}">

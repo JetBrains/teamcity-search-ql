@@ -12,4 +12,7 @@
     </vendor>
   </info>
   <deployment use-separate-classloader="true" allow-runtime-reload="true" node-responsibilities-aware="true"/>
+  <dependencies>
+    <plugin name="metarunner"/>
+  </dependencies>
 </teamcity-plugin>
