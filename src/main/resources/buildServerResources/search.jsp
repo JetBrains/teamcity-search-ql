@@ -68,7 +68,7 @@
     <div>
         <c:choose>
         <c:when test="${searchForm.isWrongQuery()}">
-            <h3 style="color:red">${searchForm.getWrongQueryMessage()}</h3>
+            <h3 style="color:red"><c:out value="${searchForm.getWrongQueryMessage()}" /></h3>
         </c:when>
         <c:otherwise>
             <c:choose>
@@ -83,10 +83,10 @@
                         <ul style="list-style-type:none">
                             <c:forEach items="${searchForm.resultProjects}" var="project">
                                 <li>
-                                    <a href="${project.objUrl}">${project.showObj}</a>
+                                    <a href="${project.objUrl}"><c:out value="${project.showObj}" /></a>
                                     <c:if test="${project.parentProjectUrl != null}">
                                         in
-                                        <a href="${project.parentProjectUrl}">${project.showParent}</a>
+                                        <a href="${project.parentProjectUrl}"><c:out value="${project.showParent}" /></a>
                                     </c:if>
                                 </li>
                             </c:forEach>
@@ -98,10 +98,10 @@
                         <ul style="list-style-type:none">
                             <c:forEach items="${searchForm.resultBuildConfigurations}" var="buildConf">
                                 <li>
-                                    <a href="${buildConf.objUrl}">${buildConf.showObj}</a>
+                                    <a href="${buildConf.objUrl}"><c:out value="${buildConf.showObj}" /></a>
                                     <c:if test="${buildConf.parentProjectUrl != null}">
                                         in
-                                        <a href="${buildConf.parentProjectUrl}">${buildConf.showParent}</a>
+                                        <a href="${buildConf.parentProjectUrl}"><c:out value="${buildConf.showParent}" /></a>
                                     </c:if>
                                 </li>
                             </c:forEach>
@@ -113,10 +113,10 @@
                         <ul style="list-style-type:none">
                             <c:forEach items="${searchForm.resultTemplates}" var="temp">
                                 <li>
-                                    <a href="${temp.objUrl}">${temp.showObj}</a>
+                                    <a href="${temp.objUrl}"><c:out value="${temp.showObj}" /></a>
                                     <c:if test="${temp.parentProjectUrl != null}">
                                         in
-                                        <a href="${temp.parentProjectUrl}">${temp.showParent}</a>
+                                        <a href="${temp.parentProjectUrl}"><c:out value="${temp.showParent}" /></a>
                                     </c:if>
                                 </li>
                             </c:forEach>
@@ -128,10 +128,10 @@
                         <ul style="list-style-type:none">
                             <c:forEach items="${searchForm.resultVcsRoots}" var="vcs">
                                 <li>
-                                    <a href="${vcs.objUrl}">${vcs.showObj}</a>
+                                    <a href="${vcs.objUrl}"><c:out value="${vcs.showObj}" /></a>
                                     <c:if test="${vcs.parentProjectUrl != null}">
                                         in
-                                        <a href="${vcs.parentProjectUrl}">${vcs.showParent}</a>
+                                        <a href="${vcs.parentProjectUrl}"><c:out value="${vcs.showParent}" /></a>
                                     </c:if>
                                 </li>
                             </c:forEach>
@@ -143,10 +143,10 @@
                         <ul style="list-style-type:none">
                             <c:forEach items="${searchForm.resultMetaRunners}" var="metaRunner">
                                 <li>
-                                    <a href="${metaRunner.objUrl}">${metaRunner.showObj}</a>
+                                    <a href="${metaRunner.objUrl}"><c:out value="${metaRunner.showObj}" /></a>
                                     <c:if test="${metaRunner.parentProjectUrl != null}">
                                         in
-                                        <a href="${metaRunner.parentProjectUrl}">${metaRunner.showParent}</a>
+                                        <a href="${metaRunner.parentProjectUrl}"><c:out value="${metaRunner.showParent}" /></a>
                                     </c:if>
                                 </li>
                             </c:forEach>
