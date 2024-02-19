@@ -62,7 +62,7 @@
             />
         </span>
           <forms:filterButton/>
-        <div class="smallNote" style="margin-left: 6em; line-height: 1.5">Search projects, build configurations, templates, vcsRoots. You can find full docs <a href="https://github.com/JetBrains/teamcity-search-ql/blob/master/FOR_USERS.md">here</a> </div>
+        <div class="smallNote" style="margin-left: 6em; line-height: 1.5">Search projects, build configurations, templates, vcsRoots. You can find full docs <a target="_blank" href="https://github.com/JetBrains/teamcity-search-ql/blob/master/FOR_USERS.md">here</a> </div>
           <div class="clearfix"></div>
     </div>
     <div>
