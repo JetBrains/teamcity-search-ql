@@ -25,6 +25,12 @@ group 'org.example'
 version '1.0-SNAPSHOT'
 
 repositories {
+    if (project.hasProperty("maven.repo.local")) {
+        maven {
+            url project.property("maven.repo.local")
+        }
+    }
+
     mavenLocal()
     mavenCentral()
 }
