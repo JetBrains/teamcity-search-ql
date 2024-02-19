@@ -40,7 +40,7 @@ dependencies {
     provided "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
     antlr "org.antlr:antlr4:4.8"
     implementation "org.antlr:antlr4-runtime:4.8"
-    implementation "org.jetbrains.kotlin:kotlin-reflect:1.8.22"
+    provided "org.jetbrains.kotlin:kotlin-reflect:1.8.22"
     provided "org.jetbrains.kotlin:kotlin-test:1.8.22"
     implementation "org.reflections:reflections:0.9.12"
 
