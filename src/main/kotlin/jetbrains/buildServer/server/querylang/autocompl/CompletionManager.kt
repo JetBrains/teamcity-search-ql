@@ -101,6 +101,7 @@ class CompletionManager(
 
     private fun createNewIndexers() {
         lock.writeLock().lock()
+        try {
             map.clear()
             projectIdFinder = getSimpleFinder(true, disableIds)
             projectParamFinder = getParamFinder(true, disableAll)
@@ -134,7 +135,9 @@ class CompletionManager(
 
             artifactRulesFinder = getSimpleFinder(false, disableAll)
             artifactRevRuleFinder = getSimpleFinder(false, disableAll)
-        lock.writeLock().unlock()
+        } finally {
+            lock.writeLock().unlock()
+        }
     }
 
     private fun registerFinders() {
@@ -145,45 +148,49 @@ class CompletionManager(
         }
 
         lock.writeLock().lock()
-        registerFinder(projectIdFinder, ProjectFilter::class, IdFilter::class)
-        registerFinder(projectIdFinder, ParentFilter::class, IdFilter::class)
-        registerFinder(projectIdFinder, AncestorFilter::class, IdFilter::class)
-        registerFinder(triggerParamValueFinder, TriggerFilter::class, ParameterFilter::class)
-        registerFinder(stepParamValueFinder, StepFilter::class, ParameterFilter::class)
-        registerFinder(featureParamValueFinder, FeatureFilter::class, ParameterFilter::class)
-        registerFinder(buildConfIdFinder, BuildConfTopLevelQuery::class, IdFilter::class)
-        registerFinder(templateIdFinder, TemplateTopLevelQuery::class, IdFilter::class)
-        registerFinder(vcsRootIdFinder, VcsRootTopLevelQuery::class, IdFilter::class)
-        registerFinder(triggerTypeFinder, TriggerFilter::class, TypeFilter::class)
-        registerFinder(stepTypeFinder, StepFilter::class, TypeFilter::class)
-        registerFinder(featureTypeFinder, FeatureFilter::class, TypeFilter::class)
-        registerFinder(vcsRootTypeFinder, VcsRootTopLevelQuery::class, TypeFilter::class)
-        registerFinder(snapshotOptionFinder, SnapshotFilter::class, OptionFilter::class)
-        registerFinder(artifactRulesFinder, ArtifactFilter::class, RulesFilter::class)
-        registerFinder(artifactRevRuleFinder, ArtifactFilter::class, RevRuleFilter::class)
-        registerFinder(projectParamFinder, ProjectTopLevelQuery::class, ParameterFilter::class)
-        registerFinder(vcsParamFinder, VcsRootTopLevelQuery::class, ParameterFilter::class)
-        registerFinder(buildConfOptionFinder, BuildConfTopLevelQuery::class, OptionFilter::class)
-        registerFinder(templateOptionFinder, TemplateTopLevelQuery::class, OptionFilter::class)
-        registerFinder(buildConfParamFinder, BuildConfTopLevelQuery::class, ParameterFilter::class)
-        registerFinder(templateParamFinder, TemplateFilter::class, ParameterFilter::class)
-        registerFinder(buildConfIdFinder, DependencyFilter::class, IdFilter::class)
-        registerFinder(buildConfParamFinder, DependencyFilter::class, ParameterFilter::class)
-        registerFinder(buildConfOptionFinder, DependencyFilter::class, OptionFilter::class)
-        registerFinder(vcsRootIdFinder, VcsRootEntryFilter::class, IdFilter::class)
-        registerFinder(vcsRootTypeFinder, VcsRootEntryFilter::class, TypeFilter::class)
-        registerFinder(vcsParamFinder, VcsRootEntryFilter::class, ParameterFilter::class)
-        registerFinder(projectNameFinder, ProjectTopLevelQuery::class, NameFilter::class)
-        registerFinder(buildConfNameFinder, BuildConfTopLevelQuery::class, NameFilter::class)
-        registerFinder(templateNameFinder, TemplateTopLevelQuery::class, NameFilter::class)
-        registerFinder(vcsRootNameFinder, VcsRootTopLevelQuery::class, NameFilter::class)
-        lock.writeLock().unlock()
+        try {
+            registerFinder(projectIdFinder, ProjectFilter::class, IdFilter::class)
+            registerFinder(projectIdFinder, ParentFilter::class, IdFilter::class)
+            registerFinder(projectIdFinder, AncestorFilter::class, IdFilter::class)
+            registerFinder(triggerParamValueFinder, TriggerFilter::class, ParameterFilter::class)
+            registerFinder(stepParamValueFinder, StepFilter::class, ParameterFilter::class)
+            registerFinder(featureParamValueFinder, FeatureFilter::class, ParameterFilter::class)
+            registerFinder(buildConfIdFinder, BuildConfTopLevelQuery::class, IdFilter::class)
+            registerFinder(templateIdFinder, TemplateTopLevelQuery::class, IdFilter::class)
+            registerFinder(vcsRootIdFinder, VcsRootTopLevelQuery::class, IdFilter::class)
+            registerFinder(triggerTypeFinder, TriggerFilter::class, TypeFilter::class)
+            registerFinder(stepTypeFinder, StepFilter::class, TypeFilter::class)
+            registerFinder(featureTypeFinder, FeatureFilter::class, TypeFilter::class)
+            registerFinder(vcsRootTypeFinder, VcsRootTopLevelQuery::class, TypeFilter::class)
+            registerFinder(snapshotOptionFinder, SnapshotFilter::class, OptionFilter::class)
+            registerFinder(artifactRulesFinder, ArtifactFilter::class, RulesFilter::class)
+            registerFinder(artifactRevRuleFinder, ArtifactFilter::class, RevRuleFilter::class)
+            registerFinder(projectParamFinder, ProjectTopLevelQuery::class, ParameterFilter::class)
+            registerFinder(vcsParamFinder, VcsRootTopLevelQuery::class, ParameterFilter::class)
+            registerFinder(buildConfOptionFinder, BuildConfTopLevelQuery::class, OptionFilter::class)
+            registerFinder(templateOptionFinder, TemplateTopLevelQuery::class, OptionFilter::class)
+            registerFinder(buildConfParamFinder, BuildConfTopLevelQuery::class, ParameterFilter::class)
+            registerFinder(templateParamFinder, TemplateFilter::class, ParameterFilter::class)
+            registerFinder(buildConfIdFinder, DependencyFilter::class, IdFilter::class)
+            registerFinder(buildConfParamFinder, DependencyFilter::class, ParameterFilter::class)
+            registerFinder(buildConfOptionFinder, DependencyFilter::class, OptionFilter::class)
+            registerFinder(vcsRootIdFinder, VcsRootEntryFilter::class, IdFilter::class)
+            registerFinder(vcsRootTypeFinder, VcsRootEntryFilter::class, TypeFilter::class)
+            registerFinder(vcsParamFinder, VcsRootEntryFilter::class, ParameterFilter::class)
+            registerFinder(projectNameFinder, ProjectTopLevelQuery::class, NameFilter::class)
+            registerFinder(buildConfNameFinder, BuildConfTopLevelQuery::class, NameFilter::class)
+            registerFinder(templateNameFinder, TemplateTopLevelQuery::class, NameFilter::class)
+            registerFinder(vcsRootNameFinder, VcsRootTopLevelQuery::class, NameFilter::class)
+        } finally {
+            lock.writeLock().unlock()
+        }
     }
 
     private fun updateParams(): Boolean {
         var isUpdated = false
 
         lock.writeLock().lock()
+        try {
             val disable = TeamCityProperties.getProperty(DISABLE_AUTOCOMPLETION_NAME).split(",").map {it.trim()}
             disable.contains("all").let {
                 if (it != disableAll) isUpdated = true
@@ -209,7 +216,9 @@ class CompletionManager(
                 if (it != valueCntLimit) isUpdated = true
                 valueCntLimit = it
             }
-        lock.writeLock().unlock()
+        } finally {
+            lock.writeLock().unlock()
+        }
 
         return isUpdated
     }
@@ -217,17 +226,23 @@ class CompletionManager(
     val nodesTotal: Long
         get() = run {
             lock.readLock().lock()
-            val res = map.values.fold(0L) {acc, sf -> acc + sf.nodesTotal}
-            lock.readLock().unlock()
-            return res
+            try {
+                val res = map.values.fold(0L) {acc, sf -> acc + sf.nodesTotal}
+                return res
+            } finally {
+                lock.readLock().unlock()
+            }
         }
 
     val symbolsTotal: Long
         get() = run {
             lock.readLock().lock()
-            val res = map.values.fold(0L) { acc, sf -> acc + sf.symbolsTotal }
-            lock.readLock().unlock()
-            return res
+            try {
+                val res = map.values.fold(0L) { acc, sf -> acc + sf.symbolsTotal }
+                return res
+            } finally {
+                lock.readLock().unlock()
+            }
         }
 
 
@@ -253,136 +268,151 @@ class CompletionManager(
 
     fun completeString(s: String, filterType: String, limit: Int): List<StringInfo<String>> {
         lock.readLock().lock()
-        val res = map[filterType]?.completeString(s, limit) ?: listOf()
-        lock.readLock().unlock()
-        return res
+        try {
+            val res = map[filterType]?.completeString(s, limit) ?: listOf()
+            return res
+        } finally {
+            lock.readLock().unlock()
+        }
     }
 
     fun updateProject(project: SProject) {
         lock.readLock().lock()
-        projectIdFinder.addString(project.externalId)
-        projectNameFinder.addString(project.name)
+        try {
+            projectIdFinder.addString(project.externalId)
+            projectNameFinder.addString(project.name)
 
-        project.ownFeatures.forEach {feat ->
-            featureTypeFinder.addString(feat.type)
-            feat.parameters.forEach { (name, value) ->
-                featureParamValueFinder.addParam(name, value)
+            project.ownFeatures.forEach {feat ->
+                featureTypeFinder.addString(feat.type)
+                feat.parameters.forEach { (name, value) ->
+                    featureParamValueFinder.addParam(name, value)
+                }
             }
-        }
 
-        project.ownParametersCollection.forEach {
-            val par = WParam(it)
-            if (par.value != "") {
-                projectParamFinder.addParam(par.name, par.value)
+            project.ownParametersCollection.forEach {
+                val par = WParam(it)
+                if (par.value != "") {
+                    projectParamFinder.addParam(par.name, par.value)
+                }
             }
+        } finally {
+            lock.readLock().unlock()
         }
-        lock.readLock().unlock()
     }
 
     fun updateBuildType(bt: SBuildType) {
         lock.readLock().lock()
-        buildConfIdFinder.addString(bt.externalId)
-        buildConfNameFinder.addString(bt.name)
-        bt.buildTriggersCollection.forEach { trig ->
-            triggerTypeFinder.addString(trig.type, trig.buildTriggerService.displayName)
-            trig.parameters.forEach {name, value ->
-                triggerParamValueFinder.addParam(name, value)
+        try {
+            buildConfIdFinder.addString(bt.externalId)
+            buildConfNameFinder.addString(bt.name)
+            bt.buildTriggersCollection.forEach { trig ->
+                triggerTypeFinder.addString(trig.type, trig.buildTriggerService.displayName)
+                trig.parameters.forEach {name, value ->
+                    triggerParamValueFinder.addParam(name, value)
+                }
             }
-        }
-        bt.buildRunners.forEach {step ->
-            stepTypeFinder.addString(step.type, step.runType.displayName)
-            step.parameters.forEach {name, value ->
-                stepParamValueFinder.addParam(name, value)
+            bt.buildRunners.forEach {step ->
+                stepTypeFinder.addString(step.type, step.runType.displayName)
+                step.parameters.forEach {name, value ->
+                    stepParamValueFinder.addParam(name, value)
+                }
             }
-        }
-        bt.buildFeatures.forEach { feat ->
-            featureTypeFinder.addString(feat.type, feat.buildFeature.displayName)
-            feat.parameters.forEach {name, value ->
-                featureParamValueFinder.addParam(name, value)
+            bt.buildFeatures.forEach { feat ->
+                featureTypeFinder.addString(feat.type, feat.buildFeature.displayName)
+                feat.parameters.forEach {name, value ->
+                    featureParamValueFinder.addParam(name, value)
+                }
             }
-        }
 
-        bt.dependencies.forEach { dep ->
-            dep.ownOptions.forEach {opt ->
-                snapshotOptionFinder.addParam(opt.key, dep.getOption(opt).toString())
+            bt.dependencies.forEach { dep ->
+                dep.ownOptions.forEach {opt ->
+                    snapshotOptionFinder.addParam(opt.key, dep.getOption(opt).toString())
+                }
             }
-        }
 
-        bt.artifactDependencies.forEach {art ->
-            artifactRulesFinder.addString(art.sourcePaths)
-            artifactRevRuleFinder.addString(art.revisionRule.name)
-        }
-
-        DefaultOptions(bt).getOptions().forEach { opt ->
-            buildConfOptionFinder.addParam(opt.first, opt.second)
-        }
-
-        bt.ownParametersCollection.forEach {
-            val par = WParam(it)
-            if (par.value != "") {
-                buildConfParamFinder.addParam(par.name, par.value)
+            bt.artifactDependencies.forEach {art ->
+                artifactRulesFinder.addString(art.sourcePaths)
+                artifactRevRuleFinder.addString(art.revisionRule.name)
             }
+
+            DefaultOptions(bt).getOptions().forEach { opt ->
+                buildConfOptionFinder.addParam(opt.first, opt.second)
+            }
+
+            bt.ownParametersCollection.forEach {
+                val par = WParam(it)
+                if (par.value != "") {
+                    buildConfParamFinder.addParam(par.name, par.value)
+                }
+            }
+        } finally {
+            lock.readLock().unlock()
         }
-        lock.readLock().unlock()
     }
 
     fun updateTemplate(temp: BuildTypeTemplate) {
         lock.readLock().lock()
-        templateIdFinder.addString(temp.externalId)
-        templateNameFinder.addString(temp.name)
-        temp.buildTriggersCollection.forEach { trig ->
-            triggerTypeFinder.addString(trig.type, trig.buildTriggerService.displayName)
-            trig.parameters.forEach {name, value ->
-                triggerParamValueFinder.addParam(name, value)
+        try {
+            templateIdFinder.addString(temp.externalId)
+            templateNameFinder.addString(temp.name)
+            temp.buildTriggersCollection.forEach { trig ->
+                triggerTypeFinder.addString(trig.type, trig.buildTriggerService.displayName)
+                trig.parameters.forEach {name, value ->
+                    triggerParamValueFinder.addParam(name, value)
+                }
             }
-        }
-        temp.buildRunners.forEach {step ->
-            stepTypeFinder.addString(step.type, step.runType.displayName)
-            step.parameters.forEach {name, value ->
-                stepParamValueFinder.addParam(name, value)
+            temp.buildRunners.forEach {step ->
+                stepTypeFinder.addString(step.type, step.runType.displayName)
+                step.parameters.forEach {name, value ->
+                    stepParamValueFinder.addParam(name, value)
+                }
             }
-        }
-        temp.buildFeatures.forEach { feat ->
-            featureTypeFinder.addString(feat.type, feat.buildFeature.displayName)
-            feat.parameters.forEach {name, value ->
-                featureParamValueFinder.addParam(name, value)
+            temp.buildFeatures.forEach { feat ->
+                featureTypeFinder.addString(feat.type, feat.buildFeature.displayName)
+                feat.parameters.forEach {name, value ->
+                    featureParamValueFinder.addParam(name, value)
+                }
             }
-        }
 
-        temp.dependencies.forEach { dep ->
-            DefaultOptions(dep).getOptions().forEach { opt ->
-                snapshotOptionFinder.addParam(opt.first, opt.second)
+            temp.dependencies.forEach { dep ->
+                DefaultOptions(dep).getOptions().forEach { opt ->
+                    snapshotOptionFinder.addParam(opt.first, opt.second)
+                }
             }
-        }
 
-        temp.artifactDependencies.forEach { art ->
-            artifactRulesFinder.addString(art.sourcePaths)
-            artifactRevRuleFinder.addString(art.revisionRule.name)
-        }
-
-        DefaultOptions(temp).getOptions().forEach { opt ->
-            templateOptionFinder.addParam(opt.first, opt.second)
-        }
-
-        temp.ownParametersCollection.forEach {
-            val par = WParam(it)
-            if (par.value != "") {
-                templateParamFinder.addParam(par.name, par.value)
+            temp.artifactDependencies.forEach { art ->
+                artifactRulesFinder.addString(art.sourcePaths)
+                artifactRevRuleFinder.addString(art.revisionRule.name)
             }
+
+            DefaultOptions(temp).getOptions().forEach { opt ->
+                templateOptionFinder.addParam(opt.first, opt.second)
+            }
+
+            temp.ownParametersCollection.forEach {
+                val par = WParam(it)
+                if (par.value != "") {
+                    templateParamFinder.addParam(par.name, par.value)
+                }
+            }
+        } finally {
+            lock.readLock().unlock()
         }
-        lock.readLock().unlock()
     }
 
     fun updateVcsRoot(vcs: SVcsRoot) {
         lock.readLock().lock()
-        vcsRootIdFinder.addString(vcs.externalId)
-        vcsRootTypeFinder.addString(vcs.vcsName)
-        vcsRootNameFinder.addString(vcs.name)
+        try {
+            vcsRootIdFinder.addString(vcs.externalId)
+            vcsRootTypeFinder.addString(vcs.vcsName)
+            vcsRootNameFinder.addString(vcs.name)
 
-        vcs.properties.forEach {(name, value) ->
-            vcsParamFinder.addParam(name, value)
+            vcs.properties.forEach {(name, value) ->
+                vcsParamFinder.addParam(name, value)
+            }
+        } finally {
+            lock.readLock().unlock()
         }
-        lock.readLock().unlock()
     }
 
     fun getSimpleFinder(isSystemAdminOnly: Boolean, disabled: Boolean): SimpleStringFinder<String> {
