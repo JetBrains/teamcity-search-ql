@@ -3,7 +3,6 @@ package jetbrains.buildServer.server.querylang.autocompl
 import jetbrains.buildServer.serverSide.BuildTypeTemplate
 import jetbrains.buildServer.serverSide.SBuildType
 import jetbrains.buildServer.serverSide.SProject
-import jetbrains.buildServer.serverSide.ServerListener
 import jetbrains.buildServer.util.ThreadUtil
 import jetbrains.buildServer.vcs.SVcsRoot
 import java.util.concurrent.Executors
@@ -23,12 +22,14 @@ class TaskQueue(
     fun init() {
         queue.clear()
         scheduledExecutor.scheduleAtFixedRate(
-            { update() },
+            {
+                compl.indexAllOnce()
+                update()
+            },
             initialDelay,
             updatePeriod,
             tu
         )
-        compl.indexAll()
     }
 
 

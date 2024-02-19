@@ -7,7 +7,6 @@ import jetbrains.buildServer.serverSide.ServerListener
 import jetbrains.buildServer.serverSide.impl.BaseServerTestCase
 import jetbrains.buildServer.util.EventDispatcher
 import org.testng.annotations.BeforeClass
-import org.testng.annotations.BeforeMethod
 import org.testng.annotations.Test
 
 @Test
@@ -47,7 +46,7 @@ class AutocompletionTests : BaseServerTestCase() {
         p5_bt1.addBuildTrigger("project", mapOf(Pair("param", "vcsRoot")))
 
         val complm = CompletionManager(myFixture.projectManager, myFixture.securityContext, myFixture.eventDispatcher as EventDispatcher<ServerListener>)
-        complm.indexAll()
+        complm.indexAllOnce()
         val compl = Completer(complm)
         autoCompl = AutoCompletion(myFixture.projectManager, compl)
     }

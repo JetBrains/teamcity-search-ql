@@ -22,7 +22,7 @@ class CompletionManagerFeatureParamTests : BaseServerTestCase() {
         temp1.addBuildFeature("vcsTrigger", mapOf(Pair("path", "abd"), Pair("abc", "bcd")))
 
         compl = CompletionManager(myFixture.projectManager, myFixture.securityContext, myFixture.eventDispatcher as EventDispatcher<ServerListener>)
-        compl.indexAll()
+        compl.indexAllOnce()
     }
 
     

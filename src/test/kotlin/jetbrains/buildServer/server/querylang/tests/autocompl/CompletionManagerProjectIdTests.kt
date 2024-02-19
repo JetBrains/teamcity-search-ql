@@ -26,7 +26,7 @@ internal class CompletionManagerProjectIdTests : BaseServerTestCase() {
         val project7 = myFixture.createProject("Base_Project2_Project4_Project7", "Base_Project2_Project4_Project7", project4)
 
         compl = CompletionManager(myFixture.projectManager, myFixture.securityContext, myFixture.eventDispatcher as EventDispatcher<ServerListener>)
-        compl.indexAll()
+        compl.indexAllOnce()
     }
 
     @Test

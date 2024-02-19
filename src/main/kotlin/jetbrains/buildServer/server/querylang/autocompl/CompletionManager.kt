@@ -76,6 +76,8 @@ class CompletionManager(
     private lateinit var artifactRulesFinder: SimpleStringFinder<String>
     private lateinit var artifactRevRuleFinder: SimpleStringFinder<String>
 
+    private val myIndexInitialized = AtomicBoolean(false)
+
     init {
         serverDispatcher.addListener(this)
 
@@ -89,7 +91,7 @@ class CompletionManager(
                     createNewIndexers()
                     registerFinders()
                     if (!disableAll) {
-                        indexAll()
+                        indexAllOnce()
                     }
                 }
             },
@@ -259,11 +261,23 @@ class CompletionManager(
         }
     }
 
-    fun indexAll() {
-        projectManager.projects.forEach { updateProject(it) }
-        projectManager.allBuildTypes.forEach { updateBuildType(it) }
-        projectManager.allTemplates.forEach { updateTemplate(it) }
-        projectManager.allVcsRoots.forEach { updateVcsRoot(it) }
+    fun resetIndexInitialized() {
+        myIndexInitialized.set(false)
+    }
+
+    fun indexAllOnce() {
+        if (myIndexInitialized.get()) return
+
+        lock.writeLock().lock()
+        try {
+            projectManager.projects.forEach { updateProject(it) }
+            projectManager.allBuildTypes.forEach { updateBuildType(it) }
+            projectManager.allTemplates.forEach { updateTemplate(it) }
+            projectManager.allVcsRoots.forEach { updateVcsRoot(it) }
+            myIndexInitialized.set(true)
+        } finally {
+            lock.writeLock().unlock()
+        }
     }
 
     fun completeString(s: String, filterType: String, limit: Int): List<StringInfo<String>> {

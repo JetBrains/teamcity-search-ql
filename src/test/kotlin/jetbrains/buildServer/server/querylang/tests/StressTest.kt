@@ -31,7 +31,7 @@ class StressTest : BaseQueryLangTest() {
         createDependencies()
 
         val time = measureTimeMillis {
-            complm.indexAll()
+            complm.indexAllOnce()
         }
         println("Indexing finished in ${time} milliseconds")
         println("Symbols total: ${complm.symbolsTotal}")

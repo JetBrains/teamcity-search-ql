@@ -23,7 +23,7 @@ class CompletionManagerStepParamTests : BaseServerTestCase() {
 
         compl = CompletionManager(myFixture.projectManager, myFixture.securityContext, myFixture.eventDispatcher as EventDispatcher<ServerListener>)
 
-        compl.indexAll()
+        compl.indexAllOnce()
     }
 
     fun testParamNameCompletion() {

@@ -5,7 +5,6 @@ import jetbrains.buildServer.artifacts.RevisionRules
 import jetbrains.buildServer.buildTriggers.BuildTriggerDescriptor
 import jetbrains.buildServer.runners.metaRunner.config.MetaRunners
 import jetbrains.buildServer.runners.metaRunner.config.MetaSpec
-import jetbrains.buildServer.runners.metaRunner.config.impl.MetaRunnersImpl
 import jetbrains.buildServer.server.querylang.MyProjectManagerInit
 import jetbrains.buildServer.server.querylang.ast.FullQuery
 import jetbrains.buildServer.server.querylang.ast.NoneObjectFilter
@@ -49,7 +48,8 @@ abstract class BaseQueryLangTest : BaseServerTestCase() {
     protected val indexingRateMillis: Long = 20
 
     fun waitForIndexing() {
-        complm.indexAll()
+        complm.resetIndexInitialized()
+        complm.indexAllOnce()
     }
 
 
@@ -572,11 +572,11 @@ abstract class BaseQueryLangTest : BaseServerTestCase() {
             return mutableListOf()
         }
 
-        override fun findSpecByRunType(p0: String?): MetaSpec? {
+        override fun findSpecByRunType(p0: SProject?, p1: String?): MetaSpec? {
             return null
         }
 
-        override fun getParameters(p0: String): MutableCollection<String> {
+        override fun getParameters(p0: SProject, p1: String): MutableCollection<String> {
             return mutableListOf()
         }
 
