@@ -23,8 +23,12 @@ Currently it supports searching 4 types of entities: projects, build configurati
 - `find project with configuration (feature type pullRequests or vcs param branchSpec = *pull*)`
     
     > find projects that contain build configurations with either Pull Requests build feature configured
-      or a VCS root with a branch specification matching certain pattern attached. 
-                                                                                                    
+      or a VCS root with a branch specification matching certain pattern attached.
+
+- `find configuration with step[all] type not sonar-plugin`
+
+    > find configurations that don't contain any use of the Sonar runner 
+                                                                                                     
 # More information
 
 Source code: https://github.com/JetBrains/teamcity-search-ql
