@@ -27,7 +27,9 @@ Currently it supports searching 4 types of entities: projects, build configurati
 
 - `find configuration with step[all] type not sonar-plugin`
 
-    > find configurations that don't contain any use of the Sonar runner 
+    > find configurations that don't contain any use of the Sonar runner
+
+[More examples and detailed syntax](https://github.com/JetBrains/teamcity-search-ql/blob/master/FOR_USERS.md)
                                                                                                      
 # More information
 
