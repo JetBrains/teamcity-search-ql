@@ -13,6 +13,6 @@
   </info>
   <deployment use-separate-classloader="true" allow-runtime-reload="true" node-responsibilities-aware="true"/>
   <dependencies>
-    <plugin name="metarunner"/>
+    <plugin name="recipes"/>
   </dependencies>
 </teamcity-plugin>

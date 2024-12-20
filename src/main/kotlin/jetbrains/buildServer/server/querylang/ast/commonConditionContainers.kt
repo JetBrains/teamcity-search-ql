@@ -96,8 +96,8 @@ interface VcsRootConditionContainer : ConditionContainer<WVcsRoot> {
     }
 }
 
-interface MetaRunnerConditionContainer : ConditionContainer<WMetaRunner> {
-    override fun evalFilterInner(filter: Filter<WMetaRunner>): EvalResult<WMetaRunner>? {
+interface PrivateRecipeConditionContainer : ConditionContainer<WPrivateRecipe> {
+    override fun evalFilterInner(filter: Filter<WPrivateRecipe>): EvalResult<WPrivateRecipe>? {
         return null
     }
 }

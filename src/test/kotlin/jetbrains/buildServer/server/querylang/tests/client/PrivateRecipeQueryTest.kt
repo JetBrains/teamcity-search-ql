@@ -7,7 +7,7 @@ import org.testng.annotations.DataProvider
 import org.testng.annotations.Test
 import kotlin.test.assertFailsWith
 
-class MetaRunnerQueryTest : BaseQueryLangTest() {
+class PrivateRecipeQueryTest : BaseQueryLangTest() {
 
     @BeforeMethod
     override fun setUp() {
@@ -22,28 +22,28 @@ class MetaRunnerQueryTest : BaseQueryLangTest() {
 
     @DataProvider(name = "data")
     fun dataProvider() = TestDataProvider()
-        .addCase("find metaRunner with id intellij*")
-        .addCase("find metaRunner with step type ABC")
-        .addCase("find metaRunner with name Runner")
-        .addCase("find metaRunner with param path=abc")
+        .addCase("find privateRecipe with id intellij*")
+        .addCase("find privateRecipe with step type ABC")
+        .addCase("find privateRecipe with name Runner")
+        .addCase("find privateRecipe with param path=abc")
         .end()
 
     @DataProvider(name = "compl")
     fun complData() = TestDataProvider()
         .addComplCase(
             "find me",
-            "metaRunner"
+            "privateRecipe"
         )
         .addComplCase(
-            "find metaRunner with n",
+            "find privateRecipe with n",
             "name"
         )
         .addComplCase(
-            "find metaRunner with i",
+            "find privateRecipe with i",
             "id"
         )
         .addComplCase(
-            "find metaRunner with ",
+            "find privateRecipe with ",
             "id",
             "name",
             "param",

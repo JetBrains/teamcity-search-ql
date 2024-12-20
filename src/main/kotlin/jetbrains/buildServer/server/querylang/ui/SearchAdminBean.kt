@@ -33,13 +33,13 @@ class SearchAdminBean(
     val resultBuildConfigurations = mutableListOf<ResultLine>()
     val resultTemplates = mutableListOf<ResultLine>()
     val resultVcsRoots = mutableListOf<ResultLine>()
-    val resultMetaRunners = mutableListOf<ResultLine>()
+    val resultPrivateRecipes = mutableListOf<ResultLine>()
 
     private val PROJECT_URL_PREFIX = "editProject.html?projectId="
     private val BUILD_CONF_URL_PREFIX = "editBuild.html?id=buildType:"
     private val BUILD_TEMPLATE_URL_PREFIX = "editBuild.html?id=template:"
     private val VCS_ROOT_URL_PREFIX = "editVcsRoot.html?vcsRootId="
-    private val META_RUNNER_URL_PREFIX = "editProject.html?tab=metaRunner&editRunnerId="
+    private val PRIVATE_RECIPE_URL_PREFIX = "editProject.html?tab=recipe&editRecipeId="
 
     fun getQuery(): String? {
         return searchAdminForm.query
@@ -57,7 +57,7 @@ class SearchAdminBean(
                 is BuildConfigurationResult -> addBuildConf(elem)
                 is TemplateResult -> addTemplate(elem)
                 is VcsRootResult -> addVcsRoot(elem)
-                is MetaRunnerResult -> addMetaRunner(elem)
+                is PrivateRecipeResult -> addPrivateRecipe(elem)
             }
         }
     }
@@ -67,7 +67,7 @@ class SearchAdminBean(
                 resultBuildConfigurations.isEmpty() &&
                 resultTemplates.isEmpty() &&
                 resultVcsRoots.isEmpty() &&
-                resultMetaRunners.isEmpty()
+                resultPrivateRecipes.isEmpty()
     }
 
     fun isWrongQuery() = wrongQueryMessage != null
@@ -82,7 +82,7 @@ class SearchAdminBean(
     fun hasBuildConfs() = resultBuildConfigurations.isNotEmpty()
     fun hasTemplates() = resultTemplates.isNotEmpty()
     fun hasVcsRoots() = resultVcsRoots.isNotEmpty()
-    fun hasMetaRunners() = resultMetaRunners.isNotEmpty()
+    fun hasPrivateRecipes() = resultPrivateRecipes.isNotEmpty()
 
     fun notAllResultsLoaded() = resultsDisplayed != resultsTotal
 
@@ -111,8 +111,8 @@ class SearchAdminBean(
         resultVcsRoots.add(getResLine(resObj, VCS_ROOT_URL_PREFIX, "&action=editVcsRoot"))
     }
 
-    private fun addMetaRunner(resObj: TeamCityObjectResult<WMetaRunner>) {
-        resultMetaRunners.add(getResLine(resObj, META_RUNNER_URL_PREFIX, "&projectId=${resObj.project?.id}"))
+    private fun addPrivateRecipe(resObj: TeamCityObjectResult<WPrivateRecipe>) {
+        resultPrivateRecipes.add(getResLine(resObj, PRIVATE_RECIPE_URL_PREFIX, "&projectId=${resObj.project?.id}"))
     }
 
     private fun getResLine(resObj: TeamCityObjectResult<*>, prefix: String, suffix: String = ""): ResultLine {

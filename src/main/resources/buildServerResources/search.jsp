@@ -138,15 +138,15 @@
                         </ul>
                     </c:if>
 
-                    <c:if test="${searchForm.hasMetaRunners()}">
-                        <h3>Meta-Runners:</h3>
+                    <c:if test="${searchForm.hasPrivateRecipes()}">
+                        <h3>Private Recipes:</h3>
                         <ul style="list-style-type:none">
-                            <c:forEach items="${searchForm.resultMetaRunners}" var="metaRunner">
+                            <c:forEach items="${searchForm.resultPrivateRecipes}" var="privateRecipe">
                                 <li>
-                                    <a href="${metaRunner.objUrl}"><c:out value="${metaRunner.showObj}" /></a>
-                                    <c:if test="${metaRunner.parentProjectUrl != null}">
+                                    <a href="${privateRecipe.objUrl}"><c:out value="${privateRecipe.showObj}" /></a>
+                                    <c:if test="${privateRecipe.parentProjectUrl != null}">
                                         in
-                                        <a href="${metaRunner.parentProjectUrl}"><c:out value="${metaRunner.showParent}" /></a>
+                                        <a href="${privateRecipe.parentProjectUrl}"><c:out value="${privateRecipe.showParent}" /></a>
                                     </c:if>
                                 </li>
                             </c:forEach>

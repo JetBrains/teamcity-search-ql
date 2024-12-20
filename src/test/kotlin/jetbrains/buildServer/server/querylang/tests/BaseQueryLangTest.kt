@@ -3,8 +3,8 @@ package jetbrains.buildServer.server.querylang.tests
 import jetbrains.buildServer.artifacts.RevisionRule
 import jetbrains.buildServer.artifacts.RevisionRules
 import jetbrains.buildServer.buildTriggers.BuildTriggerDescriptor
-import jetbrains.buildServer.runners.metaRunner.config.MetaRunners
-import jetbrains.buildServer.runners.metaRunner.config.MetaSpec
+import jetbrains.buildServer.runners.recipes._private.PrivateRecipeRegistry
+import jetbrains.buildServer.runners.recipes._private.spec.PrivateRecipeSpec
 import jetbrains.buildServer.server.querylang.MyProjectManagerInit
 import jetbrains.buildServer.server.querylang.ast.FullQuery
 import jetbrains.buildServer.server.querylang.ast.NoneObjectFilter
@@ -69,7 +69,7 @@ abstract class BaseQueryLangTest : BaseServerTestCase() {
 
         eventListener = AutocompletionEventListener(taskQueue, projectManager, myFixture.eventDispatcher)
 
-        MyProjectManagerInit(projectManager, parameterTypeManager, myFixture.securityContext, MetaRunnersEmpty())
+        MyProjectManagerInit(projectManager, parameterTypeManager, myFixture.securityContext, PrivateRecipesEmpty())
 
         eventListener.serverStartup()
     }
@@ -563,16 +563,16 @@ abstract class BaseQueryLangTest : BaseServerTestCase() {
         }
     }
 
-    class MetaRunnersEmpty : MetaRunners {
-        override fun getMetaSpecs(): MutableCollection<MetaSpec> {
+    class PrivateRecipesEmpty : PrivateRecipeRegistry {
+        override fun getRecipeSpecs(): MutableCollection<PrivateRecipeSpec> {
             return mutableListOf()
         }
 
-        override fun getDeclaredSpecs(p0: SProject): MutableCollection<MetaSpec> {
+        override fun getDeclaredSpecs(p0: SProject): MutableCollection<PrivateRecipeSpec> {
             return mutableListOf()
         }
 
-        override fun findSpecByRunType(p0: SProject?, p1: String?): MetaSpec? {
+        override fun findSpecByRunType(p0: SProject?, p1: String?): PrivateRecipeSpec? {
             return null
         }
 

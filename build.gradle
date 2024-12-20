@@ -12,13 +12,13 @@ ext {
     teamcityPluginVersion = project.hasProperty("PluginVersion") ? PluginVersion
             : "SNAPSHOT"
     teamcityVersion = project.hasProperty("TeamCityVersion") ? TeamCityVersion
-            : "2023.11"
+            : "2025.03-SNAPSHOT"
     teamcityWebInf = project.hasProperty("TeamCityLibs") ? TeamCityLibs
             : "../../.idea_artifacts/web-deployment/WEB-INF"
     teamcityLibs = "$teamcityWebInf/lib"
     teamcityTestLibs = project.hasProperty("TeamCityTestLibs") ? TeamCityTestLibs
             : "../../.idea_artifacts/dist_openapi_integration/tests"
-    teamcityPluginLibs = "$teamcityWebInf/plugins/metarunner/server"
+    teamcityPluginLibs = "$teamcityWebInf/plugins/recipes/server"
 }
 
 group 'org.example'
@@ -73,6 +73,7 @@ compileTestKotlin {
 
 teamcity {
     version = teamcityVersion
+    allowSnapshotVersions = true
     server {
         descriptor = file("teamcity-plugin.xml")
         tokens = [Version: teamcityPluginVersion]

@@ -1,13 +1,12 @@
 package jetbrains.buildServer.server.querylang
 
-import jetbrains.buildServer.runners.metaRunner.config.MetaRunners
+import jetbrains.buildServer.runners.recipes._private.PrivateRecipeRegistry
 import jetbrains.buildServer.serverSide.BuildTypeTemplate
 import jetbrains.buildServer.serverSide.ProjectManager
 import jetbrains.buildServer.serverSide.SBuildType
 import jetbrains.buildServer.serverSide.SProject
 import jetbrains.buildServer.vcs.SVcsRoot
 import jetbrains.buildServer.serverSide.auth.AccessDeniedException
-import jetbrains.buildServer.serverSide.auth.AuthorityHolder
 import jetbrains.buildServer.serverSide.auth.SecurityContext
 import jetbrains.buildServer.serverSide.parameters.types.ParameterTypeManager
 
@@ -49,19 +48,19 @@ class MyProjectManager(private val projectManager: ProjectManager): ProjectManag
 lateinit var myProjectManager: MyProjectManager
 lateinit var myParameterManager: ParameterTypeManager
 lateinit var mySecurityContext: SecurityContext
-lateinit var myMetaRunnersManager: MetaRunners
+lateinit var myPrivateRecipesManager: PrivateRecipeRegistry
 
 class MyProjectManagerInit(
     val projectManager: ProjectManager,
     parameterManager: ParameterTypeManager,
     securityContext: SecurityContext,
-    metaRunners: MetaRunners
+    privateRecipes: PrivateRecipeRegistry,
 ) {
     init {
         myProjectManager = MyProjectManager(projectManager)
         myParameterManager = parameterManager
         mySecurityContext = securityContext
-        myMetaRunnersManager = metaRunners
+        myPrivateRecipesManager = privateRecipes
     }
 }
 
