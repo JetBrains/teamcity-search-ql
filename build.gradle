@@ -18,7 +18,8 @@ ext {
     teamcityLibs = "$teamcityWebInf/lib"
     teamcityTestLibs = project.hasProperty("TeamCityTestLibs") ? TeamCityTestLibs
             : "../../.idea_artifacts/dist_openapi_integration/tests"
-    teamcityRecipePluginPath = "$teamcityWebInf/plugins/recipes.zip"
+    teamcityRecipePluginPath = project.hasProperty("TeamCityRecipesPluginPath") ? TeamCityRecipesPluginPath
+            : "../../recipes/recipes-webapp/target/teamcity/dist/recipes"
 }
 
 group 'org.example'
@@ -46,7 +47,7 @@ dependencies {
 
     provided "org.jetbrains.teamcity:server-api:$rootProject.ext.teamcityVersion"
     provided fileTree(dir: "$rootProject.ext.teamcityLibs", include: ['*.jar'])
-    provided fileTree(dir: zipTree(teamcityRecipePluginPath).find { it.name.contains('server') }, include: '*.jar')
+    provided fileTree(dir: "$rootProject.ext.teamcityRecipePluginPath/server", include: ['*.jar'])
     testImplementation fileTree(dir: "$rootProject.ext.teamcityTestLibs", include: ['*.jar'])
     testImplementation("org.testng:testng:6.8")
 }
