@@ -31,7 +31,7 @@ class PrivateRecipeQueryTest : BaseQueryLangTest() {
     @DataProvider(name = "compl")
     fun complData() = TestDataProvider()
         .addComplCase(
-            "find pr",
+            "find pri",
             "privateRecipe"
         )
         .addComplCase(
