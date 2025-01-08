@@ -181,7 +181,7 @@ data class PrivateRecipeTopLevelQuery(
     PrivateRecipeConditionContainer
 {
     companion object : ObjectDescription(
-        Names1("privateRecipe"),
+        Names1("privateRecipe", "metaRunner"),
         Descriptions(
             FixedContextDescription("search private recipes")
         )
