@@ -1,12 +1,11 @@
 package jetbrains.buildServer.server.querylang.ast
 
 import jetbrains.buildServer.server.querylang.ast.wrappers.*
-import jetbrains.buildServer.server.querylang.myMetaRunnersManager
+import jetbrains.buildServer.server.querylang.myPrivateRecipesManager
 import jetbrains.buildServer.server.querylang.myProjectManager
 import jetbrains.buildServer.server.querylang.parser.QueryParser
 import jetbrains.buildServer.server.querylang.requests.QueryResult
 import jetbrains.buildServer.server.querylang.ui.objects.*
-import jetbrains.buildServer.serverSide.impl.ProjectEx
 
 private fun checkInterruptionStatus() {
     if (Thread.currentThread().isInterrupted) {
@@ -24,7 +23,7 @@ data class FullQuery(val queries: List<TopLevelQuery<*>>): MainQuery(), Printabl
                 is BuildConfTopLevelQuery -> query.eval().objects.map { BuildConfigurationResult(it)}
                 is TemplateTopLevelQuery -> query.eval().objects.map { TemplateResult(it) }
                 is VcsRootTopLevelQuery -> query.eval().objects.map { VcsRootResult(it) }
-                is MetaRunnerTopLevelQuery -> query.eval().objects.map { MetaRunnerResult(it) }
+                is PrivateRecipeTopLevelQuery -> query.eval().objects.map { PrivateRecipeResult(it) }
             }
         }
         return QueryResult(res.toMutableList())
@@ -176,28 +175,28 @@ data class VcsRootTopLevelQuery(
     }
 }
 
-data class MetaRunnerTopLevelQuery(
-    override val condition: ConditionAST<WMetaRunner>
-) : TopLevelQuery<WMetaRunner>(),
-    MetaRunnerConditionContainer
+data class PrivateRecipeTopLevelQuery(
+    override val condition: ConditionAST<WPrivateRecipe>
+) : TopLevelQuery<WPrivateRecipe>(),
+    PrivateRecipeConditionContainer
 {
     companion object : ObjectDescription(
-        Names1("metaRunner"),
+        Names1("privateRecipe", "metaRunner"),
         Descriptions(
-            FixedContextDescription("search meta runners")
+            FixedContextDescription("search private recipes")
         )
     )
 
     override val names = Companion.names
 
-    override fun evalFrom(condition: ConditionAST<WMetaRunner>): EvalResult<WMetaRunner> {
+    override fun evalFrom(condition: ConditionAST<WPrivateRecipe>): EvalResult<WPrivateRecipe> {
         val res = condition.eval()
 
         return if (res.filter !is NoneObjectFilter)
             EvalResult(NoneObjectFilter(),
-                myMetaRunnersManager.metaSpecs.filter {meta ->
+                myPrivateRecipesManager.recipeSpecs.filter { spec ->
                     checkInterruptionStatus()
-                    meta.configLocation.project?.valueResolver?.let { vr -> res.filter.accepts(meta.wrap(vr)) } ?: false
+                    spec.configLocation.project?.valueResolver?.let { vr -> res.filter.accepts(spec.wrap(vr)) } ?: false
                 }.mapNotNull { it.wrap(it.configLocation.project!!.valueResolver) } + res.objects
             )
         else

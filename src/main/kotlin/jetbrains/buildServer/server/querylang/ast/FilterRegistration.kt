@@ -1,7 +1,6 @@
 package jetbrains.buildServer.server.querylang.ast
 
 import jetbrains.buildServer.server.querylang.readFromResources
-import java.io.File
 import kotlin.reflect.KClass
 import kotlin.reflect.full.isSubclassOf
 import kotlin.reflect.full.isSuperclassOf
@@ -39,7 +38,7 @@ object FilterRegistration {
         registerConditionContainer(BuildConfTopLevelQuery::class)
         registerConditionContainer(TemplateTopLevelQuery::class)
         registerConditionContainer(VcsRootTopLevelQuery::class)
-        registerConditionContainer(MetaRunnerTopLevelQuery::class)
+        registerConditionContainer(PrivateRecipeTopLevelQuery::class)
 
         registerFilter(EqualsStringFilter::class)
         registerFilter(PrefixStringFilter::class)

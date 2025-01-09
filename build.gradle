@@ -12,13 +12,14 @@ ext {
     teamcityPluginVersion = project.hasProperty("PluginVersion") ? PluginVersion
             : "SNAPSHOT"
     teamcityVersion = project.hasProperty("TeamCityVersion") ? TeamCityVersion
-            : "2023.11"
+            : "2025.03-SNAPSHOT"
     teamcityWebInf = project.hasProperty("TeamCityLibs") ? TeamCityLibs
             : "../../.idea_artifacts/web-deployment/WEB-INF"
     teamcityLibs = "$teamcityWebInf/lib"
     teamcityTestLibs = project.hasProperty("TeamCityTestLibs") ? TeamCityTestLibs
             : "../../.idea_artifacts/dist_openapi_integration/tests"
-    teamcityPluginLibs = "$teamcityWebInf/plugins/metarunner/server"
+    teamcityRecipePluginPath = project.hasProperty("TeamCityRecipesPluginPath") ? TeamCityRecipesPluginPath
+            : "../../recipes/recipes-webapp/target/teamcity/dist/recipes"
 }
 
 group 'org.example'
@@ -46,7 +47,7 @@ dependencies {
 
     provided "org.jetbrains.teamcity:server-api:$rootProject.ext.teamcityVersion"
     provided fileTree(dir: "$rootProject.ext.teamcityLibs", include: ['*.jar'])
-    provided fileTree(dir: "$rootProject.ext.teamcityPluginLibs", include: ['*.jar'])
+    provided fileTree(dir: "$rootProject.ext.teamcityRecipePluginPath/server", include: ['*.jar'])
     testImplementation fileTree(dir: "$rootProject.ext.teamcityTestLibs", include: ['*.jar'])
     testImplementation("org.testng:testng:6.8")
 }
@@ -73,6 +74,7 @@ compileTestKotlin {
 
 teamcity {
     version = teamcityVersion
+    allowSnapshotVersions = true
     server {
         descriptor = file("teamcity-plugin.xml")
         tokens = [Version: teamcityPluginVersion]

@@ -1,16 +1,16 @@
 package jetbrains.buildServer.server.querylang.ast.wrappers
 
 import jetbrains.buildServer.parameters.ValueResolver
-import jetbrains.buildServer.runners.metaRunner.config.MetaSpec
+import jetbrains.buildServer.runners.recipes._private.spec.PrivateRecipeSpec
 
-fun MetaSpec.wrap(valueResolver: ValueResolver): WMetaRunner? {
+fun PrivateRecipeSpec.wrap(valueResolver: ValueResolver): WPrivateRecipe? {
     return this.configLocation.project?.let {
         if (!checkPermission(it.projectId)) null
-        else WMetaRunner(this, valueResolver)
+        else WPrivateRecipe(this, valueResolver)
     }
 }
 
-class WMetaRunner :
+class WPrivateRecipe :
     FIdContainer,
     FProjectContainer,
     FParentContainer,
@@ -18,11 +18,11 @@ class WMetaRunner :
     FNameContainer,
     FStepContainer
 {
-    private val mySpec: MetaSpec
+    private val mySpec: PrivateRecipeSpec
     private val myResolver: ValueResolver
 
-    internal constructor(metaRunner: MetaSpec, resolver: ValueResolver) {
-        mySpec = metaRunner
+    internal constructor(spec: PrivateRecipeSpec, resolver: ValueResolver) {
+        mySpec = spec
         myResolver = resolver
     }
 
@@ -63,6 +63,6 @@ class WMetaRunner :
     }
 
     override fun equals(other: Any?): Boolean {
-        return other is WMetaRunner && other.mySpec == mySpec
+        return other is WPrivateRecipe && other.mySpec == mySpec
     }
 }

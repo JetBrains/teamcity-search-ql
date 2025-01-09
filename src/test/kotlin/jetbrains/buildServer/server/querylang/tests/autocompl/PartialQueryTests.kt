@@ -21,7 +21,7 @@ class PartialQueryTests {
             "find vcsRoot with type vcsTrigger",
             "find configuration,template with vcs type vcsTrigger",
             "find project,configuration,template with feature type vcsTrigger",
-            "find configuration,template,metaRunner with step type vcsTrigger",
+            "find configuration,template,privateRecipe with step type vcsTrigger",
             "find configuration,template with trigger type vcsTrigger",
             "find project with vcsRoot type vcsTrigger"
         )
@@ -34,7 +34,7 @@ class PartialQueryTests {
 
         val res = compl.complete(query).map { it.result }
         val expected = listOf(
-            """find project,configuration,template,vcsRoot,metaRunner with param "path&1"=("Base^"* and *"ProjectResult*")"""
+            """find project,configuration,template,vcsRoot,privateRecipe with param "path&1"=("Base^"* and *"ProjectResult*")"""
         )
 
         assertEquals(expected.first(), res.first())
@@ -45,7 +45,7 @@ class PartialQueryTests {
 
         val res = compl.complete(query).map { it.result }
         val expected = listOf(
-            """find project,configuration,template,vcsRoot,metaRunner with id "Base^ProjectResult""""
+            """find project,configuration,template,vcsRoot,privateRecipe with id "Base^ProjectResult""""
         )
 
         assertEquals(expected.first(), res.first())
@@ -56,7 +56,7 @@ class PartialQueryTests {
 
         val res = compl.complete(query).map { it.result }
         val expected = listOf(
-            """find project,configuration,template,vcsRoot,metaRunner with id "Base""ProjectResult""""
+            """find project,configuration,template,vcsRoot,privateRecipe with id "Base""ProjectResult""""
         )
 
         assertEquals(expected.first(), res.first())
