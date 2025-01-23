@@ -34,9 +34,9 @@ Currently it supports searching 4 types of entities: projects, build configurati
 # Building the plugin
 ### From TeamCity distribution
 ```
-./gradlew clean build -PTeamCityTestLibs=TEAMCITY_DISTR/devPackage/tests -PTeamCityLibs=TEAMCITY_DISTR/webapps/ROOT/WEB-INF/lib -PTeamCityRecipesPluginPath=TEAMCITY_DISTR/webapps/ROOT/WEB-INF/plugins/recipes.zip
+./gradlew clean serverPlugin -PTeamCityTestLibs=TEAMCITY_DISTR/devPackage/tests -PTeamCityLibs=TEAMCITY_DISTR/webapps/ROOT/WEB-INF/lib -PTeamCityRecipesPluginPath=TEAMCITY_DISTR/webapps/ROOT/WEB-INF/plugins/recipes.zip
 ```
-
+the plugin zip will be in the build/distributions folder
 
 ### For TeamCity developers
 
@@ -47,7 +47,6 @@ Building plugin:
 ```
 ./gradlew clean serverPlugin
 ```
-the plugin zip will be in the build/distributions folder
 
 Running tests:
 ```
