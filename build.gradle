@@ -14,12 +14,17 @@ ext {
     teamcityVersion = project.hasProperty("TeamCityVersion") ? TeamCityVersion
             : "2025.03-SNAPSHOT"
     teamcityWebInf = project.hasProperty("TeamCityLibs") ? TeamCityLibs
-            : "../../.idea_artifacts/web-deployment/WEB-INF"
+            : "../../.idea_artifacts/web_deployment/WEB-INF"
     teamcityLibs = "$teamcityWebInf/lib"
     teamcityTestLibs = project.hasProperty("TeamCityTestLibs") ? TeamCityTestLibs
             : "../../.idea_artifacts/dist_openapi_integration/tests"
+
     teamcityRecipePluginPath = project.hasProperty("TeamCityRecipesPluginPath") ? TeamCityRecipesPluginPath
-            : "../../recipes/recipes-webapp/target/teamcity/dist/recipes"
+            : "../../recipes/recipes-webapp/target/teamcity/dist/recipes.zip"
+    originalRecipePluginPath = teamcityRecipePluginPath
+    if (teamcityRecipePluginPath.endsWith(".zip")) {
+        teamcityRecipePluginPath = "${buildDir}/recipesPluginUnpacked" // prepareRecipesLibs task will unpack the zip into this folder
+    }
 }
 
 group 'org.example'
@@ -30,10 +35,7 @@ repositories {
         maven {
             url project.property("maven.repo.local")
         }
-    } else {
-        mavenLocal()
     }
-
     mavenCentral()
 }
 
@@ -45,7 +47,6 @@ dependencies {
     provided "org.jetbrains.kotlin:kotlin-test:1.8.22"
     implementation "org.reflections:reflections:0.9.12"
 
-    provided "org.jetbrains.teamcity:server-api:$rootProject.ext.teamcityVersion"
     provided fileTree(dir: "$rootProject.ext.teamcityLibs", include: ['*.jar'])
     provided fileTree(dir: "$rootProject.ext.teamcityRecipePluginPath/server", include: ['*.jar'])
     testImplementation fileTree(dir: "$rootProject.ext.teamcityTestLibs", include: ['*.jar'])
@@ -65,10 +66,15 @@ test {
 }
 
 compileKotlin {
+    dependsOn('initializer')
+    dependsOn('generateGrammarSource')
     kotlinOptions.jvmTarget = "1.8"
 }
 
 compileTestKotlin {
+    dependsOn('initializer')
+    dependsOn('generateTestGrammarSource')
+    dependsOn('generateGrammarSource')
     kotlinOptions.jvmTarget = "1.8"
 }
 
@@ -88,11 +94,24 @@ generateGrammarSource {
 }
 
 
-task initializer(type: Copy) {
+task initializer {
+    dependsOn('prepareRecipesLibs')
+    dependsOn('prepareFilterDescription')
+}
+
+task prepareRecipesLibs(type: Copy) {
+    // prepare recipes dependency
+    if (rootProject.ext.originalRecipePluginPath.endsWith("zip")) {
+        from zipTree(rootProject.ext.originalRecipePluginPath)
+        into rootProject.ext.teamcityRecipePluginPath
+
+        outputs.dir rootProject.ext.teamcityRecipePluginPath
+    }
+}
+
+task prepareFilterDescription(type: Copy) {
     from "FOR_USERS.md"
     into "src/main/resources/"
 }
 
-tasks.matching { it.name != 'initializer' }.all { Task task ->
-    task.dependsOn initializer
-}
+tasks.findByName('processResources').dependsOn('prepareFilterDescription')
