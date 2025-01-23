@@ -54,7 +54,7 @@ dependencies {
 }
 
 configurations {
-    compile {
+    api {
         extendsFrom = extendsFrom.findAll { it != configurations.antlr }
     }
 }
