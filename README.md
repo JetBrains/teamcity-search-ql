@@ -30,7 +30,29 @@ Currently it supports searching 4 types of entities: projects, build configurati
     > find configurations that don't contain any use of the Sonar runner
 
 [More examples and detailed syntax](https://github.com/JetBrains/teamcity-search-ql/blob/master/FOR_USERS.md)
-                                                                                                     
+
+# Building the plugin
+### From TeamCity distribution
+```
+./gradlew clean serverPlugin -PTeamCityTestLibs=TEAMCITY_DISTR/devPackage/tests -PTeamCityLibs=TEAMCITY_DISTR/webapps/ROOT/WEB-INF/lib -PTeamCityRecipesPluginPath=TEAMCITY_DISTR/webapps/ROOT/WEB-INF/plugins/recipes.zip
+```
+the plugin zip will be in the build/distributions folder
+
+### For TeamCity developers
+
+Clone the plugin code into external_repos folder(or specify paths to the artifacts used in the build.gradle file manually).
+Build dist_openapi_integration and web_deployment artifacts for TeamCity.
+
+Building plugin:
+```
+./gradlew clean serverPlugin
+```
+
+Running tests:
+```
+./gradlew clean test
+```
+
 # More information
 
 Source code: https://github.com/JetBrains/teamcity-search-ql
